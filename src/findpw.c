@@ -10,13 +10,21 @@
  * See the file LICENSE.TXT for full copyright and licensing information.
  */
 #include <stdio.h>
+#include <string.h>
 
+#define MAX_PW_LEN (80)	/* longest password input line we will allow */
+
+extern char *xcrypt(const char *, const char *);
+
+int
 main(int argc, char *argv[])
 {
-    char buf[80];
+    char buf[MAX_PW_LEN+1+1];
 
+    memset(buf, 0, sizeof(buf));
     fprintf(stderr, "Password: ");
-    (void) fgets(buf, 80, stdin);
+    (void) fgets(buf, MAX_PW_LEN+1, stdin);
     buf[strlen(buf) - 1] = '\0';
     printf("%s\n", xcrypt(buf, "mT"));
+    return 0;
 }

@@ -96,7 +96,8 @@ score(int amount, int flags, int monst)
     for (scp = top_ten; scp < endp; scp++)
     {
 	scp->sc_score = 0;
-	for (i = 0; i < MAXSTR; i++)
+	scp->sc_name[MAXNAME] = 0; /* paranoia */
+	for (i = 0; i < MAXNAME; i++)
 	    scp->sc_name[i] = (char) rnd(255);
 	scp->sc_flags = RN;
 	scp->sc_level = RN;
@@ -147,7 +148,8 @@ score(int amount, int flags, int monst)
 		sc2--;
 	    }
 	    scp->sc_score = amount;
-	    strncpy(scp->sc_name, whoami, MAXSTR);
+	    scp->sc_name[MAXNAME] = 0; /* paranoia */
+	    strncpy(scp->sc_name, whoami, MAXNAME);
 	    scp->sc_flags = flags;
 	    if (flags == 2)
 		scp->sc_level = max_level;
@@ -190,7 +192,8 @@ score(int amount, int flags, int monst)
 			*sc2 = *(sc2 + 1);
 		    sc2 = endp - 1;
 		    sc2->sc_score = 0;
-		    for (i = 0; i < MAXSTR; i++)
+		    sc2->sc_name[MAXNAME] = 0; /* paranoia */
+		    for (i = 0; i < MAXNAME; i++)
 			sc2->sc_name[i] = (char) rnd(255);
 		    sc2->sc_flags = RN;
 		    sc2->sc_level = RN;

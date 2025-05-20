@@ -45,7 +45,7 @@ AUTHORS
 
 FILES
        @SCOREFILE@                   Score file
-       ~/rogue.save                Default save file
+       ~/.rogue.save                Default save file
 
 SEE ALSO
        Michael C. Toy and Kenneth C. R. C. Arnold, A guide to the Dungeons  of

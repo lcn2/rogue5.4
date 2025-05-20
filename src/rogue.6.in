@@ -79,7 +79,7 @@ Glenn Wichman
 .ta \w'@SCOREFILE@\ \ \ 'u
 @SCOREFILE@	Score file
 .br
-\fB~\fP/rogue.save	Default save file
+\fB~\fP/.rogue.save	Default save file
 .SH SEE ALSO
 Michael C. Toy
 and

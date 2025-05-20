@@ -10,12 +10,14 @@
  * See the file LICENSE.TXT for full copyright and licensing information.
  */
 
+# define	MAXNAME		80  /* maximum score name allowed */
+
 struct sc_ent {
     uid_t sc_uid;
     int sc_score;
     unsigned int sc_flags;
     int sc_monster;
-    char sc_name[MAXSTR];
+    char sc_name[MAXNAME+1];
     int sc_level;
     unsigned int sc_time;
 };

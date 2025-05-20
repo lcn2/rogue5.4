@@ -21,10 +21,10 @@
  *      If this was the object of something's desire, that monster will
  *      get mad and run at the hero
  */
-update_mdest(obj)
-register THING *obj;
+void
+update_mdest(THING *obj)
 {
-    register THING *mp;
+    THING *mp;
 
     for (mp = mlist; mp != NULL; mp = next(mp))
         if (mp->t_dest == &obj->o_pos)

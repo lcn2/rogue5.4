@@ -40,7 +40,7 @@ FEATURES = -DALLSCORES -DSCOREFILE=\"$(SCOREFILE)\" -DLOCKFILE=\"$(LOCKFILE)\"
 CPPFLAGS =
 CFLAGS   = -O3
 LDFLAGS  =
-LIBS     = -lcurses
+LIBS     = -lncurses
 RM       = rm -f
 MAKEFILE = -f Makefile.std
 SCOREFILE= $(PROGRAM).scr
@@ -75,10 +75,10 @@ dist.src:
 	rm -fr $(DISTNAME)
 
 findpw: findpw.c xcrypt.o mdport.o xcrypt.o
-	$(CC) -s -o findpw findpw.c xcrypt.o mdport.o -lcurses
+	$(CC) -s -o findpw findpw.c xcrypt.o mdport.o -lncurses
 
 scedit: scedit.o scmisc.o vers.o mdport.o xcrypt.o
-	$(CC) -s -o scedit vers.o scedit.o scmisc.o mdport.o xcrypt.o -lcurses
+	$(CC) -s -o scedit vers.o scedit.o scmisc.o mdport.o xcrypt.o -lncurses
 
 scmisc.o scedit.o:
 	$(CC) -O -c $(SF) $*.c

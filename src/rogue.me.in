@@ -821,7 +821,7 @@ It is used if you get on the top ten scorer's list.
 .ip "\fBfruit\fP [\fI\^slime-mold\^\fP]"
 This should hold the name of a fruit that you enjoy eating.
 It is basically a whimsey that rogue uses in a couple of places.
-.ip "\fBfile\fP [\fI\^~/rogue.save\^\fP]"
+.ip "\fBfile\fP [\fI\^~/.rogue.save\^\fP]"
 The default file name for saving the game.
 If your phone is hung up by accident,
 rogue will automatically save the game in this file.

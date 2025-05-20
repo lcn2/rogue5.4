@@ -977,7 +977,7 @@ you enjoy eating. It is basically a whimsy that rogue uses
 in a couple of places.</p>
 </blockquote>
 <p align="justify"><b>file</b>
-[<i>~/rogue.save</i>]</p>
+[<i>~/.rogue.save</i>]</p>
 <blockquote>
 	<p align="justify">The default file name for saving the game.
 If your phone is hung up by accident, rogue will

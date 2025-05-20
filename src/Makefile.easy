@@ -18,55 +18,55 @@
 
 SHELL= bash
 
-DISTNAME= @PACKAGE_TARNAME@@PACKAGE_VERSION@
-PACKAGE_TARNAME= @PACKAGE_TARNAME@-@PACKAGE_VERSION@
-PROGRAM= @PROGRAM@
+DISTNAME= rogue5.4.5
+PACKAGE_TARNAME= rogue-5.4.5
+PROGRAM= rogue
 
 O= o
 
 AT= @
 
 #CC= gcc
-CC= @CC@
+CC= gcc
 
 #CFLAGS= -O2
-CFLAGS= @CFLAGS@
+CFLAGS= -O3
 
 #LIBS= -lcurses
-LIBS= @LIBS@
+LIBS=  -lncurses
 
 #RM= rm -f
 RM= rm -f
 
 #GROFF= groff
-GROFF= @GROFF@
+GROFF= groff
 
 #NROFF= nroff
-NROFF= @NROFF@
+NROFF= nroff
 
 #TBL= tbl
-TBL= @TBL@
+TBL= tbl
 
 #COLCRT= colcrt
-COLCRT= @COLCRT@
+COLCRT= colcrt
 
 #SED= sed
-SED= @SED@
+SED= sed
 
 #SCOREFILE= rogue54.scr
-SCOREFILE= @SCOREFILE@
+SCOREFILE= .rogue.scr
 
 #LOCKFILE= rogue54.lck
-LOCKFILE= @LOCKFILE@
+LOCKFILE= .rogue.lck
 
 #GROUPOWNER= games
-GROUPOWNER= @GROUPOWNER@
+GROUPOWNER= 
 
 #CPPFLAGS= -DHAVE_CONFIG_H
-CPPFLAGS= @DEFS@ @CPPFLAGS@
+CPPFLAGS= -DHAVE_CONFIG_H 
 
 #DISTFILE= $(PROGRAM)
-DISTFILE= $(DISTNAME)-@TARGET@
+DISTFILE= $(DISTNAME)-x86_64-unknown-linux-gnu
 
 INSTALL= install
 
@@ -89,13 +89,13 @@ CP= cp
 
 DESTDIR=
 
-prefix= @prefix@
-exec_prefix= @exec_prefix@
-datarootdir= @datarootdir@
-datadir= @datadir@
-bindir= @bindir@
-mandir= @mandir@
-docdir= @docdir@
+prefix= /usr/local
+exec_prefix= ${prefix}
+datarootdir= ${prefix}/share
+datadir= ${datarootdir}
+bindir= /usr/local/bin
+mandir= ${datarootdir}/man
+docdir= /usr/local/share/rogue5.4
 man6dir= $(mandir)/man6
 
 ###############################################################################
@@ -166,11 +166,11 @@ distclean maintainer-clean: clobber
 	$(RM) Makefile
 
 stddocs:
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.6.in > rogue.6
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.me.in > rogue.me
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.html.in > rogue.html
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.doc.in > rogue.doc
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.cat.in > rogue.cat
+	sed -e 's/${AT}PROGRAM${AT}/rogue/' -e 's/${AT}SCOREFILE${AT}/.rogue.scr/' rogue.6.in > rogue.6
+	sed -e 's/${AT}PROGRAM${AT}/rogue/' -e 's/${AT}SCOREFILE${AT}/.rogue.scr/' rogue.me.in > rogue.me
+	sed -e 's/${AT}PROGRAM${AT}/rogue/' -e 's/${AT}SCOREFILE${AT}/.rogue.scr/' rogue.html.in > rogue.html
+	sed -e 's/${AT}PROGRAM${AT}/rogue/' -e 's/${AT}SCOREFILE${AT}/.rogue.scr/' rogue.doc.in > rogue.doc
+	sed -e 's/${AT}PROGRAM${AT}/rogue/' -e 's/${AT}SCOREFILE${AT}/.rogue.scr/' rogue.cat.in > rogue.cat
 
 dist.src:
 	$(MAKE) $(MAKEFILE) clean

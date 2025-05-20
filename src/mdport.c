@@ -263,7 +263,7 @@ int
 md_hasclreol(void)
 {
 #if defined(clr_eol)
-#ifdef NCURSES_VERSION
+#ifndef NCURSES_VERSION
     if (cur_term == NULL)
 	return(0);
     if (cur_term->type.Strings == NULL)

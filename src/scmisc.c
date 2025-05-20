@@ -14,10 +14,16 @@
 # include	<sys/types.h>
 # include	<sys/stat.h>
 # include	<ctype.h>
+# include	<string.h>
+# include	<unistd.h>
+# include	<fcntl.h>
+# include	<time.h>
+
+# include	"score.h"
 
 # define	TRUE		1
 # define	FALSE		0
-# define	MAXSTR		80
+# define	MAXLINE		80
 # define	when		break;case
 # define	otherwise	break;default
 
@@ -29,9 +35,9 @@ char	*s_vowelstr();
 
 char *lockfile = "/tmp/.fredlock";
 
-char prbuf[MAXSTR];			/* buffer for sprintfs */
+static char	prbuf[MAXLINE+1];		/* buffer for sprintfs */
 
-MONST	monsters[] = {
+static MONST	monsters[] = {
 	{ "aquator" }, { "bat" }, { "centaur" }, { "dragon" }, { "emu" },
 	{ "venus flytrap" }, { "griffin" }, { "hobgoblin" }, { "ice monster" },
 	{ "jabberwock" }, { "kobold" }, { "leprechaun" }, { "medusa" },
@@ -39,6 +45,21 @@ MONST	monsters[] = {
 	{ "snake" }, { "troll" }, { "ur-vile" }, { "vampire" }, { "wraith" },
 	{ "xeroc" }, { "yeti" }, { "zombie" }
 };
+
+
+/* duplicated external declarations - because including rogue.h brings in too much other stuff */
+
+extern const char encstr[];
+extern const char statlist[];
+
+/* external functions from scedit.c */
+
+extern void	md_sleep(int s);
+extern int	md_unlink(char *file);
+extern void	add_score(void);
+extern void	del_score(void);
+extern void	insert_score(SCORE *new);
+
 
 /*
  * s_lock_sc:
@@ -77,7 +98,8 @@ over:
 	printf("The score file is very busy.  Do you want to wait longer\n");
 	printf("for it to become free so your score can get posted?\n");
 	printf("If so, type \"y\"\n");
-	(void) fgets(prbuf, MAXSTR, stdin);
+	memset(prbuf, 0, sizeof(prbuf));
+	(void) fgets(prbuf, MAXLINE, stdin);
 	if (prbuf[0] == 'y')
 	    for (;;)
 	    {
@@ -117,7 +139,8 @@ s_unlock_sc(void)
 void
 s_encwrite(char *start, size_t size, FILE *outf)
 {
-    char *e1, *e2, fb;
+    const char *e1, *e2;
+    char fb;
     int temp;
 
     e1 = encstr;
@@ -141,9 +164,11 @@ s_encwrite(char *start, size_t size, FILE *outf)
  *	Perform an encrypted read
  */
 
+void
 s_encread(char *start, size_t size, int inf)
 {
-    char *e1, *e2, fb;
+    const char *e1, *e2;
+    char fb;
     int temp;
     int read_size;
 

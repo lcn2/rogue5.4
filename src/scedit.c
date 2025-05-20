@@ -10,10 +10,13 @@
  * See the file LICENSE.TXT for full copyright and licensing information.
  */
 
-# include   <curses.h>
+# include   <ncurses.h>
 # include	<stdio.h>
 # include	<signal.h>
 # include	<ctype.h>
+# include	<unistd.h>
+# include	<stdlib.h>
+# include	<string.h>
 
 #ifndef TRUE
 # define	TRUE	1
@@ -24,37 +27,66 @@
 # define	MAXSTR	80
 
 # include	"score.h"
+# include	"config.h"
 
-SCORE	top_ten[10];
+static SCORE	top_ten[10];		/* top_ten must be 10 in size */
 
-char	buf[BUFSIZ],
-	*reason[] = {
-		"killed",
-		"quit",
-		"A total winner",
-		"killed with amulet",
-	};
+static char	buf[BUFSIZ+1+1],	/* +1 for when we read BUFSIZ starting with &buf[1], +1 for paranoia */
+		*reason[] = {
+			"killed",
+			"quit",
+			"A total winner",
+			"killed with amulet",
+		};
 
-int	seed;
-FILE	*inf;
+static int	seed;
+static FILE	*finf;
+static char	*scorefile;
 
 struct passwd	*getpwnam();
 int do_comm();
 int pr_score(SCORE *, int);
 
+
+/* forward declarations */
+
+void	add_score(void);
+void	del_score(void);
+void	insert_score(SCORE *new);
+int	pr_score(SCORE *scp, int num);
+
+/* duplicated external declarations - because including extern.h and rogue.h brings in too much other stuff */
+
+extern pid_t	md_getpid(void);
+extern void	s_encread(char *start, size_t size, int inf);
+extern int	s_lock_sc(void);
+extern void	s_encwrite(char *start, size_t size, FILE *outf);
+extern void	s_unlock_sc(void);
+extern char	*md_getrealname(uid_t uid);
+
+/* external functions from scmisc.c */
+
+extern char *	s_killname(int monst, int doart);
+
+
 int
 main(int ac, char *av[])
 {
-	char	*scorefile;
 	FILE	*outf;
+	int	inf;
 
 	if (ac == 1)
-		scorefile = "rogue54.scr";
+		scorefile = SCOREFILE;
 	else
 		scorefile = av[1];
 	seed = md_getpid();
 
-	if ((inf = fopen(scorefile, "r+")) < 0) {
+	if ((finf = fopen(scorefile, "r+")) == NULL) {
+		perror(scorefile);
+		exit(1);
+	}
+	inf = fileno(finf);
+	if (inf < 0) {
 		perror(scorefile);
 		exit(1);
 	}
@@ -82,15 +114,16 @@ do_comm(void)
 	printf("\nCommand: ");
 	while (isspace(buf[0] = getchar()) || buf[0] == '\n')
 		continue;
-	(void) fget(s&buf[1], BUFSIZ, stdin);
+	memset(&buf[1], 0, sizeof(buf)-1);
+	(void) fgets(&buf[1], BUFSIZ, stdin);
 	buf[strlen(buf) - 1] = '\0';
 	switch (buf[0]) {
 	  case 'w':
 		if (strncmp(buf, "write", strlen(buf)))
 			goto def;
-		lseek(inf, 0L, 0);
-		if (outf == NULL && (outf = fdopen(inf, "w")) == NULL) {
-			perror("fdopen");
+		fseek(finf, 0L, 0);
+		if (outf == NULL && (outf = fopen(scorefile, "w")) == NULL) {
+			perror(scorefile);
 			exit(1);
 		}
 		fseek(outf, 0L, 0);
@@ -176,6 +209,7 @@ add_score(void)
 	new.sc_flags -= '0';
 	do {
 		printf("User Id: ");
+		memset(buf, 0, sizeof(buf));
 		(void) fgets(buf, BUFSIZ, stdin);
 		buf[strlen(buf) - 1] = '\0';
         id = atoi(buf);
@@ -210,6 +244,7 @@ add_score(void)
  *	Print out a score entry.  Return FALSE if last entry.
  */
 
+int
 pr_score(SCORE *scp, int num)
 {
 	if (scp->sc_score) {
@@ -230,7 +265,7 @@ pr_score(SCORE *scp, int num)
  * insert_score:
  *	Insert a score into the top ten list
  */
-
+void
 insert_score(SCORE *new)
 {
 	SCORE	*scp, *sc2;
@@ -276,6 +311,7 @@ del_score(void)
 
 	for (;;) {
 		printf("Which score? ");
+		memset(buf, 0, sizeof(buf));
 		(void) fgets(buf, BUFSIZ, stdin);
 		if (buf[0] == '\n')
 			return;
