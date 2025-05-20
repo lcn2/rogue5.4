@@ -129,7 +129,7 @@
 #define LAMPDIST	3
 #ifdef MASTER
 #ifndef PASSWD
-#define	PASSWD		"mTBellIQOsLNA"
+#define PASSWD		"mTreRQpbBWGLI" /* The historic wizard password is bathtub */
 #endif
 #endif
 
