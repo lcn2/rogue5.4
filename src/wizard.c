@@ -119,6 +119,57 @@ type_name(int type)
 }
 
 #ifdef MASTER
+
+/*
+ * highest_which_letter - determine the letter of the highest which
+ *
+ * NOTE: A bogus highest will return '0'.
+ */
+static char
+highest_which_letter(int highest)
+{
+    /* firewall -- negative max maps onto 0 */
+    if (highest <= 0) {
+	return (char) '0';
+
+    /* first 10 map into 0 thru 9 */
+    } else if (highest < 10) {
+	return (char) ('0' + highest);
+
+    /* next 26 max into a to z */
+    } else if (highest < 10+26) {
+	return (char) ('a' + (highest-10));
+    }
+
+    /* firewall - max too large maps onto 0 */
+    return (char) '0';
+}
+
+/*
+ * which_char_to_int - convert a which char into an integer
+ *
+ * NOTE: A bogus char will return 0.
+ */
+static int
+which_char_to_int(int ch)
+{
+    /* firewall - non-ASCII returns 0 */
+    if (!isascii(ch)) {
+	return 0;
+
+    /* case: '0' to '9' */
+    } else if (isdigit(ch)) {
+	return (int) (ch - '0');
+
+    /* case: 'a' to 'z' */
+    } else if (islower(ch)) {
+	return (int) ((ch - 'a')+10);
+    }
+
+    /* firewall - bogus char return 0 */
+    return 0;
+}
+
 /*
  * create_obj:
  *	wizard command for getting anything he wants
@@ -129,13 +180,108 @@ create_obj(void)
 {
     THING *obj;
     int ch, bless;
+    char highest_char;
+    int which;
 
     obj = new_item();
     msg("type of item: ");
     obj->o_type = readchar();
     mpos = 0;
-    msg("which %c do you want? (0-f)", obj->o_type);
-    obj->o_which = (isdigit((ch = readchar())) ? ch - '0' : ch - 'a' + 10);
+
+    /*
+     * determine a valid o_which given an o_type
+     */
+    switch (obj->o_type) {
+
+    case POTION:    /* ! */
+	highest_char = highest_which_letter(MAXPOTIONS-1);
+	do {
+	    msg("which %c (potion) do you want? (0-%c)", obj->o_type, highest_char);
+	    ch = readchar();
+	    which = which_char_to_int(ch);
+	    if (which < 0 || which >= MAXPOTIONS) {
+		endmsg();
+		msg("invalid potion, try again");
+	    }
+	} while (which < 0 || which >= MAXPOTIONS);
+	break;
+
+    case SCROLL:    /* ? */
+	highest_char = highest_which_letter(MAXSCROLLS-1);
+	do {
+	    msg("which %c (scroll) do you want? (0-%c)", obj->o_type, highest_char);
+	    ch = readchar();
+	    which = which_char_to_int(ch);
+	    if (which < 0 || which >= MAXSCROLLS) {
+		endmsg();
+		msg("invalid scroll, try again");
+	    }
+	} while (which < 0 || which >= MAXSCROLLS);
+	break;
+
+    case WEAPON:    /* ) */
+	highest_char = highest_which_letter(MAXWEAPONS-1);
+	do {
+	    msg("which %c (weapon) do you want? (0-%c)", obj->o_type, highest_char);
+	    ch = readchar();
+	    which = which_char_to_int(ch);
+	    if (which < 0 || which >= MAXWEAPONS) {
+		endmsg();
+		msg("invalid weapon, try again");
+	    }
+	} while (which < 0 || which >= MAXWEAPONS);
+	break;
+
+    case ARMOR:	    /* ] */
+	highest_char = highest_which_letter(MAXARMORS-1);
+	do {
+	    msg("which %c (armor) do you want? (0-%c)", obj->o_type, highest_char);
+	    ch = readchar();
+	    which = which_char_to_int(ch);
+	    if (which < 0 || which >= MAXARMORS) {
+		endmsg();
+		msg("invalid armor, try again");
+	    }
+	} while (which < 0 || which >= MAXARMORS);
+	break;
+
+    case RING:	    /* = */
+	highest_char = highest_which_letter(MAXRINGS-1);
+	do {
+	    msg("which %c (ring) do you want? (0-%c)", obj->o_type, highest_char);
+	    ch = readchar();
+	    which = which_char_to_int(ch);
+	    if (which < 0 || which >= MAXRINGS) {
+		endmsg();
+		msg("invalid ring, try again");
+	    }
+	} while (which < 0 || which >= MAXRINGS);
+	break;
+
+    case STICK:	    /* / */
+	highest_char = highest_which_letter(MAXSTICKS-1);
+	do {
+	    msg("which %c (staff) do you want? (0-%c)", obj->o_type, highest_char);
+	    ch = readchar();
+	    which = which_char_to_int(ch);
+	    if (which < 0 || which >= MAXSTICKS) {
+		endmsg();
+		msg("invalid staff, try again");
+	    }
+	} while (which < 0 || which >= MAXSTICKS);
+	break;
+
+    default:	    /* anything that doesn't have an o_which */
+	highest_char = '0';
+	ch = '0';
+	which = 0;
+	break;
+    }
+
+    /*
+     * form an object
+     */
+    obj->o_which = which;
     obj->o_group = 0;
     obj->o_count = 1;
     mpos = 0;
