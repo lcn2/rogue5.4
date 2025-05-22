@@ -66,7 +66,7 @@ char *ws_type[MAXSTICKS];		/* Is it a wand or a staff */
 int  orig_dsusp;			/* Original dsusp char */
 char fruit[MAXSTR] =			/* Favorite fruit */
 		{ 's', 'l', 'i', 'm', 'e', '-', 'm', 'o', 'l', 'd', '\0' };
-char home[MAXSTR] = { '\0' };		/* User's home directory */
+char home[MAXSTR+1] = { '\0' };		/* User's home directory */
 const char *inv_t_name[] = {
 	"Overwrite",
 	"Slow",

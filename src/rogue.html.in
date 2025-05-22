@@ -25,9 +25,9 @@ Berkeley, California 94720</h3>
 
 <blockquote>
 	<blockquote>
-		<p align="justify"><b><i><font size="2">Rogue</font></i></b><font size="2"> is a visual CRT based fantasy game which runs under the 
-							UNIX† timesharing system. This paper describes how 
-		to play rogue, and gives a few hints for those who might otherwise get 
+		<p align="justify"><b><i><font size="2">Rogue</font></i></b><font size="2"> is a visual CRT based fantasy game which runs under the
+							UNIX† timesharing system. This paper describes how
+		to play rogue, and gives a few hints for those who might otherwise get
 		lost in the Dungeons of Doom. </font></p>
 	</blockquote>
 </blockquote>
@@ -87,7 +87,7 @@ game.</p>
 rogue you have to first get some grasp of what rogue is
 doing with the screen. The rogue screen is intended to
 replace the &ldquo;You can see ...&rdquo; descriptions of
-standard fantasy games. Figure 1 is a sample of what a 
+standard fantasy games. Figure 1 is a sample of what a
 rogue screen might look like.</p>
 
 <div align="center">
@@ -133,7 +133,7 @@ you go deeper into the dungeon.</td>
 		<td valign="top">
 		<p align="justify">Gold</td>
 		<td>
-		<p align="justify">The number of gold pieces you have managed to find and keep with you 
+		<p align="justify">The number of gold pieces you have managed to find and keep with you
 		so far.</td>
 	</tr>
 	<tr>
@@ -301,17 +301,17 @@ various symbols mean:</p>
 		<td align="center" valign="top">
 		<p align="justify">A-Z</td>
 		<td>
-		<p align="justify">The uppercase letters represent the various 
-		inhabitants of the Dungeons of Doom. Watch out, they can be nasty and 
+		<p align="justify">The uppercase letters represent the various
+		inhabitants of the Dungeons of Doom. Watch out, they can be nasty and
 		vicious.</td>
 	</tr>
 </table>
 
 
 <h2 align="justify"><b>4. Commands</b></h2>
-<p align="justify">Commands are given to rogue by typing one or two characters. 
-Most commands can be preceded by a count to repeat them (e.g. typing “10s” will 
-do ten searches). Commands for which counts make no sense have the count 
+<p align="justify">Commands are given to rogue by typing one or two characters.
+Most commands can be preceded by a count to repeat them (e.g. typing “10s” will
+do ten searches). Commands for which counts make no sense have the count
 ignored. To cancel a count or a prefix, type &lt;ESCAPE&gt; . The list of commands is
 rather long, but it can be read at any time during the game
 with the &ldquo;?&rdquo; command. Here it is for reference,
@@ -326,17 +326,17 @@ command.<br>
 		<td valign="top" align="left">
 		<p>?</td>
 		<td align="justify">
-		<p align="justify">The help command. Asks for a character to give help 
-		on. If you type a “*”, it will list all the commands, otherwise it will 
+		<p align="justify">The help command. Asks for a character to give help
+		on. If you type a “*”, it will list all the commands, otherwise it will
 		explain what the character you typed does.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>/</td>
 		<td align="justify">
-		<p>This is the “What is that on the screen?” command. A 
-		“/” followed by any character that you see on the level, will tell you 
-		what that character is. For instance, typing “/@” will tell you that the 
+		<p>This is the “What is that on the screen?” command. A
+		“/” followed by any character that you see on the level, will tell you
+		what that character is. For instance, typing “/@” will tell you that the
 		“@” symbol represents you, the player.</td>
 	</tr>
 	<tr>
@@ -347,12 +347,12 @@ command.<br>
 		<td align="left" valign="top">
 		&nbsp;</td>
 		<td align="justify">
-		<p align="justify">Move left. You move one space to the left. If you use 
-		upper case “h”, you will continue to move left until you run into 
-		something. This works for all movement commands (e.g. “L” means run in 
-		direction “l”) If you use the “control” “h”, you will continue moving in 
-		the specified direction until you pass something interesting or run into 
-		a wall. You should experiment with this, since it is a very useful 
+		<p align="justify">Move left. You move one space to the left. If you use
+		upper case “h”, you will continue to move left until you run into
+		something. This works for all movement commands (e.g. “L” means run in
+		direction “l”) If you use the “control” “h”, you will continue moving in
+		the specified direction until you pass something interesting or run into
+		a wall. You should experiment with this, since it is a very useful
 		command, but very difficult to describe. This also works for all movement
 commands.</td>
 	</tr>
@@ -402,7 +402,7 @@ commands.</td>
 		<td align="left" valign="top">
 		<p>t</td>
 		<td align="justify">
-		<p align="justify">Throw an object. This is a prefix command. When followed with a 
+		<p align="justify">Throw an object. This is a prefix command. When followed with a
 		direction it throws an object in the specified direction. (e.g. type
 &ldquo;th&rdquo; to throw something to the
 left.)</td>
@@ -419,24 +419,24 @@ one.</td>
 		<td align="left" valign="top">
 		<p>m</td>
 		<td align="justify">
-		<p align="justify">Move onto something without picking it up. This will move you one 
-		space in the direction you specify and, if there is an object there you 
+		<p align="justify">Move onto something without picking it up. This will move you one
+		space in the direction you specify and, if there is an object there you
 		can pick up, it won’t do it.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>z</td>
 		<td align="justify">
-		<p align="justify">Zap prefix. Point a staff or wand in a given direction and fire it. 
-		Even non-directional staves must be pointed in some direction to be 
+		<p align="justify">Zap prefix. Point a staff or wand in a given direction and fire it.
+		Even non-directional staves must be pointed in some direction to be
 		used.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>^</td>
 		<td align="justify">
-		<p align="justify">Identify trap command. If a trap is on your map and you can’t 
-		remember what type it is, you can get rogue to remind you by getting 
+		<p align="justify">Identify trap command. If a trap is on your map and you can’t
+		remember what type it is, you can get rogue to remind you by getting
 		next to it and typing “^” followed by the direction that would move
 you on top of it.</td>
 	</tr>
@@ -444,9 +444,9 @@ you on top of it.</td>
 		<td align="left" valign="top">
 		<p>s</td>
 		<td align="justify">
-		<p align="justify">Search for traps and secret doors. Examine each space immediately 
-		adjacent to you for the existence of a trap or secret door. There is a 
-		large chance that even if there is something there, you won’t find it, 
+		<p align="justify">Search for traps and secret doors. Examine each space immediately
+		adjacent to you for the existence of a trap or secret door. There is a
+		large chance that even if there is something there, you won’t find it,
 		so you might have to search a while before you find something.</td>
 	</tr>
 	<tr>
@@ -460,7 +460,7 @@ standing on staircase.</td>
 		<td align="left" valign="top">
 		<p>&lt;</td>
 		<td align="justify">
-		<p>Climb up a staircase to the level above. This can’t be done without 
+		<p>Climb up a staircase to the level above. This can’t be done without
 		the Amulet of Yendor
 in your possession.</td>
 	</tr>
@@ -468,7 +468,7 @@ in your possession.</td>
 		<td align="left" valign="top">
 		<p>.</td>
 		<td align="justify">
-		<p>Rest. This is the “do nothing” command. This is good for waiting and 
+		<p>Rest. This is the “do nothing” command. This is good for waiting and
 		healing.</td>
 	</tr>
 	<tr>
@@ -513,68 +513,68 @@ your pack.</td>
 		<td align="left" valign="top">
 		<p>w</td>
 		<td align="justify">
-		<p align="justify">Wield a weapon. Take a weapon out of your pack and carry it for use 
+		<p align="justify">Wield a weapon. Take a weapon out of your pack and carry it for use
 		in combat, replacing the one you are currently using (if any).</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>W</td>
 		<td align="justify">
-		<p align="justify">Wear armor. You can only wear one suit of armor at a time. This 
+		<p align="justify">Wear armor. You can only wear one suit of armor at a time. This
 		takes extra time.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>T</td>
 		<td align="justify">
-		<p align="justify">Take armor off. You can’t remove armor that is cursed. This takes 
+		<p align="justify">Take armor off. You can’t remove armor that is cursed. This takes
 		extra time.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>P</td>
 		<td align="justify">
-		<p align="justify">Put on a ring. You can wear only two rings at a time (one on each 
-		hand). If you aren’t wearing any rings, this command will ask you which 
-		hand you want to wear it on, otherwise, it will place it on the unused 
+		<p align="justify">Put on a ring. You can wear only two rings at a time (one on each
+		hand). If you aren’t wearing any rings, this command will ask you which
+		hand you want to wear it on, otherwise, it will place it on the unused
 		hand. The program assumes that you wield your sword in your right hand.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>R</td>
 		<td align="justify">
-		<p align="justify">Remove a ring. If you are only wearing one ring, this command takes 
-		it off. If you are wearing two, it will ask you which one you wish to 
+		<p align="justify">Remove a ring. If you are only wearing one ring, this command takes
+		it off. If you are wearing two, it will ask you which one you wish to
 		remove,</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>d</td>
 		<td align="justify">
-		<p align="justify">Drop an object. Take something out of your pack and leave it lying 
-		on the floor. Only one object can occupy each space. You cannot drop a 
+		<p align="justify">Drop an object. Take something out of your pack and leave it lying
+		on the floor. Only one object can occupy each space. You cannot drop a
 		cursed object at all if you are wielding or wearing it.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>c</td>
 		<td align="justify">
-		<p align="justify">Call an object something. If you have a type of object in your pack 
-		which you wish to remember something about, you can use the call command 
-		to give a name to that type of object. This is usually used when you 
-		figure out what a potion, scroll, ring, or staff is after you pick it 
-		up, or when you want to remember which of those swords in your pack you 
+		<p align="justify">Call an object something. If you have a type of object in your pack
+		which you wish to remember something about, you can use the call command
+		to give a name to that type of object. This is usually used when you
+		figure out what a potion, scroll, ring, or staff is after you pick it
+		up, or when you want to remember which of those swords in your pack you
 		were wielding.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>D</td>
 		<td align="justify">
-		<p align="justify">Print out which things you’ve discovered something about. This 
-		command will ask you what type of thing you are interested in. If you 
+		<p align="justify">Print out which things you’ve discovered something about. This
+		command will ask you what type of thing you are interested in. If you
 		type the character for a given type of object (<i>e.g.</i>
 &ldquo;!&rdquo; for potion) it will tell you which kinds of
-that type of object you&rsquo;ve discovered (<i>i.e.</i>, figured out what they 
+that type of object you&rsquo;ve discovered (<i>i.e.</i>, figured out what they
 		are). This command works for
 potions, scrolls, rings, and staves and
 wands.</td>
@@ -583,23 +583,23 @@ wands.</td>
 		<td align="left" valign="top">
 		<p>o</td>
 		<td align="justify">
-		<p align="justify">Examine and set options. This command is further explained in the 
+		<p align="justify">Examine and set options. This command is further explained in the
 		section on options.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>^R</td>
 		<td align="justify">
-		<p>Redraws the screen. Useful if spurious messages or transmission 
+		<p>Redraws the screen. Useful if spurious messages or transmission
 		errors have messed up the display.</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
 		<p>^P</td>
 		<td align="justify">
-		<p align="justify">Print last message. Useful when a message disappears before you can 
-		read it. This only repeats the last message that was not a mistyped 
-		command so that you don’t loose anything by accidentally typing the 
+		<p align="justify">Print last message. Useful when a message disappears before you can
+		read it. This only repeats the last message that was not a mistyped
+		command so that you don’t loose anything by accidentally typing the
 		wrong character instead of ^P.</td>
 	</tr>
 	<tr>
@@ -628,7 +628,7 @@ wands.</td>
 		<td align="left" valign="top">
 		<p>S</td>
 		<td align="justify">
-		<p align="justify">Save the current game in a file. It will ask you whether you wish to 
+		<p align="justify">Save the current game in a file. It will ask you whether you wish to
 		use the default save file.
 <i>Caveat</i>: Rogue won&rsquo;t let you start up a copy of
 a saved game, and it removes the save file as soon as you
@@ -736,8 +736,8 @@ use weapons are &ldquo;w&rdquo; (wield) and &ldquo;t&rdquo;
 
 <h3 align="justify"><b>7.2. Armor</b></h3>
 
-<p align="justify">There are various sorts of armor lying around in the dungeon. Some of it is 
-enchanted, some is cursed, and some is just normal. Different armor types have 
+<p align="justify">There are various sorts of armor lying around in the dungeon. Some of it is
+enchanted, some is cursed, and some is just normal. Different armor types have
 different armor protection. The higher the armor protection, the more protection the armor affords against the blows of
 monsters. Here is a list of the various armor types and
 their normal armor protection:</p>
@@ -794,7 +794,7 @@ off).</p>
 <h3 align="justify">
 
 <b>7.3. Scrolls</b></h3>
-<p align="justify">Scrolls come with titles in an unknown tongue<sup>3</sup>. After you read a scroll, it 
+<p align="justify">Scrolls come with titles in an unknown tongue<sup>3</sup>. After you read a scroll, it
 disappears from your pack. The com mand to use a
 scroll is &ldquo;r&rdquo; (read).</p>
 
@@ -1035,13 +1035,13 @@ Mom.</p>
 	</tr>
 	<tr>
 		<td align="right" valign="top"><sup>2</sup></td>
-		<td>A minimum screen size of 24 lines by 80 columns is required. If the 
+		<td>A minimum screen size of 24 lines by 80 columns is required. If the
 		screen is larger, only the 24x80 section
 will be used for the map.</td>
 	</tr>
 	<tr>
 		<td align="right" valign="top"><sup>3</sup></td>
-		<td>Actually, it's a dialect spoken only by the twenty-seven members of 
+		<td>Actually, it's a dialect spoken only by the twenty-seven members of
 		a tribe in Outer Mongolia, but you're not supposed to know that.</td>
 	</tr>
 	<tr>
@@ -1052,7 +1052,7 @@ $ export ROGUEOPTS<br>
 	</tr>
 	<tr>
 		<td align="right" valign="top"><sup>5</sup></td>
-		<td>The Dungeon's wizard is named Wally the Wonder Badger. Invocations 
+		<td>The Dungeon's wizard is named Wally the Wonder Badger. Invocations
 		should be accompanied by a sizable donation.</td>
 	</tr>
 </table>

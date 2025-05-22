@@ -46,10 +46,10 @@ main(int argc, char **argv)
      * get home and options from environment
      */
 
-    strcpy(home, md_gethomedir());
-
-	if (strlen(home) > MAXSTR - strlen(".rogue.save") - 1)
-		*home = 0;
+    strncpy(home, md_gethomedir(), MAXSTR);
+    home[MAXSTR] = '\0';    /* paranoia */
+    if (strlen(home) > MAXSTR - strlen(".rogue.save") - 1)
+	home[0] = '\0';
 
     strcpy(file_name, home);
     strcat(file_name, ".rogue.save");
@@ -59,13 +59,15 @@ main(int argc, char **argv)
     if (env == NULL || whoami[0] == '\0')
         strucpy(whoami, md_getusername(), strlen(md_getusername()));
     lowtime = time(NULL);
-    if (getenv("SEED") != NULL)
-    {
-	dnum = atoi(getenv("SEED"));
-	noscore = 1;
+    dnum = lowtime + md_getpid();
+#ifdef MASTER
+    if (wizard) {
+	noscore = TRUE;
+	if (getenv("SEED") != NULL) {
+	    dnum = atoi(getenv("SEED"));
+	}
     }
-    else
-	dnum = (unsigned int) lowtime + md_getpid();
+#endif
     seed = dnum;
 
     open_score();
@@ -142,7 +144,9 @@ main(int argc, char **argv)
     idlok(stdscr, TRUE);
     idlok(hw, TRUE);
 #ifdef MASTER
-    noscore = wizard;
+    if (wizard) {
+	noscore = TRUE;
+    }
 #endif
     new_level();			/* Draw current level */
     /*

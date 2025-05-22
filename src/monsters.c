@@ -125,7 +125,8 @@ wanderer(void)
     tp = new_item();
     do
     {
-        /* Avoid endless loop when all rooms are filled with monsters
+        /*
+	 * Avoid endless loop when all rooms are filled with monsters
 	 * and the player room is not accessible to the monsters.
 	 */
 	if (cnt++ >= 500)
@@ -164,12 +165,12 @@ wake_monster(int y, int x)
 	int ch;
     const char *mname;
 
-	if ((tp = moat(y, x)) == NULL) {
+    if ((tp = moat(y, x)) == NULL) {
 #ifdef MASTER
-		msg("can't find monster in wake_monster");
+	msg("can't find monster in wake_monster");
 #endif
-		return NULL;
-	}
+	return NULL;
+    }
 
     ch = tp->t_type;
     /*

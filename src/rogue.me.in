@@ -246,7 +246,7 @@ Watch out, they can be nasty and vicious.
 .pp
 Commands are given to rogue by typing one or two characters.
 Most commands can be preceded by a count to repeat them
-(e.g. typing 
+(e.g. typing
 .Cs 10s
 will do ten searches).
 Commands for which counts make no sense
@@ -287,7 +287,7 @@ you will continue to move left until you run into something.
 This works for all movement commands
 (e.g.
 .Cs L
-means run in direction 
+means run in direction
 .Cs l )
 If you use the \*(lqcontrol\*(rq
 .Cs h ,
