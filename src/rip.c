@@ -18,7 +18,7 @@
 #include <sys/types.h>
 #include <ctype.h>
 #include <fcntl.h>
-#include <curses.h>
+#include <ncurses.h>
 #include "rogue.h"
 #include "score.h"
 

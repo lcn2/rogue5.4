@@ -12,7 +12,7 @@
 #include <string.h>
 #include <signal.h>
 #include <time.h>
-#include <curses.h>
+#include <ncurses.h>
 #include "rogue.h"
 
 /*

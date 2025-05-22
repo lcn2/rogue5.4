@@ -11,7 +11,7 @@
  * See the file LICENSE.TXT for full copyright and licensing information.
  */
 
-#include <curses.h>
+#include <ncurses.h>
 #include <string.h>
 #include "rogue.h"
 

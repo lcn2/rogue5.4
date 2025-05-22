@@ -11,7 +11,7 @@
  */
 
 #include <ctype.h>
-#include <curses.h>
+#include <ncurses.h>
 #include "rogue.h"
 
 typedef struct spot {		/* position matrix for maze positions */
