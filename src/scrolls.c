@@ -230,7 +230,7 @@ def:
 		}
 	when S_FDET:
 	    /*
-	     * Potion of gold detection
+	     * Scroll of gold detection
 	     */
 	    ch = FALSE;
 	    wclear(hw);

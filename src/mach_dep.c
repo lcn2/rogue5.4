@@ -314,7 +314,7 @@ checkout(int sig)
 /*
  * chmsg:
  *	checkout()'s version of msg.  If we are in the middle of a
- *	shell, do a printf instead of a msg to a the refresh.
+ *	shell, do a printf instead of a msg to avoid the refresh.
  */
 /* VARARGS1 */
 
@@ -400,7 +400,9 @@ over:
 	printf("The score file is very busy.  Do you want to wait longer\n");
 	printf("for it to become free so your score can get posted?\n");
 	printf("If so, type \"y\"\n");
-	(void) fgets(prbuf, MAXSTR, stdin);
+	/* check return value of fgets() */
+	if (fgets(prbuf, MAXSTR, stdin) == NULL)
+	    return FALSE;
 	if (prbuf[0] == 'y')
 	    for (;;)
 	    {

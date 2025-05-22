@@ -186,9 +186,9 @@ do_zap(void)
 		&& !save_throw(VS_MAGIC, tp))
 		    hit_monster(unc(bolt.o_pos), &bolt);
 	    else if (terse)
-		msg("missle vanishes");
+		msg("missile vanishes");
 	    else
-		msg("the missle vanishes with a puff of smoke");
+		msg("the missile vanishes with a puff of smoke");
 	when WS_HASTE_M:
 	case WS_SLOW_M:
 	    y = hero.y;

@@ -314,7 +314,7 @@ inventory(const THING *list, int type)
 void
 pick_up(int ch)
 {
-    THING *obj;
+    THING *obj, *tmpl;
 
     if (on(player, ISLEVIT))
 	return;
@@ -329,6 +329,17 @@ pick_up(int ch)
 		if (obj == NULL)
 		    return;
 		money(obj->o_goldval);
+		/*
+		 * fix the segfault in chase.c - the bug was actually in
+		 * pack.c in function pick_up.  monsters chasing gold were not being
+		 * adjusted to chase the hero if the hero picked up the gold.
+		 */
+		proom->r_goldval = 0;
+		for (tmpl = mlist; tmpl != NULL; tmpl = next(tmpl)) {
+		    if (tmpl->t_dest == &obj->o_pos) {
+			tmpl->t_dest = &hero;
+		    }
+		}
 		detach(lvl_obj, obj);
 		update_mdest(obj);
 		discard(obj);

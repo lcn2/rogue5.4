@@ -91,7 +91,10 @@ new_level(void)
     for (tp = mlist; tp != NULL; tp = next(tp))
 	tp->t_room = roomin(&tp->t_pos);
 
-    find_floor(NULL, &hero, FALSE, TRUE);
+    /* make sure the hero doesn't start a new level on top of an item */
+    do {
+	find_floor(NULL, &hero, FALSE, TRUE);
+    } while ((chat(hero.y, hero.x) != PASSAGE) && (chat(hero.y, hero.x) != FLOOR));
     enter_room(&hero);
     mvaddch(hero.y, hero.x, PLAYER);
     if (on(player, SEEMONST))
