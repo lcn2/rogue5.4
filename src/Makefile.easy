@@ -87,6 +87,8 @@ CHMOD= chmod
 
 CP= cp
 
+CTAGS= ctags
+
 DESTDIR=
 
 prefix= /usr/local
@@ -145,6 +147,9 @@ $(PROGRAM): $(HDRS) $(OBJS) main.$(O)
 config.h: config.h.easy
 	$(RM) config.h
 	$(CP) -f config.h.easy config.h
+
+tags: ${CFILES} ${MISC_C}
+	${CTAGS} -w ${CFILES} ${MISC_C}
 
 clean:
 	$(RM) $(OBJS1)

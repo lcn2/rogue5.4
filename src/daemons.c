@@ -18,7 +18,7 @@
  *	A healing daemon that restors hit points after rest
  */
 void
-doctor(void)
+doctor(int d_arg __attribute__ ((__unused__)))
 {
     int lv, ohp;
 
@@ -50,7 +50,7 @@ doctor(void)
  *	Called when it is time to start rolling for wandering monsters
  */
 void
-swander(void)
+swander(int d_arg __attribute__ ((__unused__)))
 {
     start_daemon(rollwand, 0, BEFORE);
 }
@@ -61,7 +61,7 @@ swander(void)
  */
 
 void
-rollwand(void)
+rollwand(int d_arg __attribute__ ((__unused__)))
 {
 
     if (++between >= 4)
@@ -81,7 +81,7 @@ rollwand(void)
  *	Release the poor player from his confusion
  */
 void
-unconfuse(void)
+unconfuse(int d_arg __attribute__ ((__unused__)))
 {
     player.t_flags &= ~ISHUH;
     msg("you feel less %s now", choose_str("trippy", "confused"));
@@ -92,7 +92,7 @@ unconfuse(void)
  *	Turn off the ability to see invisible
  */
 void
-unsee(void)
+unsee(int d_arg __attribute__ ((__unused__)))
 {
     THING *th;
 
@@ -107,7 +107,7 @@ unsee(void)
  *	He gets his sight back
  */
 void
-sight(void)
+sight(int d_arg __attribute__ ((__unused__)))
 {
     if (on(player, ISBLIND))
     {
@@ -125,7 +125,7 @@ sight(void)
  *	End the hasting
  */
 void
-nohaste(void)
+nohaste(int d_arg __attribute__ ((__unused__)))
 {
     player.t_flags &= ~ISHASTE;
     msg("you feel yourself slowing down");
@@ -136,7 +136,7 @@ nohaste(void)
  *	Digest the hero's food
  */
 void
-stomach(void)
+stomach(int d_arg __attribute__ ((__unused__)))
 {
     int oldfood;
     int orig_hungry = hungry_state;

@@ -110,6 +110,11 @@
 
 #define NOOP(x) (x += 0)
 
+#if defined(__APPLE__)
+#undef HAVE_SETRESGID
+#undef HAVE_SETRESUID
+#endif
+
 void
 md_init(void)
 {

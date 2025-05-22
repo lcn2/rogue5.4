@@ -103,7 +103,7 @@ quaff(void)
 	    pot_info[P_HEALING].oi_know = TRUE;
 	    if ((pstats.s_hpt += roll(pstats.s_lvl, 4)) > max_hp)
 		pstats.s_hpt = ++max_hp;
-	    sight();
+	    sight(0);
 	    msg("you begin to feel better");
 	when P_STRENGTH:
 	    pot_info[P_STRENGTH].oi_know = TRUE;
@@ -169,7 +169,7 @@ quaff(void)
 	    do_pot(P_SEEINVIS, FALSE);
 	    if (!show)
 		invis_on();
-	    sight();
+	    sight(0);
 	when P_RAISE:
 	    pot_info[P_RAISE].oi_know = TRUE;
 	    msg("you suddenly feel much more skillful");
@@ -182,7 +182,7 @@ quaff(void)
 		    ++max_hp;
 		pstats.s_hpt = ++max_hp;
 	    }
-	    sight();
+	    sight(0);
 	    come_down();
 	    msg("you begin to feel much better");
 	when P_HASTE:

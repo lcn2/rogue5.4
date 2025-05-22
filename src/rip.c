@@ -108,11 +108,13 @@ score(int amount, int flags, int monst)
     signal(SIGINT, SIG_DFL);
 
 #ifdef MASTER
-    if (wizard)
-	if (strcmp(prbuf, "names") == 0)
+    if (wizard) {
+	if (strcmp(prbuf, "names") == 0) {
 	    prflags = 1;
-	else if (strcmp(prbuf, "edit") == 0)
+	} else if (strcmp(prbuf, "edit") == 0) {
 	    prflags = 2;
+	}
+    }
 #endif
     rd_score(top_ten);
     /*

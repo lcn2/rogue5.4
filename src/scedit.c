@@ -249,7 +249,7 @@ pr_score(SCORE *scp, int num)
 {
 	if (scp->sc_score) {
 		if (num)
-			printf("%d", scp - top_ten + 1);
+			printf("%ld", scp - top_ten + 1);
 		printf("\t%d\t%s: %s on level %d", scp->sc_score, scp->sc_name,
 		    reason[scp->sc_flags], scp->sc_level);
 		if (scp->sc_flags == 0)

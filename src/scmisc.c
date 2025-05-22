@@ -31,7 +31,7 @@ typedef struct {
 	char	*m_name;
 } MONST;
 
-char	*s_vowelstr();
+char	*s_vowelstr(char *str);
 
 char *lockfile = "/tmp/.fredlock";
 
