@@ -175,7 +175,7 @@ do_comm(void)
 
 	  default:
 def:
-		printf("Unkown command: \"%s\"\n", buf);
+		printf("Unknown command: \"%s\"\n", buf);
 	}
 	return TRUE;
 }
@@ -254,7 +254,7 @@ pr_score(SCORE *scp, int num)
 		    reason[scp->sc_flags], scp->sc_level);
 		if (scp->sc_flags == 0)
 		    printf(" by %s", s_killname(scp->sc_monster, TRUE));
-		
+
         printf(" (%s)", md_getrealname(scp->sc_uid));
 		putchar('\n');
 	}

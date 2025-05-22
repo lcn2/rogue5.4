@@ -28,9 +28,9 @@
 struct optstruct {
     char	*o_name;	/* option name */
     char	*o_prompt;	/* prompt for interactive entry */
-    void 	*o_opt;		/* pointer to thing to set */
+    void	*o_opt;		/* pointer to thing to set */
 				/* function to print value */
-    void 	(*o_putfunc)(void *opt);
+    void	(*o_putfunc)(void *opt);
 				/* function to get value interactively */
     int		(*o_getfunc)(void *opt, WINDOW *win);
 };
@@ -177,7 +177,7 @@ get_bool(void *vp, WINDOW *win)
     op_bad = TRUE;
     getyx(win, oy, ox);
     waddstr(win, *bp ? "True" : "False");
-    while (op_bad)	
+    while (op_bad)
     {
 	wmove(win, oy, ox);
 	wrefresh(win);
@@ -331,7 +331,7 @@ get_inv_t(void *vp, WINDOW *win)
     op_bad = TRUE;
     getyx(win, oy, ox);
     waddstr(win, inv_t_name[*ip]);
-    while (op_bad)	
+    while (op_bad)
     {
 	wmove(win, oy, ox);
 	wrefresh(win);
@@ -368,7 +368,7 @@ get_inv_t(void *vp, WINDOW *win)
     mvwprintw(win, oy, ox, "%s\n", inv_t_name[*ip]);
     return NORM;
 }
-	
+
 
 #ifdef MASTER
 /*
@@ -391,7 +391,7 @@ get_num(void *vp, WINDOW *win)
 /*
  * parse_opts:
  *	Parse options from string, usually taken from the environment.
- *	The string is a series of comma seperated values, with booleans
+ *	The string is a series of comma separated values, with booleans
  *	being stated as "name" (true) or "noname" (false), and strings
  *	being "name=....", with the string being defined up to a comma
  *	or the end of the entire option string.

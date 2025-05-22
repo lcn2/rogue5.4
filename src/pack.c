@@ -353,7 +353,7 @@ pick_up(int ch)
 	    case POTION:
 	    case FOOD:
 	    case WEAPON:
-	    case SCROLL:	
+	    case SCROLL:
 	    case AMULET:
 	    case RING:
 	    case STICK:

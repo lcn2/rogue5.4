@@ -195,7 +195,7 @@
 #define LSTAT_FOLLOWS_SLASHED_SYMLINK 1
 
 /* Define to include wizard mode */
-#define MASTER 
+#define MASTER
 
 /* Define if maxusers feature should be enabled */
 /* #undef MAXLOAD */

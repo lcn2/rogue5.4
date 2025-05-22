@@ -275,7 +275,7 @@ attack(THING *mp)
 		when 'L':
 		{
 		    /*
-		     * Leperachaun steals some gold
+		     * Leprechaun steals some gold
 		     */
 		    int lastpurse;
 
@@ -491,7 +491,7 @@ prname(const char *mname, int upper)
 
     *tbuf = '\0';
     if (mname == 0)
-	strcpy(tbuf, "you"); 
+	strcpy(tbuf, "you");
     else
 	strcpy(tbuf, mname);
     if (upper)
@@ -519,7 +519,7 @@ thunk(const THING *weap, const char *mname, int noend)
 
 /*
  * hit:
- *	Print a message to indicate a succesful hit
+ *	Print a message to indicate a successful hit
  */
 
 void

@@ -80,7 +80,7 @@ const char *tr_name[] = {			/* Names of the traps */
 	"a trapdoor",
 	"an arrow trap",
 	"a sleeping gas trap",
-	"a beartrap",
+	"a bear trap",
 	"a teleport trap",
 	"a poison dart trap",
 	"a rust trap",
@@ -283,7 +283,7 @@ struct obj_info scr_info[MAXSCROLLS] = {
     { "identify potion",		10,  80, NULL, FALSE },
     { "identify scroll",		10,  80, NULL, FALSE },
     { "identify weapon",		 6,  80, NULL, FALSE },
-    { "identify armor",		 	 7, 100, NULL, FALSE },
+    { "identify armor",			 7, 100, NULL, FALSE },
     { "identify ring, wand or staff",	10, 115, NULL, FALSE },
     { "scare monster",			 3, 200, NULL, FALSE },
     { "food detection",			 2,  60, NULL, FALSE },
@@ -400,7 +400,7 @@ int between;
 
 struct delayed_action d_list[MAXDAEMONS] = {
     _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_,
-    _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, 
+    _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_,
 };
 
 int group = 2;

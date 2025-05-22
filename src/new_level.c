@@ -227,7 +227,7 @@ treas_room(void)
 	{
 	    tp = new_item();
 	    new_monster(tp, randmonster(FALSE), &mp);
-	    tp->t_flags |= ISMEAN;	/* no sloughers in THIS room */
+	    tp->t_flags |= ISMEAN;	/* no slouchers in THIS room */
 	    give_pack(tp);
 	}
     }

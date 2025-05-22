@@ -109,7 +109,7 @@ gotfile:
 /*
  * auto_save:
  *	Automatically save a file.  This is used if a HUP signal is
- *	recieved
+ *	received
  */
 
 void
@@ -134,7 +134,7 @@ void
 save_file(FILE *savef)
 {
     char buf[80];
-    mvcur(0, COLS - 1, LINES - 1, 0); 
+    mvcur(0, COLS - 1, LINES - 1, 0);
     putchar('\n');
     endwin();
     resetltchars();
@@ -377,7 +377,7 @@ rd_score(SCORE *top_ten)
     if (scoreboard == NULL)
 	return;
 
-    rewind(scoreboard); 
+    rewind(scoreboard);
 
     for(i = 0; i < numscores; i++)
     {
@@ -390,7 +390,7 @@ rd_score(SCORE *top_ten)
             &top_ten[i].sc_level, &top_ten[i].sc_time);
     }
 
-    rewind(scoreboard); 
+    rewind(scoreboard);
 }
 
 /*
@@ -419,5 +419,5 @@ wr_score(SCORE *top_ten)
           encwrite(scoreline,100,scoreboard);
     }
 
-    rewind(scoreboard); 
+    rewind(scoreboard);
 }

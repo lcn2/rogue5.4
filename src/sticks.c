@@ -70,7 +70,7 @@ do_zap(void)
     {
 	case WS_LIGHT:
 	    /*
-	     * Reddy Kilowat wand.  Light up the room
+	     * Reddy Kilowatt wand.  Light up the room
 	     */
 	    ws_info[WS_LIGHT].oi_know = TRUE;
 	    if (proom->r_flags & ISGONE)

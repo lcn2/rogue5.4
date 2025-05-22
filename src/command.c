@@ -157,13 +157,13 @@ over:
 		    THING *obj = NULL;
 		    int found = 0;
 		    for (obj = lvl_obj; obj != NULL; obj = next(obj))
-    			{
+			{
 			    if (obj->o_pos.y == hero.y && obj->o_pos.x == hero.x)
 			    {
 				found=1;
 				break;
 			    }
-    			}
+			}
 
 		    if (found) {
 			if (levit_check())
@@ -295,7 +295,7 @@ over:
 		when 'v':
 		    after = FALSE;
 		    msg("version %s. (mctesq was here)", release);
-		when 'S': 
+		when 'S':
 		    after = FALSE;
 		    save_game();
 		when '.': ;			/* Rest command */
@@ -329,7 +329,7 @@ over:
 		    else
 		    {
 			wizard = passwd();
-			if (wizard) 
+			if (wizard)
 			{
 			    noscore = TRUE;
 			    turn_see(FALSE);
@@ -487,7 +487,7 @@ search(void)
     probinc = (on(player, ISHALU) ? 3 : 0);
     probinc += (on(player, ISBLIND) ? 2 : 0);
     found = FALSE;
-    for (y = hero.y - 1; y <= ey; y++) 
+    for (y = hero.y - 1; y <= ey; y++)
 	for (x = hero.x - 1; x <= ex; x++)
 	{
 	    if (y == hero.y && x == hero.x)

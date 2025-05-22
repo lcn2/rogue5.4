@@ -452,7 +452,7 @@ des_setkey(const char *key)
 }
 
 static int
-do_des(unsigned int l_in, unsigned int r_in, unsigned int *l_out, 
+do_des(unsigned int l_in, unsigned int r_in, unsigned int *l_out,
        unsigned int *r_out, int count)
 {
 	/*

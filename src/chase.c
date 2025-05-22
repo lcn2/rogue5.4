@@ -337,7 +337,7 @@ chase(THING *tp, const coord *ee)
 	ch_ret = rndmove(tp);
 	curdist = dist_cp(&ch_ret, ee);
 	/*
-	 * Small chance that it will become un-confused 
+	 * Small chance that it will become un-confused
 	 */
 	if (rnd(20) == 0)
 	    tp->t_flags &= ~ISHUH;

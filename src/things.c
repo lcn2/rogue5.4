@@ -504,12 +504,12 @@ add_line(const char *fmt, const char *arg)
 		refresh();
 		tw = newwin(line_cnt + 1, maxlen + 2, 0, COLS - maxlen - 3);
 		sw = subwin(tw, line_cnt + 1, maxlen + 1, 0, COLS - maxlen - 2);
-                for (y = 0; y <= line_cnt; y++) 
-                { 
-                    wmove(sw, y, 0); 
-                    for (x = 0; x <= maxlen; x++) 
-                        waddch(sw, mvwinch(hw, y, x)); 
-                } 
+                for (y = 0; y <= line_cnt; y++)
+                {
+                    wmove(sw, y, 0);
+                    for (x = 0; x <= maxlen; x++)
+                        waddch(sw, mvwinch(hw, y, x));
+                }
 		wmove(tw, line_cnt, 1);
 		waddstr(tw, prompt);
 		/*

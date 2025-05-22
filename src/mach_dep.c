@@ -102,28 +102,28 @@ open_score(void)
     allscore = FALSE;
 #endif /* ALLSCORES */
 
-     /* 
-      * We drop setgid privileges after opening the score file, so subsequent 
-      * open()'s will fail.  Just reuse the earlier filehandle. 
+     /*
+      * We drop setgid privileges after opening the score file, so subsequent
+      * open()'s will fail.  Just reuse the earlier file handle.
       */
 
-    if (scoreboard != NULL) { 
-        rewind(scoreboard); 
-        return; 
-    } 
+    if (scoreboard != NULL) {
+        rewind(scoreboard);
+        return;
+    }
 
     scoreboard = fopen(scorefile, "r+");
 
     if ((scoreboard == NULL) && (errno == ENOENT))
     {
-    	scoreboard = fopen(scorefile, "w+");
+	scoreboard = fopen(scorefile, "w+");
         md_chmod(scorefile,0664);
     }
 
-    if (scoreboard == NULL) { 
-         fprintf(stderr, "Could not open %s for writing: %s\n", scorefile, strerror(errno)); 
-         fflush(stderr); 
-    } 
+    if (scoreboard == NULL) {
+         fprintf(stderr, "Could not open %s for writing: %s\n", scorefile, strerror(errno));
+         fflush(stderr);
+    }
 #else
     scoreboard = NULL;
 #endif
@@ -167,29 +167,29 @@ setup(void)
     getltchars();			/* get the local tty chars */
 }
 
-/* 
- * resetltchars: 
- *      Reset the local tty chars to original values. 
- */ 
-void 
-resetltchars(void) 
-{ 
+/*
+ * resetltchars:
+ *      Reset the local tty chars to original values.
+ */
+void
+resetltchars(void)
+{
     if (got_ltc) {
         md_setdsuspchar(orig_dsusp);
-    } 
-} 
-  
-/* 
- * playltchars: 
- *      Set local tty chars to the values we use when playing. 
- */ 
-void 
-playltchars(void) 
-{ 
-    if (got_ltc) { 
+    }
+}
+
+/*
+ * playltchars:
+ *      Set local tty chars to the values we use when playing.
+ */
+void
+playltchars(void)
+{
+    if (got_ltc) {
         md_setdsuspchar( md_suspchar() );
-    } 
-} 
+    }
+}
 
 /*
  * start_score:
@@ -204,25 +204,25 @@ start_score(void)
 #endif
 }
 
-/* 	 	 
- * is_symlink: 	 	 
- *      See if the file has a symbolic link 	 	 
-  */ 	 	 
-int	 	 
-is_symlink(char *sp) 	 	 
-{ 	 	 
-#ifdef S_IFLNK 	 	 
-    struct stat sbuf2; 	 	 
- 	 	 
-    if (lstat(sp, &sbuf2) < 0) 	 	 
-        return FALSE; 	 	 
-    else 	 	 
-        return ((sbuf2.st_mode & S_IFMT) != S_IFREG); 	 	 
+/*
+ * is_symlink:
+ *      See if the file has a symbolic link
+  */
+int
+is_symlink(char *sp)
+{
+#ifdef S_IFLNK
+    struct stat sbuf2;
+
+    if (lstat(sp, &sbuf2) < 0)
+        return FALSE;
+    else
+        return ((sbuf2.st_mode & S_IFMT) != S_IFREG);
 #else
 	NOOP(sp);
-    return FALSE; 	 	 
-#endif 
-} 
+    return FALSE;
+#endif
+}
 
 #if defined(MAXLOAD) || defined(MAXUSERS)
 /*
@@ -291,7 +291,7 @@ checkout(int sig)
 	if (author())
 	{
 	    num_checks = 1;
-	    chmsg("The load is rather high, O exaulted one");
+	    chmsg("The load is rather high, O exulted one");
 	}
 	else if (num_checks++ == 3)
 	    fatal("Sorry.  You took too long.  You are dead\n");

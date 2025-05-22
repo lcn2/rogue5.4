@@ -82,7 +82,7 @@ look(int wakeup)
 	    if (pch != DOOR && ch != DOOR)
 		if ((pfl & F_PASS) != (*fp & F_PASS))
 		    continue;
-	    if (((*fp & F_PASS) || ch == DOOR) && 
+	    if (((*fp & F_PASS) || ch == DOOR) &&
 		 ((pfl & F_PASS) || pch == DOOR))
 	    {
 		if (hero.x != x && hero.y != y &&
@@ -341,7 +341,7 @@ check_level(void)
 
 /*
  * chg_str:
- *	used to modify the playes strength.  It keeps track of the
+ *	used to modify the player's strength.  It keeps track of the
  *	highest it has been, just in case
  */
 
@@ -434,7 +434,7 @@ vowelstr(const char *str)
     }
 }
 
-/* 
+/*
  * is_current:
  *	See if the object is one of the currently used items
  */
@@ -456,7 +456,7 @@ is_current(const THING *obj)
 
 /*
  * get_dir:
- *      Set up the direction co_ordinate for use in varios "prefix"
+ *      Set up the direction co_ordinate for use in various "prefix"
  *	commands
  */
 int

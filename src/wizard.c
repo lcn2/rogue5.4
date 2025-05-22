@@ -19,7 +19,7 @@
 
 /*
  * whatis:
- *	What a certin object is
+ *	What a certain object is
  */
 
 void

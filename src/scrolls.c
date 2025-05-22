@@ -251,7 +251,7 @@ def:
 	when S_TELEP:
 	    /*
 	     * Scroll of teleportation:
-	     * Make him dissapear and reappear
+	     * Make him disappear and reappear
 	     */
 	    {
 		cur_room = proom;

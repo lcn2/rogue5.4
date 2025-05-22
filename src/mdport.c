@@ -37,9 +37,9 @@
 #include <Lmcons.h>
 #include <io.h>
 #include <conio.h>
-#pragma warning( disable: 4201 ) 
+#pragma warning( disable: 4201 )
 #include <shlobj.h>
-#pragma warning( default: 4201 ) 
+#pragma warning( default: 4201 )
 #include <Shlwapi.h>
 #undef MOUSE_MOVED
 #endif
@@ -296,13 +296,13 @@ void
 md_raw_standout(void)
 {
 #ifdef _WIN32
-    CONSOLE_SCREEN_BUFFER_INFO csbiInfo; 
+    CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
     HANDLE hStdout;
     WORD fgattr,bgattr;
 
     if (md_standout_mode == 0)
     {
-        hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
+        hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
         GetConsoleScreenBufferInfo(hStdout, &csbiInfo);
         fgattr = (csbiInfo.wAttributes & 0xF);
         bgattr = (csbiInfo.wAttributes & 0xF0);
@@ -319,13 +319,13 @@ void
 md_raw_standend(void)
 {
 #ifdef _WIN32
-    CONSOLE_SCREEN_BUFFER_INFO csbiInfo; 
+    CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
     HANDLE hStdout;
     WORD fgattr,bgattr;
 
     if (md_standout_mode == 1)
     {
-        hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
+        hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
         GetConsoleScreenBufferInfo(hStdout, &csbiInfo);
         fgattr = (csbiInfo.wAttributes & 0xF);
         bgattr = (csbiInfo.wAttributes & 0xF0);
@@ -380,7 +380,7 @@ md_normaluser(void)
 
 #if defined(HAVE_SETRESGID)
     if (setresgid(-1, realgid, realgid) != 0) {
-#elif defined (HAVE_SETREGID) 
+#elif defined (HAVE_SETREGID)
     if (setregid(realgid, realgid) != 0) {
 #elif defined (HAVE_SETGID)
 	if (setgid(realgid) != 0) {
@@ -589,20 +589,20 @@ md_shellescape(void)
     }
     else /* Application */
     {
-    	myend = signal(SIGINT, SIG_IGN);
+	myend = signal(SIGINT, SIG_IGN);
 #ifdef SIGQUIT
         myquit = signal(SIGQUIT, SIG_IGN);
-#endif  
+#endif
         while (wait(&ret_status) != pid)
             continue;
-	    
+
         signal(SIGINT, myquit);
 #ifdef SIGQUIT
         signal(SIGQUIT, myend);
 #endif
     }
     return(ret_status);
-#elif defined(HAVE__SPAWNL) 
+#elif defined(HAVE__SPAWNL)
     return((int)_spawnl(_P_WAIT,md_getshell(),"shell",NULL,0));
 #elif defined(HAVE_SPAWNL)
     return ( spawnl(P_WAIT,md_getshell(),"shell",NULL,0) );
@@ -811,18 +811,18 @@ md_setsuspchar(int c)
     Cursor/Keypad Support
 
     Sadly Cursor/Keypad support is less straightforward than it should be.
-    
-    The various terminal emulators/consoles choose to differentiate the 
-    cursor and keypad keys (with modifiers) in different ways (if at all!). 
+
+    The various terminal emulators/consoles choose to differentiate the
+    cursor and keypad keys (with modifiers) in different ways (if at all!).
     Furthermore they use different code set sequences for each key only
     a subset of which the various curses libraries recognize. Partly due
-    to incomplete termcap/terminfo entries and partly due to inherent 
+    to incomplete termcap/terminfo entries and partly due to inherent
     limitations of those terminal capability databases.
 
     I give curses first crack at decoding the sequences. If it fails to decode
     it we check for common ESC-prefixed sequences.
 
-    All cursor/keypad results are translated into standard rogue movement 
+    All cursor/keypad results are translated into standard rogue movement
     commands.
 
     Unmodified keys are translated to walk commands: hjklyubn
@@ -967,10 +967,10 @@ md_setsuspchar(int c)
     261,	400,		444,	    492		    /# Right	    #/
     259,	547,		480,	    490		    /# Up	    #/
     258,	548,		481,	    491		    /# Down	    #/
-    262,	388,		447,	    524	    	    /# Home	    #/
-    339,	396,		445,	    526	    	    /# Page Up	    #/
+    262,	388,		447,	    524		    /# Home	    #/
+    339,	396,		445,	    526		    /# Page Up	    #/
     338,	394,		446,	    520		    /# Page Down    #/
-    358,	384,		448,	    518	 	    /# End	    #/
+    358,	384,		448,	    518		    /# End	    #/
     452,	52('4'),	511,	    521		    /# Keypad Left  #/
     454,	54('6'),	513,	    523		    /# Keypad Right #/
     450,	56('8'),	515,	    525		    /# Keypad Up    #/
@@ -1134,7 +1134,7 @@ md_readchar(WINDOW *win)
 
     for(;;)
     {
-        if (mode == M_NORMAL && uindex >= 0) 
+        if (mode == M_NORMAL && uindex >= 0)
 	{
 	    ch = reread();
 	    break;
@@ -1171,7 +1171,7 @@ md_readchar(WINDOW *win)
 		ch = CTRL( toupper(ch) );
 	    else
 	    {
-	    	mode = M_NORMAL;
+		mode = M_NORMAL;
 		unread(ch);
 		continue;
 	    }
@@ -1179,7 +1179,7 @@ md_readchar(WINDOW *win)
 	    break;
 	}
 
-	if (mode == M_ESC) 
+	if (mode == M_ESC)
 	{
 	    if (ch == 27)
 	    {
@@ -1318,8 +1318,8 @@ md_readchar(WINDOW *win)
 	    case KEY_SEND    : ch = CTRL('B'); break;
 	    case KEY_SNEXT   : ch = CTRL('N'); break;
 #endif
-	    case 0x146       : ch = CTRL('K'); break; 	/* Shift-Up	*/
-	    case 0x145       : ch = CTRL('J'); break; 	/* Shift-Down	*/
+	    case 0x146       : ch = CTRL('K'); break;	/* Shift-Up	*/
+	    case 0x145       : ch = CTRL('J'); break;	/* Shift-Down	*/
 
 
 #ifdef CTL_RIGHT

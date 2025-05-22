@@ -1,5 +1,5 @@
 /*
- * global variable initializaton
+ * global variable initialization
  *
  * @(#)init.c	4.31 (Berkeley) 02/05/99
  *
@@ -74,7 +74,7 @@ init_player(void)
 }
 
 /*
- * Contains defintions and functions for dealing with things like
+ * Contains definitions and functions for dealing with things like
  * potions and scrolls
  */
 
@@ -150,12 +150,12 @@ const STONE stones[] = {
     { "peridot",	 63},
     { "ruby",		350},
     { "sapphire",	285},
-    { "stibotantalite",	200},
+    { "stibiotantalite",200},
     { "tiger eye",	 50},
     { "topaz",		 60},
     { "turquoise",	 70},
     { "taaffeite",	300},
-    { "zircon",	 	 80},
+    { "zircon",		 80},
 };
 
 #define NSTONES (sizeof stones / sizeof (STONE))
@@ -168,7 +168,7 @@ const char *wood[] = {
     "birch",
     "cedar",
     "cherry",
-    "cinnibar",
+    "cinnabar",
     "cypress",
     "dogwood",
     "driftwood",
@@ -440,7 +440,7 @@ badcheck(const char *name, const struct obj_info *info, int bound)
 
 /*
  * pick_color:
- *	If he is halucinating, pick a random color name and return it,
+ *	If he is hallucinating, pick a random color name and return it,
  *	otherwise return the given color.
  */
 const char *

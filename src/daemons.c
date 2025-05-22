@@ -165,7 +165,7 @@ stomach(int d_arg __attribute__ ((__unused__)))
 	if (food_left < MORETIME && oldfood >= MORETIME)
 	{
 	    hungry_state = 2;
-	    msg(choose_str("the munchies are interfering with your motor capabilites",
+	    msg(choose_str("the munchies are interfering with your motor capabilities",
 			   "you are starting to feel weak"));
 	}
 	else if (food_left < 2 * MORETIME && oldfood >= 2 * MORETIME)
@@ -178,12 +178,12 @@ stomach(int d_arg __attribute__ ((__unused__)))
 			       "you are starting to get hungry"));
 	}
     }
-    if (hungry_state != orig_hungry) { 
-        player.t_flags &= ~ISRUN; 
-        running = FALSE; 
-        to_death = FALSE; 
-        count = 0; 
-    } 
+    if (hungry_state != orig_hungry) {
+        player.t_flags &= ~ISRUN;
+        running = FALSE;
+        to_death = FALSE;
+        count = 0;
+    }
 }
 
 /*

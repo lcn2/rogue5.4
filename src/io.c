@@ -120,7 +120,7 @@ doadd(const char *fmt, va_list args)
      */
     vsprintf(buf, fmt, args);
     if (strlen(buf) + newpos >= MAXMSG)
-        endmsg(); 
+        endmsg();
     strcat(msgbuf, buf);
     newpos = (int) strlen(msgbuf);
 }
@@ -232,7 +232,7 @@ status(void)
     s_pur = purse;
     s_hp = pstats.s_hpt;
     s_str = pstats.s_str;
-    s_exp = pstats.s_exp; 
+    s_exp = pstats.s_exp;
     s_hungry = hungry_state;
 
     if (stat_msg)
@@ -246,7 +246,7 @@ status(void)
     else
     {
 	move(STATLINE, 0);
-                
+
         printw("Level: %d  Gold: %-5d  Hp: %*d(%*d)  Str: %2d(%d)  Arm: %-2d  Exp: %d/%d  %s",
 	    level, purse, hpwidth, pstats.s_hpt, hpwidth, max_hp, pstats.s_str,
 	    max_stats.s_str, 10 - s_arm, pstats.s_lvl, pstats.s_exp,

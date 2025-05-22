@@ -12,7 +12,7 @@
 
 #include "extern.h"
 
-#undef lines 
+#undef lines
 
 #define NOOP(x) (x += 0)
 #define CCHAR(x) ( (x) & A_CHARTEXT )
@@ -74,7 +74,7 @@
 #define GOLDCALC	(rnd(50 + 10 * level) + 2)
 #define ISRING(h,r)	(cur_ring[h] != NULL && cur_ring[h]->o_which == r)
 #define ISWEARING(r)	(ISRING(LEFT, r) || ISRING(RIGHT, r))
-#define ISMULT(type) 	(type == POTION || type == SCROLL || type == FOOD)
+#define ISMULT(type)	(type == POTION || type == SCROLL || type == FOOD)
 #define INDEX(y,x)	(&places[((x) << 5) + (y)])
 #define chat(y,x)	(places[((x) << 5) + (y)].p_ch)
 #define flat(y,x)	(places[((x) << 5) + (y)].p_flags)
@@ -213,7 +213,7 @@
 #define P_SEEINVIS	4
 #define P_HEALING	5
 #define P_MFIND		6
-#define	P_TFIND 	7
+#define	P_TFIND		7
 #define	P_RAISE		8
 #define P_XHEAL		9
 #define P_HASTE		10
@@ -398,8 +398,8 @@ union thing {
 	char _o_hurldmg[8];		/* Damage if thrown */
 	int _o_count;			/* count for plural objects */
 	int _o_which;			/* Which object of a type it is */
-	int _o_hplus;			/* Plusses to hit */
-	int _o_dplus;			/* Plusses to damage */
+	int _o_hplus;			/* Pluses to hit */
+	int _o_dplus;			/* Pluses to damage */
 	int _o_arm;			/* Armor protection */
 	int _o_flags;			/* information about objects */
 	int _o_group;			/* group number for this object */
@@ -489,10 +489,10 @@ extern int after, again, allscore, door_stop, fight_flush,
 	   numscores, total, between, group, cNWOOD, cNMETAL, cNSTONES,
 	   cNCOLORS;
 
-extern char file_name[], home[], huh[], *Numname, outbuf[], 
+extern char file_name[], home[], huh[], *Numname, outbuf[],
 	    *ws_type[], *s_names[];
 
-extern const char *ws_made[], *inv_t_name[], *p_colors[], *r_stones[], 
+extern const char *ws_made[], *inv_t_name[], *p_colors[], *r_stones[],
                   *release, *tr_name[], *rainbow[], *wood[], *metal[],
 		  encstr[], statlist[], version[];
 
@@ -532,7 +532,7 @@ void	_attach(THING **list, THING *item);
 void	_detach(THING **list, THING *item);
 void	_free_list(THING **ptr);
 void	addmsg(const char *fmt, ...);
-int 	add_haste(int potion);
+int	add_haste(int potion);
 int	add_line(const char *fmt, const char *arg);
 void	add_pack(THING *obj, int silent);
 void	add_pass(void);
@@ -542,11 +542,11 @@ void	aggravate(void);
 int	attack(THING *mp);
 void    auto_save(int);
 void	badcheck(const char *name, const struct obj_info *info, int bound);
-int 	be_trapped(const coord *tc);
+int	be_trapped(const coord *tc);
 void	bounce(const THING *weap, const char *mname, int noend);
 void	call(void);
 void	call_it(struct obj_info *info);
-int 	cansee(int y, int x);
+int	cansee(int y, int x);
 int	center(const char *str);
 int	chase(THING *tp, const coord *ee);
 int	checkout(void);
@@ -561,7 +561,7 @@ void	create_obj(void);
 void	current(const THING *cur, const char *how, const char *where);
 void	d_level(void);
 void	death(int monst);
-int 	death_monst(void);
+int	death_monst(void);
 int	diag_ok(const coord *sp, const coord *ep);
 void	dig(int y, int x);
 void	discard(THING *item);
@@ -586,7 +586,7 @@ void	door_open(const struct room *rp);
 void	drain(void);
 void	draw_room(const struct room *rp);
 void	drop(void);
-int 	dropcheck(const THING *obj);
+int	dropcheck(const THING *obj);
 void	eat(void);
 int     encclearerr();
 int     encerror();
@@ -604,11 +604,11 @@ void	fall(THING *obj, int pr);
 int	fallpos(const coord *pos, coord *newpos);
 void	fatal(const char *s);
 void	fire_bolt(const coord *start, coord *dir, const char *name);
-int 	floor_at(void);
+int	floor_at(void);
 int	floor_ch(void);
 void	flush_type(void);
 const coord *find_dest(const THING *tp);
-int 	find_floor(const struct room *rp, coord *cp, int limit, int monst);
+int	find_floor(const struct room *rp, coord *cp, int limit, int monst);
 THING   *find_obj(int y, int x);
 int	fight(const coord *mp, const THING *weap, int thrown);
 void	fix_stick(THING *cur);
@@ -644,15 +644,15 @@ char	*inv_name(const THING *obj, int drop);
 int	inventory(const THING *list, int type);
 void	invis_on(void);
 int	is_current(const THING *obj);
-int 	is_magic(const THING *obj);
-int     is_symlink(const char *sp); 
+int	is_magic(const THING *obj);
+int     is_symlink(const char *sp);
 void	kill_daemon(void (*func)());
 void	killed(THING *tp, int pr);
 const char *killname(int monst, int doart);
 void	land(void);
 void    leave(int);
 THING   *leave_pack(THING *obj, int newobj, int all);
-int 	levit_check(void);
+int	levit_check(void);
 int	lock_sc(void);
 void	miss(const char *er, const char *ee, int noend);
 void	missile(int ydelta, int xdelta);
@@ -676,7 +676,7 @@ void	open_score(void);
 int	pack_char(void);
 int	pack_room(int from_floor, THING *obj);
 void	parse_opts(char *str);
-void 	passnum(void);
+void	passnum(void);
 int	passwd(void);
 const char *pick_color(const char *col);
 int	pick_one(const struct obj_info *info, int nitems);
@@ -695,7 +695,7 @@ void	putpass(const coord *cp);
 void	quaff(void);
 void    quit(int);
 void	raise_level(void);
-int 	randmonster(int wander);
+int	randmonster(int wander);
 void	read_scroll(void);
 int	readchar(void);
 void    relocate(THING *th, const coord *new_loc);
@@ -734,7 +734,7 @@ void	set_oldch(THING *tp, const coord *cp);
 void    set_order(int *order, int numthings);
 void	setup(void);
 void	shell(void);
-int 	show_floor(void);
+int	show_floor(void);
 void	show_map(void);
 void	show_win(const char *message);
 void	sight(int d_arg);
@@ -775,4 +775,3 @@ void	wear(void);
 void	whatis(int insist, int type);
 void	wield(void);
 int	wreadchar(WINDOW *win);
-
