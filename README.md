@@ -16,6 +16,15 @@ sudo make easy-install
 ```
 
 
+### Dependencies
+
+* Modern C compiler (perhaps c11 or better)
+* Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
+* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses)
+* [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system
+* [GNU Autoconf](https://www.gnu.org/software/autoconf/) (this is optional (see "Configure and autoconf" below) but useful)
+
+
 ## To play rogue
 
 After installing:
@@ -138,7 +147,7 @@ This repo improves on the above mentioned repo in several important aspects:
 * etc.
 
 
-## Avoiding configure and autoconf(1)
+## Configure and autoconf(1)
 
 Some people prefer to not bother with the **Autoconf** facility and running `configure`.
 
