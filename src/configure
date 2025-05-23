@@ -666,6 +666,7 @@ target_vendor
 target_os
 CC
 CFLAGS
+COPT
 LDFLAGS
 CPPFLAGS
 ac_ct_CC
@@ -692,6 +693,7 @@ host_alias
 target_alias
 CC
 CFLAGS
+COPT
 LDFLAGS
 LIBS
 CPPFLAGS
@@ -1202,7 +1204,7 @@ if test "$ac_init_help" = "long"; then
 
 Usage: $0 [OPTION]... [VAR=VALUE]...
 
-To assign environment variables (e.g., CC, CFLAGS...), specify them as
+To assign environment variables (e.g., CC, CFLAGS, COPT, ...), specify them as
 VAR=VALUE.  See below for descriptions of some of the useful variables.
 
 Defaults for the options are specified in brackets.
@@ -1303,6 +1305,7 @@ Optional Packages:
 Some influential environment variables:
   CC          C compiler command
   CFLAGS      C compiler flags
+  COPT	      C compiler optimizer (-Ox) and debug symbols (-gx)
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
               nonstandard directory <lib dir>
   LIBS        libraries to pass to the linker, e.g. -l<library>
@@ -1736,8 +1739,8 @@ fi
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS $COPT conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $COPT $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
@@ -1907,8 +1910,8 @@ test -n "$target_alias" &&
 # Checks for programs.
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS $COPT conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $COPT $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
@@ -2551,6 +2554,8 @@ echo "${ECHO_T}$ac_cv_c_compiler_gnu" >&6; }
 GCC=`test $ac_compiler_gnu = yes && echo yes`
 ac_test_CFLAGS=${CFLAGS+set}
 ac_save_CFLAGS=$CFLAGS
+ac_test_COPT=${COPT+set}
+ac_save_COPT=$COPT
 { echo "$as_me:$LINENO: checking whether $CC accepts -g" >&5
 echo $ECHO_N "checking whether $CC accepts -g... $ECHO_C" >&6; }
 if test "${ac_cv_prog_cc_g+set}" = set; then
@@ -2559,7 +2564,8 @@ else
   ac_save_c_werror_flag=$ac_c_werror_flag
    ac_c_werror_flag=yes
    ac_cv_prog_cc_g=no
-   CFLAGS="-g"
+   CFLAGS=""
+   COPT="-g"
    cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -2598,6 +2604,7 @@ else
 sed 's/^/| /' conftest.$ac_ext >&5
 
 	CFLAGS=""
+	COPT=""
       cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -2636,7 +2643,8 @@ else
 sed 's/^/| /' conftest.$ac_ext >&5
 
 	ac_c_werror_flag=$ac_save_c_werror_flag
-	 CFLAGS="-g"
+	 CFLAGS=""
+	 COPT="-g"
 	 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -2692,15 +2700,30 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS=$ac_save_CFLAGS
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-g -O2"
+    CFLAGS=""
   else
-    CFLAGS="-g"
+    CFLAGS=""
   fi
 else
   if test "$GCC" = yes; then
-    CFLAGS="-O2"
+    CFLAGS=""
   else
     CFLAGS=
+  fi
+fi
+if test "$ac_test_COPT" = set; then
+  COPT=$ac_save_COPT
+elif test $ac_cv_prog_cc_g = yes; then
+  if test "$GCC" = yes; then
+    COPT="-g -O2"
+  else
+    COPT="-g"
+  fi
+else
+  if test "$GCC" = yes; then
+    COPT="-O2"
+  else
+    COPT=
   fi
 fi
 { echo "$as_me:$LINENO: checking for $CC option to accept ISO C89" >&5
@@ -2820,8 +2843,8 @@ esac
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS $COPT conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $COPT $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
@@ -2831,8 +2854,8 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS $COPT conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $COPT $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 { echo "$as_me:$LINENO: checking how to run the C preprocessor" >&5
 echo $ECHO_N "checking how to run the C preprocessor... $ECHO_C" >&6; }
@@ -3055,8 +3078,8 @@ fi
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS $COPT conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $COPT $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
@@ -7063,6 +7086,7 @@ target_vendor!$target_vendor$ac_delim
 target_os!$target_os$ac_delim
 CC!$CC$ac_delim
 CFLAGS!$CFLAGS$ac_delim
+COPT!$COPT$ac_delim
 LDFLAGS!$LDFLAGS$ac_delim
 CPPFLAGS!$CPPFLAGS$ac_delim
 ac_ct_CC!$ac_ct_CC$ac_delim
@@ -7085,7 +7109,7 @@ TARGET!$TARGET$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 71; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 72; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

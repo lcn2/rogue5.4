@@ -42,6 +42,7 @@ CP= cp
 ID= id
 INSTALL= install
 RM= rm
+SED= sed
 SHELL= bash
 
 
@@ -103,7 +104,7 @@ src/config.h: src/config.h.easy
 
 configure:
 	${V} echo DEBUG =-= $@ start =-=
-	cd src; ./configure CFLAGS="-O3" \
+	cd src; ./configure CFLAGS="" COPT="-O3" \
 			--prefix=${PREFIX} --bindir=${DESTDIR} --docdir=${DESTDOC} \
 			--with-ncurses --enable-scorefile=.rogue.scr --enable-lockfile=.rogue.lck \
 			--enable-wizardmode
@@ -119,12 +120,12 @@ post-configure:
 	@-if [[ -f src/Makefile && -f src/config.h ]]; then \
 	    echo ${RM} -f src/Makefile.easy; \
 	    ${RM} -f src/Makefile.easy; \
-	    echo ${CP} -f src/Makefile src/Makefile.easy; \
-	    ${CP} -f src/Makefile src/Makefile.easy; \
+	    echo ${SED} -E -e 's/\s+$$//' < src/Makefile > src/Makefile.easy; \
+	    ${SED} -E -e 's/\s+$$//' < src/Makefile > src/Makefile.easy; \
 	    echo ${RM} -f src/config.h.easy; \
 	    ${RM} -f src/config.h.easy; \
-	    echo ${CP} -f src/config.h src/config.h.easy; \
-	    ${CP} -f src/config.h src/config.h.easy; \
+	    echo ${SED} -E -e 's/\s+$$//' < src/config.h > src/config.h.easy; \
+	    ${SED} -E -e 's/\s+$$//' < src/config.h > src/config.h.easy; \
 	else \
 	    echo "$$0: ERROR: must have both src/Makefile and src/config.h to makr $@" 1>&2; \
 	    echo "$$0: notice: try make configure $@" 1>&2; \
