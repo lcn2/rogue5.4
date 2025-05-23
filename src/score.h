@@ -10,7 +10,8 @@
  * See the file LICENSE.TXT for full copyright and licensing information.
  */
 
-# define	MAXNAME		80  /* maximum score name allowed */
+#define	MAXSCORELINE    80  /* maximum length of score line */
+#define	MAXNAME		80  /* maximum score name allowed */
 
 struct sc_ent {
     uid_t sc_uid;

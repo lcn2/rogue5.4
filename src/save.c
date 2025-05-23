@@ -400,23 +400,26 @@ rd_score(SCORE *top_ten)
 void
 wr_score(SCORE *top_ten)
 {
-    char scoreline[100];
+    char scoreline[MAXSCORELINE+1];
     int i;
 
     if (scoreboard == NULL)
 	return;
+    if (top_ten == NULL)
+	return;
+    scoreline[MAXSCORELINE] = '\0';
 
     rewind(scoreboard);
 
     for(i = 0; i < numscores; i++)
     {
-          memset(scoreline,0,100);
-          encwrite(top_ten[i].sc_name, MAXSTR, scoreboard);
-          sprintf(scoreline, " %u %d %u %u %d %x \n",
+          memset(scoreline,0,sizeof(scoreline));
+          encwrite(top_ten[i].sc_name, sizeof(top_ten[i].sc_name)-1, scoreboard);
+          snprintf(scoreline, MAXSCORELINE, " %u %d %u %u %d %x \n",
               top_ten[i].sc_uid, top_ten[i].sc_score,
               top_ten[i].sc_flags, top_ten[i].sc_monster,
               top_ten[i].sc_level, top_ten[i].sc_time);
-          encwrite(scoreline,100,scoreboard);
+          encwrite(scoreline, MAXSCORELINE, scoreboard);
     }
 
     rewind(scoreboard);

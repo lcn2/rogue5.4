@@ -87,10 +87,10 @@ score(int amount, int flags, int monst)
 	    delwin(hw);
     }
 
-    top_ten = malloc(numscores * sizeof (SCORE));
-
-	if (top_ten == NULL)
-		return;
+    top_ten = malloc((numscores+1+1) * sizeof (SCORE));	    /* +1 for endp, +1 for paranoia */
+    if (top_ten == NULL)
+	return;
+    memset(top_ten, 0, ((numscores+1+1) * sizeof (SCORE)));
 
     endp = &top_ten[numscores];
     for (scp = top_ten; scp < endp; scp++)
@@ -225,6 +225,14 @@ score(int amount, int flags, int monst)
 	    unlock_sc();
 	    signal(SIGINT, fp);
 	}
+    }
+
+    /*
+     * free top 10 list
+     */
+    if (top_ten != NULL) {
+	free(top_ten);
+	top_ten = NULL;
     }
 }
 
