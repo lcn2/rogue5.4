@@ -1027,12 +1027,12 @@ Mom.</p>
 
 <h2 align="justify"><b>11. Source Code</b></h2>
 
-<p align="justify">The source code for rogue version 5.4 available at the:
+<p align="justify">The source code for rogue version 5.4 is available at the:
 <a href="https://github.com/lcn2/rogue5.4">rogue5.4 repo</a> which is
 maintained by <a href="https://github.com/lcn2">Landon Curt Noll</a>.</p>
 
 <p align="justify"><b>BONUS</b>: For those who <a href="https://en.wikipedia.org/wiki/RTFM">RFTS</a>,
-the <b>wizard mode password</b> may be found in a <i>C comment</i> in that GitHub repo. :-)</p>
+the <b>wizard mode</b> password may be found in a <i>C comment</i> in that GitHub repo. :-)</p>
 
 <table border="0" width="100%" cellspacing="3" cellpadding="0" id="table5">
 	<tr>

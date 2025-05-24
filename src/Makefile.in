@@ -252,6 +252,7 @@ stddocs:
 	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.html.in > rogue.html
 	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.doc.in > rogue.doc
 	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.cat.in > rogue.cat
+	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.md.in > rogue.md
 
 dist.src:
 	$(MAKE) $(MAKEFILE) clean

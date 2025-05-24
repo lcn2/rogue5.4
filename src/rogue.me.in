@@ -893,14 +893,14 @@ And also Mom.
 .br
 .sh 1 Source Code
 .pp
-The source code for rogue version 5.4 available at:
+The source code for rogue version 5.4 is available at:
 .pp
 \fBhttps://github.com/lcn2/rogue5.4\fP
 .pp
 in the form of a GitHub repo.
 This GitHub repo is maintained by:
 .pp
-\fBLandon Curt Noll\fP (GitHub user @lcn2).
+GitHub user @lcn2: \fBhttps://github.com/lcn2\fP.
 .pp
 \fBBONUS\fP: For those who \fBRFTS\fP, the wizard mode password
 may be found in a C comment in the above GitHub repo.  :-)
