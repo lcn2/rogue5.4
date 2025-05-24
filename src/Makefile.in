@@ -124,9 +124,9 @@ CFILES   = vers.c extern.c armor.c chase.c command.c daemon.c \
            rooms.c save.c scrolls.c state.c sticks.c things.c \
            weapons.c wizard.c xcrypt.c
 MISC_C   = findpw.c scedit.c scmisc.c
-DOCSRC   = rogue.me.in rogue.6.in rogue.doc.in rogue.html.in rogue.cat.in
+DOCSRC   = rogue.me.in rogue.6.in rogue.doc.in rogue.html.in rogue.cat.in rogue.md.in
 DOCS     = $(PROGRAM).doc $(PROGRAM).html $(PROGRAM).cat $(PROGRAM).me \
-           $(PROGRAM).6
+           $(PROGRAM).6 $(PROGRAM).md
 AFILES   = configure Makefile.in configure.ac config.h.in config.sub config.guess \
            install-sh rogue.6.in rogue.me.in rogue.html.in rogue.doc.in rogue.cat.in
 MISC     = Makefile.std LICENSE.TXT rogue54.sln rogue54.vcproj rogue.spec \
@@ -311,6 +311,7 @@ install: all
 	-$(INSTALL) -m 0644 rogue.cat $(DESTDIR)$(docdir)/$(PROGRAM).cat
 	-$(INSTALL) -m 0644 LICENSE.TXT $(DESTDIR)$(docdir)/LICENSE.TXT
 	-$(INSTALL) -m 0644 rogue.me $(DESTDIR)$(docdir)/$(PROGRAM).me
+	-$(INSTALL) -m 0644 rogue.md $(DESTDIR)$(docdir)/$(PROGRAM).mf
 	-if test ! -f $(DESTDIR)$(LOCKFILE)  ; then $(INSTALL) -m 0666 test $(DESTDIR)$(LOCKFILE)  ; $(RM) $(DESTDIR)$(LOCKFILE) ; fi
 	-$(RM) test
 
