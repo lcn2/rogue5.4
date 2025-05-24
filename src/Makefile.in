@@ -311,7 +311,7 @@ install: all
 	-$(INSTALL) -m 0644 rogue.cat $(DESTDIR)$(docdir)/$(PROGRAM).cat
 	-$(INSTALL) -m 0644 LICENSE.TXT $(DESTDIR)$(docdir)/LICENSE.TXT
 	-$(INSTALL) -m 0644 rogue.me $(DESTDIR)$(docdir)/$(PROGRAM).me
-	-$(INSTALL) -m 0644 rogue.md $(DESTDIR)$(docdir)/$(PROGRAM).mf
+	-$(INSTALL) -m 0644 rogue.md $(DESTDIR)$(docdir)/$(PROGRAM).md
 	-if test ! -f $(DESTDIR)$(LOCKFILE)  ; then $(INSTALL) -m 0666 test $(DESTDIR)$(LOCKFILE)  ; $(RM) $(DESTDIR)$(LOCKFILE) ; fi
 	-$(RM) test
 
