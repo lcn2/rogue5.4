@@ -141,6 +141,11 @@ easy-configure: src/Makefile.easy src/config.h.easy
 	${CP} -f src/config.h.easy src/config.h
 	${V} echo DEBUG =-= $@ end =-=
 
+stddocs: configure
+	${V} echo DEBUG =-= $@ start =-=
+	cd src; ${MAKE} $@
+	${V} echo DEBUG =-= $@ end =-=
+
 tags: ${CFILES} ${MISC_C}
 	${V} echo DEBUG =-= $@ start =-=
 	cd src; ${MAKE} $@
