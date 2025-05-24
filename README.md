@@ -1,6 +1,6 @@
 # rogue 5.4
 
-Rogue: Exploring the Dungeons of Doom version 5.4 as a bug fixed port to modern C and Unix-like systems.
+Rogue: Exploring the Dungeons of Doom version 5.4 - bug fixed ported to modern C and Unix-like systems
 
 
 ## TL;DR - to install
@@ -230,6 +230,8 @@ This rule invokes the all rule from the `src/Makefile.easy` makefile.
 Now that you have both `src/config.h` and `src/Makefile`, use the
 `src/Makefile.easy` makefile to compile the code.
 
+**IMPORTANT NOTE**: When bypassing [Gnu Autoconf](https://www.gnu.org/software/autoconf/), you no longer
+benefit from the **Autoconf** facility ability to configure the code for your system.
 Chances are, the above should work.  However should something go wrong,
 you have have to edit `src/config.h` and/or `src/Makefile` or perhaps
 even modify the code.  If do have to modify stuff, please consider sharing by opening up a
