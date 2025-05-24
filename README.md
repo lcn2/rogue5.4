@@ -22,7 +22,19 @@ sudo make easy-install
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
 * [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses)
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system
-* [GNU Autoconf](https://www.gnu.org/software/autoconf/) (this is optional (see "Configure and autoconf" below) but useful)
+* [GNU Autoconf](https://www.gnu.org/software/autoconf/) (this is optional: see "Configure and autoconf" section below)
+
+
+### Bug reports and Pull Requests welcome
+
+We very much welcome fork [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls) to fix any:
+
+* failure to compile
+* compiler warning messages
+* program crashes
+
+You may also file a [rogue5.4 bug report](https://github.com/lcn2/rogue5.4/issues/new?template=bug_report.md).
+
 
 
 ## To play rogue
