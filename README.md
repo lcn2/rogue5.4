@@ -152,7 +152,7 @@ man src/rogue.6
 > locate the Amulet of Yendor which is somewhere below the 20th level of the dungeon and get
 > it out.
 
-**BTW**: The ``rogue(6)` man page states:
+**BTW**: The `rogue(6)` man page states:
 
 > Nobody has achieved this yet and if somebody does, they will probably go down in
 > history as a hero among heroes.
