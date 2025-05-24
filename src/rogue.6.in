@@ -80,6 +80,27 @@ Glenn Wichman
 @SCOREFILE@	Score file
 .br
 \fB~\fP/.rogue.save	Default save file
+.SH Source Code
+The source code for rogue version 5.4 available at:
+.PP
+.in +0.5i
+.I https://github.com/lcn2/rogue5.4
+.in -0.5i
+.PP
+in the form of a GitHub repo.
+.PP
+This GitHub repo is maintained by:
+.PP
+.in +0.5i
+.I Landon Curt Noll
+.in -0.5i
+.PP
+(GitHub user @lcn2).
+.PP
+.BR BONUS :
+For those who
+.BR RFTS ,
+the wizard mode password may be found in a C comment in the above GitHub repo.  :-)
 .SH SEE ALSO
 Michael C. Toy
 and

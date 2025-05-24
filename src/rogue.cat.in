@@ -1,61 +1,73 @@
-ROGUE(6)                                                              ROGUE(6)
+ROGUE(6)                         Games Manual                         ROGUE(6)
 
-
-
-NAME
+NNAAMMEE
        rogue - Exploring The Dungeons of Doom
 
-SYNOPSIS
-       @PROGRAM@ [ -r ] [ save_file ] [ -s ] [ -d ]
+SSYYNNOOPPSSIISS
+       @PROGRAM@ [ --rr ] [ _s_a_v_e___f_i_l_e ] [ --ss ] [ --dd ]
 
-DESCRIPTION
-       Rogue  is a computer fantasy game with a new twist.  It is crt oriented
-       and the object of the game is to survive the attacks  of  various  mon-
-       sters and get a lot of gold, rather than the puzzle solving orientation
-       of most computer fantasy games.
+DDEESSCCRRIIPPTTIIOONN
+       _R_o_g_u_e is a computer fantasy game with a new twist.  It is crt oriented
+       and the object of the game is to survive the attacks of various
+       monsters and get a lot of gold, rather than the puzzle solving
+       orientation of most computer fantasy games.
 
-       To get started you really only need to know two commands.  The  command
-       ?   will  give  you  a list of the available commands and the command /
+       To get started you really only need to know two commands.  The command
+       ??  will give you a list of the available commands and the command //
        will identify the things you see on the screen.
 
-       To win the game (as opposed to merely playing to  beat  other  people's
-       high  scores)  you  must locate the Amulet of Yendor which is somewhere
-       below the 20th level of  the  dungeon  and  get  it  out.   Nobody  has
-       achieved  this  yet and if somebody does, they will probably go down in
+       To win the game (as opposed to merely playing to beat other people's
+       high scores) you must locate the Amulet of Yendor which is somewhere
+       below the 20th level of the dungeon and get it out.  Nobody has
+       achieved this yet and if somebody does, they will probably go down in
        history as a hero among heroes.
 
-       When the game ends, either by your death, when you quit, or if you  (by
-       some  miracle) manage to win, rogue will give you a list of the top-ten
-       scorers.  The scoring is based entirely upon how  much  gold  you  get.
+       When the game ends, either by your death, when you quit, or if you (by
+       some miracle) manage to win, _r_o_g_u_e will give you a list of the top-ten
+       scorers.  The scoring is based entirely upon how much gold you get.
        There is a 10% penalty for getting yourself killed.
 
-       If  save_file  is  specified, rogue will be restored from the specified
-       saved game file.  If the -r option is used, the save game file is  pre-
-       sumed to be the default.
+       If _s_a_v_e___f_i_l_e is specified, rogue will be restored from the specified
+       saved game file.  If the --rr option is used, the save game file is
+       presumed to be the default.
 
-       The -s option will print out the list of scores.
+       The --ss option will print out the list of scores.
 
-       The -d option will kill you and try to add you to the score file.
+       The --dd option will kill you and try to add you to the score file.
 
-       For more detailed directions, read the document A Guide to the Dungeons
-       of Doom.
+       For more detailed directions, read the document _A _G_u_i_d_e _t_o _t_h_e _D_u_n_g_e_o_n_s
+       _o_f _D_o_o_m_.
 
-AUTHORS
+AAUUTTHHOORRSS
        Michael C. Toy, Kenneth C. R. C. Arnold, Glenn Wichman
 
-FILES
-       @SCOREFILE@                   Score file
-       ~/.rogue.save                Default save file
+FFIILLEESS
+       @SCOREFILE@   Score file
+       ~~/.rogue.save Default save file
 
-SEE ALSO
-       Michael C. Toy and Kenneth C. R. C. Arnold, A guide to the Dungeons  of
-       Doom
+SSoouurrccee CCooddee
+       The source code for rogue version 5.4 available at:
 
-BUGS
-       Probably  infinite  (although  countably  infinite).  However, that Ice
-       Monsters sometimes transfix you permanently is not a bug.  It's a  fea-
-       ture.
+            _h_t_t_p_s_:_/_/_g_i_t_h_u_b_._c_o_m_/_l_c_n_2_/_r_o_g_u_e_5_._4
 
+       in the form of a GitHub repo.
 
+       This GitHub repo is maintained by:
+
+            _L_a_n_d_o_n _C_u_r_t _N_o_l_l
+
+       (GitHub user @lcn2).
+
+       BBOONNUUSS: For those who RRFFTTSS, the wizard mode password may be found in a C
+       comment in the above GitHub repo.  :-)
+
+SSEEEE AALLSSOO
+       Michael C. Toy and Kenneth C. R. C. Arnold, _A _g_u_i_d_e _t_o _t_h_e _D_u_n_g_e_o_n_s _o_f
+       _D_o_o_m
+
+BBUUGGSS
+       Probably infinite (although countably infinite).  However, that Ice
+       Monsters sometimes transfix you permanently is _n_o_t a bug.  It's a
+       feature.
 
 4th Berkeley Distribution         May 6, 1986                         ROGUE(6)
