@@ -1,5 +1,7 @@
 # rogue 5.4
 
+Rogue: Exploring the Dungeons of Doom version 5.4 as a bug fixed port to modern C and Unix-like systems.
+
 
 ## TL;DR - to install
 
@@ -21,7 +23,7 @@ sudo make easy-install
 * Modern C compiler (perhaps c11 or better)
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
 * [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses)
-* [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system
+* [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, FreeBSD, etc.
 * [GNU Autoconf](https://www.gnu.org/software/autoconf/) (this is optional: see "Configure and autoconf" section below)
 
 
@@ -34,7 +36,6 @@ We very much welcome fork [rogue5.4 pull requests](https://github.com/lcn2/rogue
 * program crashes
 
 You may also file a [rogue5.4 bug report](https://github.com/lcn2/rogue5.4/issues/new?template=bug_report.md).
-
 
 
 ## To play rogue
@@ -65,31 +66,56 @@ For help in the game type "**?**" and then "\*".
 For your convenience, the full game help output is formatted below:
 
 ```
-    ?       prints help                         r     read scroll
-    /       identify object                     e     eat food
-    h       left                                w     wield a weapon
-    j       down                                W     wear armor
-    k       up                                  T     take armor off
-    l       right                               P     put on ring
-    y       up & left                           R     remove ring
-    u       up & right                          d     drop object
-    b       down & left                         c     call object
-    n       down & right                        a     repeat last command
-            <SHIFT><dir>: run that way          )     print current weapon
-            <CTRL><dir>: run till adjacent      ]     print current armor
-    f<dir>  fight till death or near death      =     print current rings
-    t<dir>  throw something                     @     print current stats
-    m<dir>  move onto without picking up        D     recall what's been discovered
-    z<dir>  zap a wand in a direction           o     examine/set options
-    ^<dir>  identify trap type                  ^R    redraw screen
-    s       search for trap/secret door         ^P    repeat last message
-    >       go down a staircase                 ^[    cancel command
-    <       go up a staircase                   S     save game
-    .       rest for a turn                     Q     quit
-    ,       pick something up                   !     shell escape
-    i       inventory                           F<dir>        fight till either of you dies
-    I       inventory single item               v     print version number
+    ?       prints help
+    /       identify object
+    h       left
+    j       down
+    k       up
+    l       right
+    y       up & left
+    u       up & right
+    b       down & left
+    n       down & right
+            <SHIFT><dir>: run that way
+            <CTRL><dir>: run till adjacent
+    f<dir>  fight till death or near death
+    t<dir>  throw something
+    m<dir>  move onto without picking up
+    z<dir>  zap a wand in a direction
+    ^<dir>  identify trap type
+    s       search for trap/secret door
+    >       go down a staircase
+    <       go up a staircase
+    .       rest for a turn
+    ,       pick something up
+    i       inventory
+    I       inventory single item
     q       quaff potion
+
+    r       read scroll
+    e       eat food
+    w       wield a weapon
+    W       wear armor
+    T       take armor off
+    P       put on ring
+    R       remove ring
+    d       drop object
+    c       call object
+    a       repeat last command
+    )       print current weapon
+    ]       print current armor
+    =       print current rings
+    @       print current stats
+    D       recall what's been discovered
+    o       examine/set options
+    ^R      redraw screen
+    ^P      repeat last message
+    Esc     cancel command
+    S       save game
+    Q       quit
+    !       shell escape
+    F<dir>  fight till either of you dies
+    v       print version number
 ```
 
 The following table may help explain the symbols you see when playing rogue:
@@ -156,7 +182,27 @@ This repo improves on the above mentioned repo in several important aspects:
 * Fixed cases where creating invalid type of an item in **wizard mode** crashed the game
 * Creating an item in **wizard mode** that does not have a sub-type no longer asks which type of item
 * Added extensive SPOILER section notes in the lower part of this `README.md` file
+* Fixed several buffer overflow bugs and memory leak conditions.
 * etc.
+
+
+## Rogue5.4 repo backstory
+
+This [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4)
+was cloned from [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4).
+[Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing `rogue(1)` onn the Vax running BSD, wanted to
+port the original game to modern compilers and UNIX-like operating systems
+(such as those that resonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
+
+As the [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4)
+is efficetly a "read-only" archive of the Dump of the original
+[svn r1490](https://github.com/RoguelikeRestorationProject/rogue5.4/commit/9d0dcccc8ec82454bd4d4310f4638985a4726d83),
+[Landon Curt Noll](https://github.com/lcn2) elected to break the form and clone
+[rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4) as a standalone repo
+to make it easier for people to contribute [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls)
+directly to this repo.  Even so, we are greatful to the
+[RoguelikeRestorationProject](https://github.com/RoguelikeRestorationProject)
+for making original code base available.
 
 
 ## Configure and autoconf(1)
