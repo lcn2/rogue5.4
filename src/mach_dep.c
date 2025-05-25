@@ -291,7 +291,7 @@ checkout(int sig)
 	if (author())
 	{
 	    num_checks = 1;
-	    chmsg("The load is rather high, O exulted one");
+	    chmsg("The load is rather high, O exalted one");
 	}
 	else if (num_checks++ == 3)
 	    fatal("Sorry.  You took too long.  You are dead\n");
