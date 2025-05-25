@@ -112,10 +112,12 @@ main(int argc, char **argv)
 	    my_exit(1);
 #ifdef MASTER
     if (wizard)
-	printf("Hello %s, welcome to dungeon #%d", whoami, dnum);
+	printf("Hello %s, welcome to dungeon #%u", whoami, dnum);
     else
+	printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
+#else
+    printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
 #endif
-	printf("Hello %s, just a moment while I dig the dungeon...", whoami);
     fflush(stdout);
 
     initscr();				/* Start up cursor package */
