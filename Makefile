@@ -45,6 +45,8 @@ RM= rm
 SED= sed
 SHELL= bash
 
+LC_CTYPE= C
+
 
 ######################
 # target information #
@@ -118,14 +120,14 @@ configure:
 post-configure:
 	${V} echo DEBUG =-= $@ start =-=
 	@-if [[ -f src/Makefile && -f src/config.h ]]; then \
-	    echo ${RM} -f src/Makefile.easy; \
+	    echo "${RM} -f src/Makefile.easy"; \
 	    ${RM} -f src/Makefile.easy; \
-	    echo ${SED} -E -e 's/\s+$$//' < src/Makefile > src/Makefile.easy; \
-	    ${SED} -E -e 's/\s+$$//' < src/Makefile > src/Makefile.easy; \
-	    echo ${RM} -f src/config.h.easy; \
+	    echo "LC_CTYPE=C ${SED} -E -e 's/\s+$$//' < src/Makefile > src/Makefile.easy"; \
+	    LC_CTYPE=C ${SED} -E -e 's/\s+$$//' < src/Makefile > src/Makefile.easy; \
+	    echo "${RM} -f src/config.h.easy"; \
 	    ${RM} -f src/config.h.easy; \
-	    echo ${SED} -E -e 's/\s+$$//' < src/config.h > src/config.h.easy; \
-	    ${SED} -E -e 's/\s+$$//' < src/config.h > src/config.h.easy; \
+	    echo "LC_CTYPE=C ${SED} -E -e 's/\s+$$//' < src/config.h > src/config.h.easy"; \
+	    LC_CTYPE=C ${SED} -E -e 's/\s+$$//' < src/config.h > src/config.h.easy; \
 	else \
 	    echo "$$0: ERROR: must have both src/Makefile and src/config.h to makr $@" 1>&2; \
 	    echo "$$0: notice: try make configure $@" 1>&2; \
