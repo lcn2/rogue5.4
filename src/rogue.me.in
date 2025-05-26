@@ -40,9 +40,9 @@ Berkeley, California  94720
 .(b I F
 .bi Rogue
 is a visual CRT based fantasy game
-which runs under the \*U\(dg timesharing system.
+which runs under the Unix timesharing system.
 .(f
-\fR\(dg\*U is a trademark of Bell Laboratories\fP
+Unix is a trademark of Bell Laboratories\fP
 .)f
 This paper describes how to play rogue,
 and gives a few hints
@@ -891,7 +891,7 @@ who graciously ignored work, school, and social life to play rogue
 and send us bugs, complaints, suggestions, and just plain flames.
 And also Mom.
 .br
-.sh 1 Source Code
+.sh 1 Source\ Code
 .pp
 The source code for rogue version 5.4 is available at:
 .pp

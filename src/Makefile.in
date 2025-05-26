@@ -92,6 +92,8 @@ CP= cp
 
 CTAGS= ctags
 
+LC_CTYPE= C
+
 DESTDIR=
 
 prefix= @prefix@
@@ -247,12 +249,12 @@ distclean maintainer-clean: clobber
 	$(RM) Makefile
 
 stddocs:
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.6.in > rogue.6
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.me.in > rogue.me
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.html.in > rogue.html
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.doc.in > rogue.doc
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.cat.in > rogue.cat
-	sed -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.md.in > rogue.md
+	LC_CTYPE=C $(SED) -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.6.in > rogue.6
+	LC_CTYPE=C $(SED) -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.me.in > rogue.me
+	LC_CTYPE=C $(SED) -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.html.in > rogue.html
+	LC_CTYPE=C $(SED) -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.doc.in > rogue.doc
+	LC_CTYPE=C $(SED) -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.cat.in > rogue.cat
+	LC_CTYPE=C $(SED) -e 's/${AT}PROGRAM${AT}/@PROGRAM@/' -e 's/${AT}SCOREFILE${AT}/@SCOREFILE@/' rogue.md.in > rogue.md
 
 dist.src:
 	$(MAKE) $(MAKEFILE) clean
@@ -268,18 +270,40 @@ findpw: $(OBJS) findpw.$(O)
 scedit: $(OBJS) scmisc.$(O) scedit.$(O)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) scmisc.$(O) scedit.$(O) $(LIBS) -o $@
 
-$(PROGRAM).doc: rogue.me
-	if test "x$(GROFF)" != "x" -a "x$(SED)" != "x" ; then \
-		$(GROFF) -P-c -t -me -Tascii rogue.me | $(SED) -e 's/.\x08//g' > $(PROGRAM).doc ;\
+rogue.doc: rogue.me
+	@-if test "x$(GROFF)" != "x" -a "x$(SED)" != "x" ; then \
+	    echo "$(GROFF) -P-c -t -me -Tascii $? | LC_CTYPE=C $(SED) -e 's/.\x08//g' > $@" ;\
+	    $(GROFF) -P-c -t -me -Tascii $? | LC_CTYPE=C $(SED) -e 's/.\x08//g' > $@ ;\
 	elif test "x$(NROFF)" != "x" -a "x$(TBL)" != "x" -a "x$(COLCRT)" != "x" ; then \
-		$(TBL) rogue.me | $(NROFF) -me | colcrt - > $(PROGRAM).doc ;\
+	    echo "$(TBL) $? | $(NROFF) -me | colcrt - > $@" ;\
+	    $(TBL) $? | $(NROFF) -me | colcrt - > $@ ;\
 	fi
 
-$(PROGRAM).cat: rogue.6
-	if test "x$(GROFF)" != "x" -a "x$(SED)" != "x" ; then \
-	$(GROFF) -Tascii -man rogue.6 | $(SED) -e 's/.\x08//g' > $(PROGRAM).cat ;\
+rogue.doc.in: rogue.me.in
+	@-if test "x$(GROFF)" != "x" -a "x$(SED)" != "x" ; then \
+	    echo "$(GROFF) -P-c -t -me -Tascii $? | LC_CTYPE=C $(SED) -e 's/.\x08//g' > $@" ;\
+	    $(GROFF) -P-c -t -me -Tascii $? | LC_CTYPE=C $(SED) -e 's/.\x08//g' > $@ ;\
 	elif test "x$(NROFF)" != "x" -a "x$(TBL)" != "x" -a "x$(COLCRT)" != "x" ; then \
-	$(NROFF) -man rogue.6 | $(COLCRT) - > $(PROGRAM).cat ;\
+	    echo "$(TBL) $? | $(NROFF) -me | colcrt - > $@" ;\
+	    $(TBL) $? | $(NROFF) -me | colcrt - > $@ ;\
+	fi
+
+rotue.cat: rogue.6
+	@-if test "x$(GROFF)" != "x" -a "x$(SED)" != "x" ; then \
+	    echo "$(GROFF) -Tascii -man $? | LC_CTYPE=C $(SED) -e 's/.\x08//g' > $@ ;\
+	    $(GROFF) -Tascii -man $? | LC_CTYPE=C $(SED) -e 's/.\x08//g' > $@" ;\
+	elif test "x$(NROFF)" != "x" -a "x$(TBL)" != "x" -a "x$(COLCRT)" != "x" ; then \
+	    echo "$(NROFF) -man $? | $(COLCRT) - > $@" ;\
+	    $(NROFF) -man $? | $(COLCRT) - > $@ ;\
+	fi
+
+rotue.cat.in: rogue.6.in
+	@-if test "x$(GROFF)" != "x" -a "x$(SED)" != "x" ; then \
+	    echo "$(GROFF) -Tascii -man $? | LC_CTYPE=C $(SED) -e 's/.\x08//g' > $@ ;\
+	    $(GROFF) -Tascii -man $? | LC_CTYPE=C $(SED) -e 's/.\x08//g' > $@" ;\
+	elif test "x$(NROFF)" != "x" -a "x$(TBL)" != "x" -a "x$(COLCRT)" != "x" ; then \
+	    echo "$(NROFF) -man $? | $(COLCRT) - > $@" ;\
+	    $(NROFF) -man $? | $(COLCRT) - > $@ ;\
 	fi
 
 dist: clean $(PROGRAM)
