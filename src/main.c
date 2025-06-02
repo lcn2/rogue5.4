@@ -120,6 +120,33 @@ main(int argc, char **argv)
 #endif
     fflush(stdout);
 
+   /*
+    * Get the process id of this rogue program if the
+    * environment variable is set which requests this be
+    * done.  Then create the file name with the PID so
+    * that the debugging scripts can find it and use the
+    * PID.
+    *
+    * This code can be removed if you don't need to use
+    * the debugging scripts.
+    *
+    */
+
+    /* Process ID */
+    pid_t pid;
+    char pidfilename[BUFSIZ];
+    FILE *pidfp;
+
+    if (getenv("GETROGUEPID") != NULL) {
+      pid = md_getpid ();
+      memset (pidfilename, '\0', sizeof(pidfilename));
+      snprintf (pidfilename, BUFSIZ-1, "roguepid.%d", pid);
+      if ((pidfp = fopen (pidfilename, "w")) == NULL) {
+        fprintf (stderr, "Can't open '%s'.\n", pidfilename);
+        exit(1);
+      }
+    }
+
     initscr();				/* Start up cursor package */
     init_probs();			/* Set up prob tables for objects */
     init_player();			/* Set up initial player stats */
