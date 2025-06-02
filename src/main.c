@@ -58,14 +58,28 @@ main(int argc, char **argv)
 	parse_opts(env);
     if (env == NULL || whoami[0] == '\0')
         strucpy(whoami, md_getusername(), strlen(md_getusername()));
-    lowtime = time(NULL);
-    dnum = lowtime + md_getpid();
 #ifdef MASTER
     if (wizard) {
 	noscore = TRUE;
+    }
+#endif
+    lowtime = time(NULL);
+#if defined(ORIGINAL_MASTER) /* original MASTER behavior */
+    dnum = lowtime + md_getpid();
+#ifdef MASTER
+    if (wizard) {
 	if (getenv("SEED") != NULL) {
 	    dnum = atoi(getenv("SEED"));
 	}
+    }
+#endif
+#else /* modified behavior */
+    if (getenv("SEED") != NULL) {
+	/* allow $SEED to set the initial state for debugging purposes */
+	dnum = atoi(getenv("SEED"));
+    } else {
+	/* use time + pid to set the initial state */
+	dnum = lowtime + md_getpid();
     }
 #endif
     seed = dnum;
