@@ -111,6 +111,14 @@ do_rooms(void)
 		rp->r_max.y = rnd(bsze.y - 4) + 4;
 		rp->r_pos.x = top.x + rnd(bsze.x - rp->r_max.x);
 		rp->r_pos.y = top.y + rnd(bsze.y - rp->r_max.y);
+
+		/* check to see if room is too close to above maze */
+		if ((i > 3) && (rooms[i-3].r_flags&ISMAZE) &&
+		    ((rooms[i-3].r_pos.y+rooms[i-3].r_max.y) == (rp->r_pos.y-1))) {
+		  rp->r_pos.y++;
+		  if (rp->r_max.y > 4)
+		    rp->r_max.y--;
+		}
 	    } until (rp->r_pos.y != 0);
 	draw_room(rp);
 	/*
