@@ -98,7 +98,7 @@ main(int ac, char *av[])
 		perror("calloc for scorefile failed");
 		exit(1);
 	    }
-	    snprintf(scorefile, MAXSTR+scorename_len, "%s%s", home, SCORENAME);
+	    snprintf(scorefile, MAXSTR+scorename_len+1, "%s%s", home, SCORENAME);
 	} else {
 		scorefile = av[1];
 	}

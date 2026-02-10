@@ -168,7 +168,7 @@ CFILES= vers.c extern.c armor.c chase.c command.c daemon.c \
 
 MISC_C= findpw.c scedit.c scmisc.c
 
-C_SRC= ${CFILES} ${MISC_C} 
+C_SRC= ${CFILES} ${MISC_C}
 
 SRC= ${C_SRC} ${H_SRC}
 
@@ -239,15 +239,21 @@ FSANITIZE+= -fsanitize=vptr
 #
 # We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
 #
-# FSANITIZE+= -fsanitize=nullability-arg
-# FSANITIZE+= -fsanitize=nullability-assign
-# FSANITIZE+= -fsanitize=nullability-return
+# For HomeBrew gcc version 15:
+#
+# CC:= gcc-15
+# DEBUG:= -g2
+#
 # CCWARN+= -Wall
 # CCWARN+= -pedantic
 # CCWARN+= -Werror
+# COPT:= -O0
+#
+# FSANITIZE+= -fsanitize=nullability-arg
+# FSANITIZE+= -fsanitize=nullability-assign
+# FSANITIZE+= -fsanitize=nullability-return
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
-# COPT:= -O0
 # DEBUG:= -ggdb3
 ####
 
@@ -279,6 +285,7 @@ FSANITIZE+= -fsanitize=vptr
 # CCWARN+= -Wall
 # CCWARN+= -pedantic
 # CCWARN+= -Werror
+#
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
 # COPT:= -O0
