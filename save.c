@@ -375,6 +375,7 @@ rd_score(SCORE *top_score)
 {
     char scoreline[MAXSCORELINE+1]; /* +1 for paranoia */
     SCORE score;		    /* scanned score */
+    bool failed = false;	    /* true ==> score file scan failed */
     int ret;			    /* scanf return value */
     int i;
 
@@ -397,9 +398,13 @@ rd_score(SCORE *top_score)
 	if (ret == 6) {
 	    top_score[i] = score;
 	} else {
-	    fprintf(stderr, "WARNING: sscan of score %d returned %d != 6",
-		    i, ret);
+	    failed = true;
 	}
+    }
+    if (failed) {
+	fprintf(stderr, "\nWARNING: The score file is old and/or has been corrupted!\n");
+	fprintf(stderr, "\nWARNING: Before running rouge again, remove the score file: %s\n", score_path);
+	exit(1);
     }
 
     rewind(scoreboard);

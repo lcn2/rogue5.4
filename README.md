@@ -181,6 +181,7 @@ This repo improves on the above mentioned repo in several important aspects:
 * Added extensive SPOILER section notes in the lower part of this `README.md` file
 * Fixed several buffer overflow bugs and memory leak conditions
 * Fixed bugs related to the reading and writing of the score file
+* Detects if the rogue score file is old and/or corrept and issues warnings along with a removal recommendation
 * The top scores are recorded in the rogue score file, regardless of if the game was won or not
 * etc.
 
