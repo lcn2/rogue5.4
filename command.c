@@ -287,7 +287,7 @@ over:
 		    else
 			after = FALSE;
 		when 'D': after = FALSE; discovered();
-		when CTRL('P'): after = FALSE; msg(huh);
+		when CTRL('P'): after = FALSE; msg("%s", huh);
 		when CTRL('R'):
 		    after = FALSE;
 		    clearok(curscr,TRUE);

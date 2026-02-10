@@ -69,7 +69,7 @@ whatis(int insist, int type)
         when RING:
 	    set_know(obj, ring_info);
     }
-    msg(inv_name(obj, FALSE));
+    msg("%s", inv_name(obj, FALSE));
 }
 
 /*
