@@ -26,7 +26,7 @@
 
 # define	RN	(((seed = seed*11109+13849) >> 16) & 0xffff)
 
-# define	MAXSTR	80
+# define	MAXSTR	1024
 
 # include	"score.h"
 # include	"config.h"
@@ -77,8 +77,9 @@ extern char *	s_killname(int monst, int doart);
 int
 main(int ac, char *av[])
 {
-	FILE	*outf;
 	int	inf;
+	size_t  scorename_len = 0;
+	size_t  home_len = 0;
 
 	memset(top_scores, 0, sizeof(top_scores)); /* paranoia */
 	if (ac == 1) {
@@ -89,14 +90,16 @@ main(int ac, char *av[])
 
 	    strncpy(home, md_gethomedir(), MAXSTR);
 	    home[MAXSTR] = '\0'; /* paranoia */
-	    if (strlen(home) > MAXSTR - strlen(SCORENAME) - 1)
+	    scorename_len = strlen(SCORENAME);
+	    home_len = strlen(home);
+	    if (home_len > MAXSTR - scorename_len - 1)
 		home[0] = '\0';
-	    scorefile = calloc(MAXSTR+1, 1);
+	    scorefile = calloc(MAXSTR+scorename_len+1, 1);
 	    if (scorefile == NULL) {
 		perror("calloc for scorefile failed");
 		exit(1);
 	    }
-	    snprintf(scorefile, MAXSTR, "%s%s", home, SCORENAME);
+	    snprintf(scorefile, MAXSTR+scorename_len, "%s%s", home, SCORENAME);
 	} else {
 		scorefile = av[1];
 	}
@@ -126,9 +129,7 @@ main(int ac, char *av[])
 int
 do_comm(void)
 {
-	char		*sp;
 	SCORE		*scp;
-	struct passwd	*pp;
 	static FILE	*outf = NULL;
 	static int written = TRUE;
 
@@ -209,7 +210,6 @@ def:
 void
 add_score(void)
 {
-	SCORE		*scp;
 	uid_t id = 0;
 	int		i;
 	SCORE	new;
@@ -327,7 +327,6 @@ void
 del_score(void)
 {
 	SCORE	*scp;
-	int	i;
 	int	num;
 
 	for (;;) {

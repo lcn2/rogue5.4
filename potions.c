@@ -111,7 +111,7 @@ quaff(void)
 	    msg("you feel stronger, now.  What bulging muscles!");
 	when P_MFIND:
 	    player.t_flags |= SEEMONST;
-	    fuse((void(*)())turn_see, TRUE, HUHDURATION, AFTER);
+	    fuse((void(*)(int))turn_see, TRUE, HUHDURATION, AFTER);
 	    if (!turn_see(FALSE))
 		msg("you have a %s feeling for a moment, then it passes",
 		    choose_str("normal", "strange"));

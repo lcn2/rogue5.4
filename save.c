@@ -164,12 +164,13 @@ restore(const char *file)
     struct stat sbuf2;
     int lines, cols;
 
-    if (strcmp(file, "-r") == 0)
+    if (strcmp(file, "-r") == 0) {
 	file = file_name;
+    }
 
-	md_tstphold();
+    md_tstphold();
 
-	if ((inf = fopen(file,"r")) == NULL)
+    if ((inf = fopen(file,"r")) == NULL)
     {
 	perror(file);
 	return FALSE;
@@ -375,7 +376,6 @@ rd_score(SCORE *top_score)
 {
     char scoreline[MAXSCORELINE+1]; /* +1 for paranoia */
     SCORE score;		    /* scanned score */
-    char *realname = NULL;	    /* uid converted into username */
     bool failed = false;	    /* true ==> score file scan failed */
     int ret;			    /* scanf return value */
     int i;

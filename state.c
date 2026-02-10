@@ -67,9 +67,6 @@
 #define READSTAT (format_error || read_error )
 #define WRITESTAT (write_error)
 
-static int read_error   = FALSE;
-static int write_error  = FALSE;
-static int format_error = FALSE;
 static int endian = 0x01020304;
 #define  big_endian ( *((char *)&endian) == 0x01 )
 

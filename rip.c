@@ -103,7 +103,6 @@ void
 score(int amount, int flags, int monst)
 {
     SCORE *scp;
-    int i;
     SCORE *sc2;
     SCORE *top_scores, *endp;
 # ifdef MASTER

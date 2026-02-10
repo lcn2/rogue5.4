@@ -239,7 +239,7 @@ come_down(void)
  *	change the characters for the player
  */
 void
-visuals(void)
+visuals(int d_arg __attribute__ ((__unused__)))
 {
     THING *tp;
     int seemonst;

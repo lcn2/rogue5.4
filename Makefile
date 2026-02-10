@@ -242,6 +242,8 @@ FSANITIZE+= -fsanitize=vptr
 # FSANITIZE+= -fsanitize=nullability-arg
 # FSANITIZE+= -fsanitize=nullability-assign
 # FSANITIZE+= -fsanitize=nullability-return
+# CCWARN+= -Wall
+# CCWARN+= -pedantic
 # CCWARN+= -Werror
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
@@ -274,6 +276,8 @@ FSANITIZE+= -fsanitize=vptr
 #
 #   dnf install readline-devel ncurses-libs ncurses-devel libasan libubsan
 #
+# CCWARN+= -Wall
+# CCWARN+= -pedantic
 # CCWARN+= -Werror
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
