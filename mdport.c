@@ -99,6 +99,7 @@
 #include <sys/stat.h>
 #include <signal.h>
 #include "extern.h"
+#include "score.h"
 
 #if !defined(PATH_MAX) && defined(_MAX_PATH)
 #define PATH_MAX _MAX_PATH
@@ -114,8 +115,6 @@
 #undef HAVE_SETRESGID
 #undef HAVE_SETRESUID
 #endif
-
-#define MAX_USERNAME 32	/* MAX_USERNAME */
 
 void
 md_init(void)
@@ -627,7 +626,7 @@ directory_exists(char *dirname)
 char *
 md_getrealname(uid_t uid)
 {
-    static char uidstr[MAX_USERNAME+1];	/* +1 for paranoia */
+    static char uidstr[MAX_USERNAME+1]; /* +1 for paranoia */
 
     memset(uidstr, 0, sizeof(uidstr)); /* paranoia */
 #if !defined(_WIN32) && !defined(DJGPP)
@@ -641,8 +640,8 @@ md_getrealname(uid_t uid)
 	else
 	    return(pp->pw_name);
 #else
-   snprintf(uidstr, MAX_USERNAME, "%ld", uid);
-   return(uidstr);
+    snprintf(uidstr, MAX_USERNAME, "%ld", uid);
+    return(uidstr);
 #endif
 }
 

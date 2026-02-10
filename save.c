@@ -375,6 +375,7 @@ rd_score(SCORE *top_score)
 {
     char scoreline[MAXSCORELINE+1]; /* +1 for paranoia */
     SCORE score;		    /* scanned score */
+    char *realname = NULL;	    /* uid converted into username */
     bool failed = false;	    /* true ==> score file scan failed */
     int ret;			    /* scanf return value */
     int i;
@@ -386,23 +387,30 @@ rd_score(SCORE *top_score)
 
     for(i = 0; i < numscores; i++)
     {
-        encread(top_score[i].sc_name, MAXNAME, scoreboard);
-	top_score[i].sc_name[MAXNAME] = '\0'; /* paranoia */
 	memset(scoreline, 0, sizeof(scoreline)); /* paranoia */
-        encread(scoreline, MAXSCORELINE, scoreboard);
 	memset(&score, 0, sizeof(score)); /* paranoia */
-        ret = sscanf(scoreline, " %u %d %u %d %d %jx \n",
-            &score.sc_uid, &score.sc_score,
+        encread(scoreline, MAXSCORELINE, scoreboard);
+	/*
+	 * NOTE: A number of C compilers do not correctly process a sscanf(3) line such as:
+	 *
+	 *       sscanf(string, "%*s", MAX_USERNAME, str);
+	 *
+	 * So we must HARD code the maximum width in the sscanf(3) call below.
+	 * The value MAX_USERNAME MUST match the %32s format string width.
+	 */
+        ret = sscanf(scoreline, "%32s %u %d %u %d %d %jx \n",
+            score.sc_name,
+	    &score.sc_uid, &score.sc_score,
             &score.sc_flags, &score.sc_monster,
             &score.sc_level, &score.sc_time);
-	if (ret == 6) {
+	if (ret == 7) {
 	    top_score[i] = score;
 	} else {
 	    failed = true;
 	}
     }
     if (failed) {
-	fprintf(stderr, "\nWARNING: The score file is old and/or has been corrupted!\n");
+	fprintf(stderr, "\nERROR: The score file format is too old and/or has been corrupted!\n");
 	fprintf(stderr, "\nWARNING: Before running rouge again, remove the score file: %s\n", score_path);
 	exit(1);
     }
@@ -429,9 +437,9 @@ wr_score(SCORE *top_score)
 
     for(i = 0; i < numscores; i++)
     {
-          encwrite(top_score[i].sc_name, MAXNAME, scoreboard);
 	  memset(scoreline, 0, sizeof(scoreline)); /* paranoia */
-          snprintf(scoreline, MAXSCORELINE, " %u %d %u %u %d %jx \n",
+          snprintf(scoreline, MAXSCORELINE, "%*s %u %d %u %d %d %jx \n",
+	      MAX_USERNAME, top_score[i].sc_name,
               top_score[i].sc_uid, top_score[i].sc_score,
               top_score[i].sc_flags, top_score[i].sc_monster,
               top_score[i].sc_level, top_score[i].sc_time);

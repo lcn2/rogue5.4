@@ -40,10 +40,64 @@ static char *rip[] = {
 };
 
 /*
+ * max length of a randomly generated username
+ *
+ * NOTE: Must be 1 <= RND_NAME_LEN <= MAX_USERNAME
+ */
+#define RND_NAME_LEN 8
+#if RND_NAME_LEN > MAX_USERNAME
+#error "invalid RND_NAME_LEN: Must be 1 <= RND_NAME_LEN <= MAX_USERNAME"
+#endif
+
+/*
+ * init_score_value:
+ *	Initialize a SCORE with random data.
+ */
+
+void
+init_score_value(SCORE *scp)
+{
+    long rndname_len = 0;    /* length of a random name */
+    int i;
+
+    /*
+     * initialize leading values in a SCORE
+     */
+    memset(scp, 0, sizeof(SCORE));
+    scp->sc_uid = (uid_t) ((random()%59000)+1000); /* random UID from 1000 to 59999 */
+    scp->sc_score = 0; /* 0 score will be at the bottom of the score set, and will NOT be printed */
+    scp->sc_flags = 0; /* set death flag */
+    scp->sc_monster = 'B'; /* just use the lowly bat as the monster */
+
+    /*
+     * form a random name using ASCII bytes from 33 (!) thru 126 (~)
+     */
+    memset(scp->sc_name, 0, sizeof(scp->sc_name)); /* paranoia */
+    rndname_len = (random()%RND_NAME_LEN)+1; /* random name length from 1 to RND_NAME_LEN */
+    for (i = 0; i < rndname_len; i++) {
+	scp->sc_name[i] = (char) ((random()%94)+33); /* form ASCII bytes from 33 (!) thru 126 (~) */
+    }
+    scp->sc_name[MAX_USERNAME] = '\0'; /* paranoia */
+
+    /*
+     * random level that does NOT include the amulet level
+     */
+    scp->sc_level = (int) random()%25; /* random level 0 to 25 */
+
+    /*
+     * Random timestamp from 0 to 2^62-1
+     *
+     * NOTE: random(3) returns a value from 0 to 2^30-1
+     */
+    scp->sc_time = (((uintmax_t) random()) ^ (((uintmax_t) random()) << 31));
+    return;
+}
+
+
+/*
  * score:
  *	Figure score and post it.
  */
-/* VARARGS2 */
 
 void
 score(int amount, int flags, int monst)
@@ -51,7 +105,7 @@ score(int amount, int flags, int monst)
     SCORE *scp;
     int i;
     SCORE *sc2;
-    SCORE *top_ten, *endp;
+    SCORE *top_scores, *endp;
 # ifdef MASTER
     int prflags = 0;
 # endif
@@ -63,8 +117,6 @@ score(int amount, int flags, int monst)
 	"A total winner",
 	"killed with Amulet"
     };
-
-    srandom((unsigned)seed);
 
     start_score();
 
@@ -81,7 +133,7 @@ score(int amount, int flags, int monst)
         printf("\n");
         resetltchars();
 	/*
-	 * free up space to "guarantee" there is space for the top_ten
+	 * free up space to "guarantee" there is space for the top_scores
 	 */
 	delwin(stdscr);
 	delwin(curscr);
@@ -89,22 +141,14 @@ score(int amount, int flags, int monst)
 	    delwin(hw);
     }
 
-    top_ten = calloc(numscores+1+1, sizeof(SCORE)); /* +1 for endp, +1 for paranoia */
-    if (top_ten == NULL)
+    top_scores = calloc(numscores+1, sizeof(SCORE)); /* +1 for paranoia */
+    if (top_scores == NULL)
 	return;
 
-    endp = &top_ten[numscores];
-    for (scp = top_ten; scp < endp; scp++)
+    endp = &top_scores[numscores];
+    for (scp = top_scores; scp < endp; scp++)
     {
-	scp->sc_score = 0;
-	for (i = 0; i < MAXNAME; i++)
-	    scp->sc_name[i] = (char) ((random()%254)+1);
-	scp->sc_name[MAXNAME] = '\0'; /* paranoia */
-	scp->sc_flags = 0;
-	scp->sc_level = (int) random()%26;
-	scp->sc_monster = randmonster(0);
-	scp->sc_uid = (uid_t) random()%65535;
-	scp->sc_time = (time_t) random();
+	init_score_value(scp);
     }
 
     signal(SIGINT, SIG_DFL);
@@ -118,7 +162,7 @@ score(int amount, int flags, int monst)
 	}
     }
 #endif
-    rd_score(top_ten);
+    rd_score(top_scores);
     /*
      * Insert her in list if need be
      */
@@ -126,7 +170,7 @@ score(int amount, int flags, int monst)
     if (!noscore)
     {
 	uid = md_getuid();
-	for (scp = top_ten; scp < endp; scp++)
+	for (scp = top_scores; scp < endp; scp++)
 	    if (amount > scp->sc_score)
 		break;
 #if 0 /* allow more than one score per nowin uid */
@@ -157,9 +201,10 @@ score(int amount, int flags, int monst)
 		*sc2 = sc2[-1];
 		sc2--;
 	    }
+	    memset(scp, 0, sizeof(*scp)); /* paranoia */
 	    scp->sc_score = amount;
-	    strncpy(scp->sc_name, whoami, MAXNAME);
-	    scp->sc_name[MAXNAME] = '\0'; /* paranoia */
+	    strncpy(scp->sc_name, whoami, MAX_USERNAME);
+	    scp->sc_name[MAX_USERNAME] = '\0'; /* paranoia */
 	    scp->sc_flags = flags;
 	    if (flags == 2)
 		scp->sc_level = max_level;
@@ -167,7 +212,7 @@ score(int amount, int flags, int monst)
 		scp->sc_level = level;
 	    scp->sc_monster = monst;
 	    scp->sc_uid = uid;
-	    scp->sc_time = time(NULL);
+	    scp->sc_time = (uintmax_t) time(NULL);
 	    sc2 = scp;
 	}
     }
@@ -176,16 +221,16 @@ score(int amount, int flags, int monst)
      */
     if (flags != -1)
 	putchar('\n');
-    printf("Top %s %s:\n", Numname, allscore ? "Scores" : "Rogueists");
+    printf("Top %d %s:\n", NUMSCORES, allscore ? "Scores" : "Rogueists");
     printf("   Score Name\n");
-    for (scp = top_ten; scp < endp; scp++)
+    for (scp = top_scores; scp < endp; scp++)
     {
 	if (scp->sc_score > 0) {
 	    if (sc2 == scp)
 		md_raw_standout();
-	    printf("%2d %5d %s: %s on level %d", (int) (scp - top_ten + 1),
-		scp->sc_score, scp->sc_name, reason[scp->sc_flags],
-		scp->sc_level);
+	    printf("%2d %5d %s: %s on level %d",
+		(int) (scp - top_scores + 1), scp->sc_score, scp->sc_name,
+		reason[scp->sc_flags], scp->sc_level);
 	    if (scp->sc_flags == 0 || scp->sc_flags == 3)
 		printf(" by %s", killname(scp->sc_monster, TRUE));
 #ifdef MASTER
@@ -202,15 +247,7 @@ score(int amount, int flags, int monst)
 		    for (sc2 = scp; sc2 < endp - 1; sc2++)
 			*sc2 = *(sc2 + 1);
 		    sc2 = endp - 1;
-		    sc2->sc_score = 0;
-		    for (i = 0; i < MAXNAME; i++)
-			sc2->sc_name[i] = (char) ((random()%254)+1);
-		    sc2->sc_name[MAXNAME] = '\0'; /* paranoia */
-		    sc2->sc_flags = 0;
-		    sc2->sc_level = (int) random()%26;
-		    sc2->sc_monster = randmonster(0);
-		    sc2->sc_uid = (uid_t) random()%65535;
-		    sc2->sc_time = (time_t) random();
+		    init_score_value(sc2);
 		    scp--;
 		}
 	    }
@@ -232,18 +269,18 @@ score(int amount, int flags, int monst)
 	if (lock_sc())
 	{
 	    fp = signal(SIGINT, SIG_IGN);
-	    wr_score(top_ten);
+	    wr_score(top_scores);
 	    unlock_sc();
 	    signal(SIGINT, fp);
 	}
     }
 
     /*
-     * free top 10 list
+     * free top score list
      */
-    if (top_ten != NULL) {
-	free(top_ten);
-	top_ten = NULL;
+    if (top_scores != NULL) {
+	free(top_scores);
+	top_scores = NULL;
     }
 }
 

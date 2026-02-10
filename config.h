@@ -204,7 +204,18 @@
 /* word for the number of scores to store in scoreboard */
 #define NUMNAME "Ten"
 
-/* number of scores to store in scoreboard */
+/*
+ * number of scores to store in scoreboard
+ *
+ * IMPORTANT NOTE: If you change NUMSCORES, then a existing rogue score file
+ *                 will appear to be corrupted.  If that happens, simply remove
+ *                 your existing rogue score file, and run "rogue -s" to
+ *                 re-initialize it.
+ *
+ *                 If you really want to restore your rogue scores after the
+ *                 removal and re-initialization, the use the `scedit` tool
+ *                 to restore your score scores.
+ */
 #define NUMSCORES 10
 
 /* Define to the address where bug reports for this package should be sent. */

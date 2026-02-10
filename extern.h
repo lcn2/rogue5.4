@@ -125,7 +125,7 @@ typedef unsigned int pid_t;
 #define PFBUF_LEN (2*MAXSTR)
 extern int got_ltc, in_shell;
 extern int	wizard;
-extern char	fruit[], prbuf[PFBUF_LEN+1], whoami[];
+extern char	fruit[MAXSTR+1], prbuf[PFBUF_LEN+1], whoami[MAXSTR+1];
 extern int orig_dsusp;
 extern FILE	*scoreboard;
 extern int numscores;

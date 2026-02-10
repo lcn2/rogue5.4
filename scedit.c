@@ -31,7 +31,7 @@
 # include	"score.h"
 # include	"config.h"
 
-static SCORE	top_ten[10];		/* top_ten must be 10 in size */
+static SCORE	top_scores[NUMSCORES+1];	/* scores from the score file, +1 for paranoia */
 
 static char home[MAXSTR+1] = { '\0' };	/* User's home directory */
 
@@ -80,6 +80,7 @@ main(int ac, char *av[])
 	FILE	*outf;
 	int	inf;
 
+	memset(top_scores, 0, sizeof(top_scores)); /* paranoia */
 	if (ac == 1) {
 
 	    /*
@@ -110,7 +111,7 @@ main(int ac, char *av[])
 		perror(scorefile);
 		exit(1);
 	}
-	s_encread((char *) top_ten, sizeof top_ten, inf);
+	s_encread((char *) top_scores, sizeof top_scores, inf);
 
 	while (do_comm())
 		continue;
@@ -152,7 +153,7 @@ do_comm(void)
 			void (*fp)(int);
 
 			fp = signal(SIGINT, SIG_IGN);
-			s_encwrite((char *) top_ten, sizeof top_ten, outf);
+			s_encwrite((char *) top_scores, sizeof top_scores, outf);
 			s_unlock_sc();
 			signal(SIGINT, fp);
 			written = TRUE;
@@ -177,7 +178,7 @@ do_comm(void)
 		if (strncmp(buf, "print", strlen(buf)))
 			goto def;
 		printf("\nTop Ten Rogueists:\nRank\tScore\tName\n");
-		for (scp = top_ten; scp < &top_ten[10]; scp++)
+		for (scp = top_scores; scp < &top_scores[10]; scp++)
 			if (!pr_score(scp, TRUE))
 				break;
 		break;
@@ -269,7 +270,7 @@ pr_score(SCORE *scp, int num)
 {
 	if (scp->sc_score) {
 		if (num)
-			printf("%ld", scp - top_ten + 1);
+			printf("%ld", scp - top_scores + 1);
 		printf("\t%d\t%s: %s on level %d", scp->sc_score, scp->sc_name,
 		    reason[scp->sc_flags], scp->sc_level);
 		if (scp->sc_flags == 0)
@@ -296,19 +297,19 @@ insert_score(SCORE *new)
 	uid = new->sc_uid;
 	amount = new->sc_score;
 
-	for (scp = top_ten; scp < &top_ten[10]; scp++)
+	for (scp = top_scores; scp < &top_scores[10]; scp++)
 		if (amount > scp->sc_score)
 			break;
 		else if (flags != 2 && scp->sc_uid == uid && scp->sc_flags != 2)
-			scp = &top_ten[10];
-	if (scp < &top_ten[10]) {
+			scp = &top_scores[10];
+	if (scp < &top_scores[10]) {
 		if (flags != 2)
-			for (sc2 = scp; sc2 < &top_ten[10]; sc2++) {
+			for (sc2 = scp; sc2 < &top_scores[10]; sc2++) {
 			    if (sc2->sc_uid == uid && sc2->sc_flags != 2)
 				break;
 			}
 		else
-			sc2 = &top_ten[9];
+			sc2 = &top_scores[9];
 		while (sc2 > scp) {
 			*sc2 = sc2[-1];
 			sc2--;
@@ -342,13 +343,7 @@ del_score(void)
 			break;
 	}
 	num--;
-	for (scp = &top_ten[num]; scp < &top_ten[9]; scp++)
+	for (scp = &top_scores[num]; scp < &top_scores[9]; scp++)
 		*scp = scp[1];
-	top_ten[9].sc_score = 0;
-	for (i = 0; i < MAXSTR; i++)
-	    top_ten[9].sc_name[i] = RN;
-	top_ten[9].sc_flags = RN;
-	top_ten[9].sc_level = RN;
-	top_ten[9].sc_monster = RN;
-	top_ten[9].sc_uid = RN;
+	init_score_value(&top_scores[NUMSCORES-1]);
 }

@@ -20,20 +20,36 @@
 #define SCORENAME ".rogue.scr"
 #endif
 
-#define	MAXSCORELINE    80  /* maximum length of score line */
-#define	MAXNAME		80  /* maximum score name allowed */
+/*
+ * maximum username length
+ *
+ * NOTE: A number of C compilers do not correctly process a sscanf(3) line such as:
+ *
+ *	 sscanf(string, "%*s", MAX_USERNAME, str);
+ *
+ * So we must HARD code the maximum width in the sscanf(3) call found in rd_score()
+ * in the save.c file.  The value MAX_USERNAME MUST match the %32s format string width.
+ */
+#define MAX_USERNAME	32
+
+/* maximum length the score line apart from the username */
+#define	MAX_OTHER_SCORE 80
+
+/* must be an just integer = MAX_USERNAME+MAX_OTHER_SCORE */
+#define	MAXSCORELINE   (MAX_USERNAME+MAX_OTHER_SCORE)
 
 struct sc_ent {
     uid_t sc_uid;
     int sc_score;
     unsigned int sc_flags;
     int sc_monster;
-    char sc_name[MAXNAME+1];
+    char sc_name[MAX_USERNAME+1];
     int sc_level;
     uintmax_t sc_time;
 };
 
 typedef struct sc_ent SCORE;
 
-void	rd_score(SCORE *top_ten);
-void	wr_score(SCORE *top_ten);
+void	init_score_value(SCORE *scp);
+void	rd_score(SCORE *top_score);
+void	wr_score(SCORE *top_score);

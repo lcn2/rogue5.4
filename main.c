@@ -76,6 +76,7 @@ main(int argc, char **argv)
     memset(score_path, 0, sizeof(score_path)); /* paranoia */
     snprintf(score_path, MAXSTR, "%s%s", home, SCORENAME);
 
+    memset(whoami, 0, sizeof(whoami)); /* paranoia */
     if ((env = getenv("ROGUEOPTS")) != NULL)
 	parse_opts(env);
     if (env == NULL || whoami[0] == '\0')
@@ -105,6 +106,11 @@ main(int argc, char **argv)
     }
 #endif
     seed = dnum;
+
+    /*
+     * we use the random(3) facility, seeded, to generate random data for init_score()
+     */
+    srandom((unsigned)seed);
 
     open_score();
 

@@ -20,8 +20,6 @@
  *			people will be playing; otherwise the score file
  *			gets hogged by just a few people.
  *	NUMSCORES	Number of scores in the score file (default 10).
- *	NUMNAME		String version of NUMSCORES (first character
- *			should be capitalized) (default "Ten").
  *	MAXLOAD		What (if any) the maximum load average should be
  *			when people are playing.  Since it is divided
  *			by 10, to specify a load limit of 4.0, MAXLOAD
@@ -48,14 +46,10 @@
 #include <errno.h>
 #include <time.h>
 #include <ncurses.h>
+#include "score.h"
 #include "extern.h"
 
 #define NOOP(x) (x += 0)
-
-# ifndef NUMSCORES
-#	define	NUMSCORES	10
-#	define	NUMNAME		"Ten"
-# endif
 
 #ifdef CHECKTIME
 static int num_checks = 0;		/* times we've gone over in checkout() */
@@ -91,8 +85,8 @@ init_check(void)
 void
 open_score(void)
 {
+    struct stat buf;	    /* score file status */
     numscores = NUMSCORES;
-    Numname = NUMNAME;
 
 #ifdef ALLSCORES
     allscore = TRUE;
@@ -112,16 +106,64 @@ open_score(void)
 
     scoreboard = fopen(score_path, "r+");
 
-    if ((scoreboard == NULL) && (errno == ENOENT))
-    {
-	scoreboard = fopen(score_path, "w+");
-        md_chmod(score_path, 0664);
+    /*
+     * If we opened a score file, verify that the score file size is correct
+     *
+     * If the score file as empty, close the score file and let the next section
+     * initialize the score file.
+     */
+    if (scoreboard != NULL) {
+
+	/*
+	 * determine size of the opened score file
+	 */
+	if (fstat(fileno(scoreboard), &buf) < 0) {
+	    /* stat filed, close down and treat as if the previous open failed */
+	    fclose(scoreboard);
+	    scoreboard = NULL;
+
+	/*
+	 * if score file is empty
+	 */
+	} else if (buf.st_size == 0) {
+	    /* close score file, and let the next section initialize the score file */
+	    fclose(scoreboard);
+	    scoreboard = NULL;
+	}
     }
 
+    /*
+     * initialize the score file if the score file is not open
+     */
     if (scoreboard == NULL) {
-         fprintf(stderr, "Could not open %s for writing: %s\n", score_path, strerror(errno));
-         fflush(stderr);
+	SCORE top_scores[NUMSCORES+1];        /* scores from the score file, +1 for paranoia */
+	int i;
+
+	/*
+	 * create and truncate a writable score file
+	 */
+	scoreboard = fopen(score_path, "w+");
+	if (scoreboard == NULL) {
+	     fprintf(stderr, "Could not open %s for writing: %s\n", score_path, strerror(errno));
+	     fflush(stderr);
+	     exit(1);
+	}
+        md_chmod(score_path, 0664);
+
+	/*
+	 * initialize all scores
+	 */
+	memset(top_scores, 0, sizeof(top_scores)); /* paranoia */
+	for (i=0; i < NUMSCORES; ++i) {
+	    init_score_value(&top_scores[i]);
+	}
+
+	/*
+	 * write the score file with initialized scores, and then rewind it
+	 */
+	wr_score(top_scores);
     }
+
 }
 
 /*

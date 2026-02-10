@@ -57,16 +57,16 @@ char file_name[MAXSTR+1] = {'\0'};	/* Save file path */
 char score_path[MAXSTR+1] = {'\0'};	/* score file path */
 char huh[MAXSTR];			/* The last message printed */
 const char *p_colors[MAXPOTIONS];		/* Colors of the potions */
-char prbuf[PFBUF_LEN+1];		/* buffer for snprintfs, +1 for paranoia */
+char prbuf[PFBUF_LEN+1] = {'\0'};	/* buffer for snprintfs, +1 for paranoia */
 const char *r_stones[MAXRINGS];		/* Stone settings of the rings */
 int  runch;				/* Direction player is running */
 char *s_names[MAXSCROLLS];		/* Names of the scrolls */
 int  take;				/* Thing she is taking */
-char whoami[MAXSTR];			/* Name of player */
+char whoami[MAXSTR+1] = {'\0'};		/* Name of player, +1 for paranoia */
 const char *ws_made[MAXSTICKS];		/* What sticks are made of */
 char *ws_type[MAXSTICKS];		/* Is it a wand or a staff */
 int  orig_dsusp;			/* Original dsusp char */
-char fruit[MAXSTR] =			/* Favorite fruit */
+char fruit[MAXSTR+1] =			/* Favorite fruit, +1 for paranoia */
 		{ 's', 'l', 'i', 'm', 'e', '-', 'm', 'o', 'l', 'd', '\0' };
 char home[MAXSTR+1] = { '\0' };		/* User's home directory */
 const char *inv_t_name[] = {
@@ -394,7 +394,7 @@ const struct h_list helpstr[] = {
     {'v',	"	print version number",			TRUE},
     {0,		NULL }
 };
-int numscores;
+int numscores = NUMSCORES;
 char *Numname;
 int allscore;
 int between;
