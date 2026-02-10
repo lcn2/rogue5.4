@@ -215,7 +215,7 @@ add_score(void)
 	SCORE	new;
 
 	printf("Name: ");
-	(void) fgets(new.sc_name, MAXSTR, stdin);
+	(void) fgets(new.sc_name, MAX_USERNAME, stdin);
 	new.sc_name[strlen(new.sc_name) - 1] = '\0';
 	do {
 		printf("reason: ");
