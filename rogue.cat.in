@@ -1,0 +1,82 @@
+[4mROGUE[24m(6)                         Games Manual                         [4mROGUE[24m(6)
+
+[1mNAME[0m
+       rogue - Exploring The Dungeons of Doom
+
+[1mSYNOPSIS[0m
+       [1m@PROGRAM@ [22m[ [1m-r [22m] [ [4msave_file[24m ] [ [1m-s [22m] [ [1m-d [22m]
+
+[1mDESCRIPTION[0m
+       [4mRogue[24m  is a computer fantasy game with a new twist.  It is crt oriented
+       and the object of the game is to survive the attacks  of  various  mon-
+       sters and get a lot of gold, rather than the puzzle solving orientation
+       of most computer fantasy games.
+
+       To  get started you really only need to know two commands.  The command
+       [1m?  [22mwill give you a list of the available commands  and  the  command  [1m/[0m
+       will identify the things you see on the screen.
+
+       To  win  the  game (as opposed to merely playing to beat other people's
+       high scores) you must locate the Amulet of Yendor  which  is  somewhere
+       below  the  20th  level  of  the  dungeon  and  get it out.  Nobody has
+       achieved this yet and if somebody does, they will probably go  down  in
+       history as a hero among heroes.
+
+       When  the game ends, either by your death, when you quit, or if you (by
+       some miracle) manage to win, [4mrogue[24m will give you a list of the  top-ten
+       scorers.   The  scoring  is  based entirely upon how much gold you get.
+       There is a 10% penalty for getting yourself killed.
+
+       If [4msave_file[24m is specified, rogue will be restored  from  the  specified
+       saved  game file.  If the [1m-r [22moption is used, the save game file is pre-
+       sumed to be the default.
+
+       The [1m-s [22moption will print out the list of scores.
+
+       The [1m-d [22moption will kill you and try to add you to the score file.
+
+       For more detailed directions, read the document [4mA[24m [4mGuide[24m [4mto[24m [4mthe[24m [4mDungeons[0m
+       [4mof[24m [4mDoom.[0m
+
+[1mAUTHORS[0m
+       Michael C. Toy, Kenneth C. R. C. Arnold, Glenn Wichman
+
+[1mFILES[0m
+       [1mLock File:[0m
+
+            @LOCKFILE@
+
+       [1mScore File:[0m
+
+            @SCOREFILE@
+
+       [1mSave file:[0m
+
+            @SAVEFILE@
+
+[1mSource Code[0m
+       The source code for rogue version 5.4 is available at:
+
+            [4mhttps://github.com/lcn2/rogue5.4[0m
+
+       in the form of a GitHub repo.
+
+       This GitHub repo is maintained by:
+
+            [4mLandon[24m [4mCurt[24m [4mNoll[0m
+
+       GitHub user @lcn2: [1mhttps://github.com/lcn2[22m.
+
+       [1mBONUS[22m: For those who [1mRFTS[22m, the wizard mode password may be found in a C
+       comment in the above GitHub repo.  :-)
+
+[1mSEE ALSO[0m
+       Michael C. Toy and Kenneth C. R. C. Arnold, [4mA[24m [4mguide[24m [4mto[24m [4mthe[24m [4mDungeons[24m  [4mof[0m
+       [4mDoom[0m
+
+[1mBUGS[0m
+       Probably  infinite  (although  countably  infinite).  However, that Ice
+       Monsters sometimes transfix you permanently is [4mnot[24m a bug.  It's a  fea-
+       ture.
+
+4th Berkeley Distribution         May 6, 1986                         [4mROGUE[24m(6)

@@ -2,29 +2,22 @@
 
 Rogue: Exploring the Dungeons of Doom version 5.4 - bug fixed ported to modern C and Unix-like systems
 
+We call the version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
+
 
 ## TL;DR - to install
 
 ```sh
-make
+make clobber all
 sudo make install
 ```
 
-If `configure` fails and/or if you do not have/want the **Autoconf** facility, try the easy way to install:
-
-```sh
-make easy-clobber easy-all
-sudo make easy-install
-```
-
-
 ### Dependencies
 
-* Modern C compiler (perhaps c11 or better)
+* Modern C compiler (perhaps c17 or better)
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
 * [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses)
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, FreeBSD, etc.
-* [GNU Autoconf](https://www.gnu.org/software/autoconf/) (this is optional: see "Configure and autoconf" section below)
 
 
 ### Bug reports and Pull Requests welcome
@@ -176,13 +169,19 @@ This repo improves on the above mentioned repo in several important aspects:
 * Created a top level `Makefile` wrapper to manage the `src/configure` options
 * Install using the common `install(1)` utility (instead of using src/install-sh`)
 * Install the `findpw(6)` and `scedit(6)` rouge tools
-* Provided a easy set of make files in case you wish to avoid the **Autoconf** complexity
+* Removed GNU autoconf complexities replacing it with a simple `Makefile`
+* To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
+* Changed the rogue lock filename to `~/.rogue.lck` (`.rogue.lck` under your home directory)
 * Changed the rogue save filename to `~/.rogue.save` (`.rogue.save` under your home directory)
+* Changed the rogue score filename to `~/.rogue.scr` (`.rogue.scr` under your home directory)
+* Does not require use of `chown(1)`, nor `chgrp(1)` by default
 * Fixed cases where creating invalid type of an item in **wizard mode** crashed the game
 * Creating an item in **wizard mode** that does not have a sub-type no longer asks which type of item
 * Added extensive SPOILER section notes in the lower part of this `README.md` file
-* Fixed several buffer overflow bugs and memory leak conditions.
+* Fixed several buffer overflow bugs and memory leak conditions
+* Fixed bugs related to the reading and writing of the score file
+* The top scores are recorded in the rogue score file, regardless of if the game was won or not
 * etc.
 
 
