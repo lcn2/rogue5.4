@@ -1100,7 +1100,7 @@ int undo[5];
 int uindex = -1;
 
 int
-reread()
+reread(void)
 {
     int redo;
 

@@ -264,7 +264,7 @@ restore(const char *file)
 static int encerrno = 0;
 
 int
-encerror()
+encerror(void)
 {
     return encerrno;
 }
@@ -276,7 +276,7 @@ encseterr(int err)
 }
 
 int
-encclearerr()
+encclearerr(void)
 {
     int n = encerrno;
 

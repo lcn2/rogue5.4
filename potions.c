@@ -17,7 +17,7 @@
 typedef struct PACT
 {
     const int pa_flags;
-    void (*pa_daemon)();
+    void (*pa_daemon)(int);
     const int pa_time;
     const char *pa_high, *pa_straight;
 } PACT;
@@ -97,7 +97,7 @@ quaff(void)
 	    {
 		chg_str(-(rnd(3) + 1));
 		msg("you feel very sick now");
-		come_down();
+		come_down(0);
 	    }
 	when P_HEALING:
 	    pot_info[P_HEALING].oi_know = TRUE;
@@ -183,7 +183,7 @@ quaff(void)
 		pstats.s_hpt = ++max_hp;
 	    }
 	    sight(0);
-	    come_down();
+	    come_down(0);
 	    msg("you begin to feel much better");
 	when P_HASTE:
 	    pot_info[P_HASTE].oi_know = TRUE;

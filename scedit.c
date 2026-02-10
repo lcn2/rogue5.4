@@ -47,8 +47,7 @@ static int	seed;
 static FILE	*finf;
 static char	*scorefile;
 
-struct passwd	*getpwnam();
-int do_comm();
+int do_comm(void);
 int pr_score(SCORE *, int);
 
 

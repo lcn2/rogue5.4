@@ -191,7 +191,7 @@ stomach(int d_arg __attribute__ ((__unused__)))
  *	Take the hero down off her acid trip.
  */
 void
-come_down(void)
+come_down(int d_arg __attribute__ ((__unused__)))
 {
     THING *tp;
     int seemonst;
@@ -287,7 +287,7 @@ visuals(int d_arg __attribute__ ((__unused__)))
  *	Land from a levitation potion
  */
 void
-land(void)
+land(int d_arg __attribute__ ((__unused__)))
 {
     player.t_flags &= ~ISLEVIT;
     msg(choose_str("bummer!  You've hit the ground",
