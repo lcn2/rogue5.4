@@ -118,6 +118,12 @@ typedef unsigned int pid_t;
 #endif
 #define CTRL(c)		(c & 037)
 
+/* maximum length the score line apart from the username */
+#define	MAX_OTHER_SCORE 80
+
+/* must be an just integer = MAX_USERNAME+MAX_OTHER_SCORE */
+#define	MAXSCORELINE   (MAX_USERNAME+MAX_OTHER_SCORE)
+
 /*
  * Now all the global variables
  */
@@ -125,15 +131,16 @@ typedef unsigned int pid_t;
 #define PFBUF_LEN (2*MAXSTR)
 extern int got_ltc, in_shell;
 extern int	wizard;
-extern char	fruit[MAXSTR+1], prbuf[PFBUF_LEN+1], whoami[MAXSTR+1];
+extern char	fruit[MAXSTR+1], prbuf[PFBUF_LEN+1];
 extern int orig_dsusp;
 extern FILE	*scoreboard;
 extern int numscores;
 extern char *Numname;
 extern int allscore;
-extern char file_name[MAXSTR+1];		/* Save file path, +1 for paranoia */
-extern char lock_path[MAXSTR+1];		/* lock file path, +1 for paranoia */
-extern char score_path[MAXSTR+1];		/* score file path, +1 for paranoia */
+extern char home[MAXSTR+1];			/* home path plus trailing /, +1 for paranoia */
+extern char file_name[2*MAXSTR+1];		/* home plus / plus rogue save file path, +1 for paranoia */
+extern char lock_path[2*MAXSTR+1];		/* home plus / plus rogue lock file path, +1 for paranoia */
+extern char score_path[2*MAXSTR+1];		/* home plus / plus rogue score file path, +1 for paranoia */
 
 /*
  * Function types
@@ -172,3 +179,7 @@ void md_onsignal_default(void);
 int md_issymlink(char *sp);
 extern char *xcrypt(const char *key, const char *setting);
 
+extern void form_home(void);
+extern void form_lock_path(void);
+extern void form_save_path(void);
+extern void form_score_path(void);

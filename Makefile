@@ -239,10 +239,12 @@ FSANITIZE+= -fsanitize=vptr
 #
 # We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
 #
-# For HomeBrew gcc version 15:
+# For Homebrew gcc version 15:
 #
 # CC:= gcc-15
 # DEBUG:= -g2
+#
+# For Apple clang and Homebrew gcc:
 #
 # CCWARN+= -Wall
 # CCWARN+= -pedantic
@@ -460,8 +462,6 @@ install: all
 	-@if test ! -f ~/${LOCKFILE_BASENAME}; then \
 	    echo "${INSTALL} -m 0666 empty ~/${LOCKFILE_BASENAME}" ; \
 	    ${INSTALL} -m 0666 empty ~/${LOCKFILE_BASENAME} ; \
-	    echo "${RM} -f ~/${LOCKFILE_BASENAME}" ; \
-	    ${RM} -f ~/${LOCKFILE_BASENAME} ; \
 	fi
 	${RM} -f empty
 
@@ -654,6 +654,7 @@ list.o: rogue.h
 mach_dep.o: config.h
 mach_dep.o: extern.h
 mach_dep.o: mach_dep.c
+mach_dep.o: score.h
 main.o: config.h
 main.o: extern.h
 main.o: main.c
@@ -661,6 +662,7 @@ main.o: rogue.h
 mdport.o: config.h
 mdport.o: extern.h
 mdport.o: mdport.c
+mdport.o: score.h
 misc.o: config.h
 misc.o: extern.h
 misc.o: misc.c
@@ -714,6 +716,7 @@ save.o: rogue.h
 save.o: save.c
 save.o: score.h
 scedit.o: config.h
+scedit.o: extern.h
 scedit.o: scedit.c
 scedit.o: score.h
 scmisc.o: scmisc.c

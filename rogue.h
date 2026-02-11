@@ -377,12 +377,12 @@ struct room {
  */
 #define MAX_DMG_STR 13
 struct stats {
-    int s_str;			/* Strength */
+    int s_str;				/* Strength */
     int s_exp;				/* Experience */
     int s_lvl;				/* level of mastery */
     int s_arm;				/* Armor class */
-    int s_hpt;			/* Hit points */
-    char s_dmg[MAX_DMG_STR+1];		/* String describing damage done, +1 for paranoia */
+    int s_hpt;				/* Hit points */
+    char s_dmg[MAX_DMG_STR+1+1];	/* String describing damage done, +1 for NUL, +1 for paranoia */
     int  s_maxhp;			/* Max hit points */
 };
 
@@ -506,7 +506,7 @@ extern int after, again, allscore, door_stop, fight_flush,
 	   numscores, total, between, group, cNWOOD, cNMETAL, cNSTONES,
 	   cNCOLORS;
 
-extern char file_name[], home[], huh[], *Numname, outbuf[],
+extern char file_name[], huh[], *Numname, outbuf[],
 	    *ws_type[], *s_names[];
 
 extern const char *ws_made[], *inv_t_name[], *p_colors[], *r_stones[],
@@ -537,7 +537,7 @@ extern struct monster monsters[];
 extern struct obj_info arm_info[], pot_info[], ring_info[],
 			scr_info[], things[], ws_info[], weap_info[];
 
-extern struct delayed_action d_list[MAXDAEMONS];
+extern struct delayed_action d_list[MAXDAEMONS+1];
 
 extern const STONE    stones[];
 

@@ -34,6 +34,7 @@
 #include <ncurses.h>
 #include <errno.h>
 #include "rogue.h"
+#include "score.h"
 
 /************************************************************************/
 /* Save State Code                                                      */
@@ -200,7 +201,7 @@ rs_write_ints(FILE *savef, int *c, int cnt)
 void
 rs_read_ints(FILE *savef, int *i, int cnt)
 {
-    int n, value;
+    int n, value = 0;
 
     rs_read_int(savef,&value);
 
@@ -220,7 +221,7 @@ rs_write_marker(FILE *savef, int id)
 void
 rs_read_marker(FILE *savef, int id)
 {
-    int nid;
+    int nid = 0;
 
     rs_read_int(savef, &nid);
 
@@ -298,7 +299,7 @@ rs_write_string_index(FILE *savef, const char *master[], int max, const char *st
 void
 rs_read_string_index(FILE *savef, const char *master[], int maxindex, const char **str)
 {
-    int i;
+    int i = 0;
 
     rs_read_int(savef, &i);
 
@@ -320,7 +321,7 @@ rs_write_coord(FILE *savef, coord c)
 void
 rs_read_coord(FILE *savef, coord *c)
 {
-    coord in;
+    coord in = {0, 0};
 
     rs_read_int(savef,&in.x);
     rs_read_int(savef,&in.y);
@@ -352,7 +353,7 @@ rs_write_window(FILE *savef, WINDOW *win)
 void
 rs_read_window(FILE *savef, WINDOW *win)
 {
-    int row,col,maxlines,maxcols,value,width,height;
+    int row,col,maxlines = 0,maxcols = 0,value,width,height;
 
     width  = getmaxx(win);
     height = getmaxy(win);
@@ -689,7 +690,7 @@ void
 rs_read_obj_info(FILE *savef, struct obj_info *mi, int cnt)
 {
     int n;
-    int value;
+    int value = 0;
 
     rs_read_marker(savef, RSID_MAGICITEMS);
 
@@ -797,7 +798,7 @@ rs_write_room_reference(FILE *savef, struct room *rp)
 void
 rs_read_room_reference(FILE *savef, struct room **rp)
 {
-    int i;
+    int i = 0;
 
     rs_read_int(savef, &i);
 
@@ -886,7 +887,7 @@ rs_write_object_list(FILE *savef, THING *l)
 void
 rs_read_object_list(FILE *savef, THING **list)
 {
-    int i, cnt;
+    int i, cnt = 0;
     THING *l = NULL, *previous = NULL, *head = NULL;
 
     rs_read_marker(savef, RSID_OBJECTLIST);
@@ -931,7 +932,7 @@ rs_write_object_reference(FILE *savef, THING *list, THING *item)
 void
 rs_read_object_reference(FILE *savef, THING *list, THING **item)
 {
-    int i;
+    int i = 0;
 
     rs_read_int(savef, &i);
 
@@ -1195,7 +1196,7 @@ rs_write_thing_list(FILE *savef, THING *l)
 void
 rs_read_thing_list(FILE *savef, THING **list)
 {
-    int i, cnt;
+    int i, cnt = 0;
     THING *l = NULL, *previous = NULL, *head = NULL;
 
     rs_read_marker(savef, RSID_MONSTERLIST);
@@ -1254,7 +1255,7 @@ rs_write_thing_reference(FILE *savef, THING *list, THING *item)
 void
 rs_read_thing_reference(FILE *savef, THING *list, THING **item)
 {
-    int i;
+    int i = 0;
 
     rs_read_int(savef, &i);
 
@@ -1332,7 +1333,7 @@ rs_save_file(FILE *savef)
     rs_write_potions(savef);
     rs_write_rings(savef);
     rs_write_scrolls(savef);
-    rs_write_chars(savef, whoami, MAXSTR);
+    rs_write_chars(savef, whoami, MAX_USERNAME);
     rs_write_sticks(savef);
     rs_write_chars(savef, fruit, MAXSTR);
     rs_write_int(savef,n_objs);
@@ -1398,7 +1399,7 @@ rs_restore_file(FILE *savef)
     rs_read_potions(savef);
     rs_read_rings(savef);
     rs_read_scrolls(savef);
-    rs_read_chars(savef, whoami, MAXSTR);
+    rs_read_chars(savef, whoami, MAX_USERNAME);
     rs_read_sticks(savef);
     rs_read_chars(savef, fruit, MAXSTR);
     rs_read_int(savef, &n_objs);

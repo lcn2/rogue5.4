@@ -46,6 +46,8 @@
 #include <errno.h>
 #include <time.h>
 #include <ncurses.h>
+#include <sys/file.h>
+#include "rogue.h"
 #include "score.h"
 #include "extern.h"
 
@@ -54,6 +56,9 @@
 #ifdef CHECKTIME
 static int num_checks = 0;		/* times we've gone over in checkout() */
 #endif /* CHECKTIME */
+
+static int lock_fd = -1;		/* rogue lock file descriptor, <0 ==> rogue lock file not open */
+static bool locked = FALSE;		/* TRUE ==> locked, FALSE ==> not locked */
 
 /*
  * init_check:
@@ -246,7 +251,7 @@ start_score(void)
  *      See if the file has a symbolic link
   */
 int
-is_symlink(char *sp)
+is_symlink(const char *sp)
 {
 #ifdef S_IFLNK
     struct stat sbuf2;
@@ -400,80 +405,96 @@ ucount(void)
 
 /*
  * lock_sc:
- *	lock the score file.  If it takes too long, ask the user if
- *	they care to wait.  Return TRUE if the lock is successful.
+ *	lock the rogue lock file.  Return TRUE if the lock is successful.
  */
-static FILE *lfd = NULL;
 int
 lock_sc(void)
 {
-    int cnt;
-    struct stat sbuf;
+    int ret;	    /* flock return */
 
-over:
-    if (lock_path[0] && ((lfd=fopen(lock_path, "w+")) != NULL))
-	return TRUE;
-    for (cnt = 0; cnt < 5; cnt++)
-    {
-	md_sleep(1);
-	if (lock_path[0] && ((lfd=fopen(lock_path, "w+")) != NULL))
-	    return TRUE;
-    }
-    if (lock_path[0] && (stat(lock_path, &sbuf) < 0))
-    {
-	lfd=fopen(lock_path, "w+");
+    /*
+     * do nothing if already locked
+     */
+    if (locked) {
 	return TRUE;
     }
-    if (time(NULL) - sbuf.st_mtime > 10)
-    {
-	if (lock_path[0] && (md_unlink(lock_path) < 0))
-	    return FALSE;
-	goto over;
+
+    /*
+     * form lock path if needed
+     */
+    if (lock_path[0] == '\0') {
+	form_lock_path();
     }
-    else
-    {
-	printf("The score file is very busy.  Do you want to wait longer\n");
-	printf("for it to become free so your score can get posted?\n");
-	printf("If so, type \"y\"\n");
-	/* check return value of fgets() */
-	if (fgets(prbuf, MAXSTR, stdin) == NULL)
+
+    /*
+     * open lock file if not already open
+     */
+    if (lock_fd < 0) {
+	lock_fd = open(lock_path, O_RDWR|O_CREAT);
+	if (lock_fd < 0) {
+	    /* failed to open and/or create the lock file */
+	    fprintf(stderr, "\nERROR: failed to open lock file: %s\n", lock_path);
 	    return FALSE;
-	if (prbuf[0] == 'y')
-	    for (;;)
-	    {
-		if (lock_path[0] && ((lfd=fopen(lock_path, "w+")) != 0))
-		    return TRUE;
-		if (lock_path[0] && (stat(lock_path, &sbuf) < 0))
-		{
-		    lfd=fopen(lock_path, "w+");
-		    return TRUE;
-		}
-		if (time(NULL) - sbuf.st_mtime > 10)
-		{
-		    if (lock_path[0] && (md_unlink(lock_path) < 0))
-			return FALSE;
-		}
-		md_sleep(1);
-	    }
-	else
-	    return FALSE;
+	}
     }
+
+    /*
+     * lock the file
+     */
+    ret = flock(lock_fd, LOCK_EX);
+    if (ret < 0) {
+	/* failed to lock */
+	fprintf(stderr, "\nERROR: failed to lock: %s\n", lock_path);
+	return FALSE;
+    }
+
+    /*
+     * lock successful
+     */
+    locked = TRUE;
+    return TRUE;
 }
 
 /*
  * unlock_sc:
- *	Unlock the score file
+ *	Unlock the rogue lock file
  */
 
 void
 unlock_sc(void)
 {
-    if (lfd != NULL)
-        fclose(lfd);
-    lfd = NULL;
-    if (lock_path[0]) {
-	md_unlink(lock_path);
+    int ret;	    /* flock return */
+
+    /*
+     * do nothing if not locked
+     */
+    if (! locked) {
+	return;
     }
+
+    /*
+     * do nothing is lock file is not open
+     */
+    if (lock_fd < 0) {
+	locked = FALSE;
+	return;
+    }
+
+    /*
+     * unlock
+     */
+    ret = flock(lock_fd, LOCK_UN);
+    if (ret < 0) {
+	/* failed to lock */
+	fprintf(stderr, "\nERROR: failed to unlock: %s\n", lock_path);
+	return;
+    }
+
+    /*
+     * unlock successful
+     */
+    locked = FALSE;
+    return;
 }
 
 /*
@@ -485,4 +506,121 @@ void
 flush_type(void)
 {
     flushinp();
+}
+
+/*
+ * form_home:
+ *      Form home path, plus trailing /, if not already formed.
+ */
+
+void
+form_home(void)
+{
+    /*
+     * do nothing if home string is non-empty
+     */
+    if (home[0]) {
+        return;
+    }
+
+    /*
+     * get home plus trialing / from environment
+     */
+    memset(home, 0, sizeof(home)); /* paranoia */
+    strncpy(home, md_gethomedir(), MAXSTR);
+    home[MAXSTR] = '\0'; /* paranoia */
+    return;
+}
+
+/*
+ * form_lock_path:
+ *	determine rouge score lock path
+ */
+
+void
+form_lock_path(void)
+{
+    /*
+     * do nothing if lock path string is non-empty
+     */
+    if (lock_path[0]) {
+        return;
+    }
+
+    /*
+     * form home plus trialing / if not already set
+     */
+    if (home[0] == '\0') {
+	form_home();
+    }
+
+    /*
+     * determine lock file path
+     */
+    memset(lock_path, 0, sizeof(lock_path)); /* paranoia */
+    snprintf(lock_path, 2*MAXSTR, "%s%s", home, LOCKNAME);
+    lock_path[2*MAXSTR] = '\0'; /* paranoia */
+    return;
+}
+
+/*
+ * form_save_path:
+ *	determine rouge save file path
+ */
+
+void
+form_save_path(void)
+{
+    /*
+     * do nothing if save path string is non-empty
+     */
+    if (file_name[0]) {
+        return;
+    }
+
+    /*
+     * form home plus trialing / if not already set
+     */
+    if (home[0] == '\0') {
+	form_home();
+    }
+
+    /*
+     * determine save file path
+     */
+    memset(file_name, 0, sizeof(file_name)); /* paranoia */
+    snprintf(file_name, 2*MAXSTR, "%s%s", home, SAVENAME);
+    file_name[2*MAXSTR] = '\0'; /* paranoia */
+    return;
+}
+
+/*
+ * form_score_path:
+ *	determine rouge score file path
+ */
+
+void
+form_score_path(void)
+{
+    /*
+     * do nothing if score path string is non-empty
+     */
+    if (score_path[0]) {
+        return;
+    }
+
+    /*
+     * form home plus trialing / if not already set
+     */
+    if (home[0] == '\0') {
+	form_home();
+    }
+
+    /*
+     * determine score file path
+     */
+    memset(score_path, 0, sizeof(score_path)); /* paranoia */
+    snprintf(score_path, 2*MAXSTR, "%s%s", home, SCORENAME);
+    score_path[2*MAXSTR] = '\0'; /* paranoia */
+    return;
 }

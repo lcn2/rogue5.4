@@ -28,12 +28,13 @@
 
 # define	MAXSTR	1024
 
+# include	"extern.h"
 # include	"score.h"
 # include	"config.h"
 
-static SCORE	top_scores[NUMSCORES+1];	/* scores from the score file, +1 for paranoia */
+char whoami[MAX_USERNAME] = {'\0'};	/* Name of player */
 
-static char home[MAXSTR+1] = { '\0' };	/* User's home directory */
+static SCORE	top_scores[NUMSCORES+1];	/* scores from the score file, +1 for paranoia */
 
 static char	buf[BUFSIZ+1+1],	/* +1 for when we read BUFSIZ starting with &buf[1], +1 for paranoia */
 		*reason[] = {
@@ -62,11 +63,11 @@ int	pr_score(SCORE *scp, int num);
 
 extern pid_t	md_getpid(void);
 extern void	s_encread(char *start, size_t size, int inf);
-extern int	s_lock_sc(void);
 extern void	s_encwrite(char *start, size_t size, FILE *outf);
-extern void	s_unlock_sc(void);
 extern char	*md_getrealname(uid_t uid);
 extern char	*md_gethomedir(void);
+extern int	lock_sc(void);
+extern void	unlock_sc(void);
 
 /* external functions from scmisc.c */
 
@@ -77,28 +78,19 @@ int
 main(int ac, char *av[])
 {
 	int	inf;
-	size_t  scorename_len = 0;
-	size_t  home_len = 0;
 
 	memset(top_scores, 0, sizeof(top_scores)); /* paranoia */
 	if (ac == 1) {
 
-	    /*
-	     * get home and options from environment
-	     */
+		/*
+		 * form critical paths
+		 *
+		 * FYI: rogue save file path not needed.
+		 */
+		form_home();
+		form_lock_path();
+		form_score_path();
 
-	    strncpy(home, md_gethomedir(), MAXSTR);
-	    home[MAXSTR] = '\0'; /* paranoia */
-	    scorename_len = strlen(SCORENAME);
-	    home_len = strlen(home);
-	    if (home_len > MAXSTR - scorename_len - 1)
-		home[0] = '\0';
-	    scorefile = calloc(MAXSTR+scorename_len+1, 1);
-	    if (scorefile == NULL) {
-		perror("calloc for scorefile failed");
-		exit(1);
-	    }
-	    snprintf(scorefile, MAXSTR+scorename_len+1, "%s%s", home, SCORENAME);
 	} else {
 		scorefile = av[1];
 	}
@@ -148,13 +140,13 @@ do_comm(void)
 			exit(1);
 		}
 		fseek(outf, 0L, 0);
-		if (s_lock_sc())
+		if (lock_sc())
 		{
 			void (*fp)(int);
 
 			fp = signal(SIGINT, SIG_IGN);
 			s_encwrite((char *) top_scores, sizeof top_scores, outf);
-			s_unlock_sc();
+			unlock_sc();
 			signal(SIGINT, fp);
 			written = TRUE;
 		}

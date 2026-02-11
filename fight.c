@@ -270,7 +270,7 @@ attack(THING *mp)
 		     */
 		    player.t_flags |= ISHELD;
 		    memset(monsters['F'-'A'].m_stats.s_dmg, 0, sizeof(monsters['F'-'A'].m_stats.s_dmg)); /* paranoia */
-		    snprintf(monsters['F'-'A'].m_stats.s_dmg, MAX_DMG_STR, "%dx1", ++vf_hit);
+		    snprintf(monsters['F'-'A'].m_stats.s_dmg, MAX_DMG_STR+1, "%dx1", ++vf_hit);
 		    if (--pstats.s_hpt <= 0)
 			death('F');
 		when 'L':

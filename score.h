@@ -14,13 +14,6 @@
 #include <stdint.h>
 
 /*
- * default basename of special files
- */
-#if !defined(SCORENAME)
-#define SCORENAME ".rogue.scr"
-#endif
-
-/*
  * maximum username length
  *
  * NOTE: A number of C compilers do not correctly process a sscanf(3) line such as:
@@ -31,12 +24,6 @@
  * in the save.c file.  The value MAX_USERNAME MUST match the %32s format string width.
  */
 #define MAX_USERNAME	32
-
-/* maximum length the score line apart from the username */
-#define	MAX_OTHER_SCORE 80
-
-/* must be an just integer = MAX_USERNAME+MAX_OTHER_SCORE */
-#define	MAXSCORELINE   (MAX_USERNAME+MAX_OTHER_SCORE)
 
 struct sc_ent {
     uid_t sc_uid;
@@ -49,6 +36,8 @@ struct sc_ent {
 };
 
 typedef struct sc_ent SCORE;
+
+extern char whoami[MAX_USERNAME];
 
 void	init_score_value(SCORE *scp);
 void	rd_score(SCORE *top_score);

@@ -14,6 +14,9 @@
 #include <time.h>
 #include <ncurses.h>
 #include "rogue.h"
+#include "score.h"
+
+char whoami[MAX_USERNAME] = {'\0'};	/* Name of player */
 
 /*
  * main:
@@ -43,39 +46,16 @@ main(int argc, char **argv)
 #endif
 
     /*
-     * get home and options from environment
+     * form critical paths
      */
-
-    strncpy(home, md_gethomedir(), MAXSTR);
-    home[MAXSTR] = '\0'; /* paranoia */
-    if (strlen(home) > MAXSTR - strlen(LOCKNAME) - 1) {
-	home[0] = '\0';
-    }
-    if (strlen(home) > MAXSTR - strlen(SAVENAME) - 1) {
-	home[0] = '\0';
-    }
-    if (strlen(home) > MAXSTR - strlen(SCORENAME) - 1) {
-	home[0] = '\0';
-    }
+    form_home();
+    form_lock_path();
+    form_save_path();
+    form_score_path();
 
     /*
-     * determine lock file path
+     * get options from the environment
      */
-    memset(lock_path, 0, sizeof(lock_path)); /* paranoia */
-    snprintf(lock_path, MAXSTR, "%s%s", home, LOCKNAME);
-
-    /*
-     * determine save file (as file_name) path
-     */
-    memset(file_name, 0, sizeof(file_name)); /* paranoia */
-    snprintf(file_name, MAXSTR, "%s%s", home, SAVENAME);
-
-    /*
-     * determine score file path
-     */
-    memset(score_path, 0, sizeof(score_path)); /* paranoia */
-    snprintf(score_path, MAXSTR, "%s%s", home, SCORENAME);
-
     memset(whoami, 0, sizeof(whoami)); /* paranoia */
     if ((env = getenv("ROGUEOPTS")) != NULL)
 	parse_opts(env);

@@ -52,23 +52,22 @@ int  pack_used[26] = {			/* Is the character used in the pack? */
 };
 
 int  dir_ch;				/* Direction from last get_dir() call */
-char lock_path[MAXSTR+1] = {'\0'};	/* lock file path */
-char file_name[MAXSTR+1] = {'\0'};	/* Save file path */
-char score_path[MAXSTR+1] = {'\0'};	/* score file path */
-char huh[MAXSTR];			/* The last message printed */
+char home[MAXSTR+1] = {'\0'};		/* User's home directory plus a trailing /, +1 for paranoia */
+char file_name[2*MAXSTR+1] = {'\0'};	/* home plus / plus rogue save file path, +1 for paranoia */
+char lock_path[2*MAXSTR+1] = {'\0'};	/* home plus / plus rogue lock file path, +1 for paranoia */
+char score_path[2*MAXSTR+1] = {'\0'};	/* home plus / plus rogue score file path, +1 for paranoia */
+char huh[MAXSTR+1];			/* The last message printed */
 const char *p_colors[MAXPOTIONS];		/* Colors of the potions */
 char prbuf[PFBUF_LEN+1] = {'\0'};	/* buffer for snprintfs, +1 for paranoia */
 const char *r_stones[MAXRINGS];		/* Stone settings of the rings */
 int  runch;				/* Direction player is running */
 char *s_names[MAXSCROLLS];		/* Names of the scrolls */
 int  take;				/* Thing she is taking */
-char whoami[MAXSTR+1] = {'\0'};		/* Name of player, +1 for paranoia */
 const char *ws_made[MAXSTICKS];		/* What sticks are made of */
 char *ws_type[MAXSTICKS];		/* Is it a wand or a staff */
 int  orig_dsusp;			/* Original dsusp char */
 char fruit[MAXSTR+1] =			/* Favorite fruit, +1 for paranoia */
 		{ 's', 'l', 'i', 'm', 'e', '-', 'm', 'o', 'l', 'd', '\0' };
-char home[MAXSTR+1] = { '\0' };		/* User's home directory */
 const char *inv_t_name[] = {
 	"Overwrite",
 	"Slow",
@@ -401,9 +400,10 @@ int between;
 
 #define _X_ { EMPTY }
 
-struct delayed_action d_list[MAXDAEMONS] = {
+struct delayed_action d_list[MAXDAEMONS+1] = {
     _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_,
     _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_,
+    _X_
 };
 
 int group = 2;

@@ -37,8 +37,6 @@ typedef struct {
 
 char	*s_vowelstr(char *str);
 
-char *lockfile = "/tmp/.fredlock";
-
 static char	prbuf[MAXLINE+1];		/* buffer for sprintfs */
 
 static MONST	monsters[] = {
@@ -63,78 +61,6 @@ extern int	md_unlink(char *file);
 extern void	add_score(void);
 extern void	del_score(void);
 extern void	insert_score(SCORE *new);
-
-
-/*
- * s_lock_sc:
- *	lock the score file.  If it takes too long, ask the user if
- *	they care to wait.  Return TRUE if the lock is successful.
- */
-int
-s_lock_sc(void)
-{
-    int cnt;
-    struct stat sbuf;
-
-over:
-    close(8);	/* just in case there are no files left */
-    if (creat(lockfile, 0000) >= 0)
-	return TRUE;
-    for (cnt = 0; cnt < 5; cnt++)
-    {
-	md_sleep(1);
-	if (creat(lockfile, 0000) >= 0)
-	    return TRUE;
-    }
-    if (stat(lockfile, &sbuf) < 0)
-    {
-	creat(lockfile, 0000);
-	return TRUE;
-    }
-    if (time(NULL) - sbuf.st_mtime > 10)
-    {
-	if (md_unlink(lockfile) < 0)
-	    return FALSE;
-	goto over;
-    }
-    else
-    {
-	printf("The score file is very busy.  Do you want to wait longer\n");
-	printf("for it to become free so your score can get posted?\n");
-	printf("If so, type \"y\"\n");
-	memset(prbuf, 0, sizeof(prbuf)); /* paranoia */
-	(void) fgets(prbuf, MAXLINE, stdin);
-	if (prbuf[0] == 'y')
-	    for (;;)
-	    {
-		if (creat(lockfile, 0000) >= 0)
-		    return TRUE;
-		if (stat(lockfile, &sbuf) < 0)
-		{
-		    creat(lockfile, 0000);
-		    return TRUE;
-		}
-		if (time(NULL) - sbuf.st_mtime > 10)
-		{
-		    if (md_unlink(lockfile) < 0)
-			return FALSE;
-		}
-		md_sleep(1);
-	    }
-	else
-	    return FALSE;
-    }
-}
-
-/*
- * s_unlock_sc:
- *	Unlock the score file
- */
-void
-s_unlock_sc(void)
-{
-    md_unlink(lockfile);
-}
 
 /*
  * s_encwrite:

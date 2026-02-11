@@ -11,10 +11,14 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
+#include "score.h"
 
 #define MAX_PW_LEN (80)	/* longest password input line we will allow */
 
 extern char *xcrypt(const char *, const char *);
+
+char whoami[MAX_USERNAME] = {'\0'};	/* Name of player */
 
 int
 main(int argc, char *argv[])

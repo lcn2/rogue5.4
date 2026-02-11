@@ -396,7 +396,7 @@ rd_score(SCORE *top_score)
 	 *       sscanf(string, "%*s", MAX_USERNAME, str);
 	 *
 	 * So we must HARD code the maximum width in the sscanf(3) call below.
-	 * The value MAX_USERNAME MUST match the %32s format string width.
+	 * The value MAX_USERNAME in score.h MUST match the %32s format string width.
 	 */
         ret = sscanf(scoreline, "%32s %u %d %u %d %d %jx \n",
             score.sc_name,

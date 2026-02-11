@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "rogue.h"
+#include "score.h"
 
 #define	EQSTR(a, b, c)	(strncmp(a, b, c) == 0)
 
