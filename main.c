@@ -134,7 +134,7 @@ main(int argc, char **argv)
 	    }
 	    exit(0);
 	}
-	else if (strcmp(argv[1], "-v") == 0)
+	else if (strcmp(argv[1], "-V") == 0)
 	{
 	    printf("version %s (chongo was here) %s\n", release, version);
 	    exit(0);

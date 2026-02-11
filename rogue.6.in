@@ -5,7 +5,7 @@
 .\" Copyright (C) 1980-1983, 1985, 1986 Michael Toy, Ken Arnold and Glenn Wichman
 .\" All rights reserved.
 .\"
-.\" See the file LICENSE.TXT for full copyright and licensing information.
+.\" See the file LICENSE for full copyright and licensing information.
 .\"
 .TH ROGUE 6 "May 6, 1986"
 .UC 4
@@ -26,7 +26,7 @@ rogue \- Exploring The Dungeons of Doom
 .B \-d
 ]
 [
-.B \-v
+.B \-V
 ]
 .SH DESCRIPTION
 .PP
@@ -72,7 +72,7 @@ The
 option will kill you and try to add you to the score file.
 .PP
 The
-.B \-v
+.B \-V
 will print the release and version (same as the rogue v command)
 and then exit.
 .PP

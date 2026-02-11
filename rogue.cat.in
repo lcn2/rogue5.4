@@ -4,7 +4,7 @@
        rogue - Exploring The Dungeons of Doom
 
 [1mSYNOPSIS[0m
-       [1m@PROGRAM@ [22m[ [1m-r [22m] [ [4msave_file[24m ] [ [1m-s [22m] [ [1m-d [22m]
+       [1m@PROGRAM@ [22m[ [1m-r [22m] [ [4msave_file[24m ] [ [1m-s [22m] [ [1m-d [22m] [ [1m-V [22m]
 
 [1mDESCRIPTION[0m
        [4mRogue[24m  is a computer fantasy game with a new twist.  It is crt oriented
@@ -34,6 +34,9 @@
        The [1m-s [22moption will print out the list of scores.
 
        The [1m-d [22moption will kill you and try to add you to the score file.
+
+       The [1m-V [22mwill print the release and version (same as the rogue v command)
+       and then exit.
 
        For more detailed directions, read the document [4mA[24m [4mGuide[24m [4mto[24m [4mthe[24m [4mDungeons[0m
        [4mof[24m [4mDoom.[0m
