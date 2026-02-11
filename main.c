@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <time.h>
 #include <ncurses.h>
+#include <sys/stat.h>
 #include "rogue.h"
 #include "score.h"
 
@@ -27,6 +28,11 @@ main(int argc, char **argv)
 {
     char *env;
     time_t lowtime;
+
+    /*
+     * set mode for write access for the owner only
+     */
+    (void) umask(S_IWGRP | S_IWOTH);
 
     md_init();
 

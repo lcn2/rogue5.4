@@ -430,7 +430,7 @@ lock_sc(void)
      * open lock file if not already open
      */
     if (lock_fd < 0) {
-	lock_fd = open(lock_path, O_RDWR|O_CREAT);
+	lock_fd = open(lock_path, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH); /* more 0644 */
 	if (lock_fd < 0) {
 	    /* failed to open and/or create the lock file */
 	    fprintf(stderr, "\nERROR: failed to open lock file: %s\n", lock_path);
