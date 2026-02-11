@@ -7,7 +7,7 @@
  * Copyright (C) 1980-1983, 1985, 1999 Michael Toy, Ken Arnold and Glenn Wichman
  * All rights reserved.
  *
- * See the file LICENSE.TXT for full copyright and licensing information.
+ * See the file LICENSE for full copyright and licensing information.
  */
 #include <stdio.h>
 #include <string.h>

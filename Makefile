@@ -1,6 +1,6 @@
 #!/usr/bin/env make
 #
-# rogue5.4 - rogue version 5.4
+# rogue5.4 - rogue version 5.4.5
 #
 # The following Copyright ONLY applies to this Makefile and README.md files.
 #
@@ -456,6 +456,7 @@ install: all
 	-${INSTALL} -m 0644 rogue.doc ${DESTDOC}/${PROGRAM}.doc
 	-${INSTALL} -m 0644 rogue.html ${DESTDOC}/${PROGRAM}.html
 	-${INSTALL} -m 0644 rogue.cat ${DESTDOC}/${PROGRAM}.cat
+	-${INSTALL} -m 0644 LICENSE ${DESTDOC}/LICENSE
 	-${INSTALL} -m 0644 LICENSE ${DESTDOC}/LICENSE.TXT
 	-${INSTALL} -m 0644 rogue.me ${DESTDOC}/${PROGRAM}.me
 	-${INSTALL} -m 0644 rogue.md ${DESTDOC}/${PROGRAM}.md
@@ -471,6 +472,7 @@ uninstall:
 	-${RM} -f ${DESTDOC}/${PROGRAM}.doc
 	-${RM} -f ${DESTDOC}/${PROGRAM}.html
 	-${RM} -f ${DESTDOC}/${PROGRAM}.cat
+	-${RM} -f ${DESTDOC}/LICENSE
 	-${RM} -f ${DESTDOC}/LICENSE.TXT
 	-${RM} -f ${DESTDOC}/${PROGRAM}.me
 	-${RM} -f ~/${LOCKFILE_BASENAME}

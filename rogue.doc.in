@@ -475,7 +475,7 @@ USD:33-8                     A Guide to the Dungeons of Doom
      To restart from the default save file (see below), run
                % rogue -r
 
-v    Prints the program version number.
+v    Prints the program release and version number.
 
 )    Print the weapon you are currently wielding
 

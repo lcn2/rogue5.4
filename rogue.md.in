@@ -4,7 +4,7 @@ rogue - Exploring The Dungeons of Doom
 
 # SYNOPSIS
 
-**\@PROGRAM@** \[ **-r** \] \[ *save_file* \] \[ **-s** \] \[ **-d** \]
+**\@PROGRAM@** \[ **-r** \] \[ *save_file* \] \[ **-s** \] \[ **-d** \] \[ **-v** \]
 
 # DESCRIPTION
 
@@ -35,6 +35,9 @@ presumed to be the default.
 The **-s** option will print out the list of scores.
 
 The **-d** option will kill you and try to add you to the score file.
+
+The **-v** option will print the release and version (same as the rogue v command)
+and then exit.
 
 For more detailed directions, read the document *A Guide to the Dungeons
 of Doom.*

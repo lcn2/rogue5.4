@@ -471,7 +471,7 @@ run
 .nf
 % rogue \-r
 .ip v
-Prints the program version number.
+Prints the program release and version number.
 .ip )
 Print the weapon you are currently wielding
 .ip ]

@@ -25,6 +25,9 @@ rogue \- Exploring The Dungeons of Doom
 [
 .B \-d
 ]
+[
+.B \-v
+]
 .SH DESCRIPTION
 .PP
 .I Rogue
@@ -67,6 +70,11 @@ option will print out the list of scores.
 The
 .B \-d
 option will kill you and try to add you to the score file.
+.PP
+The
+.B \-v
+will print the release and version (same as the rogue v command)
+and then exit.
 .PP
 For more detailed directions, read the document
 .I "A Guide to the Dungeons of Doom."

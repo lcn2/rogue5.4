@@ -3,7 +3,7 @@
  * Copyright (C) 1980-1983, 1985, 1999 Michael Toy, Ken Arnold and Glenn Wichman
  * All rights reserved.
  *
- * See the file LICENSE.TXT for full copyright and licensing information.
+ * See the file LICENSE for full copyright and licensing information.
  *
  * @(#)main.c	4.22 (Berkeley) 02/05/99
  */
@@ -132,6 +132,11 @@ main(int argc, char **argv)
 	    } else {
 		death('B');
 	    }
+	    exit(0);
+	}
+	else if (strcmp(argv[1], "-v") == 0)
+	{
+	    printf("version %s (chongo was here) %s\n", release, version);
 	    exit(0);
 	}
     }

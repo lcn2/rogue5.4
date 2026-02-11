@@ -8,10 +8,10 @@
  * Copyright (C) 1980-1983, 1985, 1999 Michael Toy, Ken Arnold and Glenn Wichman
  * All rights reserved.
  *
- * See the file LICENSE.TXT for full copyright and licensing information.
+ * See the file LICENSE for full copyright and licensing information.
  */
 
 const char *release = "5.4.5";
 const char encstr[] = "\300k||`\251Y.'\305\321\201+\277~r\"]\240_\223=1\341)\222\212\241t;\t$\270\314/<#\201\254";
 const char statlist[] = "\355kl{+\204\255\313idJ\361\214=4:\311\271\341wK<\312\321\213,,7\271/Rk%\b\312\f\246";
-const char version[] = "rogue (rogueforge) 09/05/07";
+const char version[] = "(github.com/lcn2/rogue5.4) 2026-02-11";

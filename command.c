@@ -7,7 +7,7 @@
  * Copyright (C) 1980-1983, 1985, 1999 Michael Toy, Ken Arnold and Glenn Wichman
  * All rights reserved.
  *
- * See the file LICENSE.TXT for full copyright and licensing information.
+ * See the file LICENSE for full copyright and licensing information.
  */
 
 #include <stdlib.h>
@@ -294,7 +294,7 @@ over:
 		    wrefresh(curscr);
 		when 'v':
 		    after = FALSE;
-		    msg("version %s. (mctesq was here)", release);
+		    msg("version %s (chongo was here) %s", release, version);
 		when 'S':
 		    after = FALSE;
 		    save_game();
