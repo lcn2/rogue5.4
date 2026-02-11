@@ -195,8 +195,7 @@ MAKE_FILE= Makefile
 #
 # The following Address Sanitizer (ASAN) are common to both RHEL9.7 (Linux) and macOS 26.2.
 #
-# By default, the Address Sanitizer is NOT enabled, not compiled into calc.
-# To enable the Address Sanitizer, uncomment the appropriate lines in Makefile.local !!!
+# By default, the Address Sanitizer is NOT enabled.
 #
 FSANITIZE:= -Wno-invalid-command-line-argument
 FSANITIZE+= -fno-common
@@ -229,17 +228,13 @@ FSANITIZE+= -fsanitize=vptr
 #
 #       See: https://releases.llvm.org/17.0.1/tools/clang/docs/AddressSanitizer.html
 #
-# See the FSANITIZE comment block in Makefile.config for common FSANITIZE values and more info.
-#
 # To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
 #
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
 # See also: https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early
 # And also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
 #
-# We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
-#
-# For Homebrew gcc version 15:
+# For Homebrew gcc version 15 only:
 #
 # CC:= gcc-15
 # DEBUG:= -g2
@@ -251,9 +246,12 @@ FSANITIZE+= -fsanitize=vptr
 # CCWARN+= -Werror
 # COPT:= -O0
 #
+# For Apple clang only:
+#
 # FSANITIZE+= -fsanitize=nullability-arg
 # FSANITIZE+= -fsanitize=nullability-assign
 # FSANITIZE+= -fsanitize=nullability-return
+#
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
 # DEBUG:= -ggdb3
@@ -271,14 +269,10 @@ FSANITIZE+= -fsanitize=vptr
 #       libasan-11.5.0-11.el9.x86_64
 #       libubsan-11.5.0-11.el9.x86_64
 #
-# See the FSANITIZE comment block in Makefile.config for common FSANITIZE values and more info.
-#
 # To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
 #
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
 # And also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
-#
-# We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
 #
 # Be sure you have the following dnf packages installed:
 #
@@ -287,10 +281,10 @@ FSANITIZE+= -fsanitize=vptr
 # CCWARN+= -Wall
 # CCWARN+= -pedantic
 # CCWARN+= -Werror
+# COPT:= -O0
 #
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
-# COPT:= -O0
 # DEBUG:= -ggdb3
 ####
 
