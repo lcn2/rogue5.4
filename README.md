@@ -2,8 +2,22 @@
 
 Rogue: Exploring the Dungeons of Doom version 5.4 - bug fixed ported to modern C and Unix-like systems
 
-We call the version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
+We call this version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
 
+For details on the release/version run `rogue -V` or type the "**v**" command into the game.
+
+## Source Code Origin
+
+**IMPORTANT NOTE**: This code is reasonably close to the original rouge
+source that used to generate the Vax/pdp binary was distributed on the
+4BSD tapes: the so called "Toy/Wichman/Arnold Vax binary" rogue game.
+
+**IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
+rouge game that distributions such as NetBSD imported from 386bsd.
+The "Public domain rogue" was a reverse engineering attempt of the
+Vax/pdp binary game found on 4BSD tapes.  As such the "Public domain rogue"
+game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
+a number of ways.
 
 ## TL;DR - to install
 
