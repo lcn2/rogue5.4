@@ -241,20 +241,20 @@ FSANITIZE+= -fsanitize=vptr
 #
 # For Apple clang and Homebrew gcc:
 #
-# CCWARN+= -Wall
-# CCWARN+= -pedantic
-# CCWARN+= -Werror
-# COPT:= -O0
+CCWARN+= -Wall
+CCWARN+= -pedantic
+CCWARN+= -Werror
+COPT:= -O0
 #
 # For Apple clang only:
 #
-# FSANITIZE+= -fsanitize=nullability-arg
-# FSANITIZE+= -fsanitize=nullability-assign
-# FSANITIZE+= -fsanitize=nullability-return
+FSANITIZE+= -fsanitize=nullability-arg
+FSANITIZE+= -fsanitize=nullability-assign
+FSANITIZE+= -fsanitize=nullability-return
 #
-# CFLAGS+= ${FSANITIZE} -fstack-protector-all
-# LDFLAGS+= ${FSANITIZE}
-# DEBUG:= -ggdb3
+CFLAGS+= ${FSANITIZE} -fstack-protector-all
+LDFLAGS+= ${FSANITIZE}
+DEBUG:= -ggdb3
 ####
 
 ####

@@ -221,46 +221,6 @@ directly to this repo.  Even so, we are greatful to the
 for making original code base available.
 
 
-## Configure and autoconf(1)
-
-Some people prefer to not bother with the **Autoconf** facility and running `configure`.
-
->  For more information on  **Autoconf** see [Gnu Autoconf](https://www.gnu.org/software/autoconf/)
-
-The upper level `Makefile` will, by default, attempt to use `src/configure`, you have `autoconf(1)` installed.
-The upper level `Makefile` will attempt to run `src/configure` with a reasonable set of options that
-have a change to work, assuming that [Gnu Autoconf](https://www.gnu.org/software/autoconf/) in installed.
-
-Should the use of `src/configure` fail, you may wish to try our easy make rules:
-
-* make easy-configure
-
-This rule simply moves into place, some reasonable estimations of what `src/configure` tried to produce.
-
-You may have to edit `src/config.h` and/or `src/Makefile` to suit your needs afterwards
-
-* make easy-all
-
-This rule invokes the all rule from the `src/Makefile.easy` makefile.
-
-Now that you have both `src/config.h` and `src/Makefile`, use the
-`src/Makefile.easy` makefile to compile the code.
-
-**IMPORTANT NOTE**: When bypassing [Gnu Autoconf](https://www.gnu.org/software/autoconf/), you no longer
-benefit from the **Autoconf** facility ability to configure the code for your system.
-Chances are, the above should work.  However should something go wrong,
-you have have to edit `src/config.h` and/or `src/Makefile` or perhaps
-even modify the code.  If do have to modify stuff, please consider sharing by opening up a
-[GitHub Pull Request](https://github.com/lcn2/rogue5.4/pulls).
-
-* sudo make easy-install easy-clobber
-
-Use the install rule in the `src/Makefile.easy` makefile to install `rogue(6)`,
-the `findpw(6)` and `scedit(6)` rouge tools, rogue documentation, and `rogue(6)` man page.
-
-The addition of easy-clobber on the sudo line will "clean up" the source tree after installing.
-
-
 # Skip over the SPOILERS to the very bottom for Reporting Security Issues
 
 
