@@ -45,23 +45,24 @@ int  tombstone = TRUE;			/* Print out tombstone at end */
 #ifdef MASTER
 int  wizard = FALSE;			/* True if allows wizard commands */
 #endif
-int  pack_used[26] = {			/* Is the character used in the pack? */
+int  pack_used[MAXPACK + 1] = {		/* Is the character used in the pack? +1 for paranoia */
     FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
     FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-    FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
+    FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
+    FALSE, /* paranoia */
 };
 
 int  dir_ch;				/* Direction from last get_dir() call */
-char home[MAXSTR+1] = {'\0'};		/* User's home directory plus a trailing /, +1 for paranoia */
-char file_name[2*MAXSTR+1] = {'\0'};	/* home plus / plus rogue save file path, +1 for paranoia */
-char lock_path[2*MAXSTR+1] = {'\0'};	/* home plus / plus rogue lock file path, +1 for paranoia */
-char score_path[2*MAXSTR+1] = {'\0'};	/* home plus / plus rogue score file path, +1 for paranoia */
-char huh[MAXSTR+1];			/* The last message printed */
-const char *p_colors[MAXPOTIONS];		/* Colors of the potions */
-char prbuf[PFBUF_LEN+1] = {'\0'};	/* buffer for snprintfs, +1 for paranoia */
-const char *r_stones[MAXRINGS];		/* Stone settings of the rings */
+char home[MAXSTR + 1] = {'\0'};		/* User's home directory plus a trailing /, +1 for paranoia */
+char file_name[(2*MAXSTR) + 1] = {'\0'};	/* home plus / plus rogue save file path, +1 for paranoia */
+char lock_path[(2*MAXSTR) + 1] = {'\0'};	/* home plus / plus rogue lock file path, +1 for paranoia */
+char score_path[(2*MAXSTR) + 1] = {'\0'};	/* home plus / plus rogue score file path, +1 for paranoia */
+char huh[MAXSTR+1];			/* The last message printed, +1 for paranoia */
+const char *p_colors[MAXPOTIONS + 1];	/* Colors of the potions, +1 for paranoia */
+char prbuf[PFBUF_LEN + 1] = {'\0'};	/* buffer for snprintfs, +1 for paranoia */
+const char *r_stones[MAXRINGS + 1];	/* Stone settings of the rings, +1 for paranoia */
 int  runch;				/* Direction player is running */
-char *s_names[MAXSCROLLS];		/* Names of the scrolls */
+char *s_names[MAXSCROLLS + 1];		/* Names of the scrolls, +1 for paranoia */
 int  take;				/* Thing she is taking */
 const char *ws_made[MAXSTICKS];		/* What sticks are made of */
 char *ws_type[MAXSTICKS];		/* Is it a wand or a staff */
@@ -150,7 +151,7 @@ coord delta;				/* Change indicated to get_dir() */
 coord oldpos;				/* Position before last look() call */
 coord stairs;				/* Location of staircase */
 
-PLACE places[MAXLINES*MAXCOLS];		/* level map */
+PLACE places[(MAXLINES*MAXCOLS) + 1];		/* level map, +1 for paranoia */
 
 THING *cur_armor;			/* What he is wearing */
 THING *cur_ring[2];			/* Which rings are being worn */
@@ -169,8 +170,8 @@ WINDOW *hw = NULL;			/* used as a scratch window */
 struct stats max_stats = INIT_STATS;	/* The maximum for the player */
 
 struct room *oldrp;			/* Roomin(&oldpos) */
-struct room rooms[MAXROOMS];		/* One for each room -- A level */
-struct room passages[MAXPASS] =		/* One for each passage */
+struct room rooms[MAXROOMS + 1];	/* One for each room -- A level, +1 for paranoia */
+struct room passages[MAXPASS + 1] =	/* One for each passage, +1 for paranoia */
 {
     { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} },
     { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} },
@@ -184,12 +185,13 @@ struct room passages[MAXPASS] =		/* One for each passage */
     { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} },
     { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} },
     { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} },
-    { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} }
+    { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} },
+    { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} } /* paranoia */
 };
 
 #define ___ 1
 #define XX 10
-struct monster monsters[26] =
+struct monster monsters[26 + 1] =
     {
 /* Name		 CARRY	FLAG    str, exp, lvl, amr, hpt, dmg */
 { "aquator",	   0,	ISMEAN,	{ XX, 20,   5,   2, ___, "0x0/0x0" } },
@@ -219,12 +221,13 @@ struct monster monsters[26] =
 { "wraith",	   0,	0,	{ XX, 55,   5,   4, ___, "1x6" } },
 { "xeroc",	  30,	0,	{ XX,100,   7,   7, ___, "4x4" } },
 { "yeti",	  30,	0,	{ XX, 50,   4,   6, ___, "1x6/1x6" } },
-{ "zombie",	   0,	ISMEAN,	{ XX,  6,   2,   8, ___, "1x8" } }
+{ "zombie",	   0,	ISMEAN,	{ XX,  6,   2,   8, ___, "1x8" } },
+{ "",		   0,	0,	{ 0,   0,   0,   0,   0, "" } }, /* paranoia */
     };
 #undef ___
 #undef XX
 
-struct obj_info things[NUMTHINGS] = {
+struct obj_info things[NUMTHINGS + 1] = {
     { 0,			26 },	/* potion */
     { 0,			36 },	/* scroll */
     { 0,			16 },	/* food */
@@ -232,9 +235,10 @@ struct obj_info things[NUMTHINGS] = {
     { 0,			 7 },	/* armor */
     { 0,			 4 },	/* ring */
     { 0,			 4 },	/* stick */
+    { 0,			 0 },	/* paranoia */
 };
 
-struct obj_info arm_info[MAXARMORS] = {
+struct obj_info arm_info[MAXARMORS + 1] = {
     { "leather armor",		 20,	 20, NULL, FALSE },
     { "ring mail",		 15,	 25, NULL, FALSE },
     { "studded leather armor",	 15,	 20, NULL, FALSE },
@@ -243,8 +247,9 @@ struct obj_info arm_info[MAXARMORS] = {
     { "splint mail",		 10,	 80, NULL, FALSE },
     { "banded mail",		 10,	 90, NULL, FALSE },
     { "plate mail",		  5,	150, NULL, FALSE },
+    { NULL,			  0,	  0, NULL, FALSE }, /* paranoia */
 };
-struct obj_info pot_info[MAXPOTIONS] = {
+struct obj_info pot_info[MAXPOTIONS + 1] = {
     { "confusion",		 7,   5, NULL, FALSE },
     { "hallucination",		 8,   5, NULL, FALSE },
     { "poison",			 8,   5, NULL, FALSE },
@@ -259,8 +264,9 @@ struct obj_info pot_info[MAXPOTIONS] = {
     { "restore strength",	13, 130, NULL, FALSE },
     { "blindness",		 5,   5, NULL, FALSE },
     { "levitation",		 6,  75, NULL, FALSE },
+    { NULL,			 0,   0, NULL, FALSE }, /* paranoia */
 };
-struct obj_info ring_info[MAXRINGS] = {
+struct obj_info ring_info[MAXRINGS + 1] = {
     { "protection",		 9, 400, NULL, FALSE },
     { "add strength",		 9, 400, NULL, FALSE },
     { "sustain strength",	 5, 280, NULL, FALSE },
@@ -275,8 +281,9 @@ struct obj_info ring_info[MAXRINGS] = {
     { "teleportation",		 5,  30, NULL, FALSE },
     { "stealth",		 7, 470, NULL, FALSE },
     { "maintain armor",		 5, 380, NULL, FALSE },
+    { NULL,			 0,   0, NULL, FALSE }, /* paranoia */
 };
-struct obj_info scr_info[MAXSCROLLS] = {
+struct obj_info scr_info[MAXSCROLLS + 1] = {
     { "monster confusion",		 7, 140, NULL, FALSE },
     { "magic mapping",			 4, 150, NULL, FALSE },
     { "hold monster",			 2, 180, NULL, FALSE },
@@ -295,8 +302,9 @@ struct obj_info scr_info[MAXSCROLLS] = {
     { "remove curse",			 7, 105, NULL, FALSE },
     { "aggravate monsters",		 3,  20, NULL, FALSE },
     { "protect armor",			 2, 250, NULL, FALSE },
+    { NULL,				 0,   0, NULL, FALSE }, /* paranoia */
 };
-struct obj_info weap_info[MAXWEAPONS + 1] = {
+struct obj_info weap_info[MAXWEAPONS + 1 + 1] = {
     { "mace",				11,   8, NULL, FALSE },
     { "long sword",			11,  15, NULL, FALSE },
     { "short bow",			12,  15, NULL, FALSE },
@@ -307,8 +315,9 @@ struct obj_info weap_info[MAXWEAPONS + 1] = {
     { "shuriken",			12,   5, NULL, FALSE },
     { "spear",				12,   5, NULL, FALSE },
     { NULL, 0 },	/* DO NOT REMOVE: fake entry for dragon's breath */
+    { NULL,				 0,   0, NULL, FALSE }, /* paranoia */
 };
-struct obj_info ws_info[MAXSTICKS] = {
+struct obj_info ws_info[MAXSTICKS + 1] = {
     { "light",			12, 250, NULL, FALSE },
     { "invisibility",		 6,   5, NULL, FALSE },
     { "lightning",		 3, 330, NULL, FALSE },
@@ -323,6 +332,7 @@ struct obj_info ws_info[MAXSTICKS] = {
     { "teleport away",		 6, 340, NULL, FALSE },
     { "teleport to",		 6,  50, NULL, FALSE },
     { "cancellation",		 5, 280, NULL, FALSE },
+    { NULL,			 0,   0, NULL, FALSE }, /* paranoia */
 };
 
 const struct h_list helpstr[] = {

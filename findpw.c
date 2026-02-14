@@ -18,7 +18,7 @@
 
 extern char *xcrypt(const char *, const char *);
 
-char whoami[MAX_USERNAME] = {'\0'};	/* Name of player */
+char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
 
 int
 main(int argc, char *argv[])
@@ -30,5 +30,6 @@ main(int argc, char *argv[])
     (void) fgets(buf, MAX_PW_LEN+1, stdin);
     buf[strlen(buf) - 1] = '\0';
     printf("%s\n", xcrypt(buf, "mT"));
+    fflush(stdout);
     return 0;
 }

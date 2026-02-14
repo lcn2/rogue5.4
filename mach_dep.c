@@ -74,10 +74,13 @@ init_check(void)
 	printf("Sorry, %s, but the system is too loaded now.\n", whoami);
 	printf("Try again later.  Meanwhile, why not enjoy a%s %s?\n",
 	    vowelstr(fruit), fruit);
-	if (author())
+	fflush(stdout);
+	if (author()) {
 	    printf("However, since you're a good guy, it's up to you\n");
-	else
+	    fflush(stdout);
+	} else {
 	    exit(1);
+	}
     }
 #endif
 }
@@ -149,8 +152,8 @@ open_score(void)
 	 */
 	scoreboard = fopen(score_path, "w+");
 	if (scoreboard == NULL) {
-	     fprintf(stderr, "Could not open %s for writing: %s\n", score_path, strerror(errno));
-	     fflush(stderr);
+	     printf("Could not open %s for writing: %s\n", score_path, strerror(errno));
+	     fflush(stdout);
 	     exit(1);
 	}
         md_chmod(score_path, 0664);
@@ -433,7 +436,8 @@ lock_sc(void)
 	lock_fd = open(lock_path, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH); /* more 0644 */
 	if (lock_fd < 0) {
 	    /* failed to open and/or create the lock file */
-	    fprintf(stderr, "\nERROR: failed to open lock file: %s\n", lock_path);
+	    printf("ERROR: failed to open lock file: %s\n", lock_path);
+	    fflush(stdout);
 	    return FALSE;
 	}
     }
@@ -444,7 +448,8 @@ lock_sc(void)
     ret = flock(lock_fd, LOCK_EX);
     if (ret < 0) {
 	/* failed to lock */
-	fprintf(stderr, "\nERROR: failed to lock: %s\n", lock_path);
+	printf("ERROR: failed to lock: %s\n", lock_path);
+	fflush(stdout);
 	return FALSE;
     }
 
@@ -486,7 +491,8 @@ unlock_sc(void)
     ret = flock(lock_fd, LOCK_UN);
     if (ret < 0) {
 	/* failed to lock */
-	fprintf(stderr, "\nERROR: failed to unlock: %s\n", lock_path);
+	printf("ERROR: failed to unlock: %s\n", lock_path);
+	fflush(stdout);
 	return;
     }
 

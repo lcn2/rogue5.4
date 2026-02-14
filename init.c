@@ -428,7 +428,7 @@ badcheck(const char *name, const struct obj_info *info, int bound)
 
     if (info[bound - 1].oi_prob == 100)
 	return;
-    printf("\nBad percentages for %s (bound = %d):\n", name, bound);
+    printf("Bad percentages for %s (bound = %d):\n", name, bound);
     for (end = &info[bound]; info < end; info++)
 	printf("%3d%% %s\n", info->oi_prob, info->oi_name);
     printf("[hit RETURN to continue]");

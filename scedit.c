@@ -32,7 +32,7 @@
 # include	"score.h"
 # include	"config.h"
 
-char whoami[MAX_USERNAME] = {'\0'};	/* Name of player */
+char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
 
 static SCORE	top_scores[NUMSCORES+1];	/* scores from the score file, +1 for paranoia */
 
@@ -124,7 +124,8 @@ do_comm(void)
 	static FILE	*outf = NULL;
 	static int written = TRUE;
 
-	printf("\nCommand: ");
+	printf("Command: ");
+	fflush(stdout);
 	while (isspace(buf[0] = getchar()) || buf[0] == '\n')
 		continue;
 	memset(&buf[1], 0, sizeof(buf)-1); /* paranoia */
@@ -169,7 +170,8 @@ do_comm(void)
 	  case 'p':
 		if (strncmp(buf, "print", strlen(buf)))
 			goto def;
-		printf("\nTop Ten Rogueists:\nRank\tScore\tName\n");
+		printf("Top Ten Rogueists:\nRank\tScore\tName\n");
+		fflush(stdout);
 		for (scp = top_scores; scp < &top_scores[10]; scp++)
 			if (!pr_score(scp, TRUE))
 				break;
@@ -180,6 +182,7 @@ do_comm(void)
 			goto def;
 		if (!written) {
 			printf("No write\n");
+			fflush(stdout);
 			written = TRUE;
 		}
 		else
@@ -189,6 +192,7 @@ do_comm(void)
 	  default:
 def:
 		printf("Unknown command: \"%s\"\n", buf);
+		fflush(stdout);
 	}
 	return TRUE;
 }
@@ -206,6 +210,7 @@ add_score(void)
 	SCORE	new;
 
 	printf("Name: ");
+	fflush(stdout);
 	(void) fgets(new.sc_name, MAX_USERNAME, stdin);
 	new.sc_name[strlen(new.sc_name) - 1] = '\0';
 	do {
@@ -213,6 +218,7 @@ add_score(void)
 		if ((new.sc_flags = getchar()) < '0' || new.sc_flags > '2') {
 			for (i = 0; i < 3; i++)
 				printf("%d: %s\n", i, reason[i]);
+			fflush(stdout);
 			ungetc(new.sc_flags, stdin);
 		}
 		while (getchar() != '\n')
@@ -221,6 +227,7 @@ add_score(void)
 	new.sc_flags -= '0';
 	do {
 		printf("User Id: ");
+		fflush(stdout);
 		memset(buf, 0, sizeof(buf)); /* paranoia */
 		(void) fgets(buf, BUFSIZ, stdin);
 		buf[strlen(buf) - 1] = '\0';
@@ -231,19 +238,23 @@ add_score(void)
 		printf("Monster: ");
 		if (!isalpha(new.sc_monster = getchar())) {
 			printf("type A-Za-z [%s]\n", unctrl(new.sc_monster));
+			fflush(stdout);
 			ungetc(new.sc_monster, stdin);
 		}
 		while (getchar() != '\n')
 			continue;
 	} while (!isalpha(new.sc_monster));
 	printf("Score: ");
+	fflush(stdout);
 	scanf("%d", &new.sc_score);
 	printf("level: ");
+	fflush(stdout);
 	scanf("%d", &new.sc_level);
 	while (getchar() != '\n')
 		continue;
 	pr_score(&new, FALSE);
 	printf("Really add it? ");
+	fflush(stdout);
 	if (getchar() != 'y')
 		return;
 	while (getchar() != '\n')
@@ -270,6 +281,7 @@ pr_score(SCORE *scp, int num)
         printf(" (%s)", md_getrealname(scp->sc_uid));
 		putchar('\n');
 	}
+	fflush(stdout);
 	return scp->sc_score;
 }
 
@@ -322,15 +334,18 @@ del_score(void)
 
 	for (;;) {
 		printf("Which score? ");
+		fflush(stdout);
 		memset(buf, 0, sizeof(buf)); /* paranoia */
 		(void) fgets(buf, BUFSIZ, stdin);
 		if (buf[0] == '\n')
 			return;
 		sscanf(buf, "%d", &num);
-		if (num < 1 || num > 10)
+		if (num < 1 || num > 10) {
 			printf("range is 1-10\n");
-		else
+			fflush(stdout);
+		} else {
 			break;
+		}
 	}
 	num--;
 	for (scp = &top_scores[num]; scp < &top_scores[9]; scp++)

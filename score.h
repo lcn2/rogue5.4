@@ -37,7 +37,7 @@ struct sc_ent {
 
 typedef struct sc_ent SCORE;
 
-extern char whoami[MAX_USERNAME];
+extern char whoami[MAX_USERNAME+1];	/* Name of player, +1 for paranoia */
 
 void	init_score_value(SCORE *scp);
 void	rd_score(SCORE *top_score);

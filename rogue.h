@@ -42,7 +42,7 @@
 #define MAXROOMS	9
 #define MAXTHINGS	9
 #define MAXOBJ		9
-#define MAXPACK		23
+#define MAXPACK		26
 #define MAXTRAPS	10
 #define AMULETLEVEL	26
 #define	NUMTHINGS	7	/* number of types of things */
@@ -51,6 +51,7 @@
 #define	NUMCOLS		80
 #define STATLINE		(NUMLINES - 1)
 #define BORE_LEVEL	50
+#define MAXMONSTERS	26
 
 /*
  * return values for get functions
@@ -496,8 +497,9 @@ typedef struct STONE STONE;
 
 extern int after, again, allscore, door_stop, fight_flush,
 	   firstmove, has_hit, inv_describe, jump, kamikaze,
-	   lower_msg, move_on, msg_esc, pack_used[],
-	   passgo, playing, q_comm, running, save_msg, see_floor,
+	   lower_msg, move_on, msg_esc;
+extern int pack_used[MAXPACK + 1]; /* +1 for paranoia */
+extern int passgo, playing, q_comm, running, save_msg, see_floor,
 	   seenstairs, stat_msg, terse, to_death, tombstone,
            amulet, count, dir_ch, food_left, hungry_state, inpack,
 	   inv_type, lastscore, level, max_hit, max_level, mpos, take,
@@ -506,8 +508,9 @@ extern int after, again, allscore, door_stop, fight_flush,
 	   numscores, total, between, group, cNWOOD, cNMETAL, cNSTONES,
 	   cNCOLORS;
 
-extern char file_name[], huh[], *Numname, outbuf[],
-	    *ws_type[], *s_names[];
+extern char file_name[(2*MAXSTR) + 1]; /* +1 for paranoia */
+extern char huh[MAXSTR + 1]; /* +1 for paranoia */
+extern char *Numname, outbuf[], *ws_type[], *s_names[];
 
 extern const char *ws_made[], *inv_t_name[], *p_colors[], *r_stones[],
                   *release, *tr_name[], *rainbow[], *wood[], *metal[],
@@ -521,23 +524,32 @@ extern WINDOW *hw;
 
 extern coord delta, oldpos, stairs;
 
-extern PLACE places[];
+extern PLACE places[(MAXLINES*MAXCOLS) + 1]; /* +1 for paranoia */
 
 extern THING *cur_armor, *cur_ring[], *cur_weapon, *l_last_pick,
 	     *last_pick, *lvl_obj, *mlist, player;
 
 extern const struct h_list helpstr[];
 
-extern struct room *oldrp, passages[], rooms[];
+extern struct room *oldrp;
+extern struct room passages[MAXPASS + 1]; /* +1 for paranoia */
+extern struct room rooms[MAXROOMS + 1]; /* +1 for paranoia */
 
 extern struct stats max_stats;
 
-extern struct monster monsters[];
+extern struct monster monsters[MAXMONSTERS + 1]; /* +1 for paranoia */
 
-extern struct obj_info arm_info[], pot_info[], ring_info[],
-			scr_info[], things[], ws_info[], weap_info[];
+extern struct obj_info arm_info[MAXARMORS + 1]; /* +1 for paranoia */
+extern struct obj_info pot_info[MAXPOTIONS + 1]; /* +1 for paranoia */
+extern struct obj_info ring_info[MAXRINGS + 1]; /* +1 for paranoia */
+extern struct obj_info arm_info[MAXARMORS + 1]; /* +1 for paranoia */
+extern struct obj_info pot_info[MAXPOTIONS + 1]; /* +1 for paranoia */
+extern struct obj_info scr_info[MAXSCROLLS + 1]; /* +1 for paranoia */
+extern struct obj_info things[NUMTHINGS + 1]; /* +1 for paranoia */
+extern struct obj_info ws_info[MAXSTICKS + 1]; /* +1 for paranoia */
+extern struct obj_info weap_info[MAXWEAPONS + 1 + 1]; /* +1 for fake entry for dragon's breath, +1 for paranoia */
 
-extern struct delayed_action d_list[MAXDAEMONS+1];
+extern struct delayed_action d_list[MAXDAEMONS+1]; /* +1 for paranoia */
 
 extern const STONE    stones[];
 

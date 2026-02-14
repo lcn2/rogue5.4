@@ -162,7 +162,9 @@ restore(const char *file)
     int syml;
     char buf[MAXSTR];
     struct stat sbuf2;
-    int lines, cols;
+    int lines = 0;
+    int cols = 0;
+    int ret = 0;
 
     if (strcmp(file, "-r") == 0) {
 	file = file_name;
@@ -183,11 +185,16 @@ restore(const char *file)
     if (strcmp(buf, release) != 0)
     {
 	printf("Sorry, saved game is out of date.\n");
+	fflush(stdout);
 	return FALSE;
     }
     encread(buf,80,inf);
-    /* XXX - validate a proper scan - XXX */
-    (void) sscanf(buf,"%d x %d\n", &lines, &cols);
+    ret = sscanf(buf,"%d x %d\n", &lines, &cols);
+    if (ret != 2) {
+	printf("Failed to parse the lines and columns from: %s\n", file);
+	fflush(stdout);
+	return FALSE;
+    }
 
     initscr();                          /* Start up cursor package */
     keypad(stdscr, 1);
@@ -197,6 +204,7 @@ restore(const char *file)
         endwin();
         printf("Sorry, original game was played on a screen with %d lines.\n",lines);
         printf("Current screen only has %d lines. Unable to restore game\n",LINES);
+	fflush(stdout);
         return(FALSE);
     }
     if (cols > COLS)
@@ -204,6 +212,7 @@ restore(const char *file)
         endwin();
         printf("Sorry, original game was played on a screen with %d columns.\n",cols);
         printf("Current screen only has %d columns. Unable to restore game\n",COLS);
+	fflush(stdout);
         return(FALSE);
     }
 
@@ -223,6 +232,7 @@ restore(const char *file)
         md_unlink_open_file(file, inf) < 0)
     {
 	printf("Cannot unlink file\n");
+	fflush(stdout);
 	return FALSE;
     }
     mpos = 0;
@@ -240,14 +250,16 @@ restore(const char *file)
 	if (sbuf2.st_nlink != 1 || syml)
 	{
 	    endwin();
-	    printf("\nCannot restore from a linked file\n");
+	    printf("Cannot restore from a linked file\n");
+	    fflush(stdout);
 	    return FALSE;
 	}
 
     if (pstats.s_hpt <= 0)
     {
 	endwin();
-	printf("\n\"He's dead, Jim\"\n");
+	printf("\"He's dead, Jim\"\n");
+	fflush(stdout);
 	return FALSE;
     }
 
@@ -259,7 +271,8 @@ restore(const char *file)
     msg("file name: %s", file);
     playit();
     /*NOTREACHED*/
-    return(0);
+    fflush(stdout);
+    exit(0);
 }
 
 static int encerrno = 0;
@@ -411,8 +424,9 @@ rd_score(SCORE *top_score)
 	}
     }
     if (failed) {
-	fprintf(stderr, "\nERROR: The score file format is too old and/or has been corrupted!\n");
-	fprintf(stderr, "\nWARNING: Before running rouge again, remove the score file: %s\n", score_path);
+	printf("ERROR: The score file format is too old and/or has been corrupted!\n");
+	printf("WARNING: Before running rouge again, remove the score file: %s\n", score_path);
+	fflush(stdout);
 	exit(1);
     }
 

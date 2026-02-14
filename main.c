@@ -17,7 +17,7 @@
 #include "rogue.h"
 #include "score.h"
 
-char whoami[MAX_USERNAME] = {'\0'};	/* Name of player */
+char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
 
 /*
  * main:
@@ -143,14 +143,18 @@ main(int argc, char **argv)
 	else if (strcmp(argv[1], "-V") == 0)
 	{
 	    printf("version %s (chongo was here) %s\n", release, version);
+	    fflush(stdout);
 	    exit(0);
 	}
     }
 
     init_check();			/* check for legal startup */
     if (argc == 2)
-	if (!restore(argv[1]))	/* Note: restore will never return */
-	    my_exit(1);
+	/* if restore works, it will never return */
+	if (!restore(argv[1])) {
+	    fflush(stdout);
+	    exit(1);
+	}
 #ifdef MASTER
     if (wizard)
 	printf("Hello %s, welcome to dungeon #%u", whoami, dnum);
@@ -183,7 +187,8 @@ main(int argc, char **argv)
       memset (pidfilename, '\0', sizeof(pidfilename));
       snprintf (pidfilename, BUFSIZ-1, "roguepid.%d", pid);
       if ((pidfp = fopen (pidfilename, "w")) == NULL) {
-        fprintf (stderr, "Can't open '%s'.\n", pidfilename);
+        printf("Can't open '%s'.\n", pidfilename);
+	fflush(stdout);
         exit(1);
       }
     }
@@ -202,8 +207,9 @@ main(int argc, char **argv)
      */
     if (LINES < NUMLINES || COLS < NUMCOLS)
     {
-	printf("\nSorry, the screen must be at least %dx%d\n", NUMLINES, NUMCOLS);
 	endwin();
+	printf("Sorry, the screen must be at least %dx%d\n", NUMLINES, NUMCOLS);
+	fflush(stdout);
 	my_exit(1);
     }
 

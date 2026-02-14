@@ -129,7 +129,7 @@ score(int amount, int flags, int monst)
         refresh();
         wgetnstr(stdscr,prbuf,80);
 	endwin();
-        printf("\n");
+	putchar('\n');
         resetltchars();
 	/*
 	 * free up space to "guarantee" there is space for the top_scores
@@ -222,6 +222,7 @@ score(int amount, int flags, int monst)
 	putchar('\n');
     printf("Top %d %s:\n", NUMSCORES, allscore ? "Scores" : "Rogueists");
     printf("   Score Name\n");
+    fflush(stdout);
     for (scp = top_scores; scp < endp; scp++)
     {
 	if (scp->sc_score > 0) {
@@ -232,6 +233,7 @@ score(int amount, int flags, int monst)
 		reason[scp->sc_flags], scp->sc_level);
 	    if (scp->sc_flags == 0 || scp->sc_flags == 3)
 		printf(" by %s", killname(scp->sc_monster, TRUE));
+	    fflush(stdout);
 #ifdef MASTER
 	    if (prflags == 1)
 	    {
@@ -239,7 +241,7 @@ score(int amount, int flags, int monst)
 	    }
 	    else if (prflags == 2)
 	    {
-		fflush(stdout);
+		memset(prbuf, 0, sizeof(prbuf));
 		(void) fgets(prbuf,10,stdin);
 		if (prbuf[0] == 'd')
 		{
@@ -253,13 +255,18 @@ score(int amount, int flags, int monst)
 	    else
 #endif /* MASTER */
                 printf(".");
+	    fflush(stdout);
 	    if (sc2 == scp)
 		    md_raw_standend();
             putchar('\n');
 	}
 	else
+	{
 	    break;
+	}
+	fflush(stdout);
     }
+
     /*
      * Update the list file
      */
