@@ -198,19 +198,10 @@ md_onsignal_autosave(void)
 int
 md_hasclreol(void)
 {
-#if defined(clr_eol)
-#ifndef NCURSES_VERSION
-    if (cur_term == NULL)
-	return(0);
-#if !defined(__NetBSD__) /* NetBSD curses is NOT ncurses */
-    if (cur_term->type.Strings == NULL)
-	return(0);
-#endif
-#endif
-    return((clr_eol != NULL) && (*clr_eol != 0));
-#else
-    return((CE != NULL) && (*CE != 0));
-#endif
+    char *ret;
+
+    ret = tgetstr("clr_eol", NULL);
+    return (ret != NULL);
 }
 
 void
