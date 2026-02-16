@@ -159,6 +159,7 @@ void
 quit(int sig)
 {
     int oy, ox;
+    int ch;
 
     NOOP(sig);
 
@@ -169,7 +170,8 @@ quit(int sig)
 	mpos = 0;
     getyx(curscr, oy, ox);
     msg("really quit?");
-    if (readchar() == 'y')
+    ch = readchar();
+    if (ch == 'y' || ch == 'Y')
     {
 	signal(SIGINT, leave);
 	clear();
