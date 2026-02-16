@@ -7,20 +7,6 @@ We call this version 5.4.5 in order to distinguish it from older, and likely mor
 For details on the release/version run `rogue -V` or type the "**v**" command into the game.
 
 
-## Source Code Origin
-
-**IMPORTANT NOTE**: This code is reasonably close to the original rouge
-source that used to generate the Vax/pdp binary was distributed on the
-4BSD tapes: the so called "Toy/Wichman/Arnold Vax binary" rogue game.
-
-**IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
-rouge game that distributions such as NetBSD imported from 386bsd.
-The "Public domain rogue" was a reverse engineering attempt of the
-Vax/pdp binary game found on 4BSD tapes.  As such the "Public domain rogue"
-game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
-a fair number of ways.
-
-
 ## TL;DR - to install
 
 ```sh
@@ -40,6 +26,32 @@ If your system as issues compiling this code, edit `Makefile` and/or `config.h`.
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
 * [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD, the NetBSD curses is likely work
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
+
+
+## Compatibility and Source Code Origin
+
+**IMPORTANT NOTE**: This code is reasonably close to the original rouge
+source that used to generate the Vax/pdp binary was distributed on the
+4BSD tapes: the so called "Toy/Wichman/Arnold Vax binary" rogue game.
+The game play provided by this code is essentially the same.
+
+**IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
+rouge game that distributions such as NetBSD imported from 386bsd.
+The "Public domain rogue" was a reverse engineering attempt of the
+Vax/pdp binary game found on 4BSD tapes.  As such the "Public domain rogue"
+game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
+a fair number of ways.  Moreover, the rogue save file, rogue lock file,
+and rogue score file used by NetBSD rogue are **NOT** compatible.
+
+**IMPORTANT NOTE**: Old rogue save files saved prior to **2026 Feb 14**,
+are **NOT** compatible, as we had to fix some bugs with the rogue
+save/restore code that required the rogue save file format to be changed.
+
+**IMPORTANT NOTE**: Damaged or old rogue score files, modified prior to
+**2026 Feb 11**, might not be compatible.  The game will exit with an ERROR
+if your rogue score file format is too old and/or has been corrupted.
+Remove the damaged or old rogue score file and run the game to rebuild.
+You can use the `scedit` to restore old scores of you wish.
 
 
 ### Bug reports and Pull Requests welcome
