@@ -18,7 +18,7 @@ rouge game that distributions such as NetBSD imported from 386bsd.
 The "Public domain rogue" was a reverse engineering attempt of the
 Vax/pdp binary game found on 4BSD tapes.  As such the "Public domain rogue"
 game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
-a number of ways.
+a fair number of ways.
 
 
 ## TL;DR - to install
@@ -38,7 +38,7 @@ If your system as issues compiling this code, edit `Makefile` and/or `config.h`.
 
 * Modern C compiler (perhaps c17 or better)
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
-* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses)
+* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD, the NetBSD curses is likely work
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
@@ -63,8 +63,7 @@ After installing:
 
 To quit, interrupt the program (type control-C), answer "y" to the question and press return.
 
-Your score file is store in the `.rogue.scr` file in your current directory (you can change this via
-modifying how the upper `Makefile` runs `src/configure`).
+Your score file is store in the by default, is maintained under your home directory (`~/rogue.scr`).
 
 To save your rogue game, press "S" and save.
 
@@ -158,7 +157,15 @@ For more information about the make, see the `rogue(6)` man page after installin
 from the top level directory:
 
 ```sh
-man src/rogue.6
+make rogue.6
+man ./rogue.6
+```
+
+To read "A Guide to the Dungeons of Doom", try:
+
+```sh
+make rogue.doc
+less rogue.doc
 ```
 
 **GOAL**: As the man page states:
@@ -187,7 +194,6 @@ This repo improves on the above mentioned repo in several important aspects:
 * Improved the C source to be able to compile under recent C compilers
 * Fixed several bugs in the rogue code
 * Fixed the code to compile both the `findpw(6)` and `scedit(6)` rouge tools
-* Install using the common `install(1)` utility (instead of using src/install-sh`)
 * Install the `findpw(6)` and `scedit(6)` rouge tools
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
 * To configure, simply edit `Makefile` and/or the `config.h` file
@@ -201,7 +207,7 @@ This repo improves on the above mentioned repo in several important aspects:
 * Added extensive SPOILER section notes in the lower part of this `README.md` file
 * Fixed many buffer overflow bugs, fixed use of un-initialized variables, and fixed memory leak conditions
 * Fixed bugs related to the reading and writing of the score file
-* Detects if the rogue score file is an old incompible format and/or corrept
+* Detects if the rogue score file is an old incompatible format and/or corrupt
 * If the rogue score file is empty or missing, the code will automatically re-initialize it
 * The top scores are recorded in the rogue score file, regardless of if the game was won or not
 * You may change the `NUMSCORES` value in `config.h` to a value other than 10
@@ -528,7 +534,7 @@ When you read use a staff:
 
 ## wizard mode spoilers
 
-If you do not know the **wizard password**, you will need to do a little reading in the source code.
+If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
 
 **HINT**: "**The historic wizard password is**" found in comment about a defined symbol.
