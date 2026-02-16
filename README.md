@@ -187,8 +187,6 @@ This repo improves on the above mentioned repo in several important aspects:
 * Improved the C source to be able to compile under recent C compilers
 * Fixed several bugs in the rogue code
 * Fixed the code to compile both the `findpw(6)` and `scedit(6)` rouge tools
-* Moved the rogue source down into `src/` sub-directory
-* Created a top level `Makefile` wrapper to manage the `src/configure` options
 * Install using the common `install(1)` utility (instead of using src/install-sh`)
 * Install the `findpw(6)` and `scedit(6)` rouge tools
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
@@ -201,7 +199,7 @@ This repo improves on the above mentioned repo in several important aspects:
 * Fixed cases where creating invalid type of an item in **wizard mode** crashed the game
 * Creating an item in **wizard mode** that does not have a sub-type no longer asks which type of item
 * Added extensive SPOILER section notes in the lower part of this `README.md` file
-* Fixed several buffer overflow bugs and memory leak conditions
+* Fixed many buffer overflow bugs, fixed use of un-initialized variables, and fixed memory leak conditions
 * Fixed bugs related to the reading and writing of the score file
 * Detects if the rogue score file is an old incompible format and/or corrept
 * If the rogue score file is empty or missing, the code will automatically re-initialize it
@@ -422,6 +420,25 @@ to a monster, and often falls to the ground nearby unless there is no
 free space nearby in which case the weapon may simply vanish.
 
 If you are not wielding a weapon, you default to using your fists as a weapon.
+
+To use a bow and arrow:
+
+0) Wield, the w command, the bow
+
+1) Throw an arrow, the t<dir> command, where <dir> is:
+
+    h       left
+    j       down
+    k       up
+    l       right
+    y       up & left
+    u       up & right
+    b       down & left
+    n       down & right
+
+To use a dart, or shuriken:
+
+0) Throw the item, the t<dir> command, where <dir> is noted above.
 
 
 ## armor spoilers ==> ]
