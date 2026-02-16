@@ -254,6 +254,7 @@ rs_read_string(FILE *savef, char *s, int max)
     if (!encerror() && (len > max))
 	encseterr(EILSEQ);
 
+    memset(s, 0, max);
     rs_read_chars(savef, s, len);
 }
 
@@ -269,10 +270,10 @@ rs_read_new_string(FILE *savef, char **s)
 	return;
 
     if (len == 0)
-        buf = NULL;
+        buf = NULL; /* it is OK to set buf to NULL when len is 0 */
     else
     {
-        buf = malloc(len);
+        buf = calloc(len, 1);
 
         if (buf == NULL)
             encseterr(ENOMEM);
@@ -371,6 +372,7 @@ rs_read_window(FILE *savef, WINDOW *win)
     for(row = 0; row < maxlines; row++)
         for(col = 0; col < maxcols; col++)
         {
+	    value = 0;
             rs_read_int(savef, &value);
 
             if ((row < height) && (col < width))
@@ -434,6 +436,7 @@ void
 rs_read_stats(FILE *savef, struct stats *s)
 {
     rs_read_marker(savef, RSID_STATS);
+    memset(s, 0, sizeof(*s));
     rs_read_int(savef,&s->s_str);
     rs_read_int(savef,&s->s_exp);
     rs_read_int(savef,&s->s_lvl);
@@ -614,7 +617,7 @@ void
 rs_read_daemons(FILE *savef, struct delayed_action *dlist, int cnt)
 {
     int i = 0;
-    int func = 0;
+    int func;
     int value = 0;
 
     rs_read_marker(savef, RSID_DAEMONS);
@@ -628,10 +631,13 @@ rs_read_daemons(FILE *savef, struct delayed_action *dlist, int cnt)
 
     for(i=0; i < cnt; i++)
     {
-        func = 0;
+	dlist[i].d_type = 0;
         rs_read_int(savef, &dlist[i].d_type);
+        func = 0;
         rs_read_int(savef, &func);
+	dlist[i].d_arg = 0;
         rs_read_int(savef, &dlist[i].d_arg);
+	dlist[i].d_time = 0;
         rs_read_int(savef, &dlist[i].d_time);
 
 	if (encerror())
@@ -707,9 +713,12 @@ rs_read_obj_info(FILE *savef, struct obj_info *mi, int cnt)
     for(n = 0; n < value; n++)
     {
         /* mi_name is const, defined at compile time in all cases */
+	mi[n].oi_prob = 0;
         rs_read_int(savef,&mi[n].oi_prob);
+	mi[n].oi_worth = 0;
         rs_read_int(savef,&mi[n].oi_worth);
         rs_read_new_string(savef,&mi[n].oi_guess);
+	mi[n].oi_know = 0;
         rs_read_int(savef,&mi[n].oi_know);
     }
 }
@@ -740,6 +749,7 @@ rs_write_room(FILE *savef, struct room *r)
 void
 rs_read_room(FILE *savef, struct room *r)
 {
+    memset(r, 0, sizeof(*r));
     rs_read_coord(savef,&r->r_pos);
     rs_read_coord(savef,&r->r_max);
     rs_read_coord(savef,&r->r_gold);
@@ -1096,9 +1106,13 @@ rs_read_thing(FILE *savef, THING *t)
         return;
 
     rs_read_coord(savef,&t->_t._t_pos);
+    t->_t._t_turn = 0;
     rs_read_int(savef,&t->_t._t_turn);
+    t->_t._t_type = 0;
     rs_read_int(savef,&t->_t._t_type);
+    t->_t._t_disguise = 0;
     rs_read_int(savef,&t->_t._t_disguise);
+    t->_t._t_oldch = 0;
     rs_read_int(savef,&t->_t._t_oldch);
 
     /*
@@ -1151,6 +1165,7 @@ rs_read_thing(FILE *savef, THING *t)
     else
         t->_t._t_dest = NULL;
 
+    t->_t._t_flags = 0;
     rs_read_int(savef,&t->_t._t_flags);
     rs_read_stats(savef,&t->_t._t_stats);
     rs_read_room_reference(savef, &t->_t._t_room);
@@ -1329,7 +1344,7 @@ rs_save_file(FILE *savef)
     rs_write_int(savef, see_floor);
     rs_write_int(savef, terse);
     rs_write_int(savef, tombstone);
-    rs_write_ints(savef, pack_used, 26);
+    rs_write_ints(savef, pack_used, MAXPACK);
     rs_write_chars(savef, file_name, MAXSTR);
     rs_write_chars(savef, huh, MAXSTR);
     rs_write_potions(savef);
@@ -1365,7 +1380,7 @@ rs_save_file(FILE *savef)
     rs_write_stats(savef,&max_stats);
     rs_write_rooms(savef, rooms, MAXROOMS);
     rs_write_rooms(savef, passages, MAXPASS);
-    rs_write_monsters(savef,monsters,26);
+    rs_write_monsters(savef, monsters, MAXMONSTERS);
     rs_write_obj_info(savef, things,  NUMTHINGS);
     rs_write_obj_info(savef, arm_info,  MAXARMORS);
     rs_write_obj_info(savef, pot_info,  MAXPOTIONS);
@@ -1373,7 +1388,7 @@ rs_save_file(FILE *savef)
     rs_write_obj_info(savef, scr_info,  MAXSCROLLS);
     rs_write_obj_info(savef, weap_info,  MAXWEAPONS+1);
     rs_write_obj_info(savef, ws_info, MAXSTICKS);
-    rs_write_daemons(savef, &d_list[0], 20);
+    rs_write_daemons(savef, &d_list[0], MAXDAEMONS);
     rs_write_int(savef,between);
     rs_write_int(savef, group);
     rs_write_window(savef,stdscr);
@@ -1386,16 +1401,26 @@ rs_restore_file(FILE *savef)
 {
     encclearerr();
 
+    noscore = 0;
     rs_read_int(savef, &noscore);
+    seenstairs = 0;
     rs_read_int(savef, &seenstairs);
+    amulet = 0;
     rs_read_int(savef, &amulet);
+    fight_flush = 0;
     rs_read_int(savef, &fight_flush);
+    jump = 0;
     rs_read_int(savef, &jump);
+    passgo = 0;
     rs_read_int(savef, &passgo);
+    see_floor = 0;
     rs_read_int(savef, &see_floor);
+    terse = 0;
     rs_read_int(savef, &terse);
+    tombstone = 0;
     rs_read_int(savef, &tombstone);
-    rs_read_ints(savef, pack_used, 26);
+    memset(pack_used, 0, sizeof(pack_used));
+    rs_read_ints(savef, pack_used, MAXPACK);
     rs_read_chars(savef, file_name, MAXSTR);
     rs_read_chars(savef, huh, MAXSTR);
     rs_read_potions(savef);
@@ -1404,19 +1429,33 @@ rs_restore_file(FILE *savef)
     rs_read_chars(savef, whoami, MAX_USERNAME);
     rs_read_sticks(savef);
     rs_read_chars(savef, fruit, MAXSTR);
+    n_objs = 0;
     rs_read_int(savef, &n_objs);
+    ntraps = 0;
     rs_read_int(savef, &ntraps);
+    hungry_state = 0;
     rs_read_int(savef, &hungry_state);
+    inpack = 0;
     rs_read_int(savef, &inpack);
+    inv_type = 0;
     rs_read_int(savef, &inv_type);
+    level = 0;
     rs_read_int(savef, &level);
+    max_level = 0;
     rs_read_int(savef, &max_level);
+    no_food = 0;
     rs_read_int(savef, &no_food);
+    food_left = 0;
     rs_read_int(savef, &food_left);
+    lastscore = 0;
     rs_read_int(savef, &lastscore);
+    no_move = 0;
     rs_read_int(savef, &no_move);
+    purse = 0;
     rs_read_int(savef, &purse);
+    quiet = 0;
     rs_read_int(savef, &quiet);
+    vf_hit = 0;
     rs_read_int(savef, &vf_hit);
     rs_read_uint(savef, &seed);
     rs_read_coord(savef, &stairs);
@@ -1433,7 +1472,7 @@ rs_restore_file(FILE *savef)
     rs_read_stats(savef, &max_stats);
     rs_read_rooms(savef, rooms, MAXROOMS);
     rs_read_rooms(savef, passages, MAXPASS);
-    rs_read_monsters(savef,monsters,26);
+    rs_read_monsters(savef, monsters, MAXMONSTERS);
     rs_read_obj_info(savef, things,  NUMTHINGS);
     rs_read_obj_info(savef, arm_info,   MAXARMORS);
     rs_read_obj_info(savef, pot_info,  MAXPOTIONS);
@@ -1441,8 +1480,10 @@ rs_restore_file(FILE *savef)
     rs_read_obj_info(savef, scr_info,  MAXSCROLLS);
     rs_read_obj_info(savef, weap_info, MAXWEAPONS+1);
     rs_read_obj_info(savef, ws_info, MAXSTICKS);
-    rs_read_daemons(savef, d_list, 20);
+    rs_read_daemons(savef, d_list, MAXDAEMONS);
+    between = 0;
     rs_read_int(savef,&between);
+    group = 0;
     rs_read_int(savef,&group);
     rs_read_window(savef,stdscr);
 
