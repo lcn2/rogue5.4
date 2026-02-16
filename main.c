@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include "modern_curses.h"
 #include "extern.h"
