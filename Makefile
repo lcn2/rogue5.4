@@ -206,7 +206,7 @@ DOCS= rogue.doc rogue.html rogue.cat rogue.me rogue.6 rogue.md
 
 AFILES= rogue.6.in rogue.cat.in rogue.doc.in rogue.html.in rogue.md.in rogue.me.in
 
-MISC= LICENSE rogue.spec rogue.png
+MISC= LICENSE rogue.spec rogue.png README.md
 
 MAKE_FILE= Makefile
 
@@ -527,6 +527,7 @@ install: all
 	-${INSTALL} -m 0644 LICENSE ${DESTDOC}/LICENSE.TXT
 	-${INSTALL} -m 0644 rogue.me ${DESTDOC}/${PROGRAM}.me
 	-${INSTALL} -m 0644 rogue.md ${DESTDOC}/${PROGRAM}.md
+	-${INSTALL} -m 0644 README.md ${DESTDOC}/README.md
 	-@if test ! -f ~/${LOCKFILE_BASENAME}; then \
 	    echo "${INSTALL} -m 0666 empty ~/${LOCKFILE_BASENAME}" ; \
 	    ${INSTALL} -m 0666 empty ~/${LOCKFILE_BASENAME} ; \
