@@ -10,7 +10,6 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-# include   "modern_curses.h"
 # include	<stdio.h>
 # include	<signal.h>
 # include	<ctype.h>
@@ -28,9 +27,10 @@
 
 # define	MAXSTR	1024
 
+# include	"modern_curses.h"
 # include	"extern.h"
-# include	"score.h"
 # include	"config.h"
+# include	"score.h"
 
 char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
 

@@ -36,11 +36,13 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <time.h>
-#include "modern_curses.h"
 #include <sys/file.h>
-#include "rogue.h"
-#include "score.h"
+
+#include "modern_curses.h"
 #include "extern.h"
+#include "config.h"
+#include "score.h"
+#include "rogue.h"
 
 #define NOOP(x) (x += 0)
 

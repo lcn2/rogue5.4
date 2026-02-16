@@ -13,6 +13,8 @@
 /* All global variables are defined here, or in vers.c or init.c */
 
 #include "modern_curses.h"
+#include "extern.h"
+#include "config.h"
 #include "rogue.h"
 
 int  after;				/* True if we want after daemons */

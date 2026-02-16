@@ -10,8 +10,10 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-#include "modern_curses.h"
 #include <string.h>
+
+#include "modern_curses.h"
+#include "extern.h"
 #include "rogue.h"
 
 #define RING_BUF 16

@@ -13,11 +13,13 @@
  */
 
 #include <stdlib.h>
-#include "modern_curses.h"
 #include <ctype.h>
 #include <string.h>
-#include "rogue.h"
+
+#include "modern_curses.h"
+#include "extern.h"
 #include "score.h"
+#include "rogue.h"
 
 #define	EQSTR(a, b, c)	(strncmp(a, b, c) == 0)
 

@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
+
 #include "score.h"
 
 #define MAX_PW_LEN (80)	/* longest password input line we will allow */

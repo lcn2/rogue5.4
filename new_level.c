@@ -11,8 +11,10 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-#include "modern_curses.h"
 #include <string.h>
+
+#include "modern_curses.h"
+#include "extern.h"
 #include "rogue.h"
 
 #define TREAS_ROOM 20	/* one chance in TREAS_ROOM for a treasure room */

@@ -11,7 +11,6 @@
  */
 
 #include <stdbool.h>
-#include "extern.h"
 
 #undef TRUE
 #define TRUE true

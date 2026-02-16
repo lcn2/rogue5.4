@@ -16,10 +16,12 @@
 #include <errno.h>
 #include <signal.h>
 #include <string.h>
-#include "modern_curses.h"
 #include <stdint.h>
-#include "rogue.h"
+
+#include "modern_curses.h"
+#include "extern.h"
 #include "score.h"
+#include "rogue.h"
 
 /*
  * save_game:

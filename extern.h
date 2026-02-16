@@ -11,8 +11,6 @@
  */
 
 
-#include "config.h"
-
 /*
  * Don't change the constants, since they are used for sizes in many
  * places in the program.

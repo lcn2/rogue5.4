@@ -30,36 +30,23 @@
 */
 
 #include <string.h>
-
-#include "modern_curses.h"
-#include "extern.h"
-
-#if defined(HAVE_SYS_TYPES)
 #include <sys/types.h>
-#endif
-
 #include <pwd.h>
-
 #include <sys/utsname.h>
-
 #include <arpa/inet.h> /* for htonl() and ntohl() */
-
 #include <termios.h>
-
 #include <unistd.h>
-
-#include "modern_curses.h" /* AIX requires curses.h be included before term.h */
-
 #include <term.h>
-
 #include <sys/wait.h>
-
 #include <ctype.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <sys/stat.h>
 #include <signal.h>
+
+#include "modern_curses.h"
 #include "extern.h"
+#include "config.h"
 #include "score.h"
 
 #if !defined(PATH_MAX) && defined(_MAX_PATH)

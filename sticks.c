@@ -11,9 +11,11 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-#include "modern_curses.h"
 #include <string.h>
 #include <ctype.h>
+
+#include "modern_curses.h"
+#include "extern.h"
 #include "rogue.h"
 
 #define STICK_BUF 16

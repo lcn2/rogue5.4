@@ -11,9 +11,11 @@
  */
 
 #include <stdlib.h>
-#include "modern_curses.h"
 #include <string.h>
 #include <ctype.h>
+
+#include "modern_curses.h"
+#include "extern.h"
 #include "rogue.h"
 
 #define	EQSTR(a, b)	(strcmp(a, b) == 0)

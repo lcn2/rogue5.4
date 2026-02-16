@@ -12,10 +12,12 @@
 #include <string.h>
 #include <signal.h>
 #include <time.h>
-#include "modern_curses.h"
 #include <sys/stat.h>
-#include "rogue.h"
+
+#include "modern_curses.h"
+#include "extern.h"
 #include "score.h"
+#include "rogue.h"
 
 char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
 

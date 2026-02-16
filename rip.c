@@ -18,9 +18,12 @@
 #include <sys/types.h>
 #include <ctype.h>
 #include <fcntl.h>
+
 #include "modern_curses.h"
-#include "rogue.h"
+#include "extern.h"
+#include "config.h"
 #include "score.h"
+#include "rogue.h"
 
 static char *rip[] = {
 "                       __________\n",

@@ -11,8 +11,10 @@
  */
 
 #include <string.h>
-#include "modern_curses.h"
 #include <ctype.h>
+
+#include "modern_curses.h"
+#include "extern.h"
 #include "rogue.h"
 
 /*
