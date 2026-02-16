@@ -202,8 +202,10 @@ md_hasclreol(void)
 #ifndef NCURSES_VERSION
     if (cur_term == NULL)
 	return(0);
+#if !defined(__NetBSD__) /* NetBSD curses is NOT ncurses */
     if (cur_term->type.Strings == NULL)
 	return(0);
+#endif
 #endif
     return((clr_eol != NULL) && (*clr_eol != 0));
 #else
