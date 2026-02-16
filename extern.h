@@ -11,6 +11,10 @@
  */
 
 
+#if !defined(INCLUDE_EXTERN_H)
+#define INCLUDE_EXTERN_H
+
+
 /*
  * Don't change the constants, since they are used for sizes in many
  * places in the program.
@@ -96,3 +100,6 @@ extern void form_home(void);
 extern void form_lock_path(void);
 extern void form_save_path(void);
 extern void form_score_path(void);
+
+
+#endif

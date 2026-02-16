@@ -10,6 +10,12 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
+
+#if !defined(INCLUDE_ROGUE_H)
+#define INCLUDE_ROGUE_H
+
+
+#include <stdarg.h>
 #include <stdbool.h>
 
 #undef TRUE
@@ -803,3 +809,6 @@ void	wear(void);
 void	whatis(int insist, int type);
 void	wield(void);
 int	wreadchar(WINDOW *win);
+
+
+#endif

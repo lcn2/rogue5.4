@@ -10,6 +10,11 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
+
+#if !defined(INCLUDE_SCORE_H)
+#define INCLUDE_SCORE_H
+
+
 #include <time.h>
 #include <stdint.h>
 
@@ -42,3 +47,6 @@ extern char whoami[MAX_USERNAME+1];	/* Name of player, +1 for paranoia */
 void	init_score_value(SCORE *scp);
 void	rd_score(SCORE *top_score);
 void	wr_score(SCORE *top_score);
+
+
+#endif

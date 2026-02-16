@@ -6,8 +6,8 @@
  */
 
 
-#if !defined(HAVE_CONFIG_H)
-#define HAVE_CONFIG_H
+#if !defined(INCLUDE_CONFIG_H)
+#define INCLUDE_CONFIG_H
 
 
 /*

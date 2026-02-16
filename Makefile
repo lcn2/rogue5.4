@@ -352,8 +352,8 @@ modern_curses.h: ${MAKE_FILE}
 	${Q} echo ' */' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '#if !defined(MODERN_CURSES_H)' >> $@
-	${Q} echo '#define MODERN_CURSES_H' >> $@
+	${Q} echo '#if !defined(INCLUDE_MODERN_CURSES_H)' >> $@
+	${Q} echo '#define INCLUDE_MODERN_CURSES_H' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '/* do have modern new curses ? */' >> $@
@@ -372,7 +372,7 @@ modern_curses.h: ${MAKE_FILE}
 	fi
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '#endif /* MODERN_CURSES_H */' >> $@
+	${Q} echo '#endif' >> $@
 	${H} echo '$@ formed'
 	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
