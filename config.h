@@ -78,18 +78,6 @@
 
 
 /*
- * HAVE_ESCDELAY - if ncurses has the ESCDELAY variable
- *
- * define - ncurses has the ESCDELAY variable
- * undef - no ESCDELAY variable in ncurses
- *
- * Suggestion: define
- */
-#define HAVE_ESCDELAY
-/* #undef HAVE_ESCDELAY */
-
-
-/*
  * HAVE_GETPASS - if system has a getpass() function
  *
  * define - system has a getpass() function

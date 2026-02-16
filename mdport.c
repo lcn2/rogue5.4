@@ -62,10 +62,6 @@
 void
 md_init(void)
 {
-#if defined(HAVE_ESCDELAY) || defined(NCURSES_VERSION)
-    ESCDELAY=64;
-#endif
-
 #if defined(DUMP)
 	md_onsignal_default();
 #else
