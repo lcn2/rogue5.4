@@ -31,7 +31,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <errno.h>
 #include "rogue.h"
 #include "score.h"
@@ -898,7 +898,7 @@ rs_read_object_list(FILE *savef, THING **list)
 
     for (i = 0; i < cnt; i++)
     {
-        l = new_item();
+        l = new_thing_ptr();
 
         l->l_prev = previous;
 
@@ -1207,7 +1207,7 @@ rs_read_thing_list(FILE *savef, THING **list)
 
     for (i = 0; i < cnt; i++)
     {
-        l = new_item();
+        l = new_thing_ptr();
 
         l->l_prev = previous;
 

@@ -11,7 +11,7 @@
  */
 
 #include <ctype.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include "rogue.h"
 
 typedef struct spot {		/* position matrix for maze positions */
@@ -128,7 +128,7 @@ do_rooms(void)
 	{
 	    THING *gold;
 
-	    gold = new_item();
+	    gold = new_thing_ptr();
 	    gold->o_goldval = rp->r_goldval = GOLDCALC;
 	    find_floor(rp, &rp->r_gold, FALSE, FALSE);
 	    gold->o_pos = rp->r_gold;
@@ -143,7 +143,7 @@ do_rooms(void)
 	 */
 	if (rnd(100) < (rp->r_goldval > 0 ? 80 : 25))
 	{
-	    tp = new_item();
+	    tp = new_thing_ptr();
 	    find_floor(rp, &mp, FALSE, TRUE);
 	    new_monster(tp, randmonster(FALSE), &mp);
 	    give_pack(tp);

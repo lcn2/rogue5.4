@@ -3,6 +3,7 @@
 findpw
 Makefile.bak
 Makefile.easy
+modern_curses.h
 NOTES
 *.o
 rogue

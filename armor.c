@@ -9,7 +9,7 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-#include <ncurses.h>
+#include "modern_curses.h"
 #include "rogue.h"
 
 /*

@@ -10,7 +10,7 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <ctype.h>
 #include "rogue.h"
 
@@ -141,7 +141,7 @@ read_scroll(void)
 		msg("you hear a faint cry of anguish in the distance");
 	    else
 	    {
-		obj = new_item();
+		obj = new_thing_ptr();
 		new_monster(obj, randmonster(FALSE), &mp);
 	    }
 	when S_ID_POTION:

@@ -11,7 +11,7 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <string.h>
 #include "rogue.h"
 
@@ -164,7 +164,7 @@ put_things(void)
      */
     if (level >= AMULETLEVEL && !amulet)
     {
-	obj = new_item();
+	obj = new_thing_ptr();
 	attach(lvl_obj, obj);
 	obj->o_hplus = 0;
 	obj->o_dplus = 0;
@@ -225,7 +225,7 @@ treas_room(void)
 	spots = 0;
 	if (find_floor(rp, &mp, MAXTRIES, TRUE))
 	{
-	    tp = new_item();
+	    tp = new_thing_ptr();
 	    new_monster(tp, randmonster(FALSE), &mp);
 	    tp->t_flags |= ISMEAN;	/* no slouchers in THIS room */
 	    give_pack(tp);

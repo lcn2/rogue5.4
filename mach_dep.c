@@ -24,15 +24,6 @@
  *			when people are playing.  Since it is divided
  *			by 10, to specify a load limit of 4.0, MAXLOAD
  *			should be "40".	 If defined, then
- *      LOADAV		Should it use it's own routine to get
- *		        the load average?
- *      NAMELIST	If so, where does the system namelist
- *		        hide?
- *	MAXUSERS	What (if any) the maximum user count should be
- *	                when people are playing.  If defined, then
- *      UCOUNT		Should it use it's own routine to count
- *		        users?
- *      UTMP		If so, where does the user list hide?
  *	CHECKTIME	How often/if it should check during the game
  *			for high load average.
  */
@@ -45,7 +36,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <time.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <sys/file.h>
 #include "rogue.h"
 #include "score.h"
@@ -55,6 +46,16 @@
 
 #ifdef CHECKTIME
 static int num_checks = 0;		/* times we've gone over in checkout() */
+
+#define MAX_MSGS 3
+char *msgs[MAX_MSGS + 1] = { /* +1 for paranoia */
+    "The load is too high to be playing.  Please leave in %0.1f minutes",
+    "Please save your game.  You have %0.1f minutes",
+    "Last warning.  You have %0.1f minutes to leave",
+    "You took too longer than %0.1f minutes", /* not printed */
+    NULL /* paranoia */
+};
+
 #endif /* CHECKTIME */
 
 static int lock_fd = -1;		/* rogue lock file descriptor, <0 ==> rogue lock file not open */
@@ -68,7 +69,7 @@ static bool locked = FALSE;		/* TRUE ==> locked, FALSE ==> not locked */
 void
 init_check(void)
 {
-#if defined(MAXLOAD) || defined(MAXUSERS)
+#if defined(MAXLOAD)
     if (too_much())
     {
 	printf("Sorry, %s, but the system is too loaded now.\n", whoami);
@@ -269,7 +270,7 @@ is_symlink(const char *sp)
 #endif
 }
 
-#if defined(MAXLOAD) || defined(MAXUSERS)
+#if defined(MAXLOAD)
 /*
  * too_much:
  *	See if the system is being used too much for this game
@@ -286,10 +287,6 @@ too_much(void)
 #ifdef MAXLOAD
     md_loadav(avec);
     if (avec[1] > (MAXLOAD / 10.0))
-	return TRUE;
-#endif
-#ifdef MAXUSERS
-    if (ucount() > MAXUSERS)
 	return TRUE;
 #endif
     return FALSE;
@@ -322,13 +319,9 @@ author(void)
  *	Check each CHECKTIME seconds to see if the load is too high
  */
 
+void
 checkout(int sig)
 {
-    char *msgs[] = {
-	"The load is too high to be playing.  Please leave in %0.1f minutes",
-	"Please save your game.  You have %0.1f minutes",
-	"Last warning.  You have %0.1f minutes to leave",
-    };
     int checktime;
 
     if (too_much())
@@ -338,7 +331,7 @@ checkout(int sig)
 	    num_checks = 1;
 	    chmsg("The load is rather high, O exalted one");
 	}
-	else if (num_checks++ == 3)
+	else if (num_checks++ >= MAX_MSGS)
 	    fatal("Sorry.  You took too long.  You are dead\n");
 	checktime = (CHECKTIME * 60) / num_checks;
 	chmsg(msgs[num_checks - 1], ((double) checktime / 60.0));
@@ -353,7 +346,7 @@ checkout(int sig)
 	checktime = (CHECKTIME * 60);
     }
 
-	md_start_checkout_timer(checktime);
+    md_start_checkout_timer(checktime);
 }
 
 /*
@@ -373,36 +366,6 @@ chmsg(char *fmt, int arg)
 	putchar('\n');
 	fflush(stdout);
     }
-}
-#endif
-
-#ifdef UCOUNT
-/*
- * ucount:
- *	count number of users on the system
- */
-#include <utmp.h>
-
-struct utmp buf;
-
-int
-ucount(void)
-{
-    struct utmp *up;
-    FILE *utmp;
-    int count;
-
-    if ((utmp = fopen(UTMP, "r")) == NULL)
-	return 0;
-
-    up = &buf;
-    count = 0;
-
-    while (fread(up, 1, sizeof (*up), utmp) > 0)
-	if (buf.ut_name[0] != '\0')
-	    count++;
-    fclose(utmp);
-    return count;
 }
 #endif
 

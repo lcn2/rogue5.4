@@ -12,7 +12,7 @@
  */
 
 #include <stdlib.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <string.h>
 #include <ctype.h>
 #include "rogue.h"
@@ -183,7 +183,7 @@ create_obj(void)
     char highest_char;
     int which;
 
-    obj = new_item();
+    obj = new_thing_ptr();
     msg("type of item: ");
     obj->o_type = readchar();
     mpos = 0;

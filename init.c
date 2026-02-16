@@ -11,7 +11,7 @@
  */
 
 #include <stdlib.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <ctype.h>
 #include <string.h>
 #include "rogue.h"
@@ -30,14 +30,14 @@ init_player(void)
     /*
      * Give him some food
      */
-    obj = new_item();
+    obj = new_thing_ptr();
     obj->o_type = FOOD;
     obj->o_count = 1;
     add_pack(obj, TRUE);
     /*
      * And his suit of armor
      */
-    obj = new_item();
+    obj = new_thing_ptr();
     obj->o_type = ARMOR;
     obj->o_which = RING_MAIL;
     obj->o_arm = a_class[RING_MAIL] - 1;
@@ -48,7 +48,7 @@ init_player(void)
     /*
      * Give him his weaponry.  First a mace.
      */
-    obj = new_item();
+    obj = new_thing_ptr();
     init_weapon(obj, MACE);
     obj->o_hplus = 1;
     obj->o_dplus = 1;
@@ -58,7 +58,7 @@ init_player(void)
     /*
      * Now a +1 bow
      */
-    obj = new_item();
+    obj = new_thing_ptr();
     init_weapon(obj, BOW);
     obj->o_hplus = 1;
     obj->o_flags |= ISKNOW;
@@ -66,7 +66,7 @@ init_player(void)
     /*
      * Now some arrows
      */
-    obj = new_item();
+    obj = new_thing_ptr();
     init_weapon(obj, ARROW);
     obj->o_count = rnd(15) + 25;
     obj->o_flags |= ISKNOW;

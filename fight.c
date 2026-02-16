@@ -11,7 +11,7 @@
  */
 
 #include <stdlib.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <string.h>
 #include <ctype.h>
 #include "rogue.h"
@@ -649,7 +649,7 @@ killed(THING *tp, int pr)
 
 	    if (fallpos(&tp->t_pos, &tp->t_room->r_gold) && level >= max_level)
 	    {
-		gold = new_item();
+		gold = new_thing_ptr();
 		gold->o_type = GOLD;
 		gold->o_goldval = GOLDCALC;
 		if (save(VS_MAGIC))

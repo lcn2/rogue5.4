@@ -11,7 +11,7 @@
  */
 
 #include <stdlib.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include "rogue.h"
 
 #ifdef MASTER
@@ -91,11 +91,11 @@ discard(THING *item)
 }
 
 /*
- * new_item
- *	Get a new item with a specified size
+ * new_thing_ptr
+ *	Return a calloc-ed pointer to a thing
  */
 THING *
-new_item(void)
+new_thing_ptr(void)
 {
     THING *item;
 

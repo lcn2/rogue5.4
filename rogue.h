@@ -49,7 +49,7 @@
 #define MAXPASS		13	/* upper limit on number of passages */
 #define	NUMLINES	24
 #define	NUMCOLS		80
-#define STATLINE		(NUMLINES - 1)
+#define STATLINE	(NUMLINES - 1)
 #define BORE_LEVEL	50
 #define MAXMONSTERS	26
 
@@ -691,7 +691,7 @@ void	move_msg(const THING *obj);
 int	msg(const char *fmt, ...);
 void	my_exit(int sig);
 void	nameit(const THING *obj, const char *type, const char *which, const struct obj_info *op, const char *(*prfunc)(const THING *));
-THING   *new_item(void);
+THING   *new_thing_ptr(void);
 void	new_level(void);
 void	new_monster(THING *tp, int type, const coord *cp);
 THING   *new_thing(void);

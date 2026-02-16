@@ -10,7 +10,7 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-# include   <ncurses.h>
+# include   "modern_curses.h"
 # include	<stdio.h>
 # include	<signal.h>
 # include	<ctype.h>

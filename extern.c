@@ -12,7 +12,7 @@
 
 /* All global variables are defined here, or in vers.c or init.c */
 
-#include <ncurses.h>
+#include "modern_curses.h"
 #include "rogue.h"
 
 int  after;				/* True if we want after daemons */

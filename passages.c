@@ -11,7 +11,7 @@
  */
 
 #include <stdlib.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include "rogue.h"
 
 /*

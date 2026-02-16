@@ -12,7 +12,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <ctype.h>
 #include "rogue.h"
 
@@ -400,7 +400,7 @@ over:
 			    /*
 			     * Give him a sword (+1,+1)
 			     */
-			    obj = new_item();
+			    obj = new_thing_ptr();
 			    init_weapon(obj, TWOSWORD);
 			    obj->o_hplus = 1;
 			    obj->o_dplus = 1;
@@ -409,7 +409,7 @@ over:
 			    /*
 			     * And his suit of armor
 			     */
-			    obj = new_item();
+			    obj = new_thing_ptr();
 			    obj->o_type = ARMOR;
 			    obj->o_which = PLATE_MAIL;
 			    obj->o_arm = -5;

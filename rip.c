@@ -18,7 +18,7 @@
 #include <sys/types.h>
 #include <ctype.h>
 #include <fcntl.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include "rogue.h"
 #include "score.h"
 
@@ -127,7 +127,7 @@ score(int amount, int flags, int monst)
     {
 	mvaddstr(LINES - 1, 0 , "[Press return to continue]");
         refresh();
-        wgetnstr(stdscr,prbuf,80);
+        wgetnstr(stdscr, prbuf, NUMCOLS);   /* read up to NUMCOLS bytes and append a NUL byte */
 	endwin();
 	putchar('\n');
         resetltchars();
@@ -172,14 +172,14 @@ score(int amount, int flags, int monst)
 	for (scp = top_scores; scp < endp; scp++)
 	    if (amount > scp->sc_score)
 		break;
-#if 0 /* allow more than one score per nowin uid */
+#if !defined(ALLSCORES)
 	    else if (!allscore &&	/* only one score per nowin uid */
 		flags != 2 && scp->sc_uid == uid && scp->sc_flags != 2)
 		    scp = endp;
 #endif
 	if (scp < endp)
 	{
-#if 0 /* allow for one score per uid */
+#if !defined(ALLSCORES)
 	    if (flags != 2 && !allscore)
 	    {
 		for (sc2 = scp; sc2 < endp; sc2++)
@@ -220,7 +220,11 @@ score(int amount, int flags, int monst)
      */
     if (flags != -1)
 	putchar('\n');
-    printf("Top %d %s:\n", NUMSCORES, allscore ? "Scores" : "Rogueists");
+#if defined(ALLSCORES)
+    printf("Top %d Scores:\n", NUMSCORES);
+#else
+    printf("Top %d Rogueists:\n", NUMSCORES);
+#endif
     printf("   Score Name\n");
     fflush(stdout);
     for (scp = top_scores; scp < endp; scp++)

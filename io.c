@@ -5,7 +5,7 @@
  */
 
 #include <stdarg.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <ctype.h>
 #include <string.h>
 #include "rogue.h"

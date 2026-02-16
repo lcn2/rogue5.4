@@ -10,7 +10,7 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <string.h>
 #include "rogue.h"
 #include <ctype.h>
@@ -122,7 +122,7 @@ wanderer(void)
     coord cp;
     int cnt = 0;
 
-    tp = new_item();
+    tp = new_thing_ptr();
     do
     {
         /*

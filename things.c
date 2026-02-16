@@ -12,7 +12,7 @@
  */
 
 #include <stdlib.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <string.h>
 #include <ctype.h>
 #include "rogue.h"
@@ -220,7 +220,7 @@ new_thing(void)
     THING *cur;
     int r;
 
-    cur = new_item();
+    cur = new_thing_ptr();
     cur->o_hplus = 0;
     cur->o_dplus = 0;
     strncpy(cur->o_damage, "0x0", sizeof(cur->o_damage));

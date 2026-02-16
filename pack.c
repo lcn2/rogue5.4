@@ -11,7 +11,7 @@
  */
 
 #include <string.h>
-#include <ncurses.h>
+#include "modern_curses.h"
 #include <ctype.h>
 #include "rogue.h"
 
@@ -228,7 +228,7 @@ leave_pack(THING *obj, int newobj, int all)
 	    inpack++;
 	if (newobj)
 	{
-	    nobj = new_item();
+	    nobj = new_thing_ptr();
 	    *nobj = *obj;
 	    next(nobj) = NULL;
 	    prev(nobj) = NULL;

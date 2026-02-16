@@ -6,6 +6,7 @@ We call this version 5.4.5 in order to distinguish it from older, and likely mor
 
 For details on the release/version run `rogue -V` or type the "**v**" command into the game.
 
+
 ## Source Code Origin
 
 **IMPORTANT NOTE**: This code is reasonably close to the original rouge
@@ -19,6 +20,7 @@ Vax/pdp binary game found on 4BSD tapes.  As such the "Public domain rogue"
 game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
 a number of ways.
 
+
 ## TL;DR - to install
 
 ```sh
@@ -26,12 +28,18 @@ make clobber all
 sudo make install
 ```
 
+
+### To configure
+
+If your system as issues compiling this code, edit `Makefile` and/or `config.h`.
+
+
 ### Dependencies
 
 * Modern C compiler (perhaps c17 or better)
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
 * [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses)
-* [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, FreeBSD, etc.
+* [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
 ### Bug reports and Pull Requests welcome
