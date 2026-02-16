@@ -138,7 +138,8 @@ AT= @
 # Alternatively NetBSD users can install the ncurses package for
 # NetBSD: https://cdn.netbsd.org/pub/pkgsrc/current/pkgsrc/devel/ncurses/README.html
 #
-ifdef __NetBSD__
+target=$(shell uname -s 2>/dev/null)
+ifeq ($(target),NetBSD)
 LIBS= -lcurses
 else
 LIBS= -lncurses
