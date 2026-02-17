@@ -1,10 +1,10 @@
 # rogue 5.4
 
-Rogue: Exploring the Dungeons of Doom version 5.4 - bug fixed ported to modern C and Unix-like systems
+Rogue: Exploring the Dungeons of Doom version 5.4 - bug fixed, ported to modern C and Unix-like systems
 
 We call this version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
 
-For details on the release/version run `rogue -V` or type the "**v**" command into the game.
+For details on the release/version, run `rogue -V` or type the "**v**" command into the game.
 
 
 ## TL;DR - to install
@@ -30,15 +30,15 @@ If your system as issues compiling this code, edit `Makefile` and/or `config.h`.
 
 ## Compatibility and Source Code Origin
 
-**IMPORTANT NOTE**: This code is reasonably close to the original rouge
-source that used to generate the Vax/pdp binary was distributed on the
-4BSD tapes: the so called "Toy/Wichman/Arnold Vax binary" rogue game.
-The game play provided by this code is essentially the same.
+**IMPORTANT NOTE**: This code is reasonably close to the original Rogue
+source that used to generate the Vax/pdp binary. It was distributed on the
+4BSD tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
+The gameplay provided by this code is essentially the same.
 
 **IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
-rouge game that distributions such as NetBSD imported from 386bsd.
+rouge game that distributions such as NetBSD imported from 386BSD.
 The "Public domain rogue" was a reverse engineering attempt of the
-Vax/pdp binary game found on 4BSD tapes.  As such the "Public domain rogue"
+Vax/pdp binary game found on 4BSD tapes.  As such, the "Public domain rogue"
 game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
 a fair number of ways.  Moreover, the rogue save file, rogue lock file,
 and rogue score file used by NetBSD rogue are **NOT** compatible.
@@ -51,7 +51,7 @@ save/restore code that required the rogue save file format to be changed.
 **2026 Feb 11**, might not be compatible.  The game will exit with an ERROR
 if your rogue score file format is too old and/or has been corrupted.
 Remove the damaged or old rogue score file and run the game to rebuild.
-You can use the `scedit` to restore old scores of you wish.
+You can use the `scedit` to restore old scores if you wish.
 
 
 ### Bug reports and Pull Requests welcome
@@ -230,7 +230,7 @@ This repo improves on the above mentioned repo in several important aspects:
 
 This [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4)
 was cloned from [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4).
-[Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing `rogue(1)` onn the Vax running BSD, wanted to
+[Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing `rogue(1)` on the Vax running BSD, wanted to
 port the original game to modern compilers and UNIX-like operating systems
 (such as those that resonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
 
@@ -253,17 +253,16 @@ for making original code base available.
 
 ## Spoilers
 
+The **Amulet of Yendor** is on level 26.  Look for a **,** (comma) in a room on that level.
+Once you have the **Amulet of Yendor**, you are allowed to go up a staircase (use the **<** command).
 
-The **Amulet of Yendor** is on level 26.  Look for a "**,**"" (comma) in a room on that level.
-Once you have the **Amulet of Yendor**, you are allowed to go up a staircase (use the "**<**" command).
-
-You may try your hand at going below level 26, however the deeper you go,
-the harder to becomes to survive.  For example, see notes under "**monster spoilers**".
+You may try your hand at going below level 26; however, the deeper you go,
+the harder it becomes to survive.  For example, see notes under "**monster spoilers**".
 Nevertheless, going deeper than level 26 is seen as a daring bonus, especially if
 you survive and return to the surface (level 0).
 
 If you do not pick up the **Amulet of Yendor** on level 26 and you go deeper than level 26,
-the game will place the **Amulet of Yendor** the deeper levels until you manage to pick it up.
+the game will place the **Amulet of Yendor** on the deeper levels until you manage to pick it up.
 
 
 ## monster spoilers ==> A-Z
@@ -303,7 +302,7 @@ The following table lists the known monsters in the dungeon and their properties
 ```
 
 Some monsters carry treasure that they drop when they are killed.  The "carry chance"
-is the chance that the monster will drop treasure when they die.
+is the chance that the monster will drop treasure when it dies.
 
 The "flags" are:
 
@@ -315,11 +314,11 @@ The "flags" are:
 
 The "Exp" is the experience gained when you kill such a monster.
 
-The smaller the monster armor class of harder they are to hit.  Thus a dragon (D) armor
-class of -1 is the toughest to hit, whereas nymph (N) armor class of 9 is the easiest.
+The smaller the monster’s armor class, the harder they are to hit.  Thus, a dragon (D) armor
+class of -1 is the toughest to hit, whereas a nymph (N) armor class of 9 is the easiest.
 
-The "HxD" in the above table indicates hit bonus (H) which improves the
-ability of the monster to hit you, and damage bonus (D) which increases
+The "HxD" in the above table indicates hit bonus (H), which improves the monster’s
+ability to hit you, and damage bonus (D), which increases
 the damage they cause when they hit you.  Monsters with multiple "HxD"
 values indicate that the given monster has more than one method of attack.
 
@@ -327,7 +326,7 @@ The "venus flytrap" hit bonus (H) of "*++**" starts about 1 and increases each t
 
 Below level 29, all monsters are hasted (fast).
 
-The monster levels goes up by 1 for each level below level 26.
+The monster levels go up by 1 for each level below level 26.
 
 
 ## potion spoilers ==> !
@@ -421,7 +420,7 @@ When you have a weapon:
 A weapon can be (+) enhanced, (n) normal, or (-) reduced in its effectiveness.
 
 The "HxD" in the above table indicates hit bonus (H) and damage bonus (D).
-For example, a wielded "long sword" has a "3x4" meaning if has a base
+For example, a wielded "long sword" has a "3x4" meaning it has a base
 hit bonus (H) of 3 and a base damage bonus (D) of 4.  Other factors such
 as strength (Str), weapon bonus or negative bonus, and chances (internal
 dice roll) factor into odds to hit and damage inflicted.
@@ -480,7 +479,7 @@ Armor can be (+) enhanced, (n) normal, or (-) cursed.
 
 Cursed armor cannot be removed except by a scroll of "**remove curse**".
 Once a scroll of "**remove curse**" has been used to remove the curse,
-cursed armor may be put on or removed as needed, however the armor will
+cursed armor may be put on or removed as needed; however, the armor will
 still have a negative effect.
 
 If you are already wearing armor, you have to take it off before you
@@ -508,13 +507,13 @@ can put on other armor.
     |    d   |     5 %   |     1     | maintain armor    |
 ```
 
-A ring can be worn in the Left or Right hand.
+A ring can be worn in the left or right hand.
 
 A ring can be (+) enhanced, (n) normal, or (-) cursed.
 
 A cursed ring cannot be removed except by a scroll of "**remove curse**".
 Once a scroll of "**remove curse**" has been used to remove the curse,
-a cursed ring may be put on or removed as needed, however the ring will
+a cursed ring may be put on or removed as needed; however, the ring will
 still have a negative effect.
 
 When **food used** is negative, the ring effectively adds food per turn when worn.
@@ -549,10 +548,10 @@ When you read use a staff:
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
 
-**HINT**: "**The historic wizard password is**" found in comment about a defined symbol.
+**HINT**: "**The historic wizard password**" may be found in a comment about a defined symbol.
 
 You may toggle **wizard mode** on and off by pressing the "+" key.
-When successfully toggle **wizard mode** on, you will see the message:
+When you successfully toggle **wizard mode** on, you will see the message:
 
 > You are suddenly as smart as Ken Arnold in dungeon #...
 
@@ -600,9 +599,9 @@ The "\*" ("_list types of an object_") command is only useful for:
 * = (ring)
 * / (staff)
 
-In all other cases the "\*" ("_list types of an object_") command prints nothing.
+In all other cases, the "\*" ("_list types of an object_") command prints nothing.
 
-When the types of an object are listed, the percentages indicate how common or rare is the given type of object.
+When the types of an object are listed, the percentages indicate how common or rare the given type of object is.
 The numbers (and letters) at the beginning of the line are needed when you create such a type of object.
 
 For "C" ("_create object_", when it asks:
