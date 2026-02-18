@@ -2,18 +2,24 @@
 
 Rogue: Exploring the Dungeons of Doom version 5.4
 
-This rogue plays like the original Vax/pdp binary that distributed on
-the 4BSD tapes.  We call this version 5.4.5 in order to distinguish it
-from older, and likely more buggy, version 5.4.4 code.
+This rogue plays like the original Vax/pdp binary that was distributed on the 4.3BSD tapes.
 
-For details on the release/version, run `rogue -V` or type the "**v**" command into the game.
+GitHub repo: [rogue5.4 repo](https://github.com/lcn2/rogue5.4)
 
 
-## TL;DR - to install
+## TL;DR
+
+To make and install:
 
 ```sh
 make clobber all
 sudo make install
+```
+
+To run rogue after installing:
+
+```sh
+/usr/local/bin/install
 ```
 
 **NOTE**: The make variable `${ROGUE_DIR}` is the directory where the rogue
@@ -45,13 +51,15 @@ If your system as issues compiling this code, edit `Makefile` and/or `config.h`.
 
 **IMPORTANT NOTE**: This code is reasonably close to the original Rogue
 source that used to generate the Vax/pdp binary. It was distributed on the
-4BSD tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
+4.3BSD tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
 The gameplay provided by this code is essentially the same.
+
+We call this version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
 
 **IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
 rouge game that distributions such as NetBSD imported from 386BSD.
 The "Public domain rogue" was a reverse engineering attempt of the
-Vax/pdp binary game found on 4BSD tapes.  As such, the "Public domain rogue"
+Vax/pdp binary game found on 4.3BSD tapes.  As such, the "Public domain rogue"
 game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
 a fair number of ways.  Moreover, the rogue save file, rogue lock file,
 and rogue score file used by NetBSD rogue are **NOT** compatible.
@@ -79,7 +87,7 @@ any privileges!  Just run `rogue(6)` as yourself and let the game use
 
 ## To play rogue
 
-After installing:
+After installing, run:
 
 ```
 /usr/local/bin/rogue
@@ -205,8 +213,8 @@ less rogue.doc
 > history as a hero among heroes.
 
 The above statement is hyperbole and not intended to imply that nobody
-has achieved the goal.  The maintainer of this repo has completed the goal
-(won) at least 3 times (without using **wizard mode**) and reached a
+has achieved the goal.  The maintainer of the [rogue5.4 repo](https://github.com/lcn2/rogue5.4)
+has completed the goal (won) at least 3 times (without using **wizard mode**) and reached a
 maximum dungeon depth (and successful return to level 0) of 31.
 
 
@@ -214,7 +222,7 @@ maximum dungeon depth (and successful return to level 0) of 31.
 
 This code is based on the "Rogue like restoration project"'s [rogue5.4](https://github.com/RoguelikeRestorationProject/rogue5.4).
 
-This repo improves on the above mentioned repo in several important aspects:
+The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above mentioned repo in several important aspects:
 
 * Improved the C source to be able to compile under recent C compilers
 * Fixed several bugs in the rogue code
