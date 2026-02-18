@@ -22,9 +22,9 @@ If your system as issues compiling this code, edit `Makefile` and/or `config.h`.
 
 ### Dependencies
 
-* Modern C compiler (perhaps c17 or better)
+* Modern C compiler (c17/gnu17 or better)
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
-* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD, the NetBSD curses is likely work
+* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD,  NetBSD curses is likely to work
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
@@ -52,6 +52,11 @@ save/restore code that required the rogue save file format to be changed.
 if your rogue score file format is too old and/or has been corrupted.
 Remove the damaged or old rogue score file and run the game to rebuild.
 You can use the `scedit` to restore old scores if you wish.
+
+**IMPORTANT NOTE**: By default, rogue does NOT install setuid/setgid.
+The default rogue score file, the default rogue lock file, and default 
+rogue save file are now located/saved under the home directory.  This new
+default reflects that multi-user systems are less common in 2026.
 
 
 ### Bug reports and Pull Requests welcome
@@ -576,7 +581,7 @@ When you are in **wizard mode**, you have these special commands available to yo
     | ctrl A  | Go up to previous level                                |
     | ctrl F  | Show map of current level                              |
     | ctrl T  | Teleport to random spot on level                       |
-    | ctrl E  | Show about of food left                                |
+    | ctrl E  | Show amount of food left                               |
     | ctrl Q  | Show passage ways                                      |
     | ctrl X  | Toggle see monsters on level                           |
     |    ~    | Super charge staff                                     |
