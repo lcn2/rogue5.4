@@ -171,8 +171,8 @@ TARGETS= rogue findpw scedit
 #
 # WARNING: Setting ${GROUPOWNER} to a non-empty value is NOT recommended !!!
 
-GROUPOWNER= games	# NOT recommended - leave GROUPOWNER as an empty value !!!
-#GROUPOWNER=
+#GROUPOWNER= games	# NOT recommended - leave GROUPOWNER as an empty value !!!
+GROUPOWNER=
 
 
 ################################
