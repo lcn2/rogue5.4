@@ -1,8 +1,10 @@
 # rogue 5.4
 
-Rogue: Exploring the Dungeons of Doom version 5.4 - bug fixed, ported to modern C and Unix-like systems
+Rogue: Exploring the Dungeons of Doom version 5.4
 
-We call this version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
+This rogue plays like the original Vax/pdp binary that distributed on
+the 4BSD tapes.  We call this version 5.4.5 in order to distinguish it
+from older, and likely more buggy, version 5.4.4 code.
 
 For details on the release/version, run `rogue -V` or type the "**v**" command into the game.
 
@@ -12,6 +14,17 @@ For details on the release/version, run `rogue -V` or type the "**v**" command i
 ```sh
 make clobber all
 sudo make install
+```
+
+**NOTE**: The make variable `${ROGUE_DIR}` is the directory where the rogue
+lock file, rogue score file, and the rogue save file are used and stored.
+The make variable `${ROGUE_DIR}` defaults to your home directory (i.e.,
+`$HOME`).  If you wish to use a different directory, then compile and
+install with a modified `${ROGUE_DIR}`.  For example:
+
+```sh
+make clobber all ROGUE_DIR=/var/tmp
+sudo make install ROGUE_DIR=/var/tmp
 ```
 
 
@@ -53,21 +66,15 @@ if your rogue score file format is too old and/or has been corrupted.
 Remove the damaged or old rogue score file and run the game to rebuild.
 You can use the `scedit` to restore old scores if you wish.
 
-**IMPORTANT NOTE**: By default, rogue does NOT install setuid/setgid.
-The default rogue score file, the default rogue lock file, and default 
-rogue save file are now located/saved under the home directory.  This new
-default reflects that multi-user systems are less common in 2026.
-
-
-### Bug reports and Pull Requests welcome
-
-We very much welcome fork [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls) to fix any:
-
-* failure to compile
-* compiler warning messages
-* program crashes
-
-You may also file a [rogue5.4 bug report](https://github.com/lcn2/rogue5.4/issues/new?template=bug_report.md).
+**IMPORTANT NOTE**: While a number of significant bugs have been fixed,
+we are sure that there remain other bugs.  As such, we do **NOT**
+recommend, nor support running rogue setuid/setgid.  We recommend that
+you maintain the `Makefile` default of **NOT** setting the `GROUPOWNER`
+make variable (leave them empty).  While you may need to `sudo(1)` in
+order to install rogue under `/usr/local/bin/`, `/usr/local/share/`,
+and `/usr/local/man/man6/`, you do **NOT** have to run `rogue(6)` with
+any privileges!  Just run `rogue(6)` as yourself and let the game use
+"dot-files" under your home directory.
 
 
 ## To play rogue
@@ -80,7 +87,8 @@ After installing:
 
 To quit, interrupt the program (type control-C), answer "y" to the question and press return.
 
-Your score file is store in the by default, is maintained under your home directory (`~/rogue.scr`).
+Your score file is store in the by default, is maintained under `${ROGUE_DIR}` which
+defaults to your home directory (i.e., `~/rogue.scr`).
 
 To save your rogue game, press "S" and save.
 
@@ -90,7 +98,7 @@ To restore your make, run:
 /usr/local/bin/rogue ~/.rogue.save
 ```
 
-**NOTE**: restoring your make will remove the `~/.rogue.save` file.
+**NOTE**: Restoring your rogue game will cause the rogue save file to be removed.
 
 For help in the game type "**?**" and then "\*".
 
@@ -215,9 +223,9 @@ This repo improves on the above mentioned repo in several important aspects:
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
 * To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
-* Changed the rogue lock filename to `~/.rogue.lck` (`.rogue.lck` under your home directory)
-* Changed the rogue save filename to `~/.rogue.save` (`.rogue.save` under your home directory)
-* Changed the rogue score filename to `~/.rogue.scr` (`.rogue.scr` under your home directory)
+* Changed the rogue lock filename to `${ROGUE_DIR}/.rogue.lck` (defaults to `.rogue.lck` under your home directory)
+* Changed the rogue save filename to `${ROGUE_DIR}/.rogue.save` (defaults to `.rogue.save` under your home directory)
+* Changed the rogue score filename to `${ROGUE_DIR}/.rogue.scr` (`defaults to .rogue.scr` under your home directory)
 * Does not require use of `chown(1)`, nor `chgrp(1)` by default
 * Fixed cases where creating invalid type of an item in **wizard mode** crashed the game
 * Creating an item in **wizard mode** that does not have a sub-type no longer asks which type of item
@@ -248,6 +256,17 @@ to make it easier for people to contribute [rogue5.4 pull requests](https://gith
 directly to this repo.  Even so, we are greatful to the
 [RoguelikeRestorationProject](https://github.com/RoguelikeRestorationProject)
 for making original code base available.
+
+
+### Bug reports and Pull Requests welcome
+
+We very much welcome fork [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls) to fix any:
+
+* failure to compile
+* compiler warning messages
+* program crashes
+
+You may also file a [rogue5.4 bug report](https://github.com/lcn2/rogue5.4/issues/new?template=bug_report.md).
 
 
 # Skip over the SPOILERS to the very bottom for Reporting Security Issues
@@ -631,5 +650,7 @@ Enter "+" for a enhanced item, "-" for a reduced item, or "n" for normal item.
 
 
 # Reporting Security Issues
+
+**IMPORTANT NOTE**: We do **NOT** support running `rogue(6)` with setuid and/or setgid privileges.
 
 To report a security issue, please visit "[Reporting Security Issues](https://github.com/lcn2/rogue5.4/security/policy)".

@@ -32,13 +32,16 @@
 #define EMPTY 0
 
 /*
- * default basename of special files
+ * be sure the paths of the rogue lock file, rogue score file, and rogue save file are set
  */
-#if !defined(LOCKNAME)
-#define LOCKNAME ".rogue.lck"
+#if !defined(LOCKPATH)
+#define LOCKPATH ".rogue.lck"
 #endif
-#if !defined(SAVENAME)
-#define SAVENAME ".rogue.save"
+#if !defined(SAVEPATH)
+#define SAVEPATH ".rogue.save"
+#endif
+#if !defined(SCOREPATH)
+#define SCOREPATH ".rogue.scr"
 #endif
 
 /*
@@ -513,13 +516,13 @@ extern int passgo, playing, q_comm, running, save_msg, see_floor,
 	   numscores, total, between, group, cNWOOD, cNMETAL, cNSTONES,
 	   cNCOLORS;
 
-extern char file_name[(2*MAXSTR) + 1]; /* +1 for paranoia */
+extern char file_name[MAXSTR + 1]; /* +1 for paranoia */
 extern char huh[MAXSTR + 1]; /* +1 for paranoia */
 extern char *Numname, outbuf[], *ws_type[], *s_names[];
 
 extern const char *ws_made[], *inv_t_name[], *p_colors[], *r_stones[],
-                  *release, *tr_name[], *rainbow[], *wood[], *metal[],
-		  encstr[], statlist[], version[];
+                  version[], *tr_name[], *rainbow[], *wood[], *metal[],
+		  encstr[], statlist[], release[];
 
 extern const int a_class[], e_levels[];
 

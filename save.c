@@ -142,7 +142,7 @@ save_file(FILE *savef)
     endwin();
     resetltchars();
     md_chmod(file_name, 0400);
-    encwrite(release, strlen(release)+1, savef);
+    encwrite(version, strlen(version)+1, savef);
     snprintf(buf, 80, "%d x %d\n", LINES, COLS);
     buf[80] = '\0'; /* paranoia */
     encwrite(buf,80,savef);
@@ -183,8 +183,8 @@ restore(const char *file)
     syml = is_symlink(file);
 
     fflush(stdout);
-    encread(buf, strlen(release) + 1, inf);
-    if (strcmp(buf, release) != 0)
+    encread(buf, strlen(version) + 1, inf);
+    if (strcmp(buf, version) != 0)
     {
 	printf("Sorry, saved game is out of date.\n");
 	fflush(stdout);

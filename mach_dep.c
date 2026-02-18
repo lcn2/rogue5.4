@@ -13,8 +13,8 @@
 /*
  * The various tuneable defines are:
  *
- *	SCORENAME	Basename of the score file
- *	LOCKNAME	Basename of the lock file
+ *	LOCKPATH	Path of the lock file
+ *	SCOREPATH	Path of the score file
  *	ALLSCORES	Score file is top ten scores, not top ten
  *			players.  This is only useful when only a few
  *			people will be playing; otherwise the score file
@@ -518,19 +518,13 @@ form_lock_path(void)
         return;
     }
 
-    /*
-     * form home plus trialing / if not already set
-     */
-    if (home[0] == '\0') {
-	form_home();
-    }
 
     /*
      * determine lock file path
      */
     memset(lock_path, 0, sizeof(lock_path)); /* paranoia */
-    snprintf(lock_path, 2*MAXSTR, "%s%s", home, LOCKNAME);
-    lock_path[2*MAXSTR] = '\0'; /* paranoia */
+    strncpy(lock_path, LOCKPATH, MAXSTR);
+    lock_path[MAXSTR] = '\0'; /* paranoia */
     return;
 }
 
@@ -550,18 +544,11 @@ form_save_path(void)
     }
 
     /*
-     * form home plus trialing / if not already set
-     */
-    if (home[0] == '\0') {
-	form_home();
-    }
-
-    /*
      * determine save file path
      */
     memset(file_name, 0, sizeof(file_name)); /* paranoia */
-    snprintf(file_name, 2*MAXSTR, "%s%s", home, SAVENAME);
-    file_name[2*MAXSTR] = '\0'; /* paranoia */
+    strncpy(file_name, SAVEPATH, MAXSTR);
+    file_name[MAXSTR] = '\0'; /* paranoia */
     return;
 }
 
@@ -581,17 +568,10 @@ form_score_path(void)
     }
 
     /*
-     * form home plus trialing / if not already set
-     */
-    if (home[0] == '\0') {
-	form_home();
-    }
-
-    /*
      * determine score file path
      */
     memset(score_path, 0, sizeof(score_path)); /* paranoia */
-    snprintf(score_path, 2*MAXSTR, "%s%s", home, SCORENAME);
-    score_path[2*MAXSTR] = '\0'; /* paranoia */
+    strncpy(score_path, SCOREPATH, MAXSTR);
+    score_path[MAXSTR] = '\0'; /* paranoia */
     return;
 }

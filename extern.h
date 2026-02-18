@@ -55,10 +55,10 @@ extern FILE	*scoreboard;
 extern int numscores;
 extern char *Numname;
 extern int allscore;
-extern char home[MAXSTR+1];			/* home path plus trailing /, +1 for paranoia */
-extern char file_name[2*MAXSTR+1];		/* home plus / plus rogue save file path, +1 for paranoia */
-extern char lock_path[2*MAXSTR+1];		/* home plus / plus rogue lock file path, +1 for paranoia */
-extern char score_path[2*MAXSTR+1];		/* home plus / plus rogue score file path, +1 for paranoia */
+extern char home[MAXSTR + 1];			/* home path plus trailing /, +1 for paranoia */
+extern char lock_path[MAXSTR + 1];		/* rogue lock file path, +1 for paranoia */
+extern char file_name[MAXSTR + 1];		/* rogue save file path, +1 for paranoia */
+extern char score_path[MAXSTR + 1];		/* rogue score file path, +1 for paranoia */
 
 /*
  * Function types

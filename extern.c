@@ -56,9 +56,9 @@ int  pack_used[MAXPACK + 1] = {		/* Is the character used in the pack? +1 for pa
 
 int  dir_ch;				/* Direction from last get_dir() call */
 char home[MAXSTR + 1] = {'\0'};		/* User's home directory plus a trailing /, +1 for paranoia */
-char file_name[(2*MAXSTR) + 1] = {'\0'};	/* home plus / plus rogue save file path, +1 for paranoia */
-char lock_path[(2*MAXSTR) + 1] = {'\0'};	/* home plus / plus rogue lock file path, +1 for paranoia */
-char score_path[(2*MAXSTR) + 1] = {'\0'};	/* home plus / plus rogue score file path, +1 for paranoia */
+char file_name[MAXSTR + 1] = {'\0'};	/* rogue save file path, +1 for paranoia */
+char lock_path[MAXSTR + 1] = {'\0'};	/* rogue lock file path, +1 for paranoia */
+char score_path[MAXSTR + 1] = {'\0'};	/* rogue score file path, +1 for paranoia */
 char huh[MAXSTR+1];			/* The last message printed, +1 for paranoia */
 const char *p_colors[MAXPOTIONS + 1];	/* Colors of the potions, +1 for paranoia */
 char prbuf[PFBUF_LEN + 1] = {'\0'};	/* buffer for snprintfs, +1 for paranoia */
@@ -402,7 +402,7 @@ const struct h_list helpstr[] = {
     {'Q',	"	quit",					TRUE},
     {'!',	"	shell escape",				TRUE},
     {'F',	"<dir>	fight till either of you dies",		TRUE},
-    {'v',	"	print version number",			TRUE},
+    {'v',	"	print version and release",		TRUE},
     {0,		NULL }
 };
 int numscores = NUMSCORES;

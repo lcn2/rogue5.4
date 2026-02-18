@@ -296,7 +296,7 @@ over:
 		    wrefresh(curscr);
 		when 'v':
 		    after = FALSE;
-		    msg("version %s (chongo was here) %s", release, version);
+		    msg("rogue version %s release %s (chongo was here)", version, release);
 		when 'S':
 		    after = FALSE;
 		    save_game();

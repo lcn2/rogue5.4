@@ -66,7 +66,6 @@ extern pid_t	md_getpid(void);
 extern void	s_encread(char *start, size_t size, int inf);
 extern void	s_encwrite(char *start, size_t size, FILE *outf);
 extern char	*md_getrealname(uid_t uid);
-extern char	*md_gethomedir(void);
 extern int	lock_sc(void);
 extern void	unlock_sc(void);
 

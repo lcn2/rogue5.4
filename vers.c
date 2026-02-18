@@ -8,13 +8,12 @@
  *
  * The original authors claim:
  *
- *	encstr is declared here to force it to be loaded before the version number,
+ *	encstr is declared here to force it to be loaded before the release (was version) string (was number),
  *	and therefore not to be written in saved games.
  *
- * IMPORTANT NOTE: As of rogue 5.4.5, the release, NOT the version is written to the rogue save file.
- *		   The release is written to the rogue save file instead of the version.
- *		   So when you change the release string, you invalidate all old rogue save files.
- *		   You can now change the version without impacting rogue save files.
+ * IMPORTANT NOTE: As of rogue 5.4.5 2026-02-18, the version, but NOT the release is written to the rogue save file.
+ *		   So when you change the version string, you invalidate all old rogue save files!
+ *		   However, you may now change the release without impacting rogue save files.
  *
  * NOTE: The encstr[] and statlist[] are used by encwrite() and encread().
  *	 You probably don't want to change either of them as doing so would almost
@@ -27,7 +26,7 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-const char *release = "5.4.5";
+const char version[] = "5.4.5";
 const char encstr[] = "\300k||`\251Y.'\305\321\201+\277~r\"]\240_\223=1\341)\222\212\241t;\t$\270\314/<#\201\254";
 const char statlist[] = "\355kl{+\204\255\313idJ\361\214=4:\311\271\341wK<\312\321\213,,7\271/Rk%\b\312\f\246";
-const char version[] = "(github.com/lcn2/rogue5.4) 2026-02-16";
+const char release[] = "2026-02-18";

@@ -145,7 +145,7 @@ main(int argc, char **argv)
 	}
 	else if (strcmp(argv[1], "-V") == 0)
 	{
-	    printf("version %s (chongo was here) %s\n", release, version);
+	    printf("rogue version %s release %s (chongo was here)\n", version, release);
 	    fflush(stdout);
 	    exit(0);
 	}
