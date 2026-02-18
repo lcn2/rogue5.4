@@ -512,7 +512,7 @@ install: all
 	fi
 	-${INSTALL} -d -m 0755 ${DESTDIR}
 	-${INSTALL} -m 0755 ${PROGRAM} ${DESTDIR}/${PROGRAM}
-	-@if [[ ! -d "${ROGUE_DIR}" ]]; then
+	-@if [[ ! -d "${ROGUE_DIR}" ]]; then \
 	    echo "${INSTALL} -d -m 0755 ${ROGUE_DIR}" ; \
 	    ${INSTALL} -d -m 0755 ${ROGUE_DIR} ; \
 	fi
