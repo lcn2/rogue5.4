@@ -456,23 +456,23 @@ rogue.cat: rogue.6 rogue.cat.in
 	    ${NROFF} -man rogue.6 | ${COLCRT} - > $@ ; \
         else \
 	    echo "LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
-			      -e 's;${AT}LOCKFILE${AT};${${ROGUE_DIR}}/${LOCKFILE_BASENAME};' \
-			      -e 's;${AT}SAVEFILE${AT};${${ROGUE_DIR}}/${SAVEFILE_BASENAME};' \
-			      -e 's;${AT}SCOREFILE${AT};${${ROGUE_DIR}}/${SCOREFILE_BASENAME};' \
+			      -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
+			      -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
+			      -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
 			      rogue.cat.in > $@" ; \
 	    LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
-			      -e 's;${AT}LOCKFILE${AT};${${ROGUE_DIR}}/${LOCKFILE_BASENAME};' \
-			      -e 's;${AT}SAVEFILE${AT};${${ROGUE_DIR}}/${SAVEFILE_BASENAME};' \
-			      -e 's;${AT}SCOREFILE${AT};${${ROGUE_DIR}}/${SCOREFILE_BASENAME};' \
+			      -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
+			      -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
+			      -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
 			      rogue.cat.in > $@ ; \
 	fi
 
 rogue.md: rogue.md.in
 	${RM} -f $@
 	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
-			  -e 's;${AT}LOCKFILE${AT};${${ROGUE_DIR}}/${LOCKFILE_BASENAME};' \
-			  -e 's;${AT}SAVEFILE${AT};${${ROGUE_DIR}}/${SAVEFILE_BASENAME};' \
-			  -e 's;${AT}SCOREFILE${AT};${${ROGUE_DIR}}/${SCOREFILE_BASENAME};' \
+			  -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
+			  -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
+			  -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
 			  rogue.md.in > rogue.md
 
 
