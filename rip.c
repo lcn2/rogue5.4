@@ -131,16 +131,7 @@ score(int amount, int flags, int monst)
 	mvaddstr(LINES - 1, 0 , "[Press return to continue]");
         refresh();
         wgetnstr(stdscr, prbuf, NUMCOLS);   /* read up to NUMCOLS bytes and append a NUL byte */
-	endwin();
-	putchar('\n');
-        resetltchars();
-	/*
-	 * free up space to "guarantee" there is space for the top_scores
-	 */
-	delwin(stdscr);
-	delwin(curscr);
-	if (hw != NULL)
-	    delwin(hw);
+	endwin_and_ncurses_cleanup();
     }
 
     top_scores = calloc(numscores+1, sizeof(SCORE)); /* +1 for paranoia */

@@ -125,6 +125,7 @@ auto_save(int sig)
     if (file_name[0] != '\0' && ((savef = fopen(file_name, "w")) != NULL ||
 	(md_unlink_open_file(file_name, savef) >= 0 && (savef = fopen(file_name, "w")) != NULL)))
 	    save_file(savef);
+    endwin_and_ncurses_cleanup();
     exit(0);
 }
 
@@ -137,10 +138,7 @@ void
 save_file(FILE *savef)
 {
     char buf[80+1]; /* +1 for paranoia */
-    mvcur(0, COLS - 1, LINES - 1, 0);
-    putchar('\n');
-    endwin();
-    resetltchars();
+
     md_chmod(file_name, 0400);
     encwrite(version, strlen(version)+1, savef);
     snprintf(buf, 80, "%d x %d\n", LINES, COLS);
@@ -149,6 +147,7 @@ save_file(FILE *savef)
     rs_save_file(savef);
     fflush(savef);
     fclose(savef);
+    endwin_and_ncurses_cleanup();
     exit(0);
 }
 
@@ -204,11 +203,11 @@ restore(const char *file)
     }
 
     initscr();                          /* Start up cursor package */
+    (void) atexit(endwin_and_ncurses_cleanup);
     keypad(stdscr, 1);
 
     if (lines > LINES)
     {
-        endwin();
         printf("Sorry, original game was played on a screen with %d lines.\n",lines);
         printf("Current screen only has %d lines. Unable to restore game\n",LINES);
 	fflush(stdout);
@@ -216,7 +215,6 @@ restore(const char *file)
     }
     if (cols > COLS)
     {
-        endwin();
         printf("Sorry, original game was played on a screen with %d columns.\n",cols);
         printf("Current screen only has %d columns. Unable to restore game\n",COLS);
 	fflush(stdout);
@@ -256,7 +254,6 @@ restore(const char *file)
 #endif
 	if (sbuf2.st_nlink != 1 || syml)
 	{
-	    endwin();
 	    printf("Cannot restore from a linked file\n");
 	    fflush(stdout);
 	    return FALSE;
@@ -264,13 +261,12 @@ restore(const char *file)
 
     if (pstats.s_hpt <= 0)
     {
-	endwin();
 	printf("\"He's dead, Jim\"\n");
 	fflush(stdout);
 	return FALSE;
     }
 
-	md_tstpresume();
+    md_tstpresume();
 
     memset(file_name, 0, sizeof(file_name)); /* paranoia */
     strncpy(file_name, file, MAXSTR);
@@ -281,7 +277,7 @@ restore(const char *file)
     fflush(stdout);
     playit();
     /*NOTREACHED*/
-    fflush(stdout);
+    endwin_and_ncurses_cleanup();
     exit(0);
 }
 

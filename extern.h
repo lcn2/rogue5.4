@@ -102,5 +102,7 @@ extern void form_lock_path(void);
 extern void form_save_path(void);
 extern void form_score_path(void);
 
+extern void endwin_and_ncurses_cleanup(void);
+
 
 #endif

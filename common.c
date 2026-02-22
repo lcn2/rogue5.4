@@ -32,6 +32,8 @@ endit(int sig)
 {
     NOOP(sig);
     fatal("Okay, bye bye!\n");
+    endwin_and_ncurses_cleanup();
+    exit(0);
 }
 
 /*
@@ -44,7 +46,7 @@ fatal(const char *s)
 {
     mvaddstr(LINES - 2, 0, s);
     refresh();
-    endwin();
+    endwin_and_ncurses_cleanup();
     my_exit(0);
 }
 
@@ -90,7 +92,7 @@ tstp(int ignored)
      */
     getyx(curscr, oy, ox);
     mvcur(0, COLS - 1, LINES - 1, 0);
-    endwin();
+    (void) endwin();
     resetltchars();
     fflush(stdout);
 	md_tstpsignal();
@@ -192,6 +194,8 @@ quit(int sig)
 	count = 0;
 	to_death = FALSE;
     }
+    endwin_and_ncurses_cleanup();
+    exit(0);
 }
 
 /*
@@ -208,13 +212,7 @@ leave(int sig)
 
     setbuf(stdout, buf);	/* throw away pending output */
 
-    if (!isendwin())
-    {
-	mvcur(0, COLS - 1, LINES - 1, 0);
-	endwin();
-    }
-
-    putchar('\n');
+    endwin_and_ncurses_cleanup();
     my_exit(0);
 }
 
@@ -231,7 +229,7 @@ shell(void)
      */
     move(LINES-1, 0);
     refresh();
-    endwin();
+    (void) endwin();
     resetltchars();
     putchar('\n');
     in_shell = TRUE;
@@ -258,7 +256,6 @@ shell(void)
 void
 my_exit(int st)
 {
-    resetltchars();
+    endwin_and_ncurses_cleanup();
     exit(st);
 }
-

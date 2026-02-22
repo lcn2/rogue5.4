@@ -59,14 +59,96 @@
 
 #define NOOP(x) (x += 0)
 
+static int final_newline = 0;	/* number if final newlines printed by endwin_and_ncurses_cleanup() */
+
+/*
+ * externs for mdport.c
+ *
+ * We do NOT want to include rogue.h in mdport.c, so we
+ * duplicate the mdport.c required externs below.
+ */
+extern WINDOW *hw;		/* used as a scratch window, or NULL */
+extern void resetltchars(void);	/* Reset the local tty chars to original values */
+
 void
 md_init(void)
 {
 #if defined(DUMP)
 	md_onsignal_default();
 #else
-	md_onsignal_exit();
+	md_onsignal_autosave();
 #endif
+}
+
+/*
+ * ncurses_delete - free up ncurses state space
+ */
+static void
+ncurses_delete(void)
+{
+    delwin(stdscr);
+    delwin(curscr);
+    if (hw != NULL)
+	delwin(hw);
+}
+
+/*
+ * endwin_and_ncurses_cleanup - cleanup and close down curses
+ */
+void
+endwin_and_ncurses_cleanup(void)
+{
+    struct termios current;	/* current terminal settings */
+
+    /*
+     * flush all output
+     */
+    fflush(stdout);
+    fflush(stderr);
+
+    /*
+     * ncurses cleanup unless endwin() was already called
+     */
+    if (!isendwin()) {
+
+	/*
+	 * move to corner of window
+	 */
+        mvcur(0, COLS - 1, LINES - 1, 0);
+
+	/*
+	 * clean up and delete curses
+	 */
+	(void) endwin();
+	ncurses_delete();
+    }
+
+    /*
+     * turn off raw mode
+     */
+    resetltchars();
+    tcgetattr (STDIN_FILENO, &current);
+    current.c_lflag |= ICANON;	    /* Enable canonical mode */
+    current.c_lflag |= ECHO;	    /* Enable echo */
+    tcsetattr (STDIN_FILENO, TCSANOW, &current);
+
+    /*
+     * output up to 2 final newlines
+     */
+    if (final_newline < 2) { putchar('\n'); }
+    ++final_newline;
+    fflush(stdout);
+}
+
+/*
+ * signal_exit - cleanup and close down curses and then exit on signal
+ */
+static void
+signal_exit(int sig)
+{
+    NOOP(sig);
+    endwin_and_ncurses_cleanup();
+    exit(0);
 }
 
 void
@@ -111,37 +193,37 @@ void
 md_onsignal_exit(void)
 {
 #ifdef SIGHUP
-    signal(SIGHUP, SIG_DFL);
+    signal(SIGHUP, signal_exit);
 #endif
 #ifdef SIGQUIT
-    signal(SIGQUIT, exit);
+    signal(SIGQUIT, signal_exit);
 #endif
 #ifdef SIGILL
-    signal(SIGILL, exit);
+    signal(SIGILL, signal_exit);
 #endif
 #ifdef SIGTRAP
-    signal(SIGTRAP, exit);
+    signal(SIGTRAP, signal_exit);
 #endif
 #ifdef SIGIOT
-    signal(SIGIOT, exit);
+    signal(SIGIOT, signal_exit);
 #endif
 #ifdef SIGEMT
-    signal(SIGEMT, exit);
+    signal(SIGEMT, signal_exit);
 #endif
 #ifdef SIGFPE
-    signal(SIGFPE, exit);
+    signal(SIGFPE, signal_exit);
 #endif
 #ifdef SIGBUS
-    signal(SIGBUS, exit);
+    signal(SIGBUS, signal_exit);
 #endif
 #ifdef SIGSEGV
-    signal(SIGSEGV, exit);
+    signal(SIGSEGV, signal_exit);
 #endif
 #ifdef SIGSYS
-    signal(SIGSYS, exit);
+    signal(SIGSYS, signal_exit);
 #endif
 #ifdef SIGTERM
-    signal(SIGTERM, exit);
+    signal(SIGTERM, signal_exit);
 #endif
 }
 

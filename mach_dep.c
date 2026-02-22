@@ -199,9 +199,9 @@ void
 setup(void)
 {
 #ifdef DUMP
-    md_onsignal_autosave();
-#else
     md_onsignal_default();
+#else
+    md_onsignal_autosave();
 #endif
 
 #ifdef CHECKTIME

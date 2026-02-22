@@ -194,12 +194,12 @@ OBJS= ${OBJS1} ${OBJS2}
 
 CFILES= vers.c extern.c armor.c chase.c command.c daemon.c \
            daemons.c fight.c init.c io.c list.c mach_dep.c \
-           main.c  mdport.c misc.c monsters.c move.c new_level.c \
+           main.c mdport.c misc.c monsters.c move.c new_level.c \
            options.c pack.c passages.c potions.c rings.c rip.c \
            rooms.c save.c scrolls.c state.c sticks.c things.c \
            weapons.c wizard.c xcrypt.c
 
-MISC_C= findpw.c scedit.c scmisc.c
+MISC_C= findpw.c scedit.c scmisc.c common.c
 
 C_SRC= ${CFILES} ${MISC_C}
 
@@ -489,8 +489,8 @@ rogue.md: rogue.md.in
 # standard Makefile utility rules #
 ###################################
 
-tags: ${CFILES} ${MISC_C}
-	${CTAGS} -w ${CFILES} ${MISC_C}
+tags: ${SRC} modern_curses.h
+	${CTAGS} -w ${SRC} modern_curses.h
 
 clean:
 	${RM} -f ${OBJS1}
