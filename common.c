@@ -32,7 +32,6 @@ endit(int sig)
 {
     NOOP(sig);
     fatal("Okay, bye bye!\n");
-    endwin_and_ncurses_cleanup();
     exit(0);
 }
 
@@ -46,7 +45,6 @@ fatal(const char *s)
 {
     mvaddstr(LINES - 2, 0, s);
     refresh();
-    endwin_and_ncurses_cleanup();
     my_exit(0);
 }
 
@@ -194,7 +192,6 @@ quit(int sig)
 	count = 0;
 	to_death = FALSE;
     }
-    endwin_and_ncurses_cleanup();
     exit(0);
 }
 
@@ -212,7 +209,6 @@ leave(int sig)
 
     setbuf(stdout, buf);	/* throw away pending output */
 
-    endwin_and_ncurses_cleanup();
     my_exit(0);
 }
 
@@ -256,6 +252,5 @@ shell(void)
 void
 my_exit(int st)
 {
-    endwin_and_ncurses_cleanup();
     exit(st);
 }

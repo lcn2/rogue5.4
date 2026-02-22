@@ -93,7 +93,7 @@ ncurses_delete(void)
 }
 
 /*
- * endwin_and_ncurses_cleanup - cleanup and close down curses
+ * endwin_and_ncurses_cleanup - cleanup I/O, and shutdown ncurses (if needed)
  */
 void
 endwin_and_ncurses_cleanup(void)
@@ -133,9 +133,11 @@ endwin_and_ncurses_cleanup(void)
     tcsetattr (STDIN_FILENO, TCSANOW, &current);
 
     /*
-     * output up to 2 final newlines
+     * output newlines once
      */
-    if (final_newline < 2) { putchar('\n'); }
+    if (final_newline == 0) {
+	putchar('\n');
+    }
     ++final_newline;
     fflush(stdout);
 }
@@ -147,7 +149,6 @@ static void
 signal_exit(int sig)
 {
     NOOP(sig);
-    endwin_and_ncurses_cleanup();
     exit(0);
 }
 

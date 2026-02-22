@@ -33,11 +33,21 @@ main(int argc, char **argv)
     time_t lowtime;
 
     /*
+     * on exit: cleanup I/O, and shutdown ncurses (if needed)
+     *
+     * NOTE: This is needed prior to calling md_init().
+     */
+    (void) atexit(endwin_and_ncurses_cleanup);
+
+    /*
+     * setup signal handling
+     */
+    md_init();
+
+    /*
      * set mode for write access for the owner only
      */
     (void) umask(S_IWGRP | S_IWOTH);
-
-    md_init();
 
 #ifdef MASTER
     /*
@@ -135,7 +145,6 @@ main(int argc, char **argv)
 		level = 1;
 	    }
 	    initscr();
-	    (void) atexit(endwin_and_ncurses_cleanup);
 	    getltchars();
 	    if (wizard) {
 		death(death_monst());
@@ -156,7 +165,6 @@ main(int argc, char **argv)
     if (argc == 2)
 	/* if restore works, it will never return */
 	if (!restore(argv[1])) {
-	    endwin_and_ncurses_cleanup();
 	    exit(1);
 	}
 #ifdef MASTER
@@ -198,7 +206,6 @@ main(int argc, char **argv)
     }
 
     initscr();				/* Start up cursor package */
-    (void) atexit(endwin_and_ncurses_cleanup);	/* on exit, endwin and cleanup ncurses */
     init_probs();			/* Set up prob tables for objects */
     init_player();			/* Set up initial player stats */
     init_names();			/* Set up names of scrolls */
@@ -212,7 +219,6 @@ main(int argc, char **argv)
      */
     if (LINES < NUMLINES || COLS < NUMCOLS)
     {
-	endwin_and_ncurses_cleanup();
 	printf("Sorry, the screen must be at least %dx%d\n", NUMLINES, NUMCOLS);
 	fflush(stdout);
 	my_exit(1);

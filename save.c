@@ -125,7 +125,6 @@ auto_save(int sig)
     if (file_name[0] != '\0' && ((savef = fopen(file_name, "w")) != NULL ||
 	(md_unlink_open_file(file_name, savef) >= 0 && (savef = fopen(file_name, "w")) != NULL)))
 	    save_file(savef);
-    endwin_and_ncurses_cleanup();
     exit(0);
 }
 
@@ -147,7 +146,6 @@ save_file(FILE *savef)
     rs_save_file(savef);
     fflush(savef);
     fclose(savef);
-    endwin_and_ncurses_cleanup();
     exit(0);
 }
 
@@ -203,7 +201,6 @@ restore(const char *file)
     }
 
     initscr();                          /* Start up cursor package */
-    (void) atexit(endwin_and_ncurses_cleanup);
     keypad(stdscr, 1);
 
     if (lines > LINES)
@@ -277,7 +274,6 @@ restore(const char *file)
     fflush(stdout);
     playit();
     /*NOTREACHED*/
-    endwin_and_ncurses_cleanup();
     exit(0);
 }
 
