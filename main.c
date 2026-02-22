@@ -40,14 +40,16 @@ main(int argc, char **argv)
     (void) atexit(endwin_and_ncurses_cleanup);
 
     /*
+     * set mode for write access for the owner only
+     *
+     * NOTE: This is needed prior to calling md_init().
+     */
+    (void) umask(S_IWGRP | S_IWOTH);
+
+    /*
      * setup signal handling
      */
     md_init();
-
-    /*
-     * set mode for write access for the owner only
-     */
-    (void) umask(S_IWGRP | S_IWOTH);
 
 #ifdef MASTER
     /*
