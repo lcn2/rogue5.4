@@ -16,6 +16,7 @@
 
 #include "modern_curses.h"
 #include "extern.h"
+#include "config.h"
 #include "rogue.h"
 
 #define	EQSTR(a, b)	(strcmp(a, b) == 0)

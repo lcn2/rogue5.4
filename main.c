@@ -17,6 +17,7 @@
 
 #include "modern_curses.h"
 #include "extern.h"
+#include "config.h"
 #include "score.h"
 #include "rogue.h"
 
@@ -169,6 +170,10 @@ main(int argc, char **argv)
 	if (!restore(argv[1])) {
 	    exit(1);
 	}
+
+    /*
+     * report dungeon (or wizard dungeon)
+     */
 #ifdef MASTER
     if (wizard)
 	printf("Hello %s, welcome to dungeon #%u", whoami, dnum);

@@ -20,6 +20,7 @@
 
 #include "modern_curses.h"
 #include "extern.h"
+#include "config.h"
 #include "score.h"
 #include "rogue.h"
 

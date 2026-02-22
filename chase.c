@@ -14,6 +14,7 @@
 
 #include "modern_curses.h"
 #include "extern.h"
+#include "config.h"
 #include "rogue.h"
 
 #define DRAGONSHOT  5	/* one chance in DRAGONSHOT that a dragon will flame */
