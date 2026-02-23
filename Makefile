@@ -65,10 +65,6 @@ TRUE= true
 # configuration #
 #################
 
-DISTNAME= rogue5.4.5
-PACKAGE_TARNAME= rogue-5.4.5
-PROGRAM= rogue
-
 # ROGUE_DIR  - where to place/use the rogue lock file, rogue score file, and rogue save file
 #
 ROGUE_DIR= ${HOME}
@@ -87,8 +83,10 @@ SCOREFILE_BASENAME= .rogue.scr
 PREFIX= /usr/local
 #
 DESTDIR= ${PREFIX}/bin
-DESTDOC= ${PREFIX}/share/rogue5.4
-MAN6DIR= ${PREFIX}/man/man6
+SHAREDIR= ${PREFIX}/share
+DESTDOC= ${SHAREDIR}/rogue5.4
+MANDIR= ${PREFIX}/man
+MAN6DIR= ${MANDIR}/man6
 
 
 #####################
@@ -403,7 +401,7 @@ stddocs: rogue.6 rogue.me rogue.html rogue.doc rogue.cat rogue.md
 
 rogue.6: rogue.6.in
 	${RM} -f $@
-	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
+	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			  -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
 			  -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
 			  -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
@@ -411,7 +409,7 @@ rogue.6: rogue.6.in
 
 rogue.me: rogue.me.in
 	${RM} -f $@
-	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
+	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			  -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
 			  -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
 			  -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
@@ -419,7 +417,7 @@ rogue.me: rogue.me.in
 
 rogue.html: rogue.html.in
 	${RM} -f $@
-	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
+	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			  -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
 			  -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
 			  -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
@@ -434,12 +432,12 @@ rogue.doc: rogue.me rogue.doc.in
 	    echo "${TBL} rogue.me | ${NROFF} -me | colcrt - > $@" ; \
 	    ${TBL} rogue.me | ${NROFF} -me | colcrt - > $@ ; \
         else \
-	    echo "LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
+	    echo "LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			      -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
 			      -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
 			      -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
 			      rogue.doc.in > $@" ; \
-	    LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
+	    LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			      -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
 			      -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
 			      -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
@@ -455,12 +453,12 @@ rogue.cat: rogue.6 rogue.cat.in
 	    echo "${NROFF} -man rogue.6 | ${COLCRT} - > $@" ; \
 	    ${NROFF} -man rogue.6 | ${COLCRT} - > $@ ; \
         else \
-	    echo "LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
+	    echo "LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			      -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
 			      -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
 			      -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
 			      rogue.cat.in > $@" ; \
-	    LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
+	    LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			      -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
 			      -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
 			      -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
@@ -469,7 +467,7 @@ rogue.cat: rogue.6 rogue.cat.in
 
 rogue.md: rogue.md.in
 	${RM} -f $@
-	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};${PROGRAM};' \
+	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			  -e 's;${AT}LOCKFILE${AT};${ROGUE_DIR}/${LOCKFILE_BASENAME};' \
 			  -e 's;${AT}SAVEFILE${AT};${ROGUE_DIR}/${SAVEFILE_BASENAME};' \
 			  -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
@@ -506,20 +504,60 @@ clobber: clean
 distclean maintainer-clean: clobber
 
 install: all
-	@if [[ -z "${ROGUE_DIR}" ]]; then \
-	    echo 'ERROR: The ROGUE_DIR make variable CANNOT be empty!!!' ; \
+	@if [[ -z "${DESTDIR}" ]]; then \
+	    echo 'ERROR: The DESTDIR make variable CANNOT be empty!!!' ; \
 	    exit 1 ; \
 	fi
 	-${INSTALL} -d -m 0755 ${DESTDIR}
-	-${INSTALL} -m 0755 ${PROGRAM} ${DESTDIR}/${PROGRAM}
-	-@if [[ ! -d "${ROGUE_DIR}" ]]; then \
-	    echo "${INSTALL} -d -m 0755 ${ROGUE_DIR}" ; \
-	    ${INSTALL} -d -m 0755 ${ROGUE_DIR} ; \
+	@if [[ ! -d "${DESTDIR}" ]]; then \
+	    echo 'ERROR: failed to create DESTDIR directory: ${DESTDIR}' 1>&2 ; \
+	    exit 2 ; \
 	fi
-	-${TOUCH} -- ${ROGUE_DIR}/${SCOREFILE_BASENAME}
-	-${CHMOD} 0644 ${ROGUE_DIR}/${SCOREFILE_BASENAME}
-	-${TOUCH} -- ${ROGUE_DIR}/${LOCKFILE_BASENAME}
-	-${CHMOD} 0644 ${ROGUE_DIR}/${LOCKFILE_BASENAME}
+	@if [[ -z "${ROGUE_DIR}" ]]; then \
+	    echo 'ERROR: The ROGUE_DIR make variable CANNOT be empty!!!' ; \
+	    exit 3 ; \
+	fi
+	-${INSTALL} -d -m 0755 ${ROGUE_DIR}
+	@if [[ ! -d "${ROGUE_DIR}" ]]; then \
+	    echo 'ERROR: failed to create ROGUE_DIR directory: ${ROGUE_DIR}' 1>&2 ; \
+	    exit 4 ; \
+	fi
+	@if [[ -z "${MANDIR}" ]]; then \
+	    echo 'ERROR: The MANDIR make variable CANNOT be empty!!!' ; \
+	    exit 5 ; \
+	fi
+	-${INSTALL} -d -m 0755 ${MANDIR}
+	@if [[ ! -d "${MANDIR}" ]]; then \
+	    echo 'ERROR: failed to create MANDIR directory: ${MANDIR}' 1>&2 ; \
+	    exit 6 ; \
+	fi
+	@if [[ -z "${MAN6DIR}" ]]; then \
+	    echo 'ERROR: The MAN6DIR make variable CANNOT be empty!!!' ; \
+	    exit 7 ; \
+	fi
+	-${INSTALL} -d -m 0755 ${MAN6DIR}
+	@if [[ ! -d "${MAN6DIR}" ]]; then \
+	    echo 'ERROR: failed to create MAN6DIR directory: ${MAN6DIR}' 1>&2 ; \
+	    exit 8 ; \
+	fi
+	@if [[ -z "${SHAREDIR}" ]]; then \
+	    echo 'ERROR: The SHAREDIR make variable CANNOT be empty!!!' ; \
+	    exit 9 ; \
+	fi
+	-${INSTALL} -d -m 0755 ${SHAREDIR}
+	@if [[ ! -d "${SHAREDIR}" ]]; then \
+	    echo 'ERROR: failed to create SHAREDIR directory: ${SHAREDIR}' 1>&2 ; \
+	    exit 10 ; \
+	fi
+	@if [[ -z "${DESTDOC}" ]]; then \
+	    echo 'ERROR: The DESTDOC make variable CANNOT be empty!!!' ; \
+	    exit 11 ; \
+	fi
+	-${INSTALL} -d -m 0755 ${DESTDOC}
+	@if [[ ! -d "${DESTDOC}" ]]; then \
+	    echo 'ERROR: failed to create DESTDOC directory: ${DESTDOC}' 1>&2 ; \
+	    exit 12 ; \
+	fi
 	-@if [[ -n "${GROUPOWNER}" ]]; then \
 	    echo -e "WARNING: Use of non-empty ${GROUPOWNER} is NOT recommended !!!\a" ; \
 	    sleep 1; \
@@ -527,41 +565,44 @@ install: all
 	    sleep 1 ; \
 	    echo -e "WARNING: Use of non-empty ${GROUPOWNER} is NOT recommended !!!\a" ; \
 	    sleep 1 ; \
-	    echo "${CHGRP} ${GROUPOWNER} ${DESTDIR}/${PROGRAM}" ; \
-	    ${CHGRP} ${GROUPOWNER} ${DESTDIR}/${PROGRAM} ; \
-	    echo "${CHMOD} 02755 ${DESTDIR}/${PROGRAM}" ; \
-	    ${CHMOD} 02755 ${DESTDIR}/${PROGRAM} ; \
+	    echo "${INSTALL} -m 2755 rogue -g ${GROUPOWNER} ${DESTDIR}/rogue" ; \
+	    ${INSTALL} -m 2755 rogue -g ${GROUPOWNER} ${DESTDIR}/rogue ; \
+	    echo "${TOUCH} -- ${ROGUE_DIR}/${SCOREFILE_BASENAME}"; \
+	    ${TOUCH} -- ${ROGUE_DIR}/${SCOREFILE_BASENAME}; \
 	    echo "${CHGRP} ${GROUPOWNER} ${ROGUE_DIR}/${SCOREFILE_BASENAME}" ; \
 	    ${CHGRP} ${GROUPOWNER} ${ROGUE_DIR}/${SCOREFILE_BASENAME} ; \
 	    echo "${CHMOD} 0664 ${ROGUE_DIR}/${SCOREFILE_BASENAME}" ; \
 	    ${CHMOD} 0664 ${ROGUE_DIR}/${SCOREFILE_BASENAME} ; \
+	    echo "${TOUCH} -- ${ROGUE_DIR}/${LOCKFILE_BASENAME}" ; \
+	    ${TOUCH} -- ${ROGUE_DIR}/${LOCKFILE_BASENAME} ; \
 	    echo "${CHGRP} ${GROUPOWNER} ${ROGUE_DIR}/${LOCKFILE_BASENAME}" ; \
 	    ${CHGRP} ${GROUPOWNER} ${ROGUE_DIR}/${LOCKFILE_BASENAME} ; \
 	    echo "${CHMOD} 0664 ${ROGUE_DIR}/${LOCKFILE_BASENAME}" ; \
 	    ${CHMOD} 0664 ${ROGUE_DIR}/${LOCKFILE_BASENAME} ; \
-         fi
+	else \
+	    echo "${INSTALL} -m 0755 rogue ${DESTDIR}/rogue" ; \
+	    ${INSTALL} -m 0755 rogue ${DESTDIR}/rogue ; \
+        fi
 	-${INSTALL} -m 0755 findpw ${DESTDIR}/findpw
 	-${INSTALL} -m 0755 scedit ${DESTDIR}/scedit
-	-${INSTALL} -d -m 0755 ${MAN6DIR}
-	-${INSTALL} -m 0644 rogue.6 ${MAN6DIR}/${PROGRAM}.6
-	-${INSTALL} -d -m 0755 ${DESTDOC}
-	-${INSTALL} -m 0444 rogue.doc ${DESTDOC}/${PROGRAM}.doc
-	-${INSTALL} -m 0444 rogue.html ${DESTDOC}/${PROGRAM}.html
-	-${INSTALL} -m 0444 rogue.cat ${DESTDOC}/${PROGRAM}.cat
-	-${INSTALL} -m 0444 rogue.me ${DESTDOC}/${PROGRAM}.me
+	-${INSTALL} -m 0644 rogue.6 ${MAN6DIR}/rogue.6
+	-${INSTALL} -m 0444 rogue.doc ${DESTDOC}/rogue.doc
+	-${INSTALL} -m 0444 rogue.html ${DESTDOC}/rogue.html
+	-${INSTALL} -m 0444 rogue.cat ${DESTDOC}/rogue.cat
+	-${INSTALL} -m 0444 rogue.me ${DESTDOC}/rogue.me
 	-${INSTALL} -m 0444 LICENSE ${DESTDOC}/LICENSE
 	-${INSTALL} -m 0444 LICENSE ${DESTDOC}/LICENSE.TXT
 	-${INSTALL} -m 0444 README.md ${DESTDOC}/README.md
 
 uninstall:
-	-${RM} -f -v ${DESTDIR}/${PROGRAM}
+	-${RM} -f -v ${DESTDIR}/rogue
 	-${RM} -f -v ${DESTDIR}/findpw
 	-${RM} -f -v ${DESTDIR}/scedit
-	-${RM} -f -v ${MAN6DIR}/${PROGRAM}.6
-	-${RM} -f -v ${DESTDOC}/${PROGRAM}.doc
-	-${RM} -f -v ${DESTDOC}/${PROGRAM}.html
-	-${RM} -f -v ${DESTDOC}/${PROGRAM}.cat
-	-${RM} -f -v ${DESTDOC}/${PROGRAM}.me
+	-${RM} -f -v ${MAN6DIR}/rogue.6
+	-${RM} -f -v ${DESTDOC}/rogue.doc
+	-${RM} -f -v ${DESTDOC}/rogue.html
+	-${RM} -f -v ${DESTDOC}/rogue.cat
+	-${RM} -f -v ${DESTDOC}/rogue.me
 	-${RM} -f -v ${DESTDOC}/LICENSE
 	-${RM} -f -v ${DESTDOC}/LICENSE.TXT
 	-${RM} -f -v ${DESTDOC}/README.md
