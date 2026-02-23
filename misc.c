@@ -564,9 +564,13 @@ call_it(struct obj_info *info)
 	{
 	    if (info->oi_guess != NULL)
 		free(info->oi_guess);
+	    /* Assign proper name? */
+	    if (prbuf[0] == '?' && prbuf[1] == '\0') {
+		(void) strlcpy(prbuf, info->oi_name, sizeof (prbuf));
+	    }
 	    info->oi_guess = malloc(strlen(prbuf) + 1);
-		if (info->oi_guess != NULL)
-			strcpy(info->oi_guess, prbuf);
+	    if (info->oi_guess != NULL)
+		strcpy(info->oi_guess, prbuf);
 	}
 	msg("");
     }
