@@ -274,9 +274,12 @@ get_str(void *vopt, WINDOW *win)
 	{
 	    if (sp > buf)
 	    {
+		int hx, hy, width;
+		getyx(win, hy, hx);
 		sp--;
-		for (i = strlen(unctrl(*sp)); i; i--)
-		    waddch(win, '\b');
+		width = strlen(unctrl(*sp));
+		mvwaddstr(win, hy, hx-width, "  ");
+		wmove(win, hy, hx-width);
 	    }
 	    continue;
 	}
