@@ -83,7 +83,7 @@ tstp(int ignored)
     int y, x;
     int oy, ox;
 
-	NOOP(ignored);
+    NOOP(ignored);
 
     /*
      * leave nicely
@@ -93,12 +93,12 @@ tstp(int ignored)
     (void) endwin();
     resetltchars();
     fflush(stdout);
-	md_tstpsignal();
+    md_tstpsignal();	/* will send a SIGSTOP signal to ourselves */
 
     /*
      * start back up again
      */
-	md_tstpresume();
+    md_tstpresume();
     raw();
     noecho();
     keypad(stdscr,1);
@@ -235,7 +235,7 @@ quit(int sig)
 	count = 0;
 	to_death = FALSE;
     }
-    exit(0);
+    return;
 }
 
 /*

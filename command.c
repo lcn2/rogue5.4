@@ -124,7 +124,7 @@ command(void)
 		{
 		    case CTRL('B'): case CTRL('H'): case CTRL('J'):
 		    case CTRL('K'): case CTRL('L'): case CTRL('N'):
-		    case CTRL('U'): case CTRL('Y'):
+		    case CTRL('U'): case CTRL('Y'): case CTRL('Z'):
 		    case '.': case 'a': case 'b': case 'h': case 'j':
 		    case 'k': case 'l': case 'm': case 'n': case 'q':
 		    case 'r': case 's': case 't': case 'u': case 'y':
@@ -369,6 +369,8 @@ over:
 		    status();
 		    stat_msg = FALSE;
 		    after = FALSE;
+		when CTRL('Z'):
+		    tstp(0);
 		otherwise:
 		    after = FALSE;
 #ifdef MASTER

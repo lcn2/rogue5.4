@@ -181,6 +181,7 @@ score(int amount, int flags, int monst)
 #if defined(SIGTERM)
     sig_term = signal(SIGTERM, SIG_IGN);
 #endif
+    md_tstphold();
 
     /*
      * Start the scoring sequence
@@ -393,6 +394,7 @@ score(int amount, int flags, int monst)
 #if defined(SIGTERM)
     signal(SIGTERM, sig_term);
 #endif
+    md_tstpresume();
 }
 
 /*

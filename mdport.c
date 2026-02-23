@@ -69,6 +69,10 @@ static int final_newline = 0;	/* number calls to endwin_and_ncurses_cleanup() */
  */
 extern WINDOW *hw;		/* used as a scratch window, or NULL */
 extern void resetltchars(void);	/* Reset the local tty chars to original values */
+extern void tstp(int ignored);
+extern void quit(int sig);
+extern void endit(int sig);
+extern void auto_save(int sig);
 
 void
 md_init(void)
@@ -171,130 +175,250 @@ signal_exit(int sig)
 void
 md_onsignal_default(void)
 {
-#ifdef SIGHUP
+#if defined(SIGHUP)
     signal(SIGHUP, SIG_DFL);
 #endif
-#ifdef SIGINT
+#if defined(SIGINT)
     signal(SIGINT, SIG_DFL);
 #endif
-#ifdef SIGQUIT
+#if defined(SIGQUIT)
     signal(SIGQUIT, SIG_DFL);
 #endif
-#ifdef SIGILL
+#if defined(SIGILL)
     signal(SIGILL, SIG_DFL);
 #endif
-#ifdef SIGTRAP
+#if defined(SIGTRAP)
     signal(SIGTRAP, SIG_DFL);
 #endif
-#ifdef SIGIOT
+#if defined(SIGABRT)
+    signal(SIGABRT, SIG_DFL);
+#elif defined(SIGIOT)
     signal(SIGIOT, SIG_DFL);
 #endif
-#ifdef SIGEMT
+#if defined(SIGEMT)
     signal(SIGEMT, SIG_DFL);
 #endif
-#ifdef SIGFPE
+#if defined(SIGFPE)
     signal(SIGFPE, SIG_DFL);
 #endif
-#ifdef SIGBUS
+/* SIGKILL cannot be caught */
+#if defined(SIGBUS)
     signal(SIGBUS, SIG_DFL);
 #endif
-#ifdef SIGSEGV
+#if defined(SIGSEGV)
     signal(SIGSEGV, SIG_DFL);
 #endif
-#ifdef SIGSYS
+#if defined(SIGSYS)
     signal(SIGSYS, SIG_DFL);
 #endif
-#ifdef SIGTERM
+#if defined(SIGPIPE)
+    signal(SIGPIPE, SIG_DFL);
+#endif
+/* SIGALRM is managed by md_start_checkout_timer(), and md_stop_checkout_timer() */
+#if defined(SIGTERM)
     signal(SIGTERM, SIG_DFL);
+#endif
+/* SIGURG is discarded by default */
+/* SIGSTOP cannot be caught */
+#if defined(SIGTSTP)
+    /* SIGTSTP is also managed by md_tstphold(), md_tstpresume(), and md_tstpsignal() */
+    signal(SIGTSTP, SIG_DFL);
+#endif
+/* SIGCONT is discarded by default */
+/* SIGCHLD is discarded by default */
+#if defined(SIGTTIN)
+    signal(SIGTTIN, SIG_DFL);	/* let the signal stop the process */
+#endif
+#if defined(SIGTTOU)
+    signal(SIGTTOU, SIG_DFL);	/* let the signal stop the process */
+#endif
+/* SIGIO is discarded by default */
+#if defined(SIGXCPU)
+    signal(SIGXCPU, SIG_DFL);
+#endif
+#if defined(SIGXFSZ)
+    signal(SIGXFSZ, SIG_DFL);
+#endif
+#if defined(SIGVTALRM)
+    signal(SIGVTALRM, SIG_DFL);
+#endif
+#if defined(SIGPROF)
+    signal(SIGPROF, SIG_DFL);
+#endif
+/* SIGWINCH is discarded by default */
+/* SIGINFO is discarded by default */
+#if defined(SIGUSR1)
+    signal(SIGUSR1, SIG_DFL);
+#endif
+#if defined(SIGUSR2)
+    signal(SIGUSR2, SIG_DFL);
 #endif
 }
 
 void
 md_onsignal_exit(void)
 {
-#ifdef SIGHUP
+#if defined(SIGHUP)
     signal(SIGHUP, signal_exit);
 #endif
-#ifdef SIGINT
+#if defined(SIGINT)
     signal(SIGINT, signal_exit);
 #endif
-#ifdef SIGQUIT
+#if defined(SIGQUIT)
     signal(SIGQUIT, signal_exit);
 #endif
-#ifdef SIGILL
+#if defined(SIGILL)
     signal(SIGILL, signal_exit);
 #endif
-#ifdef SIGTRAP
+#if defined(SIGTRAP)
     signal(SIGTRAP, signal_exit);
 #endif
-#ifdef SIGIOT
+#if defined(SIGABRT)
+    signal(SIGABRT, signal_exit);
+#elif defined(SIGIOT)
     signal(SIGIOT, signal_exit);
 #endif
-#ifdef SIGEMT
+#if defined(SIGEMT)
     signal(SIGEMT, signal_exit);
 #endif
-#ifdef SIGFPE
+#if defined(SIGFPE)
     signal(SIGFPE, signal_exit);
 #endif
-#ifdef SIGBUS
+/* SIGKILL cannot be caught */
+#if defined(SIGBUS)
     signal(SIGBUS, signal_exit);
 #endif
-#ifdef SIGSEGV
+#if defined(SIGSEGV)
     signal(SIGSEGV, signal_exit);
 #endif
-#ifdef SIGSYS
+#if defined(SIGSYS)
     signal(SIGSYS, signal_exit);
 #endif
-#ifdef SIGTERM
+#if defined(SIGPIPE)
+    signal(SIGPIPE, signal_exit);
+#endif
+/* SIGALRM is managed by md_start_checkout_timer(), and md_stop_checkout_timer() */
+#if defined(SIGTERM)
     signal(SIGTERM, signal_exit);
 #endif
+/* SIGURG is discarded by default */
+/* SIGSTOP cannot be caught */
+#if defined(SIGTSTP)
+    /* SIGTSTP is also managed by md_tstphold(), md_tstpresume(), and md_tstpsignal() */
+    signal(SIGTSTP, signal_exit);
+#endif
+/* SIGCONT is discarded by default */
+/* SIGCHLD is discarded by default */
+#if defined(SIGTTIN)
+    signal(SIGTTIN, SIG_DFL);	/* let the signal stop the process */
+#endif
+#if defined(SIGTTOU)
+    signal(SIGTTOU, SIG_DFL);	/* let the signal stop the process */
+#endif
+/* SIGIO is discarded by default */
+#if defined(SIGXCPU)
+    signal(SIGXCPU, signal_exit);
+#endif
+#if defined(SIGXFSZ)
+    signal(SIGXFSZ, signal_exit);
+#endif
+#if defined(SIGVTALRM)
+    signal(SIGVTALRM, signal_exit);
+#endif
+#if defined(SIGPROF)
+    signal(SIGPROF, signal_exit);
+#endif
+/* SIGWINCH is discarded by default */
+/* SIGINFO is discarded by default */
+#if defined(SIGUSR1)
+    signal(SIGUSR1, signal_exit);
+#endif
+#if defined(SIGUSR2)
+    signal(SIGUSR2, signal_exit);
+#endif
 }
-
-extern void auto_save(int sig);
-extern void endit(int sig);
-extern void quit(int sig);
 
 void
 md_onsignal_autosave(void)
 {
-#ifdef SIGHUP
+#if defined(SIGHUP)
     signal(SIGHUP, auto_save);
 #endif
-#ifdef SIGINT
+#if defined(SIGINT)
     signal(SIGINT, quit);
 #endif
-#ifdef SIGQUIT
+#if defined(SIGQUIT)
 	signal(SIGQUIT, endit);
 #endif
-#ifdef SIGILL
+#if defined(SIGILL)
     signal(SIGILL, auto_save);
 #endif
-#ifdef SIGTRAP
+#if defined(SIGTRAP)
     signal(SIGTRAP, auto_save);
 #endif
-#ifdef SIGIOT
+#if defined(SIGIOT)
     signal(SIGIOT, auto_save);
 #endif
-#ifdef SIGABRT
+#if defined(SIGABRT)
     signal(SIGIOT, auto_save);
 #endif
-#ifdef SIGEMT
+#if defined(SIGEMT)
     signal(SIGEMT, auto_save);
 #endif
-#ifdef SIGFPE
+#if defined(SIGFPE)
     signal(SIGFPE, auto_save);
 #endif
-#ifdef SIGBUS
+/* SIGKILL cannot be caught */
+#if defined(SIGBUS)
     signal(SIGBUS, auto_save);
 #endif
-#ifdef SIGSEGV
+#if defined(SIGSEGV)
     signal(SIGSEGV, auto_save);
 #endif
-#ifdef SIGSYS
+#if defined(SIGSYS)
     signal(SIGSYS, auto_save);
 #endif
-#ifdef SIGTERM
+#if defined(SIGPIPE)
+    signal(SIGPIPE, auto_save);
+#endif
+/* SIGALRM is managed by md_start_checkout_timer(), and md_stop_checkout_timer() */
+#if defined(SIGTERM)
     signal(SIGTERM, auto_save);
+#endif
+/* SIGURG is discarded by default */
+/* SIGSTOP cannot be caught */
+#if defined(SIGTSTP)
+    /* SIGTSTP is also managed by md_tstphold(), md_tstpresume(), and md_tstpsignal() */
+    signal(SIGTSTP, tstp);
+#endif
+/* SIGCONT is discarded by default */
+/* SIGCHLD is discarded by default */
+#if defined(SIGTTIN)
+    signal(SIGTTIN, SIG_DFL);	/* let the signal stop the process */
+#endif
+#if defined(SIGTTOU)
+    signal(SIGTTOU, SIG_DFL);	/* let the signal stop the process */
+#endif
+/* SIGIO is discarded by default */
+#if defined(SIGXCPU)
+    signal(SIGXCPU, auto_save);
+#endif
+#if defined(SIGXFSZ)
+    signal(SIGXFSZ, auto_save);
+#endif
+#if defined(SIGVTALRM)
+    signal(SIGVTALRM, auto_save);
+#endif
+#if defined(SIGPROF)
+    signal(SIGPROF, auto_save);
+#endif
+/* SIGWINCH is discarded by default */
+/* SIGINFO is discarded by default */
+#if defined(SIGUSR1)
+    signal(SIGUSR1, auto_save);
+#endif
+#if defined(SIGUSR2)
+    signal(SIGUSR2, auto_save);
 #endif
 }
 
@@ -1379,8 +1503,12 @@ md_tstpresume(void)
 void
 md_tstpsignal(void)
 {
-#ifdef SIGTSTP
-    kill(0, SIGTSTP);		/* send actual signal and suspend process */
+#ifdef SIGSTOP
+    /*
+     * If we sent a SIGTSTP, we would enter an infinite signal loop, so
+     * instead we send a SIGSTOP signal as it cannot be caught nor ignored.
+     */
+    kill(0, SIGSTOP);		/* send actual STOP signal and suspend process */
 #endif
 }
 

@@ -160,7 +160,7 @@ readchar(void)
 
     if (ch == 3)
     {
-		quit(0);
+	quit(0);
         return(27);
     }
 
@@ -176,7 +176,7 @@ wreadchar(WINDOW *win)
 
     if (ch == 3)
     {
-		quit(0);
+	quit(0);
         return(27);
     }
 
