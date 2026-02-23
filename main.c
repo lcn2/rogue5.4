@@ -114,6 +114,12 @@ main(int argc, char **argv)
      */
     srandom((unsigned)seed);
 
+    /*
+     * open the rogue score file
+     *
+     * If there is no rogue score file, or if the rogue score file is empty,
+     * we will initialize the rogue score file with slots containing 0 scores.
+     */
     open_score();
 
     /*

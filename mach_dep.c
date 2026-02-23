@@ -148,7 +148,35 @@ open_score(void)
      */
     if (scoreboard == NULL) {
 	SCORE top_scores[NUMSCORES+1];        /* scores from the score file, +1 for paranoia */
+#if defined(SIGHUP)
+	void (*sig_hup)(int);
+#endif
+#if defined(SIGINT)
+	void (*sig_int)(int);
+#endif
+#if defined(SIGQUIT)
+	void (*sig_quit)(int);
+#endif
+#if defined(SIGTERM)
+	void (*sig_term)(int);
+#endif
 	int i;
+
+	/*
+	 * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+	 */
+#if defined(SIGHUP)
+	sig_hup = signal(SIGHUP, SIG_IGN);
+#endif
+#if defined(SIGINT)
+	sig_int = signal(SIGINT, SIG_IGN);
+#endif
+#if defined(SIGQUIT)
+	sig_quit = signal(SIGQUIT, SIG_IGN);
+#endif
+#if defined(SIGTERM)
+	sig_term = signal(SIGTERM, SIG_IGN);
+#endif
 
 	/*
 	 * create and truncate a writable score file
@@ -173,6 +201,22 @@ open_score(void)
 	 * write the score file with initialized scores, and then rewind it
 	 */
 	wr_score(top_scores);
+
+	/*
+	 * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+	 */
+#if defined(SIGINT)
+	signal(SIGINT, sig_hup);
+#endif
+#if defined(SIGINT)
+	signal(SIGINT, sig_int);
+#endif
+#if defined(SIGQUIT)
+	signal(SIGQUIT, sig_quit);
+#endif
+#if defined(SIGTERM)
+	signal(SIGTERM, sig_term);
+#endif
     }
 
 }

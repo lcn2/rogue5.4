@@ -59,7 +59,7 @@
 
 #define NOOP(x) (x += 0)
 
-static int final_newline = 0;	/* number if final newlines printed by endwin_and_ncurses_cleanup() */
+static int final_newline = 0;	/* number calls to endwin_and_ncurses_cleanup() */
 
 /*
  * externs for mdport.c
@@ -93,7 +93,7 @@ ncurses_delete(void)
 }
 
 /*
- * endwin_and_ncurses_cleanup - cleanup I/O, and shutdown ncurses (if needed)
+ * endwin_and_ncurses_cleanup - flush output, shutdown ncurses if setup, and restore both echo + canonical mode
  */
 void
 endwin_and_ncurses_cleanup(void)
@@ -117,6 +117,12 @@ endwin_and_ncurses_cleanup(void)
         mvcur(0, COLS - 1, LINES - 1, 0);
 
 	/*
+	 * turn on echo and turn off raw
+	 */
+	(void) echo();
+	(void) noraw();
+
+	/*
 	 * clean up and delete curses
 	 */
 	(void) endwin();
@@ -125,20 +131,30 @@ endwin_and_ncurses_cleanup(void)
 
     /*
      * turn off raw mode
+     *
+     * NOTE: We need to explicitly enable canonical mode, and echo
+     *	     in case isendwin() was false while in raw mode.
      */
     resetltchars();
     tcgetattr (STDIN_FILENO, &current);
-    current.c_lflag |= ICANON;	    /* Enable canonical mode */
-    current.c_lflag |= ECHO;	    /* Enable echo */
+    current.c_lflag |= ICANON;	    /* enable canonical mode */
+    current.c_lflag |= ECHO;	    /* enable echo */
     tcsetattr (STDIN_FILENO, TCSANOW, &current);
 
     /*
-     * output newlines once
+     * output newline only once, even if this function is called several times
+     *
+     * NOTE: This function might be called via the atexit(3) facility, or as
+     *	     a result of a signal handler, or both.  As a result we have
+     *	     to guard against multiple calls to this function.
      */
     if (final_newline == 0) {
 	putchar('\n');
     }
     ++final_newline;
+    if (final_newline <= 0) {
+	final_newline = 1; /* paranoia */
+    }
     fflush(stdout);
 }
 
@@ -157,6 +173,9 @@ md_onsignal_default(void)
 {
 #ifdef SIGHUP
     signal(SIGHUP, SIG_DFL);
+#endif
+#ifdef SIGINT
+    signal(SIGINT, SIG_DFL);
 #endif
 #ifdef SIGQUIT
     signal(SIGQUIT, SIG_DFL);
@@ -195,6 +214,9 @@ md_onsignal_exit(void)
 {
 #ifdef SIGHUP
     signal(SIGHUP, signal_exit);
+#endif
+#ifdef SIGINT
+    signal(SIGINT, signal_exit);
 #endif
 #ifdef SIGQUIT
     signal(SIGQUIT, signal_exit);
@@ -235,9 +257,11 @@ extern void quit(int sig);
 void
 md_onsignal_autosave(void)
 {
-
 #ifdef SIGHUP
     signal(SIGHUP, auto_save);
+#endif
+#ifdef SIGINT
+    signal(SIGINT, quit);
 #endif
 #ifdef SIGQUIT
 	signal(SIGQUIT, endit);
@@ -249,6 +273,9 @@ md_onsignal_autosave(void)
     signal(SIGTRAP, auto_save);
 #endif
 #ifdef SIGIOT
+    signal(SIGIOT, auto_save);
+#endif
+#ifdef SIGABRT
     signal(SIGIOT, auto_save);
 #endif
 #ifdef SIGEMT
@@ -268,9 +295,6 @@ md_onsignal_autosave(void)
 #endif
 #ifdef SIGTERM
     signal(SIGTERM, auto_save);
-#endif
-#ifdef SIGINT
-    signal(SIGINT, quit);
 #endif
 }
 
@@ -292,19 +316,13 @@ md_putchar(int c)
 void
 md_raw_standout(void)
 {
-#if defined(SO)
-    tputs(SO,0,md_putchar);
-    fflush(stdout);
-#endif
+    attron(A_BOLD); /* Turn on bold attribute */
 }
 
 void
 md_raw_standend(void)
 {
-#if defined(SE)
-    tputs(SE,0,md_putchar);
-    fflush(stdout);
-#endif
+    attroff(A_BOLD); /* Turn off bold attribute */
 }
 
 int
@@ -469,9 +487,19 @@ md_shellescape(void)
 {
     int ret_status;
     int pid;
-    void (*myquit)(int);
-    void (*myend)(int);
     char *sh;
+#if defined(SIGHUP)
+    void (*sig_hup)(int);
+#endif
+#if defined(SIGINT)
+    void (*sig_int)(int);
+#endif
+#if defined(SIGQUIT)
+    void (*sig_quit)(int);
+#endif
+#if defined(SIGTERM)
+    void (*sig_term)(int);
+#endif
 
     sh = md_getshell();
 
@@ -490,18 +518,45 @@ md_shellescape(void)
     }
     else /* Application */
     {
-	myend = signal(SIGINT, SIG_IGN);
-#ifdef SIGQUIT
-        myquit = signal(SIGQUIT, SIG_IGN);
+
+	/*
+	 * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+	 */
+#if defined(SIGHUP)
+	sig_hup = signal(SIGHUP, SIG_IGN);
 #endif
+#if defined(SIGINT)
+	sig_int = signal(SIGINT, SIG_IGN);
+#endif
+#if defined(SIGQUIT)
+	sig_quit = signal(SIGQUIT, SIG_IGN);
+#endif
+#if defined(SIGTERM)
+	sig_term = signal(SIGTERM, SIG_IGN);
+#endif
+
+	/*
+	 * wait for the child process to complete
+	 */
         while (wait(&ret_status) != pid)
             continue;
 
-        signal(SIGINT, myquit);
-#ifdef SIGQUIT
-        signal(SIGQUIT, myend);
+	/*
+	 * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+	 */
+#if defined(SIGINT)
+	signal(SIGINT, sig_hup);
 #endif
-    }
+#if defined(SIGINT)
+	signal(SIGINT, sig_int);
+#endif
+#if defined(SIGQUIT)
+	signal(SIGQUIT, sig_quit);
+#endif
+#if defined(SIGTERM)
+	signal(SIGTERM, sig_term);
+#endif
+	}
     return(ret_status);
 }
 

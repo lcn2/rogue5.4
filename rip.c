@@ -100,6 +100,41 @@ init_score_value(SCORE *scp)
 /*
  * score:
  *	Figure score and post it.
+ *
+ * We will ignore SIGHUP, SIGINT, SIGQUIT, and SIGTERM signal events.
+ * then read the rogue score file, then insert the current game stats into
+ * the score table if the current game ranks into the top scores,
+ * print the "[Press return to continue]" and wait for the user to press return.
+ *
+ *	Wizard mode action: if wizard mode is enabled:
+ *
+ *	    Any text entered before the user presses return will be
+ *	    parsed for a wizard keyword.  Currently there are 2 possible
+ *	    wizard keywords:
+ *
+ *		names - set prflags to 1
+ *		edit - set prflags to 2
+ *
+ * As this point we flush output, shutdown ncurses if setup, and restore both echo + canonical mode,
+ * (because we are in the process ending game play, and will exit soon).
+ *
+ * We will then print the updated score table.
+ *
+ *	Wizard mode action: if wizard mode is enabled:
+ *
+ *	    prflags == 1: print usernames while printing slot scores
+ *
+ *	    prflags == 2: allow a score to be deleted
+ *
+ *		After each score line is printed, stdin will be read
+ *		If the line read starts with the letter "d", the score
+ *		just printed will be deleted from the score table.
+ *
+ * At this point the rogue score file will be replaced using the updated score table.
+ *
+ * Last free the score table, restore the SIGHUP, SIGINT, SIGQUIT, and SIGTERM signal handlers and return.
+ *
+ * NOTE: We only call this score function as we are ending game play.
  */
 
 void
@@ -111,7 +146,6 @@ score(int amount, int flags, int monst)
 # ifdef MASTER
     int prflags = 0;
 # endif
-    void (*fp)(int);
     uid_t uid;
     char *reason[] = {
 	"killed",
@@ -119,9 +153,58 @@ score(int amount, int flags, int monst)
 	"A total winner",
 	"killed with Amulet"
     };
+#if defined(SIGHUP)
+    void (*sig_hup)(int);
+#endif
+#if defined(SIGINT)
+    void (*sig_int)(int);
+#endif
+#if defined(SIGQUIT)
+    void (*sig_quit)(int);
+#endif
+#if defined(SIGTERM)
+    void (*sig_term)(int);
+#endif
 
+    /*
+     * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+     */
+#if defined(SIGHUP)
+    sig_hup = signal(SIGHUP, SIG_IGN);
+#endif
+#if defined(SIGINT)
+    sig_int = signal(SIGINT, SIG_IGN);
+#endif
+#if defined(SIGQUIT)
+    sig_quit = signal(SIGQUIT, SIG_IGN);
+#endif
+#if defined(SIGTERM)
+    sig_term = signal(SIGTERM, SIG_IGN);
+#endif
+
+    /*
+     * Start the scoring sequence
+     */
     start_score();
 
+    /*
+     * initialize top_scores array
+     */
+    top_scores = calloc(numscores+1, sizeof(SCORE)); /* +1 for paranoia */
+    if (top_scores == NULL)
+	return;
+    endp = &top_scores[numscores];
+    for (scp = top_scores; scp < endp; scp++)
+    {
+	init_score_value(scp);
+    }
+
+    /*
+     * wait for the user to press return
+     *
+     * NOTE: If wizard mode, entering names or edit before the return
+     *	     will enable later actions via prflags.
+     */
  if (flags >= 0
 #ifdef MASTER
             || wizard
@@ -132,19 +215,6 @@ score(int amount, int flags, int monst)
         refresh();
         wgetnstr(stdscr, prbuf, NUMCOLS);   /* read up to NUMCOLS bytes and append a NUL byte */
     }
-
-    top_scores = calloc(numscores+1, sizeof(SCORE)); /* +1 for paranoia */
-    if (top_scores == NULL)
-	return;
-
-    endp = &top_scores[numscores];
-    for (scp = top_scores; scp < endp; scp++)
-    {
-	init_score_value(scp);
-    }
-
-    signal(SIGINT, SIG_DFL);
-
 #ifdef MASTER
     if (wizard) {
 	if (strcmp(prbuf, "names") == 0) {
@@ -154,7 +224,20 @@ score(int amount, int flags, int monst)
 	}
     }
 #endif
+
+    /*
+     * flush output, and shutdown ncurses if setup, restore echo and canonical mode
+     */
+    endwin_and_ncurses_cleanup();
+
+    /*
+     * read the score file
+     *
+     * NOTE: The rd_score() function will print an ERROR, WARNING, and exit non-zero
+     *	     if the rogue score file is corrupted (i.e., does not correctly parse).
+     */
     rd_score(top_scores);
+
     /*
      * Insert her in list if need be
      */
@@ -208,8 +291,11 @@ score(int amount, int flags, int monst)
 	    sc2 = scp;
 	}
     }
+
     /*
-     * Print the list
+     * Print the score table
+     *
+     * We will print scores until we find a score slot with a - score.
      */
     if (flags != -1)
 	putchar('\n');
@@ -230,7 +316,6 @@ score(int amount, int flags, int monst)
 		reason[scp->sc_flags], scp->sc_level);
 	    if (scp->sc_flags == 0 || scp->sc_flags == 3)
 		printf(" by %s", killname(scp->sc_monster, TRUE));
-	    fflush(stdout);
 #ifdef MASTER
 	    if (prflags == 1)
 	    {
@@ -239,6 +324,7 @@ score(int amount, int flags, int monst)
 	    else if (prflags == 2)
 	    {
 		memset(prbuf, 0, sizeof(prbuf));
+		fflush(stdout);
 		(void) fgets(prbuf,10,stdin);
 		if (prbuf[0] == 'd')
 		{
@@ -251,30 +337,36 @@ score(int amount, int flags, int monst)
 	    }
 	    else
 #endif /* MASTER */
-                printf(".");
-	    fflush(stdout);
+                putchar('.');
 	    if (sc2 == scp)
-		    md_raw_standend();
+		md_raw_standend();
             putchar('\n');
+	    fflush(stdout);
 	}
 	else
 	{
+	    /* found a score slot with a 0 score, stop printing */
 	    break;
 	}
-	fflush(stdout);
     }
+    putchar('\n');
+    fflush(stdout);
 
     /*
      * Update the list file
      */
     if (sc2 != NULL)
     {
+	/*
+	 * lock and update score
+	 */
 	if (lock_sc())
 	{
-	    fp = signal(SIGINT, SIG_IGN);
+	    /*
+	     * write score and unlock
+	     */
 	    wr_score(top_scores);
 	    unlock_sc();
-	    signal(SIGINT, fp);
 	}
     }
 
@@ -285,6 +377,22 @@ score(int amount, int flags, int monst)
 	free(top_scores);
 	top_scores = NULL;
     }
+
+    /*
+     * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+     */
+#if defined(SIGINT)
+    signal(SIGINT, sig_hup);
+#endif
+#if defined(SIGINT)
+    signal(SIGINT, sig_int);
+#endif
+#if defined(SIGQUIT)
+    signal(SIGQUIT, sig_quit);
+#endif
+#if defined(SIGTERM)
+    signal(SIGTERM, sig_term);
+#endif
 }
 
 /*
@@ -299,10 +407,39 @@ death(int monst)
     const char *killer;
     struct tm *lt;
     time_t date;
+#if defined(SIGHUP)
+    void (*sig_hup)(int);
+#endif
+#if defined(SIGINT)
+    void (*sig_int)(int);
+#endif
+#if defined(SIGQUIT)
+    void (*sig_quit)(int);
+#endif
+#if defined(SIGTERM)
+    void (*sig_term)(int);
+#endif
 
-    signal(SIGINT, SIG_IGN);
+    /*
+     * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+     */
+#if defined(SIGHUP)
+    sig_hup = signal(SIGHUP, SIG_IGN);
+#endif
+#if defined(SIGINT)
+    sig_int = signal(SIGINT, SIG_IGN);
+#endif
+#if defined(SIGQUIT)
+    sig_quit = signal(SIGQUIT, SIG_IGN);
+#endif
+#if defined(SIGTERM)
+    sig_term = signal(SIGTERM, SIG_IGN);
+#endif
+
+    /*
+     * 10% death tax :-)
+     */
     purse -= purse / 10;
-    signal(SIGINT, leave);
     clear();
     killer = killname(monst, FALSE);
     if (!tombstone)
@@ -338,6 +475,22 @@ death(int monst)
     move(LINES - 1, 0);
     refresh();
     score(purse, amulet ? 3 : 0, monst);
+
+    /*
+     * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+     */
+#if defined(SIGINT)
+    signal(SIGINT, sig_hup);
+#endif
+#if defined(SIGINT)
+    signal(SIGINT, sig_int);
+#endif
+#if defined(SIGQUIT)
+    signal(SIGQUIT, sig_quit);
+#endif
+#if defined(SIGTERM)
+    signal(SIGTERM, sig_term);
+#endif
     my_exit(0);
 }
 
@@ -363,6 +516,34 @@ total_winner(void)
     struct obj_info *op;
     int worth = 0;
     int oldpurse;
+#if defined(SIGHUP)
+    void (*sig_hup)(int);
+#endif
+#if defined(SIGINT)
+    void (*sig_int)(int);
+#endif
+#if defined(SIGQUIT)
+    void (*sig_quit)(int);
+#endif
+#if defined(SIGTERM)
+    void (*sig_term)(int);
+#endif
+
+    /*
+     * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+     */
+#if defined(SIGHUP)
+    sig_hup = signal(SIGHUP, SIG_IGN);
+#endif
+#if defined(SIGINT)
+    sig_int = signal(SIGINT, SIG_IGN);
+#endif
+#if defined(SIGQUIT)
+    sig_quit = signal(SIGQUIT, SIG_IGN);
+#endif
+#if defined(SIGTERM)
+    sig_term = signal(SIGTERM, SIG_IGN);
+#endif
 
     clear();
     standout();
@@ -450,6 +631,22 @@ total_winner(void)
     refresh();
     score(purse, 2, ' ');
     my_exit(0);
+
+    /*
+     * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+     */
+#if defined(SIGINT)
+    signal(SIGINT, sig_hup);
+#endif
+#if defined(SIGINT)
+    signal(SIGINT, sig_int);
+#endif
+#if defined(SIGQUIT)
+    signal(SIGQUIT, sig_quit);
+#endif
+#if defined(SIGTERM)
+    signal(SIGTERM, sig_term);
+#endif
 }
 
 /*

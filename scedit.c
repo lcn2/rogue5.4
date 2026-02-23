@@ -123,6 +123,18 @@ do_comm(void)
 	SCORE		*scp;
 	static FILE	*outf = NULL;
 	static int written = TRUE;
+#if defined(SIGHUP)
+	void (*sig_hup)(int);
+#endif
+#if defined(SIGINT)
+	void (*sig_int)(int);
+#endif
+#if defined(SIGQUIT)
+	void (*sig_quit)(int);
+#endif
+#if defined(SIGTERM)
+	void (*sig_term)(int);
+#endif
 
 	printf("Command: ");
 	fflush(stdout);
@@ -143,13 +155,42 @@ do_comm(void)
 		fseek(outf, 0L, 0);
 		if (lock_sc())
 		{
-			void (*fp)(int);
 
-			fp = signal(SIGINT, SIG_IGN);
+			/*
+			 * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+			 */
+#if defined(SIGHUP)
+			sig_hup = signal(SIGHUP, SIG_IGN);
+#endif
+#if defined(SIGINT)
+			sig_int = signal(SIGINT, SIG_IGN);
+#endif
+#if defined(SIGQUIT)
+			sig_quit = signal(SIGQUIT, SIG_IGN);
+#endif
+#if defined(SIGTERM)
+			sig_term = signal(SIGTERM, SIG_IGN);
+#endif
+
 			s_encwrite((char *) top_scores, sizeof top_scores, outf);
 			unlock_sc();
-			signal(SIGINT, fp);
 			written = TRUE;
+
+			/*
+			 * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+			 */
+#if defined(SIGINT)
+			signal(SIGINT, sig_hup);
+#endif
+#if defined(SIGINT)
+			signal(SIGINT, sig_int);
+#endif
+#if defined(SIGQUIT)
+			signal(SIGQUIT, sig_quit);
+#endif
+#if defined(SIGTERM)
+			signal(SIGTERM, sig_term);
+#endif
 		}
 		break;
 

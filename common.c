@@ -160,6 +160,18 @@ quit(int sig)
 {
     int oy, ox;
     int ch;
+#if defined(SIGHUP)
+    void (*sig_hup)(int);
+#endif
+#if defined(SIGINT)
+    void (*sig_int)(int);
+#endif
+#if defined(SIGQUIT)
+    void (*sig_quit)(int);
+#endif
+#if defined(SIGTERM)
+    void (*sig_term)(int);
+#endif
 
     NOOP(sig);
 
@@ -173,12 +185,43 @@ quit(int sig)
     ch = readchar();
     if (ch == 'y' || ch == 'Y')
     {
-	signal(SIGINT, leave);
+	/*
+	 * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+	 */
+#if defined(SIGHUP)
+	sig_hup = signal(SIGHUP, SIG_IGN);
+#endif
+#if defined(SIGINT)
+	sig_int = signal(SIGINT, SIG_IGN);
+#endif
+#if defined(SIGQUIT)
+	sig_quit = signal(SIGQUIT, SIG_IGN);
+#endif
+#if defined(SIGTERM)
+	sig_term = signal(SIGTERM, SIG_IGN);
+#endif
+
 	clear();
 	mvprintw(LINES - 2, 0, "You quit with %d gold pieces", purse);
 	move(LINES - 1, 0);
 	refresh();
 	score(purse, 1, 0);
+
+	/*
+	 * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM
+	 */
+#if defined(SIGINT)
+	signal(SIGINT, sig_hup);
+#endif
+#if defined(SIGINT)
+	signal(SIGINT, sig_int);
+#endif
+#if defined(SIGQUIT)
+	signal(SIGQUIT, sig_quit);
+#endif
+#if defined(SIGTERM)
+	signal(SIGTERM, sig_term);
+#endif
 	my_exit(0);
     }
     else
