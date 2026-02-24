@@ -167,24 +167,22 @@ For your convenience, the full game help output is formatted below:
 
 The following table may help explain the symbols you see when playing rogue:
 
-```
-    | symbol | object  |
-    |--------|---------|
-    |    #   | passage |
-    |    +   | door    |
-    |    .   | floor   |
-    |    @   | player  |
-    |    ^   | trap    |
-    |    *   | gold    |
-    |    !   | potion  |
-    |    ?   | scroll  |
-    |    $   | food    |
-    |    )   | weapon  |
-    |    ]   | armor   |
-    |    ,   | amulet  |
-    |    =   | ring    |
-    |    /   | staff   |
-```
+| symbol | object  |
+|--------|---------|
+|    #   | passage |
+|    +   | door    |
+|    .   | floor   |
+|    @   | player  |
+|    ^   | trap    |
+|    *   | gold    |
+|    !   | potion  |
+|    ?   | scroll  |
+|    $   | food    |
+|    )   | weapon  |
+|    ]   | armor   |
+|    ,   | amulet  |
+|    =   | ring    |
+|    /   | staff   |
 
 For more information about the make, see the `rogue(6)` man page after installing, or run the command
 from the top level directory:
@@ -301,37 +299,35 @@ the game will place the **Amulet of Yendor** on the deeper levels until you mana
 
 The following table lists the known monsters in the dungeon and their properties:
 
-```
-    |        |    monster    | carry  |       |      |  min  | armor |
-    | symbol |     name      | chance | flags |  Exp | level | class | damage           |
-    |--------|---------------|--------|-------|------|-------|-------|------------------|
-    |    A   | aquator       |    0 % | m     |   20 |   5   |   2   | 0x0 / 0x0        |
-    |    B   | bat           |    0 % | f     |    1 |   1   |   3   | 1x2              |
-    |    C   | centaur       |   15 % |       |   17 |   4   |   4   | 1x2 / 1x5 / 1x5  |
-    |    D   | dragon        |  100 % | m     | 5000 |  10   |  -1   | 1x8 / 1x8 / 3x10 |
-    |    E   | emu           |    0 % | m     |    2 |   1   |   7   | 1x2              |
-    |    F   | venus flytrap |    0 % | m     |   80 |   8   |   3   | ++               |
-    |    G   | griffin       |   20 % | m f r | 2000 |  13   |   2   | 4x3 / 3x5        |
-    |    H   | hobgoblin     |    0 % | m     |    3 |   3   |   1   | 1x8              |
-    |    I   | ice monster   |    0 % |       |    5 |   5   |   1   | 0x0              |
-    |    J   | jabberwock    |   70 % |       | 3000 |  15   |   6   | 2x12 / 2x4       |
-    |    K   | kestrel       |    0 % | m f   |    1 |   1   |   1   | 1x4              |
-    |    L   | leprechaun    |    0 % |       |   10 |   3   |   8   | 1x1              |
-    |    M   | medusa        |   40 % | m     |  200 |   8   |   2   | 3x4 / 3x4 / 2x5  |
-    |    N   | nymph         |  100 % | g     |   37 |   3   |   9   | 0x0              |
-    |    O   | orc           |   15 % | i     |    5 |   1   |   6   | 1x8              |
-    |    P   | phantom       |    0 % | m     |  120 |   8   |   3   | 4x4              |
-    |    Q   | quagga        |    0 % | m     |   15 |   3   |   3   | 1x5 / 1x5        |
-    |    R   | rattlesnake   |    0 % | m     |    9 |   2   |   3   | 1x6              |
-    |    S   | snake         |    0 % | m     |    2 |   1   |   5   | 1x3              |
-    |    T   | troll         |   50 % | m   r |  120 |   6   |   4   | 1x8 / 1x8 / 2x6  |
-    |    U   | black unicorn |    0 % | m     |    7 |   7   |  -2   | 1x9 / 1x9 / 2x9  |
-    |    V   | vampire       |   20 % | m   r |  350 |   8   |   1   | 1x10             |
-    |    W   | wraith        |    0 % |       |   55 |   5   |   4   | 1x6              |
-    |    X   | xeroc         |   30 % |       |  100 |   7   |   7   | 4x4              |
-    |    Y   | yeti          |   30 % |       |   50 |   4   |   6   | 1x6 / 1x6        |
-    |    Z   | zombie        |    0 % | m     |    6 |   2   |   8   | 1x8              |
-```
+|        |    monster    | carry  |       |      |  min  | armor |
+| symbol |     name      | chance | flags |  Exp | level | class | damage           |
+|--------|---------------|--------|-------|------|-------|-------|------------------|
+|    A   | aquator       |    0 % | m     |   20 |   5   |   2   | 0x0 / 0x0        |
+|    B   | bat           |    0 % | f     |    1 |   1   |   3   | 1x2              |
+|    C   | centaur       |   15 % |       |   17 |   4   |   4   | 1x2 / 1x5 / 1x5  |
+|    D   | dragon        |  100 % | m     | 5000 |  10   |  -1   | 1x8 / 1x8 / 3x10 |
+|    E   | emu           |    0 % | m     |    2 |   1   |   7   | 1x2              |
+|    F   | venus flytrap |    0 % | m     |   80 |   8   |   3   | ++               |
+|    G   | griffin       |   20 % | m f r | 2000 |  13   |   2   | 4x3 / 3x5        |
+|    H   | hobgoblin     |    0 % | m     |    3 |   3   |   1   | 1x8              |
+|    I   | ice monster   |    0 % |       |    5 |   5   |   1   | 0x0              |
+|    J   | jabberwock    |   70 % |       | 3000 |  15   |   6   | 2x12 / 2x4       |
+|    K   | kestrel       |    0 % | m f   |    1 |   1   |   1   | 1x4              |
+|    L   | leprechaun    |    0 % |       |   10 |   3   |   8   | 1x1              |
+|    M   | medusa        |   40 % | m     |  200 |   8   |   2   | 3x4 / 3x4 / 2x5  |
+|    N   | nymph         |  100 % | g     |   37 |   3   |   9   | 0x0              |
+|    O   | orc           |   15 % | i     |    5 |   1   |   6   | 1x8              |
+|    P   | phantom       |    0 % | m     |  120 |   8   |   3   | 4x4              |
+|    Q   | quagga        |    0 % | m     |   15 |   3   |   3   | 1x5 / 1x5        |
+|    R   | rattlesnake   |    0 % | m     |    9 |   2   |   3   | 1x6              |
+|    S   | snake         |    0 % | m     |    2 |   1   |   5   | 1x3              |
+|    T   | troll         |   50 % | m   r |  120 |   6   |   4   | 1x8 / 1x8 / 2x6  |
+|    U   | black unicorn |    0 % | m     |    7 |   7   |  -2   | 1x9 / 1x9 / 2x9  |
+|    V   | vampire       |   20 % | m   r |  350 |   8   |   1   | 1x10             |
+|    W   | wraith        |    0 % |       |   55 |   5   |   4   | 1x6              |
+|    X   | xeroc         |   30 % |       |  100 |   7   |   7   | 4x4              |
+|    Y   | yeti          |   30 % |       |   50 |   4   |   6   | 1x6 / 1x6        |
+|    Z   | zombie        |    0 % | m     |    6 |   2   |   8   | 1x8              |
 
 Some monsters carry treasure that they drop when they are killed.  The "carry chance"
 is the chance that the monster will drop treasure when it dies.
@@ -365,24 +361,22 @@ The monster levels go up by 1 for each level below level 26.
 
 When you quaff a potion:
 
-```
-    | letter | frequency | potion            | message                                                 |
-    |--------|-----------|-------------------|---------------------------------------------------------|
-    |    0   |    7 %    | confusion         | Wait, what's going on here. Huh? What? Who?             |
-    |    1   |    8 %    | hallucination     | Oh, wow!  Everything seems so cosmic!                   |
-    |    2   |    8 %    | poison            | You feel very sick now                                  |
-    |    3   |   13 %    | gain strength     | You feel stronger, now.  What bulging muscles!          |
-    |    4   |    3 %    | see invisible     | This potion tastes like ... juice                       |
-    |    5   |   13 %    | healing           | You begin to feel better                                |
-    |    6   |    6 %    | monster detection | ((you see the monitors on the current level))           |
-    |    7   |    6 %    | magic detection   | You sense the presence of magic on this level           |
-    |    8   |    2 %    | raise level       | You suddenly feel much more skillful                    |
-    |    9   |    5 %    | extra healing     | You begin to feel much better                           |
-    |    a   |    5 %    | haste self        | You feel yourself moving much faster                    |
-    |    b   |   13 %    | restore strength  | Hey, this tastes great.  It make you feel warm all over |
-    |    c   |    5 %    | blindness         | A cloak of darkness falls around you                    |
-    |    d   |    6 %    | levitation        | You start to float in the air                           |
-```
+| index | chance | potion            | message                                                 |
+|-------|--------|-------------------|---------------------------------------------------------|
+|   0   |    7 % | confusion         | Wait, what's going on here. Huh? What? Who?             |
+|   1   |    8 % | hallucination     | Oh, wow!  Everything seems so cosmic!                   |
+|   2   |    8 % | poison            | You feel very sick now                                  |
+|   3   |   13 % | gain strength     | You feel stronger, now.  What bulging muscles!          |
+|   4   |    3 % | see invisible     | This potion tastes like ... juice                       |
+|   5   |   13 % | healing           | You begin to feel better                                |
+|   6   |    6 % | monster detection | ((you see the monitors on the current level))           |
+|   7   |    6 % | magic detection   | You sense the presence of magic on this level           |
+|   8   |    2 % | raise level       | You suddenly feel much more skillful                    |
+|   9   |    5 % | extra healing     | You begin to feel much better                           |
+|   a   |    5 % | haste self        | You feel yourself moving much faster                    |
+|   b   |   13 % | restore strength  | Hey, this tastes great.  It make you feel warm all over |
+|   c   |    5 % | blindness         | A cloak of darkness falls around you                    |
+|   d   |    6 % | levitation        | You start to float in the air                           |
 
 **HINT**: The rogue v5.4.5 code, as of 2026-02-23, has a **special
 feature**.  When, after drinking the potion, you are prompted with
@@ -399,44 +393,42 @@ potion of the same type, you will see the correct potion name.
 
 When you read a scroll:
 
-```
-    | letter | frequency | scroll                       | message                                               |
-    |--------|-----------|------------------------------|-------------------------------------------------------|
-    |    0   |    7 %    | monster confusion            | Your hands begin to glow ...                          |
-    |    1   |    4 %    | magic mapping                | Oh, now this scroll has a map on it                   |
-    |    2   |    2 %    | hold monster                 | The monster(s around you) freeze(s)                   |
-    |        |           |                              |   -or-                                                |
-    |        |           |                              | You feel a strange sense of loss                      |
-    |    3   |    3 %    | sleep                        | You fall asleep                                       |
-    |    4   |    7 %    | enchant armor                | Your armor glows ... for a moment                     |
-    |        |           |                              |   -or-                                                |
-    |        |           |                              | ((nothing))                                           |
-    |    5   |   10 %    | identify potion              | This scroll is an identify potion scroll              |
-    |    6   |   10 %    | identify scroll              | This scroll is an identify scroll scroll              |
-    |    7   |    6 %    | identify weapon              | This scroll is an identify weapon scroll              |
-    |    8   |    7 %    | identify armor               | This scroll is an identify armor scroll               |
-    |    9   |   10 %    | identify ring, wand or staff | This scroll is an identify ring, wand or staff scroll |
-    |    a   |    3 %    | scare monster                | You hear maniacal laughter in the distance            |
-    |    b   |    2 %    | food detection               | Your nose tingles and you smell food.                 |
-    |        |           |                              |   -or-                                                |
-    |        |           |                              | Your nose tingles                                     |
-    |    c   |    5 %    | teleportation                | ((you jump to a randomly spot on the current level))  |
-    |    d   |    8 %    | enchant weapon               | Your ((name of armor)) glows ... for a moment         |
-    |        |           |                              |   -or-                                                |
-    |        |           |                              | You feel a strange sense of loss                      |
-    |    e   |    4 %    | create monster               | ((a monster appears next to you))                     |
-    |        |           |                              |   -or-                                                |
-    |        |           |                              | You hear a faint cry of anguish in the distance       |
-    |    f   |    7 %    | remove curse                 | You feel as if somebody is watching over you          |
-    |        |           |                              |   -or-                                                |
-    |        |           |                              | You feel in touch with the Universal Onenes           |
-    |        |           |                              |   -or-                                                |
-    |        |           |                              | There is nothing on it to read                        |
-    |    g   |    3 %    | aggravate monsters           | You hear a high pitched humming noise                 |
-    |    h   |    2 %    | protect armor                | Your armor is covered by a shimmering ... shield      |
-    |        |           |                              |   -or-                                                |
-    |        |           |                              | You feel a strange sense of loss                      |
-```
+| index | freq. | scroll                       | message                                               |
+|-------|-------|------------------------------|-------------------------------------------------------|
+|   0   |   7 % | monster confusion            | Your hands begin to glow ...                          |
+|   1   |   4 % | magic mapping                | Oh, now this scroll has a map on it                   |
+|   2   |   2 % | hold monster                 | The monster(s around you) freeze(s)                   |
+|       |       |                              |   -or-                                                |
+|       |       |                              | You feel a strange sense of loss                      |
+|   3   |   3 % | sleep                        | You fall asleep                                       |
+|   4   |   7 % | enchant armor                | Your armor glows ... for a moment                     |
+|       |       |                              |   -or-                                                |
+|       |       |                              | ((nothing))                                           |
+|   5   |  10 % | identify potion              | This scroll is an identify potion scroll              |
+|   6   |  10 % | identify scroll              | This scroll is an identify scroll scroll              |
+|   7   |   6 % | identify weapon              | This scroll is an identify weapon scroll              |
+|   8   |   7 % | identify armor               | This scroll is an identify armor scroll               |
+|   9   |  10 % | identify ring, wand or staff | This scroll is an identify ring, wand or staff scroll |
+|   a   |   3 % | scare monster                | You hear maniacal laughter in the distance            |
+|   b   |   2 % | food detection               | Your nose tingles and you smell food.                 |
+|       |       |                              |   -or-                                                |
+|       |       |                              | Your nose tingles                                     |
+|   c   |   5 % | teleportation                | ((you jump to a randomly spot on the current level))  |
+|   d   |   8 % | enchant weapon               | Your ((name of armor)) glows ... for a moment         |
+|       |       |                              |   -or-                                                |
+|       |       |                              | You feel a strange sense of loss                      |
+|   e   |   4 % | create monster               | ((a monster appears next to you))                     |
+|       |       |                              |   -or-                                                |
+|       |       |                              | You hear a faint cry of anguish in the distance       |
+|   f   |   7 % | remove curse                 | You feel as if somebody is watching over you          |
+|       |       |                              |   -or-                                                |
+|       |       |                              | You feel in touch with the Universal Onenes           |
+|       |       |                              |   -or-                                                |
+|       |       |                              | There is nothing on it to read                        |
+|   g   |   3 % | aggravate monsters           | You hear a high pitched humming noise                 |
+|   h   |   2 % | protect armor                | Your armor is covered by a shimmering ... shield      |
+|       |       |                              |   -or-                                                |
+|       |       |                              | You feel a strange sense of loss                      |
 
 **HINT**: The rogue v5.4.5 code, as of 2026-02-23, has a **special
 feature**.  When, after reading the scroll, you are prompted with
@@ -453,21 +445,19 @@ scroll of the same type, you will see the correct scroll name.
 
 When you have a weapon:
 
-```
-    |        |           | damage  | damage |                  |
-    | letter | frequency | wielded | thrown | weapon           |
-    |--------|-----------|---------|--------|------------------|
-    |   n/a  |    n/a    |   0x0   |   0x0  | ((no weapon))    |
-    |    0   |   11 %    |   2x4   |   1x3  | mace             |
-    |    1   |   11 %    |   3x4   |   1x2  | long sword       |
-    |    2   |   12 %    |   1x1   |   1x1  | short bow        |
-    |    3   |   12 %    |   1x1   |   2x3  | arrow (11)       |
-    |    4   |    8 %    |   1x6   |   1x4  | dagger (4)       |
-    |    5   |   10 %    |   4x4   |   1x2  | two handed sword |
-    |    6   |   12 %    |   1x1   |   1x3  | dart (10)        |
-    |    7   |   12 %    |   1x2   |   2x4  | shuriken (11)    |
-    |    8   |   12 %    |   2x3   |   1x6  | spear            |
-```
+|       |       | damage  | damage |                  |
+| index | freq. | wielded | thrown | weapon           |
+|-------|-------|---------|--------|------------------|
+|  n/a  |   n/a |   0x0   |   0x0  | ((no weapon))    |
+|   0   |  11 % |   2x4   |   1x3  | mace             |
+|   1   |  11 % |   3x4   |   1x2  | long sword       |
+|   2   |  12 % |   1x1   |   1x1  | short bow        |
+|   3   |  12 % |   1x1   |   2x3  | arrow (11)       |
+|   4   |   8 % |   1x6   |   1x4  | dagger (4)       |
+|   5   |  10 % |   4x4   |   1x2  | two handed sword |
+|   6   |  12 % |   1x1   |   1x3  | dart (10)        |
+|   7   |  12 % |   1x2   |   2x4  | shuriken (11)    |
+|   8   |  12 % |   2x3   |   1x6  | spear            |
 
 A weapon can be (+) enhanced, (n) normal, or (-) reduced in its effectiveness.
 
@@ -514,18 +504,16 @@ To use a dart, or shuriken:
 
 When you have armor:
 
-```
-    | letter | frequency | protection | armor                  |
-    |--------|-----------|------------|-------------------------
-    |    0   |    20 %   |      2     | leather armor          |
-    |    1   |    15 %   |      3     | ring mail              |
-    |    2   |    15 %   |      3     | studded leather armor  |
-    |    3   |    13 %   |      4     | scale mail             |
-    |    4   |    12 %   |      5     | chain mail             |
-    |    5   |    10 %   |      6     | splint mail            |
-    |    6   |    10 %   |      6     | banded mail            |
-    |    7   |     5 %   |      7     | plate mail             |
-```
+| index | freq. | protection | armor                  |
+|-------|-------|------------|-------------------------
+|   0   |  20 % |      2     | leather armor          |
+|   1   |  15 % |      3     | ring mail              |
+|   2   |  15 % |      3     | studded leather armor  |
+|   3   |  13 % |      4     | scale mail             |
+|   4   |  12 % |      5     | chain mail             |
+|   5   |  10 % |      6     | splint mail            |
+|   6   |  10 % |      6     | banded mail            |
+|   7   |   5 % |      7     | plate mail             |
 
 Armor can be (+) enhanced, (n) normal, or (-) cursed.
 
@@ -540,24 +528,29 @@ can put on other armor.
 
 ## ring spoilers ==> =
 
-```
-    | letter | frequency | food used | ring              |
-    |--------|-----------|-----------|--------------------
-    |    0   |     9 %   |     1     | protection        |
-    |    1   |     9 %   |     1     | add strength      |
-    |    2   |     5 %   |     1     | sustain strength  |
-    |    3   |    10 %   |    -3     | searching         |
-    |    4   |    10 %   |    -5     | see invisible     |
-    |    5   |     1 %   |     0     | adornment         |
-    |    6   |    10 %   |     0     | aggravate monster |
-    |    7   |     8 %   |    -3     | dexterity         |
-    |    8   |     8 %   |    -3     | increase damage   |
-    |    9   |     4 %   |     2     | regeneration      |
-    |    a   |     9 %   |    -2     | slow digestion    |
-    |    b   |     5 %   |     0     | teleportation     |
-    |    c   |     7 %   |     1     | stealth           |
-    |    d   |     5 %   |     1     | maintain armor    |
-```
+What rings can do:
+
+| index | freq. | food used | name              | description                                 |
+|-------|-------|-----------|-------------------|---------------------------------------------|
+|   0   |   9 % |     1     | protection        | Adds to defense and magical saving throws.  |
+|   1   |   9 % |     1     | add strength      | Adds to strength.                           |
+|   2   |   5 % |     1     | sustain strength  | Pevents poison and Rattlesnakes from        |
+|       |       |           |                   | reducing strength.                          |
+|   3   |  10 % |    -3     | searching         | Helps detect secret doors and traps.        |
+|   4   |  10 % |    -5     | see invisible     | Reveals Phantoms.                           |
+|   5   |   1 % |     0     | adornment         | Worth 10 gold.                              |
+|   6   |  10 % |     0     | aggravate monster | Cursed. Causes monsters to attack more      |
+|       |       |           |                   | aggressively.                               |
+|   7   |   8 % |    -3     | dexterity         | Improves weapon accuracy.                   |
+|   8   |   8 % |    -3     | increase damage   | Increases weapon damage.                    |
+|   9   |   4 % |     2     | regeneration      | Heals 1 hp per turn.                        |
+|   a   |   9 % |    -2     | slow digestion    | Reduces food consumption by about 50%. Two  |
+|       |       |           |                   | rings can cancel out food consumption.      |
+|   b   |   5 % |     0     | teleportation     | Cursed. Randomly teleports the player       |
+|       |       |           |                   | around the map.                             |
+|   c   |   7 % |     1     | stealth           | Allows player to move without rousing       |
+|       |       |           |                   | sleeping monsters.                          |
+|   d   |   5 % |     1     | maintain armor    | Prevents rust damage from Aquators.         |
 
 A ring can be worn in the left or right hand.
 
@@ -575,33 +568,30 @@ When **food used** is negative, the ring effectively adds food per turn when wor
 
 When you read use a staff:
 
-```
-    | letter | frequency | staff         | Description                                 |
-    |--------|-----------|---------------|---------------------------------------------|
-    |    0   |   12 %    | light         | Illuminates the room.                       |
-    |    1   |    6 %    | invisibility  | Makes a monster invisible.                  |
-    |    2   |    3 %    | lightning     | Inflicts 6d6 damage. Bounces off walls.     |
-    |    3   |    3 %    | fire          | Inflicts 6d6 damage. Bounces off walls.     |
-    |    4   |    3 %    | cold          | Inflicts 6d6 damage. Bounces off walls.     |
-    |    5   |   15 %    | polymorph     | Transforms a monster into another.          |
-    |    6   |   10 %    | magic missile | Inflicts 1d4 damage on a target.            |
-    |    7   |   10 %    | haste monster | Hastens a monster.                          |
-    |    8   |   11 %    | slow monster  | Slows a monster.                            |
-    |    9   |    9 %    | drain life    | Drains half hero's hp.  Take same hp from   |
-    |        |           |               | all monsters in room or next to in passage. |
-    |    a   |    1 %    | nothing       | A "/dev/null" staff.                        |
-    |    b   |    6 %    | teleport away | Teleport a monster somewhere else.          |
-    |    c   |    6 %    | teleport to   | Teleport a monster to near you.             |
-    |    d   |    5 %    | cancellation  | Supresses monster's special abilities.      |
-```
-
+| index | freq. | staff         | Description                                 |
+|-------|-------|---------------|---------------------------------------------|
+|   0   |  12 % | light         | Illuminates the room.                       |
+|   1   |   6 % | invisibility  | Makes a monster invisible.                  |
+|   2   |   3 % | lightning     | Inflicts 6d6 damage. Bounces off walls.     |
+|   3   |   3 % | fire          | Inflicts 6d6 damage. Bounces off walls.     |
+|   4   |   3 % | cold          | Inflicts 6d6 damage. Bounces off walls.     |
+|   5   |  15 % | polymorph     | Transforms a monster into another.          |
+|   6   |  10 % | magic missile | Inflicts 1d4 damage on a target.            |
+|   7   |  10 % | haste monster | Hastens a monster.                          |
+|   8   |  11 % | slow monster  | Slows a monster.                            |
+|   9   |   9 % | drain life    | Drains half hero's hp.  Take same hp from   |
+|       |       |               | all monsters in room or next to in passage. |
+|   a   |   1 % | nothing       | A "/dev/null" staff.                        |
+|   b   |   6 % | teleport away | Teleport a monster somewhere else.          |
+|   c   |   6 % | teleport to   | Teleport a monster to near you.             |
+|   d   |   5 % | cancellation  | Supresses monster's special abilities.      |
 
 ## wizard mode spoilers
 
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
 
-**HINT**: "**The historic wizard password**" may be found in a comment about a defined symbol.
+**HINT**: **The historic wizard password**" may be found in a comment about a defined symbol.
 
 You may toggle **wizard mode** on and off by pressing the "+" key.
 When you successfully toggle **wizard mode** on, you will see the message:
@@ -616,26 +606,24 @@ rogue ""
 
 When you are in **wizard mode**, you have these special commands available to you:
 
-```
-    | command | action                                                 |
-    |---------|--------------------------------------------------------|
-    |    +    | Toggle wizard mode                                     |
-    |    |    | Show location                                          |
-    |    C    | Create                                                 |
-    |    $    | Count items in pack                                    |
-    | ctrl G  | Inventory current level                                |
-    | ctrl W  | Identify item                                          |
-    | ctrl D  | Go down to next level                                  |
-    | ctrl A  | Go up to previous level                                |
-    | ctrl F  | Show map of current level                              |
-    | ctrl T  | Teleport to random spot on level                       |
-    | ctrl E  | Show amount of food left                               |
-    | ctrl Q  | Show passage ways                                      |
-    | ctrl X  | Toggle see monsters on level                           |
-    |    ~    | Super charge staff                                     |
-    | ctrl I  | +10 Exp, add +8 plate mail, add +1,+1 two handed sword |
-    |    *    | List types of an object                                |
-```
+| command | action                                                 |
+|---------|--------------------------------------------------------|
+|    +    | Toggle wizard mode                                     |
+|    |    | Show location                                          |
+|    C    | Create                                                 |
+|    $    | Count items in pack                                    |
+| ctrl G  | Inventory current level                                |
+| ctrl W  | Identify item                                          |
+| ctrl D  | Go down to next level                                  |
+| ctrl A  | Go up to previous level                                |
+| ctrl F  | Show map of current level                              |
+| ctrl T  | Teleport to random spot on level                       |
+| ctrl E  | Show amount of food left                               |
+| ctrl Q  | Show passage ways                                      |
+| ctrl X  | Toggle see monsters on level                           |
+|    ~    | Super charge staff                                     |
+| ctrl I  | +10 Exp, add +8 plate mail, add +1,+1 two handed sword |
+|    *    | List types of an object                                |
 
 For "\*" ("_List types of an object_"), when it asks:
 
