@@ -28,7 +28,19 @@
 #define MAXLINES	32	/* maximum number of screen lines used */
 #define MAXCOLS		80	/* maximum number of screen columns used */
 
-#define RN		(((seed = seed*11109+13849) >> 16) & 0xffff)
+#if defined(NON_BSD_RN_GENERATOR)
+/*
+ * NOTE: The RN is a poor way to generate pseudo-random numbers.
+ *	 Worse, the RN value limits the seed value to a 16-bit pseudo-random number.
+ */
+#  define RN		(((seed = seed*11109+13849) >> 16) & 0xffff)
+#else
+/*
+ * use the BSD random(3) generator, seed by he dungeon number to generate a 31-bit pseudo-random number.
+ */
+#  define RN		((unsigned int)random())
+#endif
+
 #ifdef CTRL
 #undef CTRL
 #endif

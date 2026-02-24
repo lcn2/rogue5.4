@@ -527,7 +527,10 @@ extern const char *ws_made[], *inv_t_name[], *p_colors[], *r_stones[],
 
 extern const int a_class[], e_levels[];
 
-extern unsigned int dnum, seed;
+extern unsigned int dnum;
+#if defined(NON_BSD_RN_GENERATOR)
+extern unsigned int seed;
+#endif
 
 extern WINDOW *hw;
 

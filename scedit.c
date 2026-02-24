@@ -18,13 +18,12 @@
 # include	<string.h>
 # include	<stdbool.h>
 # include	<sys/types.h>
+# include	<sys/time.h>
 
 # undef		TRUE
 # define	TRUE true
 # undef		FALSE
 # define	FALSE false
-
-# define	RN	(((seed = seed*11109+13849) >> 16) & 0xffff)
 
 # define	MAXSTR	1024
 
@@ -45,7 +44,10 @@ static char	buf[BUFSIZ+1+1],	/* +1 for when we read BUFSIZ starting with &buf[1]
 			"killed with amulet",
 		};
 
-static int	seed;
+#if defined(NON_BSD_RN_GENERATOR)
+static unsigned int seed;
+#endif
+static unsigned int dnum;
 static FILE	*finf;
 static char	*scorefile;
 
@@ -78,6 +80,7 @@ int
 main(int ac, char *av[])
 {
 	int	inf;
+	struct timeval tp;
 
 	memset(top_scores, 0, sizeof(top_scores)); /* paranoia */
 	if (ac == 1) {
@@ -94,7 +97,37 @@ main(int ac, char *av[])
 	} else {
 		scorefile = av[1];
 	}
-	seed = md_getpid();
+
+	/*
+	 * set dnum as if it were a dungeon number
+	 */
+	memset(&tp, 0, sizeof(tp));
+	if (gettimeofday(&tp, NULL) < 0) {
+	    dnum = time(NULL);
+	} else {
+	    dnum = ((unsigned int)(tp.tv_sec) ^ (unsigned int)(tp.tv_usec << 16));
+	}
+	dnum += (unsigned int)md_getpid();
+	dnum += (unsigned int)md_getuid();
+#ifdef MASTER
+	char *env;
+
+	if (wizard) {
+	    env = getenv("SEED");
+	    if (env != NULL) {
+		dnum = (unsigned int)strtol(env, NULL, 0);
+	    }
+	}
+#endif
+
+	/*
+	 * seed with the dungeon number
+	 */
+#if defined(NON_BSD_RN_GENERATOR)
+	seed = (dnum ^ (dnum >> 16)) & 0xffff;  /* the RN macro uses a 16-bit seed */
+#else
+	srandom((unsigned)dnum);
+#endif
 
 	if ((finf = fopen(scorefile, "r+")) == NULL) {
 		perror(scorefile);

@@ -1333,6 +1333,10 @@ rs_read_places(FILE *savef, PLACE *p, int cnt)
 int
 rs_save_file(FILE *savef)
 {
+#if !defined(NON_BSD_RN_GENERATOR)
+    unsigned int new_seed;
+#endif
+
     encclearerr();
 
     rs_write_int(savef, noscore);
@@ -1367,7 +1371,12 @@ rs_save_file(FILE *savef)
     rs_write_int(savef, purse);
     rs_write_int(savef, quiet);
     rs_write_int(savef, vf_hit);
+#if defined(NON_BSD_RN_GENERATOR)
     rs_write_uint(savef, seed);
+#else
+    new_seed = (unsigned int)random();
+    rs_write_uint(savef, new_seed);
+#endif
     rs_write_coord(savef, stairs);
     rs_write_thing(savef, &player);
     rs_write_object_reference(savef, player.t_pack, cur_armor);
@@ -1399,6 +1408,10 @@ rs_save_file(FILE *savef)
 int
 rs_restore_file(FILE *savef)
 {
+#if !defined(NON_BSD_RN_GENERATOR)
+    unsigned int new_seed;
+#endif
+
     encclearerr();
 
     noscore = 0;
@@ -1457,7 +1470,13 @@ rs_restore_file(FILE *savef)
     rs_read_int(savef, &quiet);
     vf_hit = 0;
     rs_read_int(savef, &vf_hit);
+#if defined(NON_BSD_RN_GENERATOR)
     rs_read_uint(savef, &seed);
+    srandom((unsigned)seed);
+#else
+    rs_read_uint(savef, &new_seed);
+    srandom((unsigned)new_seed);
+#endif
     rs_read_coord(savef, &stairs);
     rs_read_thing(savef, &player);
     rs_read_object_reference(savef, player.t_pack, &cur_armor);

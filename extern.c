@@ -124,7 +124,9 @@ int quiet = 0;				/* Number of quiet turns */
 int vf_hit = 0;				/* Number of time flytrap has hit */
 
 unsigned int dnum;				/* Dungeon number */
+#if defined(NON_BSD_RN_GENERATOR)
 unsigned int seed;				/* Random number seed */
+#endif
 const int e_levels[] = {
         10L,
 	20L,

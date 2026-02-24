@@ -14,6 +14,7 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/time.h>
 
 #include "modern_curses.h"
 #include "extern.h"
@@ -31,7 +32,7 @@ int
 main(int argc, char **argv)
 {
     char *env;
-    time_t lowtime;
+    struct timeval tp;
 
     /*
      * on exit: cleanup I/O, and shutdown ncurses (if needed)
@@ -79,7 +80,8 @@ main(int argc, char **argv)
      * get options from the environment
      */
     memset(whoami, 0, sizeof(whoami)); /* paranoia */
-    if ((env = getenv("ROGUEOPTS")) != NULL)
+    env = getenv("ROGUEOPTS");
+    if (env != NULL)
 	parse_opts(env);
     if (env == NULL || whoami[0] == '\0')
         strucpy(whoami, md_getusername(), strlen(md_getusername()));
@@ -88,21 +90,31 @@ main(int argc, char **argv)
 	noscore = TRUE;
     }
 #endif
-    lowtime = time(NULL);
-    dnum = lowtime + md_getpid();
+    memset(&tp, 0, sizeof(tp));
+    if (gettimeofday(&tp, NULL) < 0) {
+	dnum = time(NULL);
+    } else {
+	dnum = ((unsigned int)(tp.tv_sec) ^ (unsigned int)(((unsigned long)tp.tv_usec) << 16));
+    }
+    dnum += (unsigned int)md_getpid();
+    dnum += (unsigned int)md_getuid();
 #ifdef MASTER
     if (wizard) {
-	if (getenv("SEED") != NULL) {
-	    dnum = atoi(getenv("SEED"));
+	env = getenv("SEED");
+	if (env != NULL) {
+	    dnum = (unsigned int)strtol(env, NULL, 0);
 	}
     }
 #endif
-    seed = dnum;
 
     /*
-     * we use the random(3) facility, seeded, to generate random data for init_score()
+     * seed the game with the dungeon number
      */
-    srandom((unsigned)seed);
+#if defined(NON_BSD_RN_GENERATOR)
+    seed = md_getpid();
+#else
+    srandom((unsigned)dnum);
+#endif
 
     /*
      * open the rogue score file
@@ -115,29 +127,35 @@ main(int argc, char **argv)
     /*
      * Drop setuid/setgid after opening the scoreboard file.
      */
-
     md_normaluser();
 
     /*
-     * check for print-score option
+     * parse 2nd arg
      */
-
-	md_normaluser(); /* we drop any setgid/setuid privileges here */
-
     if (argc == 2)
     {
+
+	/*
+	 * -s ==> check for print-score option
+	 */
 	if (strcmp(argv[1], "-s") == 0)
 	{
 	    noscore = TRUE;
 	    score(0, -1, 0);
 	    exit(0);
 	}
+
+	/*
+	 * -d ==> die immediately by bat (or random monster if wizard mode)
+	 */
 	else if (strcmp(argv[1], "-d") == 0)
 	{
-	    dnum = rnd(100);	/* throw away some rnd()s to break patterns */
-	    while (--dnum)
+	    unsigned int rnum;
+
+	    rnum = rnd(100)+1;	/* throw away some rnd()s to break patterns */
+	    while (--rnum)
 		rnd(100);
-	    purse = rnd(100) + 1;
+	    purse = GOLDCALC;
 	    if (wizard) {
 		level = rnd(100) + 1;
 	    } else {
@@ -152,8 +170,13 @@ main(int argc, char **argv)
 	    }
 	    exit(0);
 	}
+
+	/*
+	 * -V ==> print version and exit
+	 */
 	else if (strcmp(argv[1], "-V") == 0)
 	{
+	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
 	    printf("rogue version %s release %s (chongo was here)", version, release);
 	    fflush(stdout);
 	    exit(0);
@@ -172,11 +195,11 @@ main(int argc, char **argv)
      */
 #ifdef MASTER
     if (wizard)
-	printf("Hello %s, welcome to dungeon #%u\n", whoami, dnum);
+	printf("Hello %s, welcome to dungeon #%u", whoami, dnum);
     else
-	printf("Hello %s, just a moment while I dig the dungeon #%u...\n", whoami, dnum);
+	printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
 #else
-    printf("Hello %s, just a moment while I dig the dungeon #%u...\n", whoami, dnum);
+    printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
 #endif
     fflush(stdout);
 
