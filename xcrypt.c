@@ -52,6 +52,10 @@
 #include <sys/types.h>
 #include <string.h>
 
+#include "have_strlcat.h"
+#include "have_strlcpy.h"
+#include "strl.h"
+
 static unsigned int md_endian = 0x01020304;
 
 unsigned int

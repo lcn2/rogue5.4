@@ -1,8 +1,13 @@
 # sort via: sort -d
 #
 findpw
+have_strlcat
+have_strlcat.h
+have_strlcat.o
+have_strlcpy
+have_strlcpy.h
+have_strlcpy.o
 Makefile.bak
-Makefile.easy
 modern_curses.h
 NOTES
 *.o
@@ -20,3 +25,4 @@ rogue.scr
 scedit
 skel/
 tags
+unused_tmp

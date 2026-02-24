@@ -17,6 +17,9 @@
 #include <string.h>
 
 #include "modern_curses.h"
+#include "have_strlcat.h"
+#include "have_strlcpy.h"
+#include "strl.h"
 #include "extern.h"
 #include "config.h"
 #include "score.h"

@@ -25,6 +25,9 @@
 # undef		FALSE
 # define	FALSE false
 
+# include	"have_strlcat.h"
+# include	"have_strlcpy.h"
+# include	"strl.h"
 # include	"score.h"
 
 # define	MAXLINE		80
