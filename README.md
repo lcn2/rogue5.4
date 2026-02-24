@@ -576,22 +576,23 @@ When **food used** is negative, the ring effectively adds food per turn when wor
 When you read use a staff:
 
 ```
-    | letter | frequency | staff         |
-    |--------|-----------|---------------|
-    |    0   |   12 %    | light         |
-    |    1   |    6 %    | invisibility  |
-    |    2   |    3 %    | lightning     |
-    |    3   |    3 %    | fire          |
-    |    4   |    3 %    | cold          |
-    |    5   |   15 %    | polymorph     |
-    |    6   |   10 %    | magic missile |
-    |    7   |   10 %    | haste monster |
-    |    8   |   11 %    | slow monster  |
-    |    9   |    9 %    | drain life    |
-    |    a   |    1 %    | nothing       |
-    |    b   |    6 %    | teleport away |
-    |    c   |    6 %    | teleport to   |
-    |    d   |    5 %    | cancellation  |
+    | letter | frequency | staff         | Description                                 |
+    |--------|-----------|---------------|---------------------------------------------|
+    |    0   |   12 %    | light         | Illuminates the room.                       |
+    |    1   |    6 %    | invisibility  | Makes a monster invisible.                  |
+    |    2   |    3 %    | lightning     | Inflicts 6d6 damage. Bounces off walls.     |
+    |    3   |    3 %    | fire          | Inflicts 6d6 damage. Bounces off walls.     |
+    |    4   |    3 %    | cold          | Inflicts 6d6 damage. Bounces off walls.     |
+    |    5   |   15 %    | polymorph     | Transforms a monster into another.          |
+    |    6   |   10 %    | magic missile | Inflicts 1d4 damage on a target.            |
+    |    7   |   10 %    | haste monster | Hastens a monster.                          |
+    |    8   |   11 %    | slow monster  | Slows a monster.                            |
+    |    9   |    9 %    | drain life    | Drains half hero's hp.  Take same hp from   |
+    |        |           |               | all monsters in room or next to in passage. |
+    |    a   |    1 %    | nothing       | A "/dev/null" staff.                        |
+    |    b   |    6 %    | teleport away | Teleport a monster somewhere else.          |
+    |    c   |    6 %    | teleport to   | Teleport a monster to near you.             |
+    |    d   |    5 %    | cancellation  | Supresses monster's special abilities.      |
 ```
 
 
