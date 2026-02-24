@@ -167,24 +167,22 @@ For your convenience, the full game help output is formatted below:
 
 The following table may help explain the symbols you see when playing rogue:
 
-```
-    | symbol | object  |
-    |--------|---------|
-    |    #   | passage |
-    |    +   | door    |
-    |    .   | floor   |
-    |    @   | player  |
-    |    ^   | trap    |
-    |    *   | gold    |
-    |    !   | potion  |
-    |    ?   | scroll  |
-    |    $   | food    |
-    |    )   | weapon  |
-    |    ]   | armor   |
-    |    ,   | amulet  |
-    |    =   | ring    |
-    |    /   | staff   |
-```
+| symbol | object  |
+|--------|---------|
+|    #   | passage |
+|    +   | door    |
+|    .   | floor   |
+|    @   | player  |
+|    ^   | trap    |
+|    *   | gold    |
+|    !   | potion  |
+|    ?   | scroll  |
+|    $   | food    |
+|    )   | weapon  |
+|    ]   | armor   |
+|    ,   | amulet  |
+|    =   | ring    |
+|    /   | staff   |
 
 For more information about the make, see the `rogue(6)` man page after installing, or run the command
 from the top level directory:
