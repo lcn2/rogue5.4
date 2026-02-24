@@ -24,6 +24,7 @@
 #include <sys/types.h>
 
 #define MAXSTR		1024	/* maximum length of strings */
+#define SHORTSTR	32	/* typical short string */
 #define MAXLINES	32	/* maximum number of screen lines used */
 #define MAXCOLS		80	/* maximum number of screen columns used */
 

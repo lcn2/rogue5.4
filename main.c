@@ -164,7 +164,7 @@ main(int argc, char **argv)
 	}
 	else if (strcmp(argv[1], "-V") == 0)
 	{
-	    printf("rogue version %s release %s (chongo was here)\n", version, release);
+	    printf("rogue version %s release %s (chongo was here)", version, release);
 	    fflush(stdout);
 	    exit(0);
 	}
@@ -182,11 +182,11 @@ main(int argc, char **argv)
      */
 #ifdef MASTER
     if (wizard)
-	printf("Hello %s, welcome to dungeon #%u", whoami, dnum);
+	printf("Hello %s, welcome to dungeon #%u\n", whoami, dnum);
     else
-	printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
+	printf("Hello %s, just a moment while I dig the dungeon #%u...\n", whoami, dnum);
 #else
-    printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
+    printf("Hello %s, just a moment while I dig the dungeon #%u...\n", whoami, dnum);
 #endif
     fflush(stdout);
 
@@ -204,13 +204,13 @@ main(int argc, char **argv)
 
     /* Process ID */
     pid_t pid;
-    char pidfilename[BUFSIZ];
+    char pidfilename[SHORTSTR + 1];
     FILE *pidfp;
 
     if (getenv("GETROGUEPID") != NULL) {
       pid = md_getpid ();
       memset (pidfilename, '\0', sizeof(pidfilename));
-      snprintf (pidfilename, BUFSIZ-1, "roguepid.%d", pid);
+      snprintf (pidfilename, SHORTSTR, "roguepid.%d", pid);
       if ((pidfp = fopen (pidfilename, "w")) == NULL) {
         printf("Can't open '%s'.\n", pidfilename);
 	fflush(stdout);
