@@ -282,7 +282,7 @@ score(int amount, int flags, int monst)
 	    }
 	    memset(scp, 0, sizeof(*scp)); /* paranoia */
 	    scp->sc_score = amount;
-	    strncpy(scp->sc_name, whoami, MAX_USERNAME);
+	    strlcpy(scp->sc_name, whoami, MAX_USERNAME);
 	    scp->sc_name[MAX_USERNAME] = '\0'; /* paranoia */
 	    scp->sc_flags = flags;
 	    if (flags == 2)

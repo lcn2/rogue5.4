@@ -35,14 +35,14 @@ struct sc_ent {
     int sc_score;
     unsigned int sc_flags;
     int sc_monster;
-    char sc_name[MAX_USERNAME+1];
+    char sc_name[MAX_USERNAME +1 ]; /* Name of player in this score slot, +1 for paranoia */
     int sc_level;
     uintmax_t sc_time;
 };
 
 typedef struct sc_ent SCORE;
 
-extern char whoami[MAX_USERNAME+1];	/* Name of player, +1 for paranoia */
+extern char whoami[MAX_USERNAME + 1];	/* Name of player, +1 for paranoia */
 
 void	init_score_value(SCORE *scp);
 void	rd_score(SCORE *top_score);

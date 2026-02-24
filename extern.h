@@ -1,5 +1,5 @@
 /*
- * Defines for things used in mach_dep.c
+ * Widely sued defines and extern statements
  *
  * @(#)extern.h	4.35 (Berkeley) 02/05/99
  *

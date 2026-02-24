@@ -29,6 +29,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "have_strlcat.h"
+#include "have_strlcpy.h"
 #include "strl.h"
 
 #if !defined(HAVE_STRLCPY) || defined(STRL_TEST)

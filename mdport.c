@@ -508,15 +508,16 @@ md_getpid(void)
 char *
 md_getusername(void)
 {
-    static char login[80];
+    static char login[MAX_USERNAME + 1];
     struct passwd *pw;
     char *l = NULL;
+
+    memset(login, 0, sizeof(login)); /* paranoia */
 
     /* POSIX Shell has priority, then O/S specific methods */
     if ( (l = getenv("LOGNAME")) != NULL )
     {
-        strncpy(login,l,80);
-        login[79] = 0;
+        strlcpy(login, l, MAX_USERNAME);
         return(login);
     }
 
@@ -530,8 +531,7 @@ md_getusername(void)
                 if ( (l = getenv("USER")) == NULL )
                     l = "nobody";
 
-    strncpy(login,l,80);
-    login[79] = 0;
+    strlcpy(login, l, MAX_USERNAME);
 
     return(login);
 }
@@ -539,11 +539,14 @@ md_getusername(void)
 char *
 md_gethomedir(void)
 {
-    static char homedir[PATH_MAX];
+    static char homedir[PATH_MAX + 1]; /* home directory path, +1 for paranoia */
     char *h = NULL;
     size_t len;
     char slash = '/';
     struct passwd *pw;
+
+    memset(homedir, 0, sizeof(homedir)); /* paranoia */
+
     pw = getpwuid(getuid());
 
     h = pw->pw_dir;
@@ -560,8 +563,7 @@ md_gethomedir(void)
                 h = "";
             else
             {
-                strncpy(homedir,h,PATH_MAX-1);
-                homedir[PATH_MAX-1] = 0;
+                strlcpy(homedir, h, PATH_MAX);
 
                 if ( (h = getenv("HOMEPATH")) == NULL)
                     h = "";
@@ -571,7 +573,7 @@ md_gethomedir(void)
 
 
     len = strlen(homedir);
-    strncat(homedir,h,PATH_MAX-len-1);
+    strlcat(homedir, h, PATH_MAX-len);
     len = strlen(homedir);
 
     if ((len > 0) && (homedir[len-1] != slash)) {
@@ -591,7 +593,7 @@ md_sleep(int s)
 char *
 md_getshell(void)
 {
-    static char shell[PATH_MAX];
+    static char shell[PATH_MAX + 1];
     char *s = NULL;
     char *def = "/bin/sh";
     struct passwd *pw;
@@ -603,8 +605,7 @@ md_getshell(void)
                 if ( (s = getenv("SystemRoot")) == NULL)
                     s = def;
 
-    strncpy(shell,s,PATH_MAX);
-    shell[PATH_MAX-1] = 0;
+    strlcpy(shell, s, PATH_MAX);
 
     return(shell);
 }

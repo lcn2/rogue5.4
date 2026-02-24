@@ -229,8 +229,8 @@ new_thing(void)
     cur = new_thing_ptr();
     cur->o_hplus = 0;
     cur->o_dplus = 0;
-    strncpy(cur->o_damage, "0x0", sizeof(cur->o_damage));
-    strncpy(cur->o_hurldmg, "0x0", sizeof(cur->o_hurldmg));
+    strlcpy(cur->o_damage, "0x0", sizeof(cur->o_damage)-1);
+    strlcpy(cur->o_hurldmg, "0x0", sizeof(cur->o_hurldmg)-1);
     cur->o_arm = 11;
     cur->o_count = 1;
     cur->o_group = 0;

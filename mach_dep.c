@@ -545,7 +545,7 @@ form_home(void)
      * get home plus trialing / from environment
      */
     memset(home, 0, sizeof(home)); /* paranoia */
-    strncpy(home, md_gethomedir(), MAXSTR);
+    strlcpy(home, md_gethomedir(), MAXSTR);
     home[MAXSTR] = '\0'; /* paranoia */
     return;
 }
@@ -570,7 +570,7 @@ form_lock_path(void)
      * determine lock file path
      */
     memset(lock_path, 0, sizeof(lock_path)); /* paranoia */
-    strncpy(lock_path, LOCKPATH, MAXSTR);
+    strlcpy(lock_path, LOCKPATH, MAXSTR);
     lock_path[MAXSTR] = '\0'; /* paranoia */
     return;
 }
@@ -594,7 +594,7 @@ form_save_path(void)
      * determine save file path
      */
     memset(file_name, 0, sizeof(file_name)); /* paranoia */
-    strncpy(file_name, SAVEPATH, MAXSTR);
+    strlcpy(file_name, SAVEPATH, MAXSTR);
     file_name[MAXSTR] = '\0'; /* paranoia */
     return;
 }
@@ -618,7 +618,7 @@ form_score_path(void)
      * determine score file path
      */
     memset(score_path, 0, sizeof(score_path)); /* paranoia */
-    strncpy(score_path, SCOREPATH, MAXSTR);
+    strlcpy(score_path, SCOREPATH, MAXSTR);
     score_path[MAXSTR] = '\0'; /* paranoia */
     return;
 }

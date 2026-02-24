@@ -647,7 +647,7 @@ xcrypt(const char *key, const char *setting)
 			if (des_setkey((const char *) keybuf))
 				return(NULL);
 		}
-		strncpy((char *)output, setting, 9);
+		strlcpy((char *)output, setting, 8);
 
 		/*
 		 * Double check that we weren't given a short setting.

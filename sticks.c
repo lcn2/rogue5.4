@@ -33,10 +33,10 @@ void
 fix_stick(THING *cur)
 {
     if (strcmp(ws_type[cur->o_which], "staff") == 0)
-	strncpy(cur->o_damage,"2x3",sizeof(cur->o_damage));
+	strlcpy(cur->o_damage, "2x3", sizeof(cur->o_damage)-1);
     else
-	strncpy(cur->o_damage,"1x1",sizeof(cur->o_damage));
-    strncpy(cur->o_hurldmg,"1x1",sizeof(cur->o_hurldmg));
+	strlcpy(cur->o_damage, "1x1", sizeof(cur->o_damage)-1);
+    strlcpy(cur->o_hurldmg, "1x1", sizeof(cur->o_hurldmg)-1);
 
     switch (cur->o_which)
     {
@@ -183,7 +183,7 @@ do_zap(void)
 	when WS_MISSILE:
 	    ws_info[WS_MISSILE].oi_know = TRUE;
 	    bolt.o_type = '*';
-	    strncpy(bolt.o_hurldmg,"1x4",sizeof(bolt.o_hurldmg));
+	    strlcpy(bolt.o_hurldmg, "1x4", sizeof(bolt.o_hurldmg)-1);
 	    bolt.o_hplus = 100;
 	    bolt.o_dplus = 1;
 	    bolt.o_flags = ISMISL;
@@ -317,7 +317,7 @@ fire_bolt(const coord *start, coord *dir, const char *name)
 
     bolt.o_type = WEAPON;
     bolt.o_which = FLAME;
-    strncpy(bolt.o_hurldmg,"6x6",sizeof(bolt.o_hurldmg));
+    strlcpy(bolt.o_hurldmg, "6x6", sizeof(bolt.o_hurldmg)-1);
     bolt.o_hplus = 100;
     bolt.o_dplus = 0;
     weap_info[FLAME].oi_name = name;

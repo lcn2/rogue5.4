@@ -270,7 +270,7 @@ restore(const char *file)
     md_tstpresume();
 
     memset(file_name, 0, sizeof(file_name)); /* paranoia */
-    strncpy(file_name, file, MAXSTR);
+    strlcpy(file_name, file, MAXSTR);
     file_name[MAXSTR] = '\0'; /* paranoia */
     clearok(curscr, TRUE);
     srand(md_getpid());

@@ -178,7 +178,7 @@ GROUPOWNER=
 # source and destination files #
 ################################
 
-HFILES= config.h rogue.h extern.h score.h
+HFILES= config.h rogue.h extern.h score.h strl.h
 
 OBJS1= vers.o extern.o armor.o chase.o command.o common.o \
            daemon.o daemons.o fight.o init.o io.o list.o \
@@ -187,7 +187,7 @@ OBJS1= vers.o extern.o armor.o chase.o command.o common.o \
 
 OBJS2= options.o pack.o passages.o potions.o rings.o \
            rip.o rooms.o save.o scrolls.o state.o sticks.o \
-           things.o weapons.o wizard.o xcrypt.o
+           things.o weapons.o wizard.o xcrypt.o strl.o
 
 OBJS= ${OBJS1} ${OBJS2}
 
@@ -196,11 +196,11 @@ CFILES= vers.c extern.c armor.c chase.c command.c daemon.c \
            main.c mdport.c misc.c monsters.c move.c new_level.c \
            options.c pack.c passages.c potions.c rings.c rip.c \
            rooms.c save.c scrolls.c state.c sticks.c things.c \
-           weapons.c wizard.c xcrypt.c
+           weapons.c wizard.c xcrypt.c strl.c
 
-MISC_C= findpw.c scedit.c scmisc.c common.c have_strlcat.c have_strlcpy.c strl.c
+MISC_C= findpw.c scedit.c scmisc.c common.c have_strlcat.c have_strlcpy.c
 
-MISC_H= strl.h
+MISC_H=
 
 H_SRC= ${HFILES} ${MISC_H}
 
@@ -1036,6 +1036,8 @@ sticks.o: modern_curses.h
 sticks.o: rogue.h
 sticks.o: sticks.c
 sticks.o: strl.h
+strl.o: have_strlcat.h
+strl.o: have_strlcpy.h
 strl.o: strl.c
 strl.o: strl.h
 things.o: config.h
