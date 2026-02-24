@@ -105,7 +105,7 @@ main(int ac, char *av[])
 	if (gettimeofday(&tp, NULL) < 0) {
 	    dnum = time(NULL);
 	} else {
-	    dnum = ((unsigned int)(tp.tv_sec) ^ (unsigned int)(tp.tv_usec << 16));
+	    dnum = ((unsigned int)(tp.tv_sec) ^ (((unsigned int)tp.tv_usec) << 12));
 	}
 	dnum += (unsigned int)md_getpid();
 	dnum += (unsigned int)md_getuid();
