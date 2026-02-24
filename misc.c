@@ -566,7 +566,7 @@ call_it(struct obj_info *info)
 		free(info->oi_guess);
 	    /* Assign proper name? */
 	    if (prbuf[0] == '?' && prbuf[1] == '\0') {
-		(void) strlcpy(prbuf, info->oi_name, sizeof (prbuf));
+		(void) strncpy(prbuf, info->oi_name, sizeof (prbuf));
 	    }
 	    info->oi_guess = malloc(strlen(prbuf) + 1);
 	    if (info->oi_guess != NULL)
