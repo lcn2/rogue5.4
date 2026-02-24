@@ -89,22 +89,12 @@ main(int argc, char **argv)
     }
 #endif
     lowtime = time(NULL);
-#if defined(ORIGINAL_MASTER) /* original MASTER behavior */
     dnum = lowtime + md_getpid();
 #ifdef MASTER
     if (wizard) {
 	if (getenv("SEED") != NULL) {
 	    dnum = atoi(getenv("SEED"));
 	}
-    }
-#endif
-#else /* modified behavior */
-    if (getenv("SEED") != NULL) {
-	/* allow $SEED to set the initial state for debugging purposes */
-	dnum = atoi(getenv("SEED"));
-    } else {
-	/* use time + pid to set the initial state */
-	dnum = lowtime + md_getpid();
     }
 #endif
     seed = dnum;
