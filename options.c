@@ -259,7 +259,6 @@ get_str(void *vopt, WINDOW *win)
     char *opt = (char *) vopt;
     char *sp;
     int oy, ox;
-    size_t i;
     int c;
     static char buf[MAXSTR];
 

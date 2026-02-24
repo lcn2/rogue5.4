@@ -384,20 +384,21 @@ struct room {
 /*
  * Structure describing a fighting being
  */
-#define MAX_DMG_STR 13
+#define MAX_DMG_STR 14
 struct stats {
     int s_str;				/* Strength */
     int s_exp;				/* Experience */
     int s_lvl;				/* level of mastery */
     int s_arm;				/* Armor class */
     int s_hpt;				/* Hit points */
-    char s_dmg[MAX_DMG_STR+1+1];	/* String describing damage done, +1 for NUL, +1 for paranoia */
+    char s_dmg[MAX_DMG_STR + 1];	/* String describing damage done, +1 for paranoia */
     int  s_maxhp;			/* Max hit points */
 };
 
 /*
  * Structure for monsters and player
  */
+#define MAX_THING_DMG_STR 7
 union thing {
     struct {
 	union thing *_l_next, *_l_prev;	/* Next pointer in link */
@@ -420,8 +421,8 @@ union thing {
 	char *_o_text;			/* What it says if you read it */
 	int  _o_launch;			/* What you need to launch it */
 	int _o_packch;			/* What character it is in the pack */
-	char _o_damage[8];		/* Damage if used like sword */
-	char _o_hurldmg[8];		/* Damage if thrown */
+	char _o_damage[MAX_THING_DMG_STR + 1];	/* Damage if used like sword, +1 for paranoia */
+	char _o_hurldmg[MAX_THING_DMG_STR + 1];	/* Damage if thrown, +1 for paranoia */
 	int _o_count;			/* count for plural objects */
 	int _o_which;			/* Which object of a type it is */
 	int _o_hplus;			/* Pluses to hit */
