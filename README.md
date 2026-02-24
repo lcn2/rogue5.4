@@ -595,13 +595,40 @@ When you read use a staff:
     |    d   |    5 %    | cancellation  | Supresses monster's special abilities.      |
 ```
 
+## ring spoilers ==> =
+
+What rings can do:
+
+```
+    | index | freq. | name              | description                                 |
+    |-------|-------|-------------------|---------------------------------------------|
+    |   0   |   9 % | protection        | Adds to defense and magical saving throws.  |
+    |   1   |   9 % | add strength      | Adds to strength.                           |
+    |   2   |   5 % | sustain strength  | Pevents poison and Rattlesnakes from        |
+    |       |       |                   | reducing strength.                          |
+    |   3   |  10 % | searching         | Helps detect secret doors and traps.        |
+    |   4   |  10 % | see invisible     | Reveals Phantoms.                           |
+    |   5   |   1 % | adornment         | Worth 10 gold.                              |
+    |   6   |  10 % | aggravate monster | Cursed. Causes monsters to attack more      |
+    |       |       |                   | aggressively.                               |
+    |   7   |   8 % | dexterity         | Improves weapon accuracy.                   |
+    |   8   |   8 % | increase damage   | Increases weapon damage.                    |
+    |   9   |   4 % | regeneration      | Heals 1 hp per turn.                        |
+    |   a   |   9 % | slow digestion    | Reduces food consumption by about 50%. Two  |
+    |       |       |                   | rings can cancel out food consumption.      |
+    |   b   |   5 % | teleportation     | Cursed. Randomly teleports the player       |
+    |       |       |                   | around the map.                             |
+    |   c   |   7 % | stealth           | Allows player to move without rousing       |
+    |       |       |                   | sleeping monsters.                          |
+    |   d   |   5 % | maintain armor    | Prevents rust damage from Aquators.         |
+```
 
 ## wizard mode spoilers
 
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
 
-**HINT**: "**The historic wizard password**" may be found in a comment about a defined symbol.
+**HINT**: **The historic wizard password**" may be found in a comment about a defined symbol.
 
 You may toggle **wizard mode** on and off by pressing the "+" key.
 When you successfully toggle **wizard mode** on, you will see the message:
