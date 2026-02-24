@@ -384,6 +384,16 @@ When you quaff a potion:
     |    d   |    6 %    | levitation        | You start to float in the air                           |
 ```
 
+**HINT**: The rogue v5.4.5 code, as of 2026-02-23, has a **special
+feature**.  When, after drinking the potion, you are prompted with
+the question:
+
+> What do you want to call it?
+
+If you answer with a single question mark (i.e., "**?**"), the game will
+name provide the correct name of the potion.  Thus, when you find another
+potion of the same type, you will see the correct potion name.
+
 
 ## scroll spoilers ==> ?
 
@@ -427,6 +437,16 @@ When you read a scroll:
     |        |           |                              |   -or-                                                |
     |        |           |                              | You feel a strange sense of loss                      |
 ```
+
+**HINT**: The rogue v5.4.5 code, as of 2026-02-23, has a **special
+feature**.  When, after reading the scroll, you are prompted with
+the question:
+
+> What do you want to call it?
+
+If you answer with a single question mark (i.e., "**?**"), the game will
+name provide the correct name of the scroll.  Thus, when you find another
+scroll of the same type, you will see the correct scroll name.
 
 
 ## weapon spoilers ==> )
