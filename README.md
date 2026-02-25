@@ -37,7 +37,7 @@ After installing, run:
 
 To quit, interrupt the program (type control-C), answer "y" to the question and press return.
 
-Your score file is store in the by default, is maintained under `${ROGUE_DIR}` which
+Your score file is store in the by default, is maintained under `${ROGUEDIR}` which
 defaults to your home directory (i.e., `~/rogue.scr`).
 
 To save your rogue game, press "S" and save.
@@ -335,17 +335,17 @@ tool to create fake scores is not a nice thing to do.
 
 # Changing the rogue directory
 
-The make variable `${ROGUE_DIR}` is the directory where the rogue
+The make variable `${ROGUEDIR}` is the directory where the rogue
 lock file, rogue score file, and the rogue save file are used and stored.
-The make variable `${ROGUE_DIR}` defaults to your home directory (i.e.,
+The make variable `${ROGUEDIR}` defaults to your home directory (i.e.,
 `$HOME`).  If you wish to use a different directory, then compile and
-install with a modified `${ROGUE_DIR}`.
+install with a modified `${ROGUEDIR}`.
 
 For example:
 
 ```sh
-make clobber all ROGUE_DIR=/var/tmp
-sudo make install ROGUE_DIR=/var/tmp
+make clobber all ROGUEDIR=/var/tmp
+sudo make install ROGUEDIR=/var/tmp
 ```
 
 
@@ -370,9 +370,9 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
 * To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
-* Changed the rogue lock filename to `${ROGUE_DIR}/.rogue.lck` (defaults to `.rogue.lck` under your home directory)
-* Changed the rogue save filename to `${ROGUE_DIR}/.rogue.save` (defaults to `.rogue.save` under your home directory)
-* Changed the rogue score filename to `${ROGUE_DIR}/.rogue.scr` (`defaults to .rogue.scr` under your home directory)
+* Changed the rogue lock filename to `${ROGUEDIR}/.rogue.lck` (defaults to `.rogue.lck` under your home directory)
+* Changed the rogue save filename to `${ROGUEDIR}/.rogue.save` (defaults to `.rogue.save` under your home directory)
+* Changed the rogue score filename to `${ROGUEDIR}/.rogue.scr` (`defaults to .rogue.scr` under your home directory)
 * Does not require use of `chown(1)`, nor `chgrp(1)` by default
 * Fixed cases where creating invalid type of an item in **wizard mode** crashed the game
 * Creating an item in **wizard mode** that does not have a sub-type no longer asks which type of item
