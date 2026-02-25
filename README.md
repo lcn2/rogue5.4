@@ -158,6 +158,134 @@ has completed the goal (won) at least 3 times (without using **wizard mode**) an
 maximum dungeon depth (and successful return to level 0) of 31.
 
 
+## rogue options and the ROGUEOPTS environment variable
+
+The `rogue(6)` game options may be displayed and changed by using the "**o**" command.
+
+The `$ROGUEOPTS` environment variable may be used to change the `rogue(6)` at startup,
+rather than having to use the "**o**" command each time you play.
+
+The `$ROGUEOPTS` environment variable would be a string that is a series
+of comma separated values, with booleans being stated as "name" (true)
+or "noname" (false), and strings being "name=....", with the string
+being defined up to a comma or the end of the entire option string.
+
+The option names are:
+
+* terse / noterse
+
+Useful for those who are tired of the sometimes lengthy messages of rogue.
+
+This is a useful option to enable when playing on an historically slow terminal.
+
+Default: noterse
+
+Recommendation: noterse
+
+* flush / noflush
+
+If this option is set, running moves will not be displayed until you reach the end of the move.
+
+This option saves a bit for both CPU and display time.
+
+Default: noflush
+
+Recommendation: flush
+
+* jump / nojump
+
+If this option is set, running moves will not  be  displayed until you reach the end of the move.
+
+This option saves a bit for both CPU and display time.
+
+Default: nojump
+
+Recommendation: jump
+
+* seefloor / seefloor
+
+Display the floor around you on the screen as you move through dark rooms.
+
+This is a useful option to disable when playing on an historically slow terminal.
+
+Default: seefloor
+
+Recommendation: seefloor
+
+* passgo / nopassgo
+
+Follow turnings in passageways.
+If you run in a passage and you run into stone or a wall, rogue will see if it can turn to the right or left.
+If it can only turn one way, it will turn that way. If it can turn either or neither, it will stop.
+
+This algorithm can sometimes lead to slightly confusing occurrences to some people,
+which is why it defaults to false.
+
+Default: nopassgo
+
+Recommendation: passgo
+
+* tombstone / notombstone
+
+Print out the tombstone at the end if you get killed.
+
+This is a useful option to disable when playing on an historically slow terminal.
+
+Default: tombstone
+
+Recommendation: tombstone
+
+* inven
+
+Set the inventory style to one of "overwrite", "slow", or "clear".
+
+With "overwrite" the top lines of the map are overwritten with the list when inventory is requested,
+or when "Which item do you wish to ...?" questions are answered with a "\*".
+However, if the list is longer than a screenful, the screen is cleared.
+
+With "slow", lists are displayed one item at a time on the top of the screen.
+
+With "clear", the screen is cleared, the list is displayed, and then the dungeon level is re-displayed.
+
+Default: clear
+
+Recommendation: overwrite
+
+* name
+
+This is the name of your character, as displayed in the rogue score file.
+
+Default: <<Your account name>>
+
+Recommendation: <<leave as default>>
+
+* fruit
+
+This should hold the name of a fruit that you enjoy eating.
+It is basically a whimsy that rogue uses in a couple of places.
+
+Default: slime-mold
+
+Recommendation: apple
+
+* file
+
+The default file name for saving the game.
+
+Default: ~/.rogue.save
+
+Recommendation: <<leave as default>>
+
+As an example, here is a recommended `$ROGUEOPTS` environment value to set in your environment:
+
+```sh
+export ROGUEOPTS="noterse,flush,jump,seefloor,passgo,tombstone,inven=overwrite,fruit=apple"
+```
+
+If `$ROGUEOPTS` environment variable is missing or empty, the default
+options will be used.  Unknown options are silently ignored.
+
+
 ## Rogue files
 
 By default, the rogue stores files in your home (i.e., '${HOME}`) directory:
@@ -583,7 +711,7 @@ What rings can do:
 |-------|-------|-----------|-------------------|---------------------------------------------|
 |   0   |   9 % |     1     | protection        | Adds to defense and magical saving throws.  |
 |   1   |   9 % |     1     | add strength      | Adds to strength.                           |
-|   2   |   5 % |     1     | sustain strength  | Pevents poison and Rattlesnakes from        |
+|   2   |   5 % |     1     | sustain strength  | Prevents poison and Rattlesnakes from       |
 |       |       |           |                   | reducing strength.                          |
 |   3   |  10 % |    -3     | searching         | Helps detect secret doors and traps.        |
 |   4   |  10 % |    -5     | see invisible     | Reveals Phantoms.                           |
@@ -633,9 +761,11 @@ When you read use a staff:
 |   a   |   1 % | nothing       | A "/dev/null" staff.                        |
 |   b   |   6 % | teleport away | Teleport a monster somewhere else.          |
 |   c   |   6 % | teleport to   | Teleport a monster to near you.             |
-|   d   |   5 % | cancellation  | Supresses monster's special abilities.      |
+|   d   |   5 % | cancellation  | Suppresses monster's special abilities.     |
 
 ## wizard mode spoilers
+
+**IMPORTANT NOTE**: If you enter **wizard mode** at any time during the game, your score will not be posted to the scoreboard.
 
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
@@ -652,6 +782,19 @@ You may also start rogue in **wizard mode** by giving an empty 2nd argument:
 ```sh
 rogue ""
 ```
+
+If you start start rogue in **wizard mode**, then the `$SEED` environment variable
+may be used to set a specific dungeon number and pseudo-random number seed.
+This will allow you to run specific dungeon, say for debugging purposes.
+For example:
+
+```sh
+SEED=1227897957 rogue ""
+```
+
+**NOTE**: A seed is very likely portable across different systems that
+implement the BSD `random(3)` facility, for rogue release **2026-02-24**
+or later.
 
 When you are in **wizard mode**, you have these special commands available to you:
 
@@ -711,8 +854,6 @@ Finally, when creating a weapon, armor or ring, it will ask:
 > Blessing? (+,-,n)
 
 Enter "+" for a enhanced item, "-" for a reduced item, or "n" for normal item.
-
-**IMPORTANT NOTE**: If you enter **wizard mode** at any time during the game, your score will not be posted to the scoreboard.
 
 
 # Reporting Security Issues
