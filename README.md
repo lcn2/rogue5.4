@@ -184,7 +184,8 @@ Recommendation: noterse
 
 * flush / noflush
 
-If this option is set, running moves will not be displayed until you reach the end of the move.
+If this option is set, typeahead is thrown away after each round of battle.
+This is useful for those who type far ahead, and then watch in dismay as a Bat kills them.
 
 This option saves a bit for both CPU and display time.
 
@@ -194,7 +195,7 @@ Recommendation: flush
 
 * jump / nojump
 
-If this option is set, running moves will not  be  displayed until you reach the end of the move.
+If this option is set, running moves will not be displayed until you reach the end of the move.
 
 This option saves a bit for both CPU and display time.
 
@@ -353,7 +354,7 @@ sudo make install ROGUEDIR=/var/tmp
 
 * Modern C compiler (c17/gnu17 or better)
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
-* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD,  NetBSD curses is likely to work
+* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD, NetBSD curses is likely to work
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
