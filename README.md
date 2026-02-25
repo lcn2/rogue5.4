@@ -351,8 +351,7 @@ the game will place the **Amulet of Yendor** on the deeper levels until you mana
 
 The following table lists the known monsters in the dungeon and their properties:
 
-|        |    monster    | carry  |       |      |  min  | armor |
-| symbol |     name      | chance | flags |  Exp | level | class | damage           |
+| symbol |    monster    |  carry | flags |  Exp |min lvl| armour| damage           |
 |--------|---------------|--------|-------|------|-------|-------|------------------|
 |    A   | aquator       |    0 % | m     |   20 |   5   |   2   | 0x0 / 0x0        |
 |    B   | bat           |    0 % | f     |    1 |   1   |   3   | 1x2              |
@@ -497,7 +496,6 @@ scroll of the same type, you will see the correct scroll name.
 
 When you have a weapon:
 
-|       |       | damage  | damage |                  |
 | index | freq. | wielded | thrown | weapon           |
 |-------|-------|---------|--------|------------------|
 |  n/a  |   n/a |   0x0   |   0x0  | ((no weapon))    |
