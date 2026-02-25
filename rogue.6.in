@@ -89,6 +89,25 @@ Glenn Wichman
 @LOCKFILE@
 .in -0.5i
 .PP
+The rogue lock file is a zero-length file that must be writable by the user.
+It is used to help prevent multiple processes on the local machine from
+writing to the rogue score file at the same time.
+.PP
+If the rogue lock file does not exist, it will be created.
+.PP
+.B Save\ file:
+.PP
+.in +0.5i
+@SAVEFILE@
+.in -0.5i
+.PP
+The rogue save file is created whenever you use the
+.B S
+command to save the game, or if certain signals are successfully caught and
+the "auto save" action is successfully completed.
+.PP
+If the rogue save file does not exist, it will be created.
+.PP
 .B Score\ File:
 .PP
 .in +0.5i
@@ -96,11 +115,20 @@ Glenn Wichman
 @SCOREFILE@
 .in -0.5i
 .PP
-.B Save\ file:
+The rogue score file contains the top rogue games, in terms of gold collected.
+By default, 10 rogue score are saved.
 .PP
-.in +0.5i
-@SAVEFILE@
-.in -0.5i
+The rogue score file must be writable by the user.
+The length of the rogue score file is usually 112 bytes per score slot, so the default
+rogue score file size is 1120 bytes.
+.PP
+Unlike the BSD rogue game on the Vax/pdp, rogue keeps track of top rogue scores,
+no matter how they were played, and no matter if they won the game or not.
+.PP
+If the rogue save file does not exist, it will be created.
+.PP
+If the rogue score file is corrupted, or the format is too old, then
+an error message will be displayed advising that the rogue score file be removed.
 .SH Source Code
 The source code for rogue version 5.4 is available at:
 .PP

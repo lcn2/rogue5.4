@@ -22,17 +22,6 @@ To run rogue after installing:
 /usr/local/bin/install
 ```
 
-**NOTE**: The make variable `${ROGUE_DIR}` is the directory where the rogue
-lock file, rogue score file, and the rogue save file are used and stored.
-The make variable `${ROGUE_DIR}` defaults to your home directory (i.e.,
-`$HOME`).  If you wish to use a different directory, then compile and
-install with a modified `${ROGUE_DIR}`.  For example:
-
-```sh
-make clobber all ROGUE_DIR=/var/tmp
-sudo make install ROGUE_DIR=/var/tmp
-```
-
 
 ### To configure
 
@@ -45,44 +34,6 @@ If your system as issues compiling this code, edit `Makefile` and/or `config.h`.
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
 * [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD,  NetBSD curses is likely to work
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
-
-
-## Compatibility and Source Code Origin
-
-**IMPORTANT NOTE**: This code is reasonably close to the original Rogue
-source that used to generate the Vax/pdp binary. It was distributed on the
-4.3BSD tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
-The gameplay provided by this code is essentially the same.
-
-We call this version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
-
-**IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
-rouge game that distributions such as NetBSD imported from 386BSD.
-The "Public domain rogue" was a reverse engineering attempt of the
-Vax/pdp binary game found on 4.3BSD tapes.  As such, the "Public domain rogue"
-game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
-a fair number of ways.  Moreover, the rogue save file, rogue lock file,
-and rogue score file used by NetBSD rogue are **NOT** compatible.
-
-**IMPORTANT NOTE**: Old rogue save files saved prior to **2026 Feb 14**,
-are **NOT** compatible, as we had to fix some bugs with the rogue
-save/restore code that required the rogue save file format to be changed.
-
-**IMPORTANT NOTE**: Damaged or old rogue score files, modified prior to
-**2026 Feb 11**, might not be compatible.  The game will exit with an ERROR
-if your rogue score file format is too old and/or has been corrupted.
-Remove the damaged or old rogue score file and run the game to rebuild.
-You can use the `scedit` to restore old scores if you wish.
-
-**IMPORTANT NOTE**: While a number of significant bugs have been fixed,
-we are sure that there remain other bugs.  As such, we do **NOT**
-recommend, nor support running rogue setuid/setgid.  We recommend that
-you maintain the `Makefile` default of **NOT** setting the `GROUPOWNER`
-make variable (leave them empty).  While you may need to `sudo(1)` in
-order to install rogue under `/usr/local/bin/`, `/usr/local/share/`,
-and `/usr/local/man/man6/`, you do **NOT** have to run `rogue(6)` with
-any privileges!  Just run `rogue(6)` as yourself and let the game use
-"dot-files" under your home directory.
 
 
 ## To play rogue
@@ -262,6 +213,107 @@ to make it easier for people to contribute [rogue5.4 pull requests](https://gith
 directly to this repo.  Even so, we are greatful to the
 [RoguelikeRestorationProject](https://github.com/RoguelikeRestorationProject)
 for making original code base available.
+
+
+## Rogue files
+
+By default, the rogue stores files in your home (i.e., '${HOME}`) directory:
+
+* ~/.rogue.lck
+
+The rogue lock file is a zero-length file that must be writable by the user.
+It is used to help prevent multiple processes on the local machine from
+writing to the rogue score file at the same time.
+
+If the rogue lock file does not exist, `rogue(6)` will create it.
+
+* ~/.rogue.save
+
+The rogue save file is created whenever you use the "**S**" command to
+save the game, or if certain signals are successfully caught and
+the "auto save" action is successfully completed.
+
+If the rogue save file does not exist, `rogue(6)` will create it.
+
+* ~/.rogue.scr
+
+The rogue score file contains the top rogue games, in terms of gold collected.
+The number of rogue score slots is defined by `NUMSCORES` in `config.h`
+and defaults to 10 top rogue scores.
+
+The rogue score file must be writable by the user.  The length of the
+rogue score file is usually 112 bytes per score slot, so the default
+rogue score file size is 1120 bytes.
+
+Unlike the BSD rogue game on the Vax/pdp, rogue keeps track of top rogue scores,
+no matter how they were played, and no matter if they won the game or not.
+
+If the rogue score file does not exist, `rogue(6)` will create it.
+If the rogue score file is corrupted, or the format is too old, then
+`rogue(6)` will display an error message and recommend removing it.
+
+**IMPORTANT NOTE**: Changing the `NUMSCORES` value will cause rogue score files
+with a different number of slots to become invalid.  A `rogue(6)` compiled
+with a different value will treat the previous rogue score file as if
+it were corrupt.
+
+You may use the `scedit(1)` tool to modify the rogue score file for
+some important reason, such as restoring a lost score.  Use of the `scedit(1)`
+tool to create fake scores is not a nice thing to do.
+
+
+# Changing the rogue directory
+
+The make variable `${ROGUE_DIR}` is the directory where the rogue
+lock file, rogue score file, and the rogue save file are used and stored.
+The make variable `${ROGUE_DIR}` defaults to your home directory (i.e.,
+`$HOME`).  If you wish to use a different directory, then compile and
+install with a modified `${ROGUE_DIR}`.
+
+For example:
+
+```sh
+make clobber all ROGUE_DIR=/var/tmp
+sudo make install ROGUE_DIR=/var/tmp
+```
+
+
+## Compatibility and Source Code Origin
+
+**IMPORTANT NOTE**: This code is reasonably close to the original Rogue
+source that used to generate the Vax/pdp binary. It was distributed on the
+4.3BSD tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
+The gameplay provided by this code is essentially the same.
+
+We call this version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
+
+**IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
+rouge game that distributions such as NetBSD imported from 386BSD.
+The "Public domain rogue" was a reverse engineering attempt of the
+Vax/pdp binary game found on 4.3BSD tapes.  As such, the "Public domain rogue"
+game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
+a fair number of ways.  Moreover, the rogue save file, rogue lock file,
+and rogue score file used by NetBSD rogue are **NOT** compatible.
+
+**IMPORTANT NOTE**: Old rogue save files saved prior to **2026 Feb 14**,
+are **NOT** compatible, as we had to fix some bugs with the rogue
+save/restore code that required the rogue save file format to be changed.
+
+**IMPORTANT NOTE**: Damaged or old rogue score files, modified prior to
+**2026 Feb 11**, might not be compatible.  The game will exit with an ERROR
+if your rogue score file format is too old and/or has been corrupted.
+Remove the damaged or old rogue score file and run the game to rebuild.
+You can use the `scedit` to restore old scores if you wish.
+
+**IMPORTANT NOTE**: While a number of significant bugs have been fixed,
+we are sure that there remain other bugs.  As such, we do **NOT**
+recommend, nor support running rogue setuid/setgid.  We recommend that
+you maintain the `Makefile` default of **NOT** setting the `GROUPOWNER`
+make variable (leave them empty).  While you may need to `sudo(1)` in
+order to install rogue under `/usr/local/bin/`, `/usr/local/share/`,
+and `/usr/local/man/man6/`, you do **NOT** have to run `rogue(6)` with
+any privileges!  Just run `rogue(6)` as yourself and let the game use
+"dot-files" under your home directory.
 
 
 ### Bug reports and Pull Requests welcome

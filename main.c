@@ -48,11 +48,6 @@ main(int argc, char **argv)
      */
     (void) umask(S_IWGRP | S_IWOTH);
 
-    /*
-     * setup signal handling
-     */
-    md_init();
-
 #ifdef MASTER
     /*
      * Check to see if he is a wizard

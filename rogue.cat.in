@@ -49,13 +49,42 @@
 
             @LOCKFILE@
 
-       [1mScore File:[0m
+       The rogue lock file is a zero-length file that must be writable by  the
+       user.   It  is used to help prevent multiple processes on the local ma-
+       chine from writing to the rogue score file at the same time.
 
-            @SCOREFILE@
+       If the rogue lock file does not exist, it will be created.
 
        [1mSave file:[0m
 
             @SAVEFILE@
+
+       The rogue save file is created whenever you use the [1mS [22mcommand  to  save
+       the  game,  or if certain signals are successfully caught and the "auto
+       save" action is successfully completed.
+
+       If the rogue save file does not exist, it will be created.
+
+       [1mScore File:[0m
+
+            @SCOREFILE@
+
+       The rogue score file contains the top rogue games,  in  terms  of  gold
+       collected.  By default, 10 rogue score are saved.
+
+       The  rogue  score file must be writable by the user.  The length of the
+       rogue score file is usually 112 bytes per score slot,  so  the  default
+       rogue score file size is 1120 bytes.
+
+       Unlike  the  BSD  rogue  game  on the Vax/pdp, rogue keeps track of top
+       rogue scores, no matter how they were played, and no matter if they won
+       the game or not.
+
+       If the rogue save file does not exist, it will be created.
+
+       If the rogue score file is corrupted, or the format is too old, then an
+       error message will be displayed advising that the rogue score  file  be
+       removed.
 
 [1mSource Code[0m
        The source code for rogue version 5.4 is available at:
@@ -74,12 +103,12 @@
        comment in the above GitHub repo.  :-)
 
 [1mSEE ALSO[0m
-       Michael C. Toy and Kenneth C. R. C. Arnold, [4mA[24m [4mguide[24m [4mto[24m [4mthe[24m [4mDungeons[24m  [4mof[0m
+       Michael  C. Toy and Kenneth C. R. C. Arnold, [4mA[24m [4mguide[24m [4mto[24m [4mthe[24m [4mDungeons[24m [4mof[0m
        [4mDoom[0m
 
 [1mBUGS[0m
-       Probably  infinite  (although  countably  infinite).  However, that Ice
-       Monsters sometimes transfix you permanently is [4mnot[24m a bug.  It's a  fea-
+       Probably infinite (although countably  infinite).   However,  that  Ice
+       Monsters  sometimes transfix you permanently is [4mnot[24m a bug.  It's a fea-
        ture.
 
 4th Berkeley Distribution         May 6, 1986                         [4mROGUE[24m(6)

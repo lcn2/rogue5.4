@@ -569,6 +569,13 @@ rogue.md: rogue.md.in
 			  -e 's;${AT}SCOREFILE${AT};${ROGUE_DIR}/${SCOREFILE_BASENAME};' \
 			  rogue.md.in > rogue.md
 
+# NOTE: This rule is NOT part of the build of rogue documentation!
+#       We use this rule to form the rogue.cat.in file from the rogue.6.in file.
+#
+form_rogue_cat_in: rogue.6.in
+	${RM} -f rogue.cat.in
+	${GROFF} -Tascii -man rogue.6.in | LC_CTYPE=C ${SED} -e 's/.\x08//g' > rogue.cat.in
+
 
 #################################################
 # .PHONY list of rules that do not create files #

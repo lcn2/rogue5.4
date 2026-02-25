@@ -239,7 +239,7 @@ getltchars(void)
 
 /*
  * setup:
- *	Get starting setup for all games
+ *	Setup signal handlers to auto_save(), and get the terminal setup.
  */
 
 void
@@ -248,7 +248,7 @@ setup(void)
 #ifdef DUMP
     md_onsignal_default();
 #else
-    md_onsignal_autosave();
+    md_onsignal_autosave(); /* most signals that can be caught will save the rogue game */
 #endif
 
 #ifdef CHECKTIME

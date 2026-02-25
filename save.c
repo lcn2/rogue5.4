@@ -115,8 +115,17 @@ gotfile:
 
 /*
  * auto_save:
- *	Automatically save a file.  This is used if a HUP signal is
- *	received
+ *	Automatically save a file.  This is most commonly used with various signals
+ *	are received.
+ *
+ *	The md_onsignal_autosave() in mdport.c, which is called via
+ *	setup() from mach_dep.c, and md_init() from mdport.c.
+ *
+ *	The setup() function is called from main() (short after the
+ *	"just a moment while I dig the dungeon" message a printed,
+ *	and after ncurses setup and data structures are setup) in main.c,
+ *	and from restore() (shortly after data structures are restored
+ *	and ncurses setup) in save.c.
  */
 
 void
