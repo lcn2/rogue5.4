@@ -272,7 +272,8 @@ get_str(void *vopt, WINDOW *win)
     {
 	if (c == -1)
 	    continue;
-	else if (c == erasechar())	/* process erase character */
+	/* Check erase and avoid stty erase vs terminal emulator key conflicts. */
+	else if (c == '\b' || c == 0x7F || c == erasechar())
 	{
 	    if (sp > buf)
 	    {
