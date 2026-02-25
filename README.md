@@ -9,6 +9,10 @@ GitHub repo: [rogue5.4 repo](https://github.com/lcn2/rogue5.4)
 
 ## TL;DR
 
+To configure:
+
+If needed, edit `Makefile` and/or `config.h`.  Most likely you won't need to do so.
+
 To make and install:
 
 ```sh
@@ -19,21 +23,8 @@ sudo make install
 To run rogue after installing:
 
 ```sh
-/usr/local/bin/install
+/usr/local/bin/rogue
 ```
-
-
-### To configure
-
-If your system as issues compiling this code, edit `Makefile` and/or `config.h`.
-
-
-### Dependencies
-
-* Modern C compiler (c17/gnu17 or better)
-* Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
-* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD,  NetBSD curses is likely to work
-* [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
 ## To play rogue
@@ -167,54 +158,6 @@ has completed the goal (won) at least 3 times (without using **wizard mode**) an
 maximum dungeon depth (and successful return to level 0) of 31.
 
 
-## Why yet another rouge repo?
-
-This code is based on the "Rogue like restoration project"'s [rogue5.4](https://github.com/RoguelikeRestorationProject/rogue5.4).
-
-The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above mentioned repo in several important aspects:
-
-* Improved the C source to be able to compile under recent C compilers
-* Fixed several bugs in the rogue code
-* Fixed the code to compile both the `findpw(6)` and `scedit(6)` rouge tools
-* Install the `findpw(6)` and `scedit(6)` rouge tools
-* Removed GNU autoconf complexities replacing it with a simple `Makefile`
-* To configure, simply edit `Makefile` and/or the `config.h` file
-* Fixed `make stddocs` so that the proper configuration values are configured into the documentation
-* Changed the rogue lock filename to `${ROGUE_DIR}/.rogue.lck` (defaults to `.rogue.lck` under your home directory)
-* Changed the rogue save filename to `${ROGUE_DIR}/.rogue.save` (defaults to `.rogue.save` under your home directory)
-* Changed the rogue score filename to `${ROGUE_DIR}/.rogue.scr` (`defaults to .rogue.scr` under your home directory)
-* Does not require use of `chown(1)`, nor `chgrp(1)` by default
-* Fixed cases where creating invalid type of an item in **wizard mode** crashed the game
-* Creating an item in **wizard mode** that does not have a sub-type no longer asks which type of item
-* Added extensive SPOILER section notes in the lower part of this `README.md` file
-* Fixed many buffer overflow bugs, fixed use of un-initialized variables, and fixed memory leak conditions
-* Fixed bugs related to the reading and writing of the score file
-* Detects if the rogue score file is an old incompatible format and/or corrupt
-* If the rogue score file is empty or missing, the code will automatically re-initialize it
-* The top scores are recorded in the rogue score file, regardless of if the game was won or not
-* You may change the `NUMSCORES` value in `config.h` to a value other than 10
-* etc.
-
-
-## Rogue5.4 repo backstory
-
-This [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4)
-was cloned from [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4).
-[Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing `rogue(1)` on the Vax running BSD, wanted to
-port the original game to modern compilers and UNIX-like operating systems
-(such as those that resonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
-
-As the [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4)
-is efficetly a "read-only" archive of the Dump of the original
-[svn r1490](https://github.com/RoguelikeRestorationProject/rogue5.4/commit/9d0dcccc8ec82454bd4d4310f4638985a4726d83),
-[Landon Curt Noll](https://github.com/lcn2) elected to break the form and clone
-[rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4) as a standalone repo
-to make it easier for people to contribute [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls)
-directly to this repo.  Even so, we are greatful to the
-[RoguelikeRestorationProject](https://github.com/RoguelikeRestorationProject)
-for making original code base available.
-
-
 ## Rogue files
 
 By default, the rogue stores files in your home (i.e., '${HOME}`) directory:
@@ -276,6 +219,62 @@ For example:
 make clobber all ROGUE_DIR=/var/tmp
 sudo make install ROGUE_DIR=/var/tmp
 ```
+
+
+### Dependencies
+
+* Modern C compiler (c17/gnu17 or better)
+* Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
+* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD,  NetBSD curses is likely to work
+* [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
+
+
+## Why yet another rouge repo?
+
+This code is based on the "Rogue like restoration project"'s [rogue5.4](https://github.com/RoguelikeRestorationProject/rogue5.4).
+
+The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above mentioned repo in several important aspects:
+
+* Improved the C source to be able to compile under recent C compilers
+* Fixed several bugs in the rogue code
+* Fixed the code to compile both the `findpw(6)` and `scedit(6)` rouge tools
+* Install the `findpw(6)` and `scedit(6)` rouge tools
+* Removed GNU autoconf complexities replacing it with a simple `Makefile`
+* To configure, simply edit `Makefile` and/or the `config.h` file
+* Fixed `make stddocs` so that the proper configuration values are configured into the documentation
+* Changed the rogue lock filename to `${ROGUE_DIR}/.rogue.lck` (defaults to `.rogue.lck` under your home directory)
+* Changed the rogue save filename to `${ROGUE_DIR}/.rogue.save` (defaults to `.rogue.save` under your home directory)
+* Changed the rogue score filename to `${ROGUE_DIR}/.rogue.scr` (`defaults to .rogue.scr` under your home directory)
+* Does not require use of `chown(1)`, nor `chgrp(1)` by default
+* Fixed cases where creating invalid type of an item in **wizard mode** crashed the game
+* Creating an item in **wizard mode** that does not have a sub-type no longer asks which type of item
+* Added extensive SPOILER section notes in the lower part of this `README.md` file
+* Fixed many buffer overflow bugs, fixed use of un-initialized variables, and fixed memory leak conditions
+* Fixed bugs related to the reading and writing of the score file
+* Detects if the rogue score file is an old incompatible format and/or corrupt
+* If the rogue score file is empty or missing, the code will automatically re-initialize it
+* The top scores are recorded in the rogue score file, regardless of if the game was won or not
+* You may change the `NUMSCORES` value in `config.h` to a value other than 10
+* etc.
+
+
+## Rogue5.4 repo backstory
+
+This [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4)
+was cloned from [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4).
+[Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing `rogue(1)` on the Vax running BSD, wanted to
+port the original game to modern compilers and UNIX-like operating systems
+(such as those that resonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
+
+As the [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4)
+is efficetly a "read-only" archive of the Dump of the original
+[svn r1490](https://github.com/RoguelikeRestorationProject/rogue5.4/commit/9d0dcccc8ec82454bd4d4310f4638985a4726d83),
+[Landon Curt Noll](https://github.com/lcn2) elected to break the form and clone
+[rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4) as a standalone repo
+to make it easier for people to contribute [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls)
+directly to this repo.  Even so, we are greatful to the
+[RoguelikeRestorationProject](https://github.com/RoguelikeRestorationProject)
+for making original code base available.
 
 
 ## Compatibility and Source Code Origin
