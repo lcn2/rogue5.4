@@ -78,10 +78,181 @@ and then exit.
 .PP
 For more detailed directions, read the document
 .I "A Guide to the Dungeons of Doom."
-.SH AUTHORS
-Michael C. Toy,
-Kenneth C. R. C. Arnold,
-Glenn Wichman
+.SH OPTIONS
+The
+.B rogue
+game options may be displayed and changed by using the
+.B o
+command.
+.PP
+The option names are:
+.PP
+.TP
+.B terse / noterse
+.sp
+Useful for those who are tired of the sometimes lengthy messages of rogue.
+.sp
+This is a useful option to enable when playing on an historically slow terminal.
+.sp
+Default:
+.B noterse
+.sp
+Recommendation:
+.B noterse
+.PP
+.TP
+.B flush / noflush
+.sp
+If this option is set, typeahead is thrown away after each round of battle.
+.sp
+This is useful for those who type far ahead, and then watch in dismay as a Bat kills them.
+.sp
+Default:
+.B noflush
+.sp
+Recommendation:
+.B flush
+.TP
+.B jump / nojump
+.sp
+If this option is set, running moves will not be displayed until you reach the end of the move.
+.sp
+This is a useful option to enable when playing on an historically slow terminal.
+.sp
+Default:
+.B nojump
+.sp
+Recommendation:
+.B jump
+.TP
+.B seefloor / seefloor
+.sp
+Display the floor around you on the screen as you move through dark rooms.
+.sp
+This is a useful option to disable when playing on an historically slow terminal.
+.sp
+Default:
+.B seefloor
+.sp
+Recommendation:
+.B seefloor
+.TP
+.B passgo / nopassgo
+.sp
+Follow turnings in passageways.
+If you run in a passage and you run into stone or a wall, rogue will see if it can turn to the right or left.
+If it can only turn one way, it will turn that way. If it can turn either or neither, it will stop.
+.sp
+This algorithm can sometimes lead to slightly confusing occurrences to some people, which is why it defaults to false.
+.sp
+Default:
+.B nopassgo
+.sp
+Recommendation:
+.B passgo
+.TP
+.B tombstone / notombstone
+.sp
+Print out the tombstone at the end if you get killed.
+.sp
+This is a useful option to disable when playing on an historically slow terminal.
+.sp
+Default:
+.B tombstone
+.sp
+Recommendation:
+.B tombstone
+.TP
+.BR inven \ style
+.sp
+Set the inventory style to one of:
+.BR overwrite ,
+.BR slow ,
+or
+.BR clear .
+.sp
+With
+.BR overwrite ,
+the top lines of the map are overwritten with the list when inventory is requested,
+or when "Which item do you wish to ...?" questions are answered with a
+.B *
+(asterisk).
+However, if the list is longer than a screenful, the screen is cleared.
+.sp
+With
+.BR slow ,
+lists are displayed one item at a time on the top of the screen.
+.sp
+With
+.BR clear ,
+the screen is cleared, the list is displayed, and then the dungeon level is re-displayed.
+.sp
+Default:
+.B clear
+.sp
+Recommendation:
+.B overwrite
+.TP
+.BR name \ rogue-name
+.sp
+This is the name of your character, as displayed in the rogue score file.
+.sp
+Default:
+.B <<your account name>>
+.sp
+Recommendation:
+.B <<leave as default>>
+.TP
+.BR fruit \ fruit-name
+.sp
+This should hold the name of a fruit that you enjoy eating.
+It is basically a whimsy that rogue uses in a couple of places.
+.sp
+Default:
+.B slime-mold
+.sp
+Recommendation:
+.B apple
+.TP
+.BR file \ rogue-save-path
+.sp
+The default file name for saving the game.
+.sp
+Default:
+.B ~/.rogue.save
+.sp
+Recommendation:
+.B <<leave as default>>
+.SH ENVIRONMENT
+The following environment variables affect the execution of
+.BR $ROGUEOPTS :
+The
+.B $ROGUEOPTS
+environment variable may be used to change the
+.B rogue
+at startup, rather than having to use the
+.B o
+command each time you play.
+.sp
+The
+.B $ROGUEOPTS
+environment variable would be a string that is a series
+of comma separated values, with booleans being stated as "name" (true)
+or "noname" (false), and strings being "name=....", with the string
+being defined up to a comma or the end of the entire option string.
+.sp
+As an example, here is a recommended
+.B $ROGUEOPTS
+environment value to set in your environment:
+.sp
+.in +0.5i
+export ROGUEOPTS="noterse,flush,jump,seefloor,passgo,tombstone,inven=overwrite,fruit=apple"
+.in -0.5i
+.PP
+If the
+.B $ROGUEOPTS
+environment value is missing or empty, the default options will be used.
+Unknown options are silently ignored.
 .SH FILES
 .B Lock\ File:
 .PP
@@ -156,6 +327,10 @@ Michael C. Toy
 and
 Kenneth C. R. C. Arnold,
 .I "A guide to the Dungeons of Doom"
+.SH AUTHORS
+Michael C. Toy,
+Kenneth C. R. C. Arnold,
+Glenn Wichman
 .SH BUGS
 .PP
 Probably infinite

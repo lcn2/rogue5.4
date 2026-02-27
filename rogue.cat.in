@@ -41,16 +41,157 @@
        For more detailed directions, read the document [4mA[24m [4mGuide[24m [4mto[24m [4mthe[24m [4mDungeons[0m
        [4mof[24m [4mDoom.[0m
 
-[1mAUTHORS[0m
-       Michael C. Toy, Kenneth C. R. C. Arnold, Glenn Wichman
+[1mOPTIONS[0m
+       The [1mrogue [22mgame options may be displayed and changed by using the [1mo [22mcom-
+       mand.
+
+       The option names are:
+
+       [1mterse / noterse[0m
+
+              Useful for those who are tired of the sometimes lengthy messages
+              of rogue.
+
+              This is a useful option to enable when playing  on  an  histori-
+              cally slow terminal.
+
+              Default: [1mnoterse[0m
+
+              Recommendation: [1mnoterse[0m
+
+       [1mflush / noflush[0m
+
+              If this option is set, typeahead is thrown away after each round
+              of battle.
+
+              This  is  useful for those who type far ahead, and then watch in
+              dismay as a Bat kills them.
+
+              Default: [1mnoflush[0m
+
+              Recommendation: [1mflush[0m
+
+       [1mjump / nojump[0m
+
+              If this option is set, running moves will not be displayed until
+              you reach the end of the move.
+
+              This is a useful option to enable when playing  on  an  histori-
+              cally slow terminal.
+
+              Default: [1mnojump[0m
+
+              Recommendation: [1mjump[0m
+
+       [1mseefloor / seefloor[0m
+
+              Display  the  floor around you on the screen as you move through
+              dark rooms.
+
+              This is a useful option to disable when playing on  an  histori-
+              cally slow terminal.
+
+              Default: [1mseefloor[0m
+
+              Recommendation: [1mseefloor[0m
+
+       [1mpassgo / nopassgo[0m
+
+              Follow turnings in passageways.  If you run in a passage and you
+              run  into  stone or a wall, rogue will see if it can turn to the
+              right or left.  If it can only turn one way, it will  turn  that
+              way. If it can turn either or neither, it will stop.
+
+              This  algorithm  can sometimes lead to slightly confusing occur-
+              rences to some people, which is why it defaults to false.
+
+              Default: [1mnopassgo[0m
+
+              Recommendation: [1mpassgo[0m
+
+       [1mtombstone / notombstone[0m
+
+              Print out the tombstone at the end if you get killed.
+
+              This is a useful option to disable when playing on  an  histori-
+              cally slow terminal.
+
+              Default: [1mtombstone[0m
+
+              Recommendation: [1mtombstone[0m
+
+       [1minven [22mstyle
+
+              Set the inventory style to one of: [1moverwrite[22m, [1mslow[22m, or [1mclear[22m.
+
+              With  [1moverwrite[22m,  the  top lines of the map are overwritten with
+              the list when inventory is requested, or when "Which item do you
+              wish to ...?" questions are answered with a [1m* [22m(asterisk).   How-
+              ever,  if  the  list  is  longer than a screenful, the screen is
+              cleared.
+
+              With [1mslow[22m, lists are displayed one item at a time on the top  of
+              the screen.
+
+              With  [1mclear[22m,  the  screen is cleared, the list is displayed, and
+              then the dungeon level is re-displayed.
+
+              Default: [1mclear[0m
+
+              Recommendation: [1moverwrite[0m
+
+       [1mname [22mrogue-name
+
+              This is the name of your character, as displayed  in  the  rogue
+              score file.
+
+              Default: [1m<<your account name>>[0m
+
+              Recommendation: [1m<<leave as default>>[0m
+
+       [1mfruit [22mfruit-name
+
+              This  should hold the name of a fruit that you enjoy eating.  It
+              is basically a whimsy that rogue uses in a couple of places.
+
+              Default: [1mslime-mold[0m
+
+              Recommendation: [1mapple[0m
+
+       [1mfile [22mrogue-save-path
+
+              The default file name for saving the game.
+
+              Default: [1m~/.rogue.save[0m
+
+              Recommendation: [1m<<leave as default>>[0m
+
+[1mENVIRONMENT[0m
+       The following environment variables affect the execution of [1m$ROGUEOPTS[22m:
+       The [1m$ROGUEOPTS [22menvironment variable may be used to change the [1mrogue  [22mat
+       startup, rather than having to use the [1mo [22mcommand each time you play.
+
+       The  [1m$ROGUEOPTS [22menvironment variable would be a string that is a series
+       of comma separated values, with booleans being stated as "name"  (true)
+       or "noname" (false), and strings being "name=....", with the string be-
+       ing defined up to a comma or the end of the entire option string.
+
+       As  an  example,  here is a recommended [1m$ROGUEOPTS [22menvironment value to
+       set in your environment:
+
+            export ROGUEOPTS="noterse,flush,jump,seefloor,passgo,tombstone,in-
+            ven=overwrite,fruit=apple"
+
+       If the [1m$ROGUEOPTS [22menvironment value is missing or  empty,  the  default
+       options will be used.  Unknown options are silently ignored.
 
 [1mFILES[0m
        [1mLock File:[0m
 
             @LOCKFILE@
 
-       The rogue lock file is a zero-length file that must be writable by  the
-       user.   It  is used to help prevent multiple processes on the local ma-
+       The  rogue lock file is a zero-length file that must be writable by the
+       user.  It is used to help prevent multiple processes on the  local  ma-
        chine from writing to the rogue score file at the same time.
 
        If the rogue lock file does not exist, it will be created.
@@ -59,8 +200,8 @@
 
             @SAVEFILE@
 
-       The rogue save file is created whenever you use the [1mS [22mcommand  to  save
-       the  game,  or if certain signals are successfully caught and the "auto
+       The  rogue  save file is created whenever you use the [1mS [22mcommand to save
+       the game, or if certain signals are successfully caught and  the  "auto
        save" action is successfully completed.
 
        If the rogue save file does not exist, it will be created.
@@ -69,21 +210,21 @@
 
             @SCOREFILE@
 
-       The rogue score file contains the top rogue games,  in  terms  of  gold
+       The  rogue  score  file  contains the top rogue games, in terms of gold
        collected.  By default, 10 rogue score are saved.
 
-       The  rogue  score file must be writable by the user.  The length of the
-       rogue score file is usually 112 bytes per score slot,  so  the  default
+       The rogue score file must be writable by the user.  The length  of  the
+       rogue  score  file  is usually 112 bytes per score slot, so the default
        rogue score file size is 1120 bytes.
 
-       Unlike  the  BSD  rogue  game  on the Vax/pdp, rogue keeps track of top
+       Unlike the BSD rogue game on the Vax/pdp,  rogue  keeps  track  of  top
        rogue scores, no matter how they were played, and no matter if they won
        the game or not.
 
        If the rogue save file does not exist, it will be created.
 
        If the rogue score file is corrupted, or the format is too old, then an
-       error message will be displayed advising that the rogue score  file  be
+       error  message  will be displayed advising that the rogue score file be
        removed.
 
 [1mSource Code[0m
@@ -103,12 +244,15 @@
        comment in the above GitHub repo.  :-)
 
 [1mSEE ALSO[0m
-       Michael  C. Toy and Kenneth C. R. C. Arnold, [4mA[24m [4mguide[24m [4mto[24m [4mthe[24m [4mDungeons[24m [4mof[0m
+       Michael C. Toy and Kenneth C. R. C. Arnold, [4mA[24m [4mguide[24m [4mto[24m [4mthe[24m [4mDungeons[24m  [4mof[0m
        [4mDoom[0m
 
+[1mAUTHORS[0m
+       Michael C. Toy, Kenneth C. R. C. Arnold, Glenn Wichman
+
 [1mBUGS[0m
-       Probably infinite (although countably  infinite).   However,  that  Ice
-       Monsters  sometimes transfix you permanently is [4mnot[24m a bug.  It's a fea-
+       Probably  infinite  (although  countably  infinite).  However, that Ice
+       Monsters sometimes transfix you permanently is [4mnot[24m a bug.  It's a  fea-
        ture.
 
 4th Berkeley Distribution         May 6, 1986                         [4mROGUE[24m(6)

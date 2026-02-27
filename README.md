@@ -185,9 +185,8 @@ Recommendation: noterse
 * flush / noflush
 
 If this option is set, typeahead is thrown away after each round of battle.
-This is useful for those who type far ahead, and then watch in dismay as a Bat kills them.
 
-This option saves a bit for both CPU and display time.
+This is useful for those who type far ahead, and then watch in dismay as a Bat kills them.
 
 Default: noflush
 
@@ -197,7 +196,7 @@ Recommendation: flush
 
 If this option is set, running moves will not be displayed until you reach the end of the move.
 
-This option saves a bit for both CPU and display time.
+This is a useful option to enable when playing on an historically slow terminal.
 
 Default: nojump
 
@@ -219,8 +218,7 @@ Follow turnings in passageways.
 If you run in a passage and you run into stone or a wall, rogue will see if it can turn to the right or left.
 If it can only turn one way, it will turn that way. If it can turn either or neither, it will stop.
 
-This algorithm can sometimes lead to slightly confusing occurrences to some people,
-which is why it defaults to false.
+This algorithm can sometimes lead to slightly confusing occurrences to some people, which is why it defaults to false.
 
 Default: nopassgo
 
@@ -283,7 +281,7 @@ As an example, here is a recommended `$ROGUEOPTS` environment value to set in yo
 export ROGUEOPTS="noterse,flush,jump,seefloor,passgo,tombstone,inven=overwrite,fruit=apple"
 ```
 
-If `$ROGUEOPTS` environment variable is missing or empty, the default
+If the `$ROGUEOPTS` environment variable is missing or empty, the default
 options will be used.  Unknown options are silently ignored.
 
 
