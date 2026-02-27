@@ -64,7 +64,7 @@ main(int argc, char **argv)
 #endif
 
     /*
-     * form critical paths
+     * form default paths
      */
     form_home();
     form_lock_path();
@@ -76,15 +76,90 @@ main(int argc, char **argv)
      */
     memset(whoami, 0, sizeof(whoami)); /* paranoia */
     env = getenv("ROGUEOPTS");
-    if (env != NULL)
+    if (env != NULL) {
+	/*
+	 * parse ROGUEOPTS
+	 */
 	parse_opts(env);
-    if (env == NULL || whoami[0] == '\0')
-        strucpy(whoami, md_getusername(), strlen(md_getusername()));
+    }
+
+    /*
+     * correct any lack of a rogue name (whoami[])
+     *
+     * The whoami[] string starts out as an empty string.
+     * However, the parse_opts() could fail to set the rogue name, or the parse_opts()
+     * could set the rogue name (via the "name" option) to an empty string.
+     *
+     * In such a case, we will use the login name of the current user, or
+     * in case that login name is empty, then rogue name will be "nobody".
+     */
+    if (whoami[0] == '\0') {
+	char *username;
+
+	username = md_getusername();
+	if (username == NULL || username[0] == '\0') {
+	    username = "nobody"; /* paranoia */
+	}
+        strlcpy(whoami, username, MAX_USERNAME);
+    }
+
+    /*
+     * correct any lack of rogue lock path (lock_path[])
+     *
+     * The lock_path[] string is set by the form_lock_path() function.
+     * However, the parse_opts() could fail to set the rogue lock path, or
+     * the parse_opts() could set the rogue name (via the "lock" option) to an empty string.
+     *
+     * In such a case, we will use the LOCKPATH string constant.
+     *
+     * NOTE: The form_lock_path() function will NOT return if LOCKPATH is an empty string.
+     */
+    if (lock_path[0] == '\0') {
+	strlcpy(lock_path, LOCKPATH, MAXSTR); /* paranoia */
+    }
+
+    /*
+     * correct any lack of rogue save path (file_name[])
+     *
+     * The file_name[] string is set by the form_save_path() function.
+     * However, the parse_opts() could fail to set the rogue save path, or
+     * the parse_opts() could set the rogue name (via the "file" option) to an empty string.
+     *
+     * In such a case, we will use the SAVEPATH string constant.
+     *
+     * NOTE: The form_save_path() function will NOT return if SAVEPATH is an empty string.
+     */
+    if (file_name[0] == '\0') {
+	strlcpy(file_name, SAVEPATH, MAXSTR); /* paranoia */
+    }
+
+    /*
+     * correct any lack of rogue score path (score_path[])
+     *
+     * The file_name[] string is set by the form_score_path() function.
+     * However, the parse_opts() could fail to set the rogue score path, or
+     * the parse_opts() could set the rogue name (via the "score" option) to an empty string.
+     *
+     * In such a case, we will use the SCOREPATH string constant.
+     *
+     * NOTE: The form_score_path() function will NOT return if SCOREPATH is an empty string.
+     */
+    if (score_path[0] == '\0') {
+	strlcpy(score_path, SCOREPATH, MAXSTR); /* paranoia */
+    }
+
+    /*
+     * disable score file use if starting out in wizard mode
+     */
 #ifdef MASTER
     if (wizard) {
 	noscore = TRUE;
     }
 #endif
+
+    /*
+     * determine dungeon number
+     */
     memset(&tp, 0, sizeof(tp));
     if (gettimeofday(&tp, NULL) < 0) {
 	dnum = time(NULL);
@@ -95,6 +170,9 @@ main(int argc, char **argv)
     dnum += (unsigned int)md_getuid();
 #ifdef MASTER
     if (wizard) {
+	/*
+	 * wizard's can use $SEED to force a given dungeon number
+	 */
 	env = getenv("SEED");
 	if (env != NULL) {
 	    dnum = (unsigned int)strtol(env, NULL, 0);

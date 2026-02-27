@@ -179,7 +179,7 @@ restore(const char *file)
     int ret = 0;
 
     if (strcmp(file, "-r") == 0) {
-	file = SAVEPATH;
+	file = file_name;
     }
     if (strlen(file) >= MAXSTR) {
 	printf("Sorry, the rogue save file path is too long.\n");
@@ -278,8 +278,10 @@ restore(const char *file)
 
     md_tstpresume();
 
-    memset(file_name, 0, sizeof(file_name)); /* paranoia */
-    strlcpy(file_name, file, MAXSTR);
+    if (strcmp(file_name, file) != 0) {
+	memset(file_name, 0, sizeof(file_name)); /* paranoia */
+	strlcpy(file_name, file, MAXSTR);
+    }
     file_name[MAXSTR] = '\0'; /* paranoia */
     clearok(curscr, TRUE);
     srand(md_getpid());

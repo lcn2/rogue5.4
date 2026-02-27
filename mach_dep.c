@@ -571,6 +571,11 @@ form_lock_path(void)
      */
     memset(lock_path, 0, sizeof(lock_path)); /* paranoia */
     strlcpy(lock_path, LOCKPATH, MAXSTR);
+    if (lock_path[0] == '\0') { /* paranoia */
+	printf("ERROR: LOCKPATH is an empty string!\n");
+	fflush(stdout);
+	exit(1);
+    }
     lock_path[MAXSTR] = '\0'; /* paranoia */
     return;
 }
@@ -595,6 +600,11 @@ form_save_path(void)
      */
     memset(file_name, 0, sizeof(file_name)); /* paranoia */
     strlcpy(file_name, SAVEPATH, MAXSTR);
+    if (file_name[0] == '\0') { /* paranoia */
+	printf("ERROR: SAVEPATH is an empty string!\n");
+	fflush(stdout);
+	exit(1);
+    }
     file_name[MAXSTR] = '\0'; /* paranoia */
     return;
 }
@@ -619,6 +629,11 @@ form_score_path(void)
      */
     memset(score_path, 0, sizeof(score_path)); /* paranoia */
     strlcpy(score_path, SCOREPATH, MAXSTR);
+    if (score_path[0] == '\0') { /* paranoia */
+	printf("ERROR: SCOREPATH is an empty string!\n");
+	fflush(stdout);
+	exit(1);
+    }
     score_path[MAXSTR] = '\0'; /* paranoia */
     return;
 }

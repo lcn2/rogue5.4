@@ -361,10 +361,26 @@ scedit: ${OBJS} scmisc.o scedit.o
 
 hsrc: ${BUILD_HSRC}
 
+# NOTE: We check for an empty ${ROGUEDIR}, ${LOCKFILE_BASENAME}, ${SAVEFILE_BASENAME}, or ${SCOREFILE_BASENAME}
+# 	as a paranoia check here because the modern_curses.h MUST be constructed while compiling rogue.
+# 	The modern_curses.h file doesn't need these make variables, we simply test them here as a convenience.
+#
 modern_curses.h: ${MAKE_FILE}
 	${Q} if [[ -z "${ROGUEDIR}" ]]; then \
 	    echo 'ERROR: The ROGUEDIR make variable CANNOT be empty!!!' ; \
 	    exit 1 ; \
+	fi
+	${Q} if [[ -z "${LOCKFILE_BASENAME}" ]]; then \
+	    echo 'ERROR: The LOCKFILE_BASENAME make variable CANNOT be empty!!!' ; \
+	    exit 2 ; \
+	fi
+	${Q} if [[ -z "${SAVEFILE_BASENAME}" ]]; then \
+	    echo 'ERROR: The SAVEFILE_BASENAME make variable CANNOT be empty!!!' ; \
+	    exit 3 ; \
+	fi
+	${Q} if [[ -z "${SCOREFILE_BASENAME}" ]]; then \
+	    echo 'ERROR: The SCOREFILE_BASENAME make variable CANNOT be empty!!!' ; \
+	    exit 4 ; \
 	fi
 	${Q} ${RM} -f modern_curses.o modern_curses $@
 	${H} echo 'forming $@'

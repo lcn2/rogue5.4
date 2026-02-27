@@ -1,5 +1,5 @@
 .\"
-.\" @(#)rogue.6	6.2 (Berkeley) 5/6/86
+.\" @(#)rogue.5.4.5
 .\"
 .\" Rogue: Exploring the Dungeons of Doom
 .\" Copyright (C) 1980-1983, 1985, 1986 Michael Toy, Ken Arnold and Glenn Wichman
@@ -7,7 +7,7 @@
 .\"
 .\" See the file LICENSE for full copyright and licensing information.
 .\"
-.TH ROGUE 6 "May 6, 1986"
+.TH ROGUE 6 "Feb 27, 2026"
 .UC 4
 .SH NAME
 rogue \- Exploring The Dungeons of Doom
@@ -125,7 +125,7 @@ Default:
 Recommendation:
 .B jump
 .TP
-.B seefloor / seefloor
+.B seefloor / noseefloor
 .sp
 Display the floor around you on the screen as you move through dark rooms.
 .sp
@@ -163,7 +163,7 @@ Default:
 Recommendation:
 .B tombstone
 .TP
-.BR inven \ style
+.BR inven =style
 .sp
 Set the inventory style to one of:
 .BR overwrite ,
@@ -193,7 +193,7 @@ Default:
 Recommendation:
 .B overwrite
 .TP
-.BR name \ rogue-name
+.BR name =rogue-name
 .sp
 This is the name of your character, as displayed in the rogue score file.
 .sp
@@ -203,7 +203,7 @@ Default:
 Recommendation:
 .B <<leave as default>>
 .TP
-.BR fruit \ fruit-name
+.BR fruit =fruit-name
 .sp
 This should hold the name of a fruit that you enjoy eating.
 It is basically a whimsy that rogue uses in a couple of places.
@@ -214,12 +214,32 @@ Default:
 Recommendation:
 .B apple
 .TP
-.BR file \ rogue-save-path
+.BR file =rogue-save-path
 .sp
 The default file name for saving the game.
 .sp
 Default:
 .B ~/.rogue.save
+.sp
+Recommendation:
+.B <<leave as default>>
+.TP
+.BR score =rogue-score-path
+.sp
+The path of the rogue score file.
+.sp
+Default:
+.B ~/.rogue.scr
+.sp
+Recommendation:
+.B <<leave as default>>
+.TP
+.BR lock =rogue-lock-path
+.sp
+The rogue lock file used to protect the rogue score file.
+.sp
+Default:
+.B ~/.rogue.lck
 .sp
 Recommendation:
 .B <<leave as default>>
@@ -264,7 +284,8 @@ The rogue lock file is a zero-length file that must be writable by the user.
 It is used to help prevent multiple processes on the local machine from
 writing to the rogue score file at the same time.
 .PP
-If the rogue lock file does not exist, it will be created.
+If the rogue lock file does not exist, the lock file will created when
+updating the rogue score file.
 .PP
 .B Save\ file:
 .PP
@@ -277,7 +298,9 @@ The rogue save file is created whenever you use the
 command to save the game, or if certain signals are successfully caught and
 the "auto save" action is successfully completed.
 .PP
-If the rogue save file does not exist, it will be created.
+A rogue save file is not guaranteed to restore in a different system.
+.PP
+If the rogue save file does not exist, it will be created when a game is saved.
 .PP
 .B Score\ File:
 .PP
@@ -290,13 +313,16 @@ The rogue score file contains the top rogue games, in terms of gold collected.
 By default, 10 rogue score are saved.
 .PP
 The rogue score file must be writable by the user.
+.PP
 The length of the rogue score file is usually 112 bytes per score slot, so the default
 rogue score file size is 1120 bytes.
 .PP
 Unlike the BSD rogue game on the Vax/pdp, rogue keeps track of top rogue scores,
 no matter how they were played, and no matter if they won the game or not.
 .PP
-If the rogue save file does not exist, it will be created.
+If the rogue score file does not exist,
+.B rogue
+will create it.
 .PP
 If the rogue score file is corrupted, or the format is too old, then
 an error message will be displayed advising that the rogue score file be removed.

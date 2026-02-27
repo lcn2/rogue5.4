@@ -66,7 +66,11 @@ static const OPTION	optlist[] = {
     {"fruit",	 "Fruit",
 		 fruit,		put_str,	get_str		},
     {"file",	 "Save file",
-		 file_name,	put_str,	get_str		}
+		 file_name,	put_str,	get_str		},
+    {"score",	 "Score file",
+		 score_path,	put_str,	get_str		},
+    {"lock",	 "Lock file",
+		 lock_path,	put_str,	get_str		}
 };
 
 /*

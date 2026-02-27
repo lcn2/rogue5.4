@@ -194,7 +194,7 @@ Default: nojump
 
 Recommendation: jump
 
-* seefloor / seefloor
+* seefloor / noseefloor
 
 Display the floor around you on the screen as you move through dark rooms.
 
@@ -226,7 +226,7 @@ Default: tombstone
 
 Recommendation: tombstone
 
-* inven
+* inven=style
 
 Set the inventory style to one of "overwrite", "slow", or "clear".
 
@@ -242,7 +242,7 @@ Default: clear
 
 Recommendation: overwrite
 
-* name
+* name=rogue-name
 
 This is the name of your character, as displayed in the rogue score file.
 
@@ -250,7 +250,7 @@ Default: <<Your account name>>
 
 Recommendation: <<leave as default>>
 
-* fruit
+* fruit=fruit-name
 
 This should hold the name of a fruit that you enjoy eating.
 It is basically a whimsy that rogue uses in a couple of places.
@@ -259,11 +259,27 @@ Default: slime-mold
 
 Recommendation: apple
 
-* file
+* file=rogue-save-path
 
 The default file name for saving the game.
 
 Default: ~/.rogue.save
+
+Recommendation: <<leave as default>>
+
+* score=rogue-score-path
+
+The path of the rogue score file.
+
+Default: ~/.rogue.scr
+
+Recommendation: <<leave as default>>
+
+* lock=rogue-lock-path
+
+The rogue lock file used to protect the rogue score file.
+
+Default: ~/.rogue.lck
 
 Recommendation: <<leave as default>>
 
@@ -298,7 +314,8 @@ The rogue lock file is a zero-length file that must be writable by the user.
 It is used to help prevent multiple processes on the local machine from
 writing to the rogue score file at the same time.
 
-If the rogue lock file does not exist, `rogue(6)` will create it.
+If the rogue lock file does not exist, the lock file will created when
+updating the rogue score file.
 
 * ~/.rogue.save
 
@@ -306,7 +323,9 @@ The rogue save file is created whenever you use the "**S**" command to
 save the game, or if certain signals are successfully caught and
 the "auto save" action is successfully completed.
 
-If the rogue save file does not exist, `rogue(6)` will create it.
+A rogue save file is not guaranteed to restore in a different system.
+
+If the rogue save file does not exist, `rogue(6)` will create it a game is saved.
 
 * ~/.rogue.scr
 
@@ -314,14 +333,16 @@ The rogue score file contains the top rogue games, in terms of gold collected.
 The number of rogue score slots is defined by `NUMSCORES` in `config.h`
 and defaults to 10 top rogue scores.
 
-The rogue score file must be writable by the user.  The length of the
-rogue score file is usually 112 bytes per score slot, so the default
-rogue score file size is 1120 bytes.
+The rogue score file must be writable by the user.
+
+The length of the rogue score file is usually 112 bytes per score slot,
+so the default rogue score file size is 1120 bytes.
 
 Unlike the BSD rogue game on the Vax/pdp, rogue keeps track of top rogue scores,
 no matter how they were played, and no matter if they won the game or not.
 
 If the rogue score file does not exist, `rogue(6)` will create it.
+
 If the rogue score file is corrupted, or the format is too old, then
 `rogue(6)` will display an error message and recommend removing it.
 
@@ -366,7 +387,7 @@ This code is based on the "Rogue like restoration project"'s [rogue5.4](https://
 The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above mentioned repo in several important aspects:
 
 * Improved the C source to be able to compile under recent C compilers
-* Fixed several bugs in the rogue code
+* Fixed many bugs in the rogue code
 * Fixed the code to compile both the `findpw(6)` and `scedit(6)` rouge tools
 * Install the `findpw(6)` and `scedit(6)` rouge tools
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
@@ -385,7 +406,18 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * If the rogue score file is empty or missing, the code will automatically re-initialize it
 * The top scores are recorded in the rogue score file, regardless of if the game was won or not
 * You may change the `NUMSCORES` value in `config.h` to a value other than 10
+* By default, `rogue(6)` is **NOT** installed setguid (`${GROUPOWNER}`, by default, is empty)
 * etc.
+
+**IMPORTANT NOTE**: While a number of significant bugs have been fixed,
+we are sure that there remain other bugs.  As such, we do **NOT**
+recommend, nor support running rogue setuid/setgid.  We recommend that
+you maintain the `Makefile` default of **NOT** setting the `GROUPOWNER`
+make variable (leave them empty).  While you may need to `sudo(1)` in
+order to install rogue under `/usr/local/bin/`, `/usr/local/share/`,
+and `/usr/local/man/man6/`, you do **NOT** have to run `rogue(6)` with
+any privileges!  Just run `rogue(6)` as yourself and let the game use
+"dot-files" under your home directory.
 
 
 ## Rogue5.4 repo backstory
@@ -406,15 +438,15 @@ directly to this repo.  Even so, we are greatful to the
 [RoguelikeRestorationProject](https://github.com/RoguelikeRestorationProject)
 for making original code base available.
 
-
-## Compatibility and Source Code Origin
-
 **IMPORTANT NOTE**: This code is reasonably close to the original Rogue
 source that used to generate the Vax/pdp binary. It was distributed on the
 4.3BSD tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
 The gameplay provided by this code is essentially the same.
 
 We call this version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
+
+
+## Compatibility
 
 **IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
 rouge game that distributions such as NetBSD imported from 386BSD.
@@ -424,25 +456,20 @@ game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
 a fair number of ways.  Moreover, the rogue save file, rogue lock file,
 and rogue score file used by NetBSD rogue are **NOT** compatible.
 
-**IMPORTANT NOTE**: Old rogue save files saved prior to **2026 Feb 14**,
+**IMPORTANT NOTE**: Old rogue save files saved prior to **2026 Feb 25**,
 are **NOT** compatible, as we had to fix some bugs with the rogue
 save/restore code that required the rogue save file format to be changed.
+
+**IMPORTANT NOTE**: A rogue save file is not guaranteed to restore in a different system.
+Among the many reasons are such diverse reasons such as differences in CPU
+architectures, a diffent byte order, C integer size differences, and the whim
+of a C compiler.
 
 **IMPORTANT NOTE**: Damaged or old rogue score files, modified prior to
 **2026 Feb 11**, might not be compatible.  The game will exit with an ERROR
 if your rogue score file format is too old and/or has been corrupted.
 Remove the damaged or old rogue score file and run the game to rebuild.
 You can use the `scedit` to restore old scores if you wish.
-
-**IMPORTANT NOTE**: While a number of significant bugs have been fixed,
-we are sure that there remain other bugs.  As such, we do **NOT**
-recommend, nor support running rogue setuid/setgid.  We recommend that
-you maintain the `Makefile` default of **NOT** setting the `GROUPOWNER`
-make variable (leave them empty).  While you may need to `sudo(1)` in
-order to install rogue under `/usr/local/bin/`, `/usr/local/share/`,
-and `/usr/local/man/man6/`, you do **NOT** have to run `rogue(6)` with
-any privileges!  Just run `rogue(6)` as yourself and let the game use
-"dot-files" under your home directory.
 
 
 ### Bug reports and Pull Requests welcome
