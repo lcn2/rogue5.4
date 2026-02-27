@@ -1,8 +1,8 @@
 # rogue 5.4
 
-Rogue: Exploring the Dungeons of Doom version 5.4
+Rogue: Exploring the Dungeons of Doom version 5.4.5
 
-This rogue plays like the original Vax/pdp binary that was distributed on the 4.3BSD tapes.
+This rogue plays like the original Vax binary that was distributed on the BSD 4.3 Reno tapes.
 
 GitHub repo: [rogue5.4 repo](https://github.com/lcn2/rogue5.4)
 
@@ -338,7 +338,7 @@ The rogue score file must be writable by the user.
 The length of the rogue score file is usually 112 bytes per score slot,
 so the default rogue score file size is 1120 bytes.
 
-Unlike the BSD rogue game on the Vax/pdp, rogue keeps track of top rogue scores,
+Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue scores,
 no matter how they were played, and no matter if they won the game or not.
 
 If the rogue score file does not exist, `rogue(6)` will create it.
@@ -439,11 +439,11 @@ directly to this repo.  Even so, we are greatful to the
 for making original code base available.
 
 **IMPORTANT NOTE**: This code is reasonably close to the original Rogue
-source that used to generate the Vax/pdp binary. It was distributed on the
-4.3BSD tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
+source that used to generate the Vax binary. It was distributed on the
+4.3 BSD Reno tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
 The gameplay provided by this code is essentially the same.
 
-We call this version 5.4.5 in order to distinguish it from older, and likely more buggy, version 5.4.4 code.
+We call this version 5.4.5 in order to distinguish it from older, and much more buggy, version 5.4.4 code.
 
 
 ## Compatibility
@@ -451,7 +451,7 @@ We call this version 5.4.5 in order to distinguish it from older, and likely mor
 **IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
 rogue game that distributions such as NetBSD imported from 386BSD.
 The "Public domain rogue" was a reverse engineering attempt of the
-Vax/pdp binary game found on 4.3BSD tapes.  As such, the "Public domain rogue"
+Vax binary game found on BSD 4.3 Reno tapes.  As such, the "Public domain rogue"
 game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
 a fair number of ways.  Moreover, the rogue save file, rogue lock file,
 and rogue score file used by NetBSD rogue are **NOT** compatible.
@@ -460,9 +460,9 @@ and rogue score file used by NetBSD rogue are **NOT** compatible.
 are **NOT** compatible, as we had to fix some bugs with the rogue
 save/restore code that required a change in rogue save file format.
 
-**IMPORTANT NOTE**: A rogue save file is not guaranteed to restore in a different system.
-Among the diverse reasons a restore in a different system might fail are
-CPU architecture differences and the whim of the C compiler.
+**IMPORTANT NOTE**: A rogue save file is likely, but is not guaranteed to restore in a different system.
+Among the diverse reasons a restore on a different system might fail are
+CPU architecture differences, and the whim of the C compiler.
 
 **IMPORTANT NOTE**: Damaged or old rogue score files, modified prior to
 **2026 Feb 11**, might not be compatible.  The game will exit with an ERROR
@@ -473,13 +473,13 @@ You can use the `scedit` to restore old scores if you wish.
 
 ### Bug reports and Pull Requests welcome
 
-We very much welcome fork [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls) to fix any:
+We very much welcome [rogue5.4 GitHub pull requests](https://github.com/lcn2/rogue5.4/pulls) to fix any:
 
-* failure to compile
+* failures to compile
 * compiler warning messages
 * program crashes
 
-You may also file a [rogue5.4 bug report](https://github.com/lcn2/rogue5.4/issues/new?template=bug_report.md).
+You may also file a [rogue5.4 GitHub bug report](https://github.com/lcn2/rogue5.4/issues/new?template=bug_report.md).
 
 
 # Skip over the SPOILERS to the very bottom for Reporting Security Issues
@@ -795,10 +795,10 @@ When you read use a staff:
 
 **IMPORTANT NOTE**: If you enter **wizard mode** at any time during the game, your score will not be posted to the scoreboard.
 
+**HINT**: **The historic wizard password**" may be found in a comment about a defined symbol.
+
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
-
-**HINT**: **The historic wizard password**" may be found in a comment about a defined symbol.
 
 You may toggle **wizard mode** on and off by pressing the "+" key.
 When you successfully toggle **wizard mode** on, you will see the message:

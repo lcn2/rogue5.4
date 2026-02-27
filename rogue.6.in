@@ -10,7 +10,7 @@
 .TH ROGUE 6 "Feb 27, 2026"
 .UC 4
 .SH NAME
-rogue \- Exploring The Dungeons of Doom
+rogue \- Exploring The Dungeons of Doom \- version 5.4.5
 .SH SYNOPSIS
 .B @PROGRAM@
 [
@@ -31,7 +31,7 @@ rogue \- Exploring The Dungeons of Doom
 .SH DESCRIPTION
 .PP
 .I Rogue
-is a computer fantasy game with a new twist.  It is crt oriented and the
+is a computer fantasy game with a new twist.  It is CRT oriented and the
 object of the game is to survive the attacks of various monsters and get
 a lot of gold, rather than the puzzle solving orientation of most computer
 fantasy games.
@@ -274,60 +274,50 @@ If the
 environment value is missing or empty, the default options will be used.
 Unknown options are silently ignored.
 .SH FILES
-.B Lock\ File:
-.PP
-.in +0.5i
-@LOCKFILE@
-.in -0.5i
-.PP
+.TP
+.BR Lock\ File \ \-\ @LOCKFILE@
+.sp
 The rogue lock file is a zero-length file that must be writable by the user.
 It is used to help prevent multiple processes on the local machine from
 writing to the rogue score file at the same time.
-.PP
+.sp
 If the rogue lock file does not exist, the lock file will be created when
 updating the rogue score file.
-.PP
-.B Save\ file:
-.PP
-.in +0.5i
-@SAVEFILE@
-.in -0.5i
-.PP
+.TP
+.BR Save\ file \ \-\ @SAVEFILE@
+.sp
 The rogue save file is created whenever you use the
 .B S
 command to save the game, or if certain signals are successfully caught and
 the "auto save" action is successfully completed.
-.PP
-A rogue save file is not guaranteed to restore in a different system.
-.PP
-If the rogue save file does not exist, it will be created when a game is saved.
-.PP
-.B Score\ File:
-.PP
-.in +0.5i
 .sp
-@SCOREFILE@
-.in -0.5i
-.PP
+A rogue save file is likely, but is not guaranteed to restore in a different system.
+Among the diverse reasons a restore on a different system might fail are
+CPU architecture differences, and the whim of the C compiler.
+.sp
+If the rogue save file does not exist, it will be created when a game is saved.
+.TP
+.BR Score\ File \ \-\ @SCOREFILE@
+.sp
 The rogue score file contains the top rogue games, in terms of gold collected.
 By default, 10 rogue score are saved.
-.PP
+.sp
 The rogue score file must be writable by the user.
-.PP
+.sp
 The length of the rogue score file is usually 112 bytes per score slot, so the default
 rogue score file size is 1120 bytes.
-.PP
-Unlike the BSD rogue game on the Vax/pdp, rogue keeps track of top rogue scores,
+.sp
+Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue scores,
 no matter how they were played, and no matter if they won the game or not.
-.PP
+.sp
 If the rogue score file does not exist,
 .B rogue
 will create it.
-.PP
+.sp
 If the rogue score file is corrupted, or the format is too old, then
 an error message will be displayed advising that the rogue score file be removed.
 .SH Source Code
-The source code for rogue version 5.4 is available at:
+The source code for rogue version 5.4.5 is available at:
 .PP
 .in +0.5i
 .I https://github.com/lcn2/rogue5.4
@@ -335,24 +325,40 @@ The source code for rogue version 5.4 is available at:
 .PP
 in the form of a GitHub repo.
 .PP
-This GitHub repo is maintained by:
+The above GitHub repo is maintained by:
+.B Landon\ Curt\ Noll
+(GitHub user @lcn2:
+.IR https://github.com/lcn2 ).
 .PP
-.in +0.5i
-.I Landon Curt Noll
-.in -0.5i
+Rogue version 5.4.5 plays like the original Vax binary that was distributed on the BSD 4.3 Reno tapes.
 .PP
-GitHub user @lcn2:
-.BR https://github.com/lcn2 .
+The port to ISO C 2017 with GNU extensions, the port to various platforms
+such as NetBSD, Linux, and Cygwin, and many rogue bug fixes applied to
+rogue version 5.4.5 were made by Landon Curt Noll (chongo), and Anthony
+C Howe (SirWumpus).
 .PP
 .BR BONUS :
-For those who
-.BR RFTS ,
-the wizard mode password may be found in a C comment in the above GitHub repo.  :-)
+The historic wizard mode password may be found in a source code comment about a defined symbol.
+In other words,
+as the expression goes:
+.B RTFS
+(\fIhttps://en.wikipedia.org/wiki/RTFS\fP) :-).
 .SH SEE ALSO
-Michael C. Toy
-and
-Kenneth C. R. C. Arnold,
+We recommend that you read the
+.B README.md
+file of the above mentioned GitHub repo:
+.PP
+.in +0.5i
+.I https://github.com/lcn2/rogue5.4#rogue-54
+.in -0.5i
+.PP
+For additional details read:
 .I "A guide to the Dungeons of Doom"
+by Michael C. Toy, and Kenneth C. R. C. Arnold.
+.PP
+See the
+.B rogue.doc
+file for a copy of that guide.
 .SH AUTHORS
 Michael C. Toy,
 Kenneth C. R. C. Arnold,
@@ -366,3 +372,10 @@ that Ice Monsters sometimes transfix you permanently is
 .I not
 a bug.
 It's a feature.
+.PP
+We very much welcome rogue5.4 GutHub pull requests
+(\fIhttps://github.com/lcn2/rogue5.4/pulls\fP) to fix any
+failures to compile, compiler warning messages, and/or program crashes.
+.PP
+You may also file a rogue5.4 GitHub bug report
+(\fIhttps://github.com/lcn2/rogue5.4/issues/new?template=bug_report.md\fP).
