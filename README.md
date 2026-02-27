@@ -314,7 +314,7 @@ The rogue lock file is a zero-length file that must be writable by the user.
 It is used to help prevent multiple processes on the local machine from
 writing to the rogue score file at the same time.
 
-If the rogue lock file does not exist, the lock file will created when
+If the rogue lock file does not exist, the lock file will be created when
 updating the rogue score file.
 
 * ~/.rogue.save
@@ -325,7 +325,7 @@ the "auto save" action is successfully completed.
 
 A rogue save file is not guaranteed to restore in a different system.
 
-If the rogue save file does not exist, `rogue(6)` will create it a game is saved.
+If the rogue save file does not exist, `rogue(6)` will create it when a game is saved.
 
 * ~/.rogue.scr
 
@@ -449,21 +449,21 @@ We call this version 5.4.5 in order to distinguish it from older, and likely mor
 ## Compatibility
 
 **IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
-rouge game that distributions such as NetBSD imported from 386BSD.
+rogue game that distributions such as NetBSD imported from 386BSD.
 The "Public domain rogue" was a reverse engineering attempt of the
 Vax/pdp binary game found on 4.3BSD tapes.  As such, the "Public domain rogue"
 game play differs from the "Toy/Wichman/Arnold Vax binary" rogue game in
 a fair number of ways.  Moreover, the rogue save file, rogue lock file,
 and rogue score file used by NetBSD rogue are **NOT** compatible.
 
-**IMPORTANT NOTE**: Old rogue save files saved prior to **2026 Feb 25**,
+**IMPORTANT NOTE**: Old rogue save files saved prior to **2026 Feb 11**,
 are **NOT** compatible, as we had to fix some bugs with the rogue
 save/restore code that required the rogue save file format to be changed.
 
 **IMPORTANT NOTE**: A rogue save file is not guaranteed to restore in a different system.
-Among the many reasons are such diverse reasons such as differences in CPU
-architectures, a diffent byte order, C integer size differences, and the whim
-of a C compiler.
+Among the many diverse reasons a restore in a different system can fail
+are CPU architectures, a different byte order, C integer size differences,
+operating system differences, and the whim of a C compiler.
 
 **IMPORTANT NOTE**: Damaged or old rogue score files, modified prior to
 **2026 Feb 11**, might not be compatible.  The game will exit with an ERROR

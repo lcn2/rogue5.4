@@ -939,10 +939,13 @@ mach_dep.o: score.h
 mach_dep.o: strl.h
 main.o: config.h
 main.o: extern.h
+main.o: have_strlcat.h
+main.o: have_strlcpy.h
 main.o: main.c
 main.o: modern_curses.h
 main.o: rogue.h
 main.o: score.h
+main.o: strl.h
 mdport.o: config.h
 mdport.o: extern.h
 mdport.o: have_strlcat.h

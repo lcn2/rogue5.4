@@ -284,7 +284,7 @@ The rogue lock file is a zero-length file that must be writable by the user.
 It is used to help prevent multiple processes on the local machine from
 writing to the rogue score file at the same time.
 .PP
-If the rogue lock file does not exist, the lock file will created when
+If the rogue lock file does not exist, the lock file will be created when
 updating the rogue score file.
 .PP
 .B Save\ file:
