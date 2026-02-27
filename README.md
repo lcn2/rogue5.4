@@ -158,17 +158,9 @@ has completed the goal (won) at least 3 times (without using **wizard mode**) an
 maximum dungeon depth (and successful return to level 0) of 31.
 
 
-## rogue options and the ROGUEOPTS environment variable
+## rogue options
 
 The `rogue(6)` game options may be displayed and changed by using the "**o**" command.
-
-The `$ROGUEOPTS` environment variable may be used to change the `rogue(6)` at startup,
-rather than having to use the "**o**" command each time you play.
-
-The `$ROGUEOPTS` environment variable would be a string that is a series
-of comma separated values, with booleans being stated as "name" (true)
-or "noname" (false), and strings being "name=....", with the string
-being defined up to a comma or the end of the entire option string.
 
 The option names are:
 
@@ -274,6 +266,17 @@ The default file name for saving the game.
 Default: ~/.rogue.save
 
 Recommendation: <<leave as default>>
+
+
+## ROGUEOPTS environment variable
+
+The `$ROGUEOPTS` environment variable may be used to change the `rogue(6)` at startup,
+rather than having to use the "**o**" command each time you play.
+
+The `$ROGUEOPTS` environment variable would be a string that is a series
+of comma separated values, with booleans being stated as "name" (true)
+or "noname" (false), and strings being "name=....", with the string
+being defined up to a comma or the end of the entire option string.
 
 As an example, here is a recommended `$ROGUEOPTS` environment value to set in your environment:
 
