@@ -228,6 +228,11 @@ Recommendation:
 .sp
 The path of the rogue score file.
 .sp
+.B IMPORTANT NOTE:
+Changing the rogue score file path without also changing the rogue lock file path is
+.B NOT
+a good idea.
+.sp
 Default:
 .B ~/.rogue.scr
 .sp
@@ -237,6 +242,11 @@ Recommendation:
 .BR lock =rogue-lock-path
 .sp
 The rogue lock file used to protect the rogue score file.
+.sp
+.B IMPORTANT NOTE:
+Changing the rogue lock file path without also changing the rogue score file path is
+.B NOT
+a good idea.
 .sp
 Default:
 .B ~/.rogue.lck

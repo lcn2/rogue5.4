@@ -271,6 +271,8 @@ Recommendation: <<leave as default>>
 
 The path of the rogue score file.
 
+**IMPORTANT NOTE**: Changing the rogue score file path without also changing the rogue lock file path is **NOT** a good idea.
+
 Default: ~/.rogue.scr
 
 Recommendation: <<leave as default>>
@@ -278,6 +280,8 @@ Recommendation: <<leave as default>>
 * lock=rogue-lock-path
 
 The rogue lock file used to protect the rogue score file.
+
+**IMPORTANT NOTE**: Changing the rogue lock file path without also changing the rogue score file path is **NOT** a good idea.
 
 Default: ~/.rogue.lck
 

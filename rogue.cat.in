@@ -170,6 +170,9 @@
 
               The path of the rogue score file.
 
+              [1mIMPORTANT NOTE: [22mChanging the rogue score file path without  also
+              changing the rogue lock file path is [1mNOT [22ma good idea.
+
               Default: [1m~/.rogue.scr[0m
 
               Recommendation: [1m<<leave as default>>[0m
@@ -177,6 +180,9 @@
        [1mlock[22m=rogue-lock-path
 
               The rogue lock file used to protect the rogue score file.
+
+              [1mIMPORTANT  NOTE:  [22mChanging the rogue lock file path without also
+              changing the rogue score file path is [1mNOT [22ma good idea.
 
               Default: [1m~/.rogue.lck[0m
 
