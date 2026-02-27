@@ -458,12 +458,11 @@ and rogue score file used by NetBSD rogue are **NOT** compatible.
 
 **IMPORTANT NOTE**: Old rogue save files saved prior to **2026 Feb 11**,
 are **NOT** compatible, as we had to fix some bugs with the rogue
-save/restore code that required the rogue save file format to be changed.
+save/restore code that required a change in rogue save file format.
 
 **IMPORTANT NOTE**: A rogue save file is not guaranteed to restore in a different system.
-Among the many diverse reasons a restore in a different system can fail
-are CPU architectures, a different byte order, C integer size differences,
-operating system differences, and the whim of a C compiler.
+Among the diverse reasons a restore in a different system might fail are
+CPU architecture differences and the whim of the C compiler.
 
 **IMPORTANT NOTE**: Damaged or old rogue score files, modified prior to
 **2026 Feb 11**, might not be compatible.  The game will exit with an ERROR
