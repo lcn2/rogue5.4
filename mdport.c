@@ -116,7 +116,7 @@ endwin_and_ncurses_cleanup(void)
     /*
      * ncurses cleanup unless endwin() was already called
      */
-    if (!isendwin()) {
+    if (stdscr != NULL && !isendwin()) {
 
 	/*
 	 * move to corner of window
