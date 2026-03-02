@@ -19,25 +19,23 @@
 # include	<stdbool.h>
 # include	<sys/types.h>
 # include	<sys/time.h>
+# include	<sys/stat.h>
 
 # undef		TRUE
 # define	TRUE true
 # undef		FALSE
 # define	FALSE false
 
-# define	MAXSTR	1024
-
 # include	"modern_curses.h"
 # include	"extern.h"
 # include	"config.h"
 # include	"score.h"
 
-char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
+char whoami[MAX_USERNAME + 1] = {'\0'};	/* Name of player, +1 for paranoia */
 
-static SCORE	top_scores[NUMSCORES+1];	/* scores from the score file, +1 for paranoia */
+static SCORE	top_scores[NUMSCORES + 1];	/* scores from the score file, +1 for paranoia */
 
-static char	buf[BUFSIZ+1+1],	/* +1 for when we read BUFSIZ starting with &buf[1], +1 for paranoia */
-		*reason[] = {
+static char	*reason[] = {
 			"killed",
 			"quit",
 			"A total winner",
@@ -48,8 +46,7 @@ static char	buf[BUFSIZ+1+1],	/* +1 for when we read BUFSIZ starting with &buf[1]
 static unsigned int seed;
 #endif
 static unsigned int dnum;
-static FILE	*finf;
-static char	*scorefile;
+static char     *scorefile;
 
 int do_comm(void);
 int pr_score(SCORE *, int);
@@ -57,15 +54,14 @@ int pr_score(SCORE *, int);
 
 /* forward declarations */
 
-void	add_score(void);
+int	add_score(void);
 void	del_score(void);
-void	insert_score(SCORE *new);
+int	insert_score(SCORE *new);
 int	pr_score(SCORE *scp, int num);
 
 /* duplicated external declarations - because including extern.h and rogue.h brings in too much other stuff */
 
 extern pid_t	md_getpid(void);
-extern void	s_encread(char *start, size_t size, int inf);
 extern void	s_encwrite(char *start, size_t size, FILE *outf);
 extern char	*md_getrealname(uid_t uid);
 extern int	lock_sc(void);
@@ -79,10 +75,19 @@ extern char *	s_killname(int monst, int doart);
 int
 main(int ac, char *av[])
 {
-	int	inf;
 	struct timeval tp;
+	SCORE *scp;
 
-	memset(top_scores, 0, sizeof(top_scores)); /* paranoia */
+	 /*
+	  * set mode for write access for the owner only
+	  *
+	  * NOTE: This is needed prior to calling md_init().
+	  */
+	(void) umask(S_IWGRP | S_IWOTH);
+
+	/*
+	 * parse args
+	 */
 	if (ac == 1) {
 
 		/*
@@ -93,6 +98,7 @@ main(int ac, char *av[])
 		form_home();
 		form_lock_path();
 		form_score_path();
+		scorefile = score_path;
 
 	} else {
 		scorefile = av[1];
@@ -129,20 +135,36 @@ main(int ac, char *av[])
 	srandom((unsigned)dnum);
 #endif
 
-	if ((finf = fopen(scorefile, "r+")) == NULL) {
-		perror(scorefile);
-		exit(1);
+	/*
+	 * initialize top_scores array
+	 */
+	for (scp = top_scores; scp <  &top_scores[NUMSCORES]; scp++)
+	{
+	    init_score_value(scp);
 	}
-	inf = fileno(finf);
-	if (inf < 0) {
-		perror(scorefile);
-		exit(1);
-	}
-	s_encread((char *) top_scores, sizeof top_scores, inf);
 
+	/*
+	 * open score file
+	 */
+	if ((scoreboard = fopen(scorefile, "r+")) == NULL) {
+		perror(scorefile);
+		exit(1);
+	}
+
+	/*
+	 * read the score file
+	 *
+	 * NOTE: The rd_score() function will print an ERROR, WARNING, and exit non-zero
+	 *       if the rogue score file is corrupted (i.e., does not correctly parse).
+	 */
+	rd_score(top_scores);
+
+	/*
+	 * process scedit commands until quit
+	 */
 	while (do_comm())
 		continue;
-
+	fclose(scoreboard);
 	exit(0);
 }
 
@@ -153,119 +175,108 @@ main(int ac, char *av[])
 int
 do_comm(void)
 {
-	SCORE		*scp;
-	static FILE	*outf = NULL;
-	static int written = TRUE;
-#if defined(SIGHUP)
-	void (*sig_hup)(int);
-#endif
-#if defined(SIGINT)
-	void (*sig_int)(int);
-#endif
-#if defined(SIGQUIT)
-	void (*sig_quit)(int);
-#endif
-#if defined(SIGTERM)
-	void (*sig_term)(int);
-#endif
+	SCORE *scp;
+	static int modified = FALSE; /* TRUE ==> top score table modified but not yet written to disk */
+	int added = FALSE;	     /* TRUE ==> new score was inserted into top score table */
+	char buf[SHORTSTR + 1];	     /* command buffer, +1 for paranoia */
+	char *ret = NULL;	     /* fgets() return */
 
-	printf("Command: ");
+	/*
+	 * show the current rogue scores
+	 */
+	printf("\nTop Ten Rogueists:\nRank\tScore\tName\n");
 	fflush(stdout);
-	while (isspace(buf[0] = getchar()) || buf[0] == '\n')
-		continue;
-	memset(&buf[1], 0, sizeof(buf)-1); /* paranoia */
-	(void) fgets(&buf[1], BUFSIZ, stdin);
-	buf[strlen(buf) - 1] = '\0';
+	for (scp = top_scores; scp < &top_scores[NUMSCORES]; scp++)
+		if (!pr_score(scp, TRUE))
+			break;
+	putchar('\n');
+
+	/*
+	 * print command table
+	 */
+	printf("Valid commands:\n");
+	putchar('\n');
+	printf("    a - add score to rogue score file\n");
+	printf("    d - delete score from rogue score file\n");
+	printf("    f - print rogue score file path\n");
+	printf("    p - print rogue score file\n");
+	printf("    w - write rogue score file\n");
+	printf("    q - quit\n");
+	printf("    Q - Force QUIT without saving changes\n");
+
+	/*
+	 * read command from stdin
+	 */
+	do {
+		fflush(stdin);
+		printf("\nCommand: ");
+		fflush(stdout);
+		memset(buf, 0, sizeof(buf));
+		ret = fgets(buf, SHORTSTR, stdin);
+	} while (ret != NULL && isspace(buf[0]));
+
+	/*
+	 * process command line
+	 */
+	if (ret == NULL) {
+	    return FALSE;
+	}
 	switch (buf[0]) {
-	  case 'w':
-		if (strncmp(buf, "write", strlen(buf)))
-			goto def;
-		fseek(finf, 0L, 0);
-		if (outf == NULL && (outf = fopen(scorefile, "w")) == NULL) {
-			perror(scorefile);
-			exit(1);
-		}
-		fseek(outf, 0L, 0);
+        case 'w':
 		if (lock_sc())
 		{
-
-			/*
-			 * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
-			 */
-#if defined(SIGHUP)
-			sig_hup = signal(SIGHUP, SIG_IGN);
-#endif
-#if defined(SIGINT)
-			sig_int = signal(SIGINT, SIG_IGN);
-#endif
-#if defined(SIGQUIT)
-			sig_quit = signal(SIGQUIT, SIG_IGN);
-#endif
-#if defined(SIGTERM)
-			sig_term = signal(SIGTERM, SIG_IGN);
-#endif
-
-			s_encwrite((char *) top_scores, sizeof top_scores, outf);
+			wr_score(top_scores);
 			unlock_sc();
-			written = TRUE;
+		}
+		printf("\nScore file successfully updated: %s\n", scorefile);
+		modified = FALSE;
+		break;
 
-			/*
-			 * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM
-			 */
-#if defined(SIGINT)
-			signal(SIGINT, sig_hup);
-#endif
-#if defined(SIGINT)
-			signal(SIGINT, sig_int);
-#endif
-#if defined(SIGQUIT)
-			signal(SIGQUIT, sig_quit);
-#endif
-#if defined(SIGTERM)
-			signal(SIGTERM, sig_term);
-#endif
+	case 'a':
+		added = add_score();
+		if (added) {
+			modified = TRUE;
 		}
 		break;
 
-	  case 'a':
-		if (strncmp(buf, "add", strlen(buf)))
-			goto def;
-		add_score();
-		written = FALSE;
-		break;
-
-	  case 'd':
-		if (strncmp(buf, "delete", strlen(buf)))
-			goto def;
+	case 'd':
 		del_score();
-		written = FALSE;
+		modified = TRUE;
 		break;
 
-	  case 'p':
-		if (strncmp(buf, "print", strlen(buf)))
-			goto def;
-		printf("Top Ten Rogueists:\nRank\tScore\tName\n");
-		fflush(stdout);
-		for (scp = top_scores; scp < &top_scores[10]; scp++)
-			if (!pr_score(scp, TRUE))
-				break;
+	case 'f':
+		printf("\nRogue score file path: %s\n", scorefile);
 		break;
 
-	  case 'q':
-		if (strncmp(buf, "quit", strlen(buf)))
-			goto def;
-		if (!written) {
-			printf("No write\n");
+	case 'p':
+		/* rogue scores will be printed by the next command prompt cycle */
+		break;
+
+	case 'q':
+		if (modified) {
+			printf("\nChanges to rogue score file not yet saved!\n");
 			fflush(stdout);
-			written = TRUE;
+		} else {
+			return FALSE; /* quit */
 		}
-		else
-			return FALSE;
 		break;
 
-	  default:
-def:
-		printf("Unknown command: \"%s\"\n", buf);
+	case 'Q':
+		if (!modified) {
+			printf("\nQuitting without saving rogue score file changes!\n");
+			fflush(stdout);
+		}
+		return FALSE; /* quit */
+		break;
+
+	case EOF:
+		printf("EOF\n");
+		fflush(stdout);
+		return FALSE;
+		break;
+
+	default:
+		printf("Unknown command character: \"%c\"\n", buf[0]);
 		fflush(stdout);
 	}
 	return TRUE;
@@ -274,66 +285,226 @@ def:
 /*
  * add_score:
  *	Add a score to the score file
+ *
+ * Returns:
+ *	TRUE ==> score was added
+ *	FALSE ==> score was not added
  */
 
-void
+int
 add_score(void)
 {
 	uid_t id = 0;
-	int		i;
-	SCORE	new;
+	SCORE new;
+	char buf[BUFSIZ + 1]; /* +1 for paranoia */
+	int tmp = 0;
+	int answer = FALSE;
+	int i;
 
-	printf("Name: ");
+	printf("Rogue player name: ");
 	fflush(stdout);
 	(void) fgets(new.sc_name, MAX_USERNAME, stdin);
 	new.sc_name[strlen(new.sc_name) - 1] = '\0';
 	do {
-		printf("reason: ");
-		if ((new.sc_flags = getchar()) < '0' || new.sc_flags > '2') {
-			for (i = 0; i < 3; i++)
-				printf("%d: %s\n", i, reason[i]);
+
+		/*
+		 * ask for a reason
+		 */
+		printf("reason [0: %s: 1: %s 2: %s: 3: %s]: ",
+		       reason[0], reason[1], reason[2], reason[3]);
+		new.sc_flags = getchar();
+
+		/*
+		 * validate reason
+		 */
+		if (new.sc_flags == EOF) {
+			printf("\nRead error or EOF on stdin\n");
+			fflush(stdout);
+			return FALSE;
+		}
+		if (new.sc_flags < '0' || new.sc_flags > '3') {
+			printf("\nInvalid reason: must be a number: 0 thru 3\n\n");
 			fflush(stdout);
 			ungetc(new.sc_flags, stdin);
-		}
-		while (getchar() != '\n')
 			continue;
-	} while (new.sc_flags < '0' || new.sc_flags > '2');
+		}
+
+		/*
+		 * toss input until newline or EOF
+		 */
+		do {
+			tmp = getchar();
+			if (tmp == EOF) {
+				printf("\nRead error or EOF on stdin\n");
+				fflush(stdout);
+				return FALSE;
+			}
+		} while (tmp != '\n');
+	} while (new.sc_flags < '0' || new.sc_flags > '3');
+
+	/*
+	 * convert reason into a sc_flag
+	 */
 	new.sc_flags -= '0';
+
+	/*
+	 * ask for the uid
+	 */
 	do {
-		printf("User Id: ");
+		printf("Numerical user id: ");
 		fflush(stdout);
 		memset(buf, 0, sizeof(buf)); /* paranoia */
 		(void) fgets(buf, BUFSIZ, stdin);
 		buf[strlen(buf) - 1] = '\0';
-        id = atoi(buf);
+		id = atoi(buf);
 	} while (id == -1);
 	new.sc_uid = id;
-	do {
-		printf("Monster: ");
-		if (!isalpha(new.sc_monster = getchar())) {
-			printf("type A-Za-z [%s]\n", unctrl(new.sc_monster));
-			fflush(stdout);
-			ungetc(new.sc_monster, stdin);
-		}
-		while (getchar() != '\n')
-			continue;
-	} while (!isalpha(new.sc_monster));
+
+	/*
+	 * determine cause of death
+	 */
+	if (new.sc_flags == 0 || new.sc_flags == 3) {
+		do {
+
+			/*
+			 * prompt for cause of death
+			 */
+			printf("Monster letter [A-Z], a(rrow) b(olt) d(art) h(ypothermia) s(tarvation): ");
+			new.sc_monster = getchar();
+			if (!isalpha(new.sc_monster)) {
+				printf("type A-Za-z [%s]\n", unctrl(new.sc_monster));
+				fflush(stdout);
+				ungetc(new.sc_monster, stdin);
+			}
+
+			/*
+			 * toss input until newline or EOF
+			 */
+			do {
+				tmp = getchar();
+				if (tmp == EOF) {
+					printf("\nRead error or EOF on stdin\n");
+					fflush(stdout);
+					return FALSE;
+				}
+			} while (tmp != '\n');
+		} while (!isalpha(new.sc_monster));
+	} else {
+		new.sc_monster = ' ';
+	}
+
+	/*
+	 * enter final score
+	 */
 	printf("Score: ");
 	fflush(stdout);
 	scanf("%d", &new.sc_score);
-	printf("level: ");
+
+	/*
+	 * enter level
+	 */
+	new.sc_level = -1; /* invalid level */
+	do {
+		/*
+		 * prompt for level
+		 */
+		switch (new.sc_flags) {
+		case 0:
+			printf("Death level: ");
+			break;
+		case 1:
+			printf("Quit level: ");
+			break;
+		case 2:
+			printf("Deepest level reached: ");
+			break;
+		case 3:
+			printf("Death level with amulet: ");
+			break;
+		default:
+			printf("Bogus flag: %d level: ", new.sc_flags);
+			break;
+		}
+		fflush(stdout);
+
+		/*
+		 * read integer
+		 */
+		tmp = -1;
+		i = scanf("%d", &tmp);
+		if (i != 1 && tmp < 0) {
+			if (i == EOF) {
+				printf("\nRead error or EOF on stdin\n");
+				fflush(stdout);
+				return FALSE;
+			}
+			printf("\nLevel must be an integer >= 0\n\n");
+			continue;
+		}
+		new.sc_level = tmp;
+
+		/*
+		 * toss input until newline or EOF
+		 */
+		do {
+			tmp = getchar();
+			if (tmp == EOF) {
+				printf("\nRead error or EOF on stdin\n");
+				fflush(stdout);
+				return FALSE;
+			}
+		} while (tmp != '\n');
+	} while (new.sc_level < 0);
+
+	/*
+	 * ask to confirm new score entry
+	 */
+	printf("\nConfirm new score entry:\n\n");
 	fflush(stdout);
-	scanf("%d", &new.sc_level);
-	while (getchar() != '\n')
-		continue;
 	pr_score(&new, FALSE);
-	printf("Really add it? ");
-	fflush(stdout);
-	if (getchar() != 'y')
-		return;
-	while (getchar() != '\n')
-		continue;
-	insert_score(&new);
+	tmp = '\0';
+	do {
+
+		/*
+		 * ask if we should add the new score
+		 */
+		printf("\nReally add the new score? ");
+		fflush(stdout);
+		answer = getchar();
+
+		/*
+		 * toss input until newline or EOF
+		 */
+		do {
+			tmp = getchar();
+			if (tmp == EOF) {
+				printf("\nRead error or EOF on stdin\n");
+				fflush(stdout);
+				return FALSE;
+			}
+		} while (tmp != '\n');
+
+		/*
+		 * insert if confirmed
+		 */
+		if (answer == 'y' || answer == 'Y') {
+			int inserted;
+
+			/*
+			 * attempt to insert score
+			 */
+			inserted = insert_score(&new);
+			printf("\n%s new score\n", (inserted ? "Inserted" : "Score too small, did not insert"));
+			return inserted;
+
+		} else if (answer == 'n' || answer == 'N') {
+			printf("\nNew score not inserted\n");
+			return FALSE;
+		} else {
+			printf("\nPlease answer y or n\n");
+		}
+	} while (answer != 'n' && answer != 'N');
+	return FALSE;
 }
 
 /*
@@ -361,32 +532,72 @@ pr_score(SCORE *scp, int num)
 
 /*
  * insert_score:
- *	Insert a score into the top ten list
+ *	Insert a score into the top score list
+ *
+ * Returns:
+ *	TRUE ==> score was inserted into the top score list
+ *	FALSE ==> score is too small to be inserted into the top score list
  */
-void
+int
 insert_score(SCORE *new)
 {
-	SCORE	*scp, *sc2;
-	int	flags, amount;
-	uid_t uid;
+	SCORE	*scp;
+	SCORE	*sc2;
+	SCORE	*endp;
+#if !defined(ALLSCORES)
+	int	flags;
+	uid_t	uid;
+#endif
+	int	amount;
 
+	/*
+	 * setup
+	 */
+#if !defined(ALLSCORES)
 	flags = new->sc_flags;
 	uid = new->sc_uid;
+#endif
 	amount = new->sc_score;
+	endp = &top_scores[NUMSCORES];
 
-	for (scp = top_scores; scp < &top_scores[10]; scp++)
+	/*
+	 * skip over score slots with higher priority
+	 */
+	for (scp = top_scores; scp < endp; scp++) {
 		if (amount > scp->sc_score)
 			break;
+#if !defined(ALLSCORES)
 		else if (flags != 2 && scp->sc_uid == uid && scp->sc_flags != 2)
-			scp = &top_scores[10];
-	if (scp < &top_scores[10]) {
+			scp = endp;
+#endif
+	}
+
+	/*
+	 * case: score cannot be inserted in the top score table: it is too small
+	 */
+	if (scp >= endp) {
+		return FALSE;
+	}
+
+	/*
+	 * insert score
+	 */
+	if (scp < endp) {
+#if !defined(ALLSCORES)
 		if (flags != 2)
-			for (sc2 = scp; sc2 < &top_scores[10]; sc2++) {
+			for (sc2 = scp; sc2 < &top_scores[NUMSCORES]; sc2++) {
 			    if (sc2->sc_uid == uid && sc2->sc_flags != 2)
 				break;
 			}
 		else
-			sc2 = &top_scores[9];
+			sc2 = endp - 1;
+#else
+		sc2 = endp - 1;
+#endif
+
+		/*
+		 * move other scores down
+		 */
 		while (sc2 > scp) {
 			*sc2 = sc2[-1];
 			sc2--;
@@ -394,6 +605,7 @@ insert_score(SCORE *new)
 		*scp = *new;
 		sc2 = scp;
 	}
+	return TRUE;
 }
 
 /*
@@ -405,6 +617,7 @@ del_score(void)
 {
 	SCORE	*scp;
 	int	num;
+	char buf[BUFSIZ + 1]; /* +1 for paranoia */
 
 	for (;;) {
 		printf("Which score? ");
@@ -414,8 +627,8 @@ del_score(void)
 		if (buf[0] == '\n')
 			return;
 		sscanf(buf, "%d", &num);
-		if (num < 1 || num > 10) {
-			printf("range is 1-10\n");
+		if (num < 1 || num > NUMSCORES) {
+			printf("range is 1-%d\n", NUMSCORES);
 			fflush(stdout);
 		} else {
 			break;

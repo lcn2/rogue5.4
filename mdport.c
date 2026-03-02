@@ -43,6 +43,7 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include <signal.h>
+#include <uuid/uuid.h>
 
 #include "modern_curses.h"
 #include "have_strlcat.h"
@@ -702,11 +703,25 @@ directory_exists(char *dirname)
 char *
 md_getrealname(uid_t uid)
 {
-    static char uidstr[MAX_USERNAME+1]; /* +1 for paranoia */
+    static char uidstr[MAX_USERNAME + 1]; /* +1 for paranoia */
+    struct passwd *pw;
 
+    /*
+     * lookup uid in password file
+     */
     memset(uidstr, 0, sizeof(uidstr)); /* paranoia */
-    snprintf(uidstr, MAX_USERNAME, "%ld", (unsigned long int) uid);
-    return(uidstr);
+    pw = getpwuid(uid);
+    if (pw == NULL || pw->pw_name == NULL || pw->pw_name[0] == '\0') {
+	/* unknown uid, or failed to find login username, so return uid as a string */
+	snprintf(uidstr, MAX_USERNAME, "%d", uid);
+	return uidstr;
+    }
+
+    /*
+     * return username
+     */
+    strlcpy(uidstr, pw->pw_name, MAX_USERNAME);
+    return uidstr;
 }
 
 char *

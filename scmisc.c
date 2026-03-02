@@ -63,7 +63,7 @@ extern void	md_sleep(int s);
 extern int	md_unlink(char *file);
 extern void	add_score(void);
 extern void	del_score(void);
-extern void	insert_score(SCORE *new);
+extern int	insert_score(SCORE *new);
 
 /*
  * s_encwrite:

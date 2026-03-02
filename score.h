@@ -27,17 +27,29 @@
  *
  * So we must HARD code the maximum width in the sscanf(3) call found in rd_score()
  * in the save.c file.  The value MAX_USERNAME MUST match the %32s format string width.
+ *
+ * NOTE: Regarding "cause of death" and sc_monster:
+ *
+ *	If sc_monster is an UPPER CASE letter, then it the monster that killed,
+ *	else if
+ *	    a ==> killed by arrow
+ *	    b ==> killed by lightning bolt
+ *	    d ==> killed by dart
+ *	    h ==> death by hypothermia
+ *	    s ==> death by starvation
+ *	else
+ *	    killed by "Wally the Wonder Badger"
  */
 #define MAX_USERNAME	32
 
 struct sc_ent {
-    uid_t sc_uid;
-    int sc_score;
-    unsigned int sc_flags;
-    int sc_monster;
+    uid_t sc_uid;		    /* uid of player */
+    int sc_score;		    /* 0 ==> score slot is unused. >0 ==> score death, quit, or win */
+    unsigned int sc_flags;	    /* 0 ==> killed by monster, 1 ==> quit, 2 ==> total winner, 3 ==> killed with Amulet */
+    int sc_monster;		    /* sc_flags == 0 or 3 cause of death, sc_flags == 1 or 2 ==> unused, set to ' ' (space) */
     char sc_name[MAX_USERNAME +1 ]; /* Name of player in this score slot, +1 for paranoia */
-    int sc_level;
-    uintmax_t sc_time;
+    int sc_level;		    /* sc_flags == 1 ==> quit level, sc_flags == 2 ==> deepest level, else level killed on */
+    uintmax_t sc_time;		    /* timestamp of when the score slot was updated */
 };
 
 typedef struct sc_ent SCORE;
