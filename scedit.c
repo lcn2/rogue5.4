@@ -21,11 +21,6 @@
 # include	<sys/time.h>
 # include	<sys/stat.h>
 
-# undef		TRUE
-# define	TRUE true
-# undef		FALSE
-# define	FALSE false
-
 # include	"modern_curses.h"
 # include	"extern.h"
 # include	"config.h"
@@ -176,8 +171,8 @@ int
 do_comm(void)
 {
 	SCORE *scp;
-	static int modified = FALSE; /* TRUE ==> top score table modified but not yet written to disk */
-	int added = FALSE;	     /* TRUE ==> new score was inserted into top score table */
+	static int modified = false; /* true ==> top score table modified but not yet written to disk */
+	int added = false;	     /* true ==> new score was inserted into top score table */
 	char buf[SHORTSTR + 1];	     /* command buffer, +1 for paranoia */
 	char *ret = NULL;	     /* fgets() return */
 
@@ -187,7 +182,7 @@ do_comm(void)
 	printf("\nTop Ten Rogueists:\nRank\tScore\tName\n");
 	fflush(stdout);
 	for (scp = top_scores; scp < &top_scores[NUMSCORES]; scp++)
-		if (!pr_score(scp, TRUE))
+		if (!pr_score(scp, true))
 			break;
 	putchar('\n');
 
@@ -219,7 +214,7 @@ do_comm(void)
 	 * process command line
 	 */
 	if (ret == NULL) {
-	    return FALSE;
+	    return false;
 	}
 	switch (buf[0]) {
         case 'w':
@@ -229,19 +224,19 @@ do_comm(void)
 			unlock_sc();
 		}
 		printf("\nScore file successfully updated: %s\n", scorefile);
-		modified = FALSE;
+		modified = false;
 		break;
 
 	case 'a':
 		added = add_score();
 		if (added) {
-			modified = TRUE;
+			modified = true;
 		}
 		break;
 
 	case 'd':
 		del_score();
-		modified = TRUE;
+		modified = true;
 		break;
 
 	case 'f':
@@ -257,7 +252,7 @@ do_comm(void)
 			printf("\nChanges to rogue score file not yet saved!\n");
 			fflush(stdout);
 		} else {
-			return FALSE; /* quit */
+			return false; /* quit */
 		}
 		break;
 
@@ -266,20 +261,20 @@ do_comm(void)
 			printf("\nQuitting without saving rogue score file changes!\n");
 			fflush(stdout);
 		}
-		return FALSE; /* quit */
+		return false; /* quit */
 		break;
 
 	case EOF:
 		printf("EOF\n");
 		fflush(stdout);
-		return FALSE;
+		return false;
 		break;
 
 	default:
 		printf("Unknown command character: \"%c\"\n", buf[0]);
 		fflush(stdout);
 	}
-	return TRUE;
+	return true;
 }
 
 /*
@@ -287,8 +282,8 @@ do_comm(void)
  *	Add a score to the score file
  *
  * Returns:
- *	TRUE ==> score was added
- *	FALSE ==> score was not added
+ *	true ==> score was added
+ *	false ==> score was not added
  */
 
 int
@@ -298,7 +293,7 @@ add_score(void)
 	SCORE new;
 	char buf[BUFSIZ + 1]; /* +1 for paranoia */
 	int tmp = 0;
-	int answer = FALSE;
+	int answer = false;
 	int i;
 
 	printf("Rogue player name: ");
@@ -320,7 +315,7 @@ add_score(void)
 		if (new.sc_flags == EOF) {
 			printf("\nRead error or EOF on stdin\n");
 			fflush(stdout);
-			return FALSE;
+			return false;
 		}
 		if (new.sc_flags < '0' || new.sc_flags > '3') {
 			printf("\nInvalid reason: must be a number: 0 thru 3\n\n");
@@ -337,7 +332,7 @@ add_score(void)
 			if (tmp == EOF) {
 				printf("\nRead error or EOF on stdin\n");
 				fflush(stdout);
-				return FALSE;
+				return false;
 			}
 		} while (tmp != '\n');
 	} while (new.sc_flags < '0' || new.sc_flags > '3');
@@ -385,7 +380,7 @@ add_score(void)
 				if (tmp == EOF) {
 					printf("\nRead error or EOF on stdin\n");
 					fflush(stdout);
-					return FALSE;
+					return false;
 				}
 			} while (tmp != '\n');
 		} while (!isalpha(new.sc_monster));
@@ -436,7 +431,7 @@ add_score(void)
 			if (i == EOF) {
 				printf("\nRead error or EOF on stdin\n");
 				fflush(stdout);
-				return FALSE;
+				return false;
 			}
 			printf("\nLevel must be an integer >= 0\n\n");
 			continue;
@@ -451,7 +446,7 @@ add_score(void)
 			if (tmp == EOF) {
 				printf("\nRead error or EOF on stdin\n");
 				fflush(stdout);
-				return FALSE;
+				return false;
 			}
 		} while (tmp != '\n');
 	} while (new.sc_level < 0);
@@ -461,7 +456,7 @@ add_score(void)
 	 */
 	printf("\nConfirm new score entry:\n\n");
 	fflush(stdout);
-	pr_score(&new, FALSE);
+	pr_score(&new, false);
 	tmp = '\0';
 	do {
 
@@ -480,7 +475,7 @@ add_score(void)
 			if (tmp == EOF) {
 				printf("\nRead error or EOF on stdin\n");
 				fflush(stdout);
-				return FALSE;
+				return false;
 			}
 		} while (tmp != '\n');
 
@@ -499,17 +494,17 @@ add_score(void)
 
 		} else if (answer == 'n' || answer == 'N') {
 			printf("\nNew score not inserted\n");
-			return FALSE;
+			return false;
 		} else {
 			printf("\nPlease answer y or n\n");
 		}
 	} while (answer != 'n' && answer != 'N');
-	return FALSE;
+	return false;
 }
 
 /*
  * pr_score:
- *	Print out a score entry.  Return FALSE if last entry.
+ *	Print out a score entry.  Return false if last entry.
  */
 
 int
@@ -521,7 +516,7 @@ pr_score(SCORE *scp, int num)
 		printf("\t%d\t%s: %s on level %d", scp->sc_score, scp->sc_name,
 		    reason[scp->sc_flags], scp->sc_level);
 		if (scp->sc_flags == 0)
-		    printf(" by %s", s_killname(scp->sc_monster, TRUE));
+		    printf(" by %s", s_killname(scp->sc_monster, true));
 
         printf(" (%s)", md_getrealname(scp->sc_uid));
 		putchar('\n');
@@ -535,8 +530,8 @@ pr_score(SCORE *scp, int num)
  *	Insert a score into the top score list
  *
  * Returns:
- *	TRUE ==> score was inserted into the top score list
- *	FALSE ==> score is too small to be inserted into the top score list
+ *	true ==> score was inserted into the top score list
+ *	false ==> score is too small to be inserted into the top score list
  */
 int
 insert_score(SCORE *new)
@@ -576,7 +571,7 @@ insert_score(SCORE *new)
 	 * case: score cannot be inserted in the top score table: it is too small
 	 */
 	if (scp >= endp) {
-		return FALSE;
+		return false;
 	}
 
 	/*
@@ -605,7 +600,7 @@ insert_score(SCORE *new)
 		*scp = *new;
 		sc2 = scp;
 	}
-	return TRUE;
+	return true;
 }
 
 /*

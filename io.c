@@ -78,7 +78,7 @@ endmsg(void)
 	strcpy(huh, msgbuf);
     if (mpos)
     {
-	look(FALSE);
+	look(false);
 	mvaddstr(0, mpos, "--More--");
 	refresh();
 	if (!msg_esc)
@@ -143,7 +143,7 @@ step_ok(int ch)
 	case ' ':
 	case '|':
 	case '-':
-	    return FALSE;
+	    return false;
 	default:
 	    return (!isalpha(ch));
     }
@@ -295,6 +295,6 @@ show_win(const char *message)
     touchwin(win);
     wrefresh(win);
     wait_for(win, ' ');
-    clearok(curscr, TRUE);
+    clearok(curscr, true);
     touchwin(stdscr);
 }

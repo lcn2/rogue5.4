@@ -319,7 +319,7 @@ score(int amount, int flags, int monst)
 		(int) (scp - top_scores + 1), scp->sc_score, scp->sc_name,
 		reason[scp->sc_flags], scp->sc_level);
 	    if (scp->sc_flags == 0 || scp->sc_flags == 3)
-		printf(" by %s", killname(scp->sc_monster, TRUE));
+		printf(" by %s", killname(scp->sc_monster, true));
 #ifdef MASTER
 	    if (prflags == 1)
 	    {
@@ -446,11 +446,11 @@ death(int monst)
      */
     purse -= purse / 10;
     clear();
-    killer = killname(monst, FALSE);
+    killer = killname(monst, false);
     if (!tombstone)
     {
 	mvprintw(LINES - 2, 0, "Killed by ");
-	killer = killname(monst, FALSE);
+	killer = killname(monst, false);
 	if (monst != 's' && monst != 'h')
 	    printw("a%s ", vowelstr(killer));
 	printw("%s with %d gold", killer, purse);
@@ -593,14 +593,14 @@ total_winner(void)
 		op = &scr_info[obj->o_which];
 		if (!op->oi_know)
 		    worth /= 2;
-		op->oi_know = TRUE;
+		op->oi_know = true;
 	    when POTION:
 		worth = pot_info[obj->o_which].oi_worth;
 		worth *= obj->o_count;
 		op = &pot_info[obj->o_which];
 		if (!op->oi_know)
 		    worth /= 2;
-		op->oi_know = TRUE;
+		op->oi_know = true;
 	    when RING:
 		op = &ring_info[obj->o_which];
 		worth = op->oi_worth;
@@ -615,7 +615,7 @@ total_winner(void)
 		if (!(obj->o_flags & ISKNOW))
 		    worth /= 2;
 		obj->o_flags |= ISKNOW;
-		op->oi_know = TRUE;
+		op->oi_know = true;
 	    when STICK:
 		op = &ws_info[obj->o_which];
 		worth = op->oi_worth;
@@ -623,13 +623,13 @@ total_winner(void)
 		if (!(obj->o_flags & ISKNOW))
 		    worth /= 2;
 		obj->o_flags |= ISKNOW;
-		op->oi_know = TRUE;
+		op->oi_know = true;
 	    when AMULET:
 		worth = 1000;
 	}
 	if (worth < 0)
 	    worth = 0;
-	printw("%c) %5d  %s\n", obj->o_packch, worth, inv_name(obj, FALSE));
+	printw("%c) %5d  %s\n", obj->o_packch, worth, inv_name(obj, false));
 	purse += worth;
     }
     printw("   %5d  Gold Pieces          ", oldpurse);
@@ -665,23 +665,23 @@ killname(int monst, int doart)
     const char *sp;
     int article;
     struct h_list nlist[] = {
-	{'a',	"arrow",		TRUE},
-	{'b',	"bolt",			TRUE},
-	{'d',	"dart",			TRUE},
-	{'h',	"hypothermia",		FALSE},
-	{'s',	"starvation",		FALSE},
+	{'a',	"arrow",		true},
+	{'b',	"bolt",			true},
+	{'d',	"dart",			true},
+	{'h',	"hypothermia",		false},
+	{'s',	"starvation",		false},
 	{'\0'}
     };
 
     if (isupper(monst))
     {
 	sp = monsters[monst-'A'].m_name;
-	article = TRUE;
+	article = true;
     }
     else
     {
 	sp = "Wally the Wonder Badger";
-	article = FALSE;
+	article = false;
 	for (hp = nlist; hp->h_ch; hp++)
 	    if (hp->h_ch == monst)
 	    {

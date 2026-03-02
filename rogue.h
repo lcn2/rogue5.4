@@ -18,11 +18,6 @@
 #include <stdarg.h>
 #include <stdbool.h>
 
-#undef TRUE
-#define TRUE true
-#undef FALSE
-#define FALSE false
-
 #undef lines
 
 #define NOOP(x) (x += 0)

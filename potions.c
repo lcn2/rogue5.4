@@ -62,7 +62,7 @@ void
 quaff(void)
 {
     THING *obj, *tp, *mp;
-    int discardit = FALSE;
+    int discardit = false;
     int show, trip;
 
     obj = get_item("quaff", POTION);
@@ -87,13 +87,13 @@ quaff(void)
      */
     trip = on(player, ISHALU);
     discardit = (obj->o_count == 1);
-    leave_pack(obj, FALSE, FALSE);
+    leave_pack(obj, false, false);
     switch (obj->o_which)
     {
 	case P_CONFUSE:
 	    do_pot(P_CONFUSE, !trip);
 	when P_POISON:
-	    pot_info[P_POISON].oi_know = TRUE;
+	    pot_info[P_POISON].oi_know = true;
 	    if (ISWEARING(R_SUSTSTR))
 		msg("you feel momentarily sick");
 	    else
@@ -103,26 +103,26 @@ quaff(void)
 		come_down(0);
 	    }
 	when P_HEALING:
-	    pot_info[P_HEALING].oi_know = TRUE;
+	    pot_info[P_HEALING].oi_know = true;
 	    if ((pstats.s_hpt += roll(pstats.s_lvl, 4)) > max_hp)
 		pstats.s_hpt = ++max_hp;
 	    sight(0);
 	    msg("you begin to feel better");
 	when P_STRENGTH:
-	    pot_info[P_STRENGTH].oi_know = TRUE;
+	    pot_info[P_STRENGTH].oi_know = true;
 	    chg_str(1);
 	    msg("you feel stronger, now.  What bulging muscles!");
 	when P_MFIND:
 	    player.t_flags |= SEEMONST;
-	    fuse((void(*)(int))turn_see, TRUE, HUHDURATION, AFTER);
-	    if (!turn_see(FALSE))
+	    fuse((void(*)(int))turn_see, true, HUHDURATION, AFTER);
+	    if (!turn_see(false))
 		msg("you have a %s feeling for a moment, then it passes",
 		    choose_str("normal", "strange"));
 	when P_TFIND:
 	    /*
 	     * Potion of magic detection.  Show the potions and scrolls
 	     */
-	    show = FALSE;
+	    show = false;
 	    if (lvl_obj != NULL)
 	    {
 		wclear(hw);
@@ -130,10 +130,10 @@ quaff(void)
 		{
 		    if (is_magic(tp))
 		    {
-			show = TRUE;
+			show = true;
 			wmove(hw, tp->o_pos.y, tp->o_pos.x);
 			waddch(hw, MAGIC);
-			pot_info[P_TFIND].oi_know = TRUE;
+			pot_info[P_TFIND].oi_know = true;
 		    }
 		}
 		for (mp = mlist; mp != NULL; mp = next(mp))
@@ -142,7 +142,7 @@ quaff(void)
 		    {
 			if (is_magic(tp))
 			{
-			    show = TRUE;
+			    show = true;
 			    wmove(hw, mp->t_pos.y, mp->t_pos.x);
 			    waddch(hw, MAGIC);
 			}
@@ -151,7 +151,7 @@ quaff(void)
 	    }
 	    if (show)
 	    {
-		pot_info[P_TFIND].oi_know = TRUE;
+		pot_info[P_TFIND].oi_know = true;
 		show_win("You sense the presence of magic on this level.--More--");
 	    }
 	    else
@@ -161,24 +161,24 @@ quaff(void)
 	    if (!trip)
 	    {
 		if (on(player, SEEMONST))
-		    turn_see(FALSE);
+		    turn_see(false);
 		start_daemon(visuals, 0, BEFORE);
 		seenstairs = seen_stairs();
 	    }
-	    do_pot(P_LSD, TRUE);
+	    do_pot(P_LSD, true);
 	when P_SEEINVIS:
 	    snprintf(prbuf, sizeof(prbuf), "this potion tastes like %s juice", fruit);
 	    show = on(player, CANSEE);
-	    do_pot(P_SEEINVIS, FALSE);
+	    do_pot(P_SEEINVIS, false);
 	    if (!show)
 		invis_on();
 	    sight(0);
 	when P_RAISE:
-	    pot_info[P_RAISE].oi_know = TRUE;
+	    pot_info[P_RAISE].oi_know = true;
 	    msg("you suddenly feel much more skillful");
 	    raise_level();
 	when P_XHEAL:
-	    pot_info[P_XHEAL].oi_know = TRUE;
+	    pot_info[P_XHEAL].oi_know = true;
 	    if ((pstats.s_hpt += roll(pstats.s_lvl, 8)) > max_hp)
 	    {
 		if (pstats.s_hpt > max_hp + pstats.s_lvl + 1)
@@ -189,9 +189,9 @@ quaff(void)
 	    come_down(0);
 	    msg("you begin to feel much better");
 	when P_HASTE:
-	    pot_info[P_HASTE].oi_know = TRUE;
-	    after = FALSE;
-	    if (add_haste(TRUE))
+	    pot_info[P_HASTE].oi_know = true;
+	    after = false;
+	    if (add_haste(true))
 		msg("you feel yourself moving much faster");
 	when P_RESTORE:
 	    if (ISRING(LEFT, R_ADDSTR))
@@ -206,9 +206,9 @@ quaff(void)
 		add_str(&pstats.s_str, cur_ring[RIGHT]->o_arm);
 	    msg("hey, this tastes great.  It make you feel warm all over");
 	when P_BLIND:
-	    do_pot(P_BLIND, TRUE);
+	    do_pot(P_BLIND, true);
 	when P_LEVIT:
-	    do_pot(P_LEVIT, TRUE);
+	    do_pot(P_LEVIT, true);
 #ifdef MASTER
 	otherwise:
 	    msg("what an odd tasting potion!");
@@ -245,9 +245,9 @@ is_magic(const THING *obj)
 	case STICK:
 	case RING:
 	case AMULET:
-	    return TRUE;
+	    return true;
     }
-    return FALSE;
+    return false;
 }
 
 /*
@@ -276,7 +276,7 @@ turn_see(int turn_off)
     THING *mp;
     int can_see, add_new;
 
-    add_new = FALSE;
+    add_new = false;
     for (mp = mlist; mp != NULL; mp = next(mp))
     {
 	move(mp->t_pos.y, mp->t_pos.x);
@@ -310,7 +310,7 @@ turn_see(int turn_off)
 
 /*
  * seen_stairs:
- *	Return TRUE if the player has seen the stairs
+ *	Return true if the player has seen the stairs
  */
 int
 seen_stairs(void)
@@ -319,9 +319,9 @@ seen_stairs(void)
 
     move(stairs.y, stairs.x);
     if (CCHAR( inch() ) == STAIRS)			/* it's on the map */
-	return TRUE;
+	return true;
     if (ce(hero, stairs))			/* It's under him */
-	return TRUE;
+	return true;
 
     /*
      * if a monster is on the stairs, this gets hairy
@@ -329,13 +329,13 @@ seen_stairs(void)
     if ((tp = moat(stairs.y, stairs.x)) != NULL)
     {
 	if (see_monst(tp) && on(*tp, ISRUN))	/* if it's visible and awake */
-	    return TRUE;			/* it must have moved there */
+	    return true;			/* it must have moved there */
 
 	if (on(player, SEEMONST)		/* if she can detect monster */
 	    && tp->t_oldch == STAIRS)		/* and there once were stairs */
-		return TRUE;			/* it must have moved there */
+		return true;			/* it must have moved there */
     }
-    return FALSE;
+    return false;
 }
 
 /*
@@ -370,7 +370,7 @@ do_pot(int type, int knowit)
     {
 	player.t_flags |= pp->pa_flags;
 	fuse(pp->pa_daemon, 0, t, AFTER);
-	look(FALSE);
+	look(false);
     }
     else
 	lengthen(pp->pa_daemon, t);

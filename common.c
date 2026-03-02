@@ -103,7 +103,7 @@ tstp(int ignored)
     noecho();
     keypad(stdscr,1);
     playltchars();
-    clearok(curscr, TRUE);
+    clearok(curscr, true);
     wrefresh(curscr);
     getyx(curscr, y, x);
     mvcur(y, x, oy, ox);
@@ -128,9 +128,9 @@ playit(void)
 
     if (baudrate() <= 1200)
     {
-	terse = TRUE;
-	jump = TRUE;
-	see_floor = FALSE;
+	terse = true;
+	jump = true;
+	see_floor = false;
     }
 
     if (md_hasclreol())
@@ -233,7 +233,7 @@ quit(int sig)
 	refresh();
 	mpos = 0;
 	count = 0;
-	to_death = FALSE;
+	to_death = false;
     }
     return;
 }
@@ -271,8 +271,8 @@ shell(void)
     (void) endwin();
     resetltchars();
     putchar('\n');
-    in_shell = TRUE;
-    after = FALSE;
+    in_shell = true;
+    after = false;
     fflush(stdout);
     /*
      * Fork and do a shell
@@ -283,8 +283,8 @@ shell(void)
     raw();
     keypad(stdscr,1);
     playltchars();
-    in_shell = FALSE;
-    clearok(stdscr, TRUE);
+    in_shell = false;
+    clearok(stdscr, true);
 }
 
 /*

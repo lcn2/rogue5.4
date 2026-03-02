@@ -75,7 +75,7 @@ whatis(int insist, int type)
         when RING:
 	    set_know(obj, ring_info);
     }
-    msg("%s", inv_name(obj, FALSE));
+    msg("%s", inv_name(obj, false));
 }
 
 /*
@@ -88,7 +88,7 @@ set_know(THING *obj, struct obj_info *info)
 {
     char **guess;
 
-    info[obj->o_which].oi_know = TRUE;
+    info[obj->o_which].oi_know = true;
     obj->o_flags |= ISKNOW;
     guess = &info[obj->o_which].oi_guess;
     if (*guess)
@@ -107,14 +107,14 @@ type_name(int type)
 {
     struct h_list *hp;
     struct h_list tlist[] = {
-	{POTION, "potion",		FALSE},
-	{SCROLL, "scroll",		FALSE},
-	{FOOD,	 "food",		FALSE},
-	{R_OR_S, "ring, wand or staff",	FALSE},
-	{RING,	 "ring",		FALSE},
-	{STICK,	 "wand or staff",	FALSE},
-	{WEAPON, "weapon",		FALSE},
-	{ARMOR,	 "suit of armor",	FALSE},
+	{POTION, "potion",		false},
+	{SCROLL, "scroll",		false},
+	{FOOD,	 "food",		false},
+	{R_OR_S, "ring, wand or staff",	false},
+	{RING,	 "ring",		false},
+	{STICK,	 "wand or staff",	false},
+	{WEAPON, "weapon",		false},
+	{ARMOR,	 "suit of armor",	false},
     };
 
     for (hp = tlist; hp->h_ch; hp++)
@@ -339,7 +339,7 @@ create_obj(void)
 	msg("how much?");
 	get_num(&obj->o_goldval, stdscr);
     }
-    add_pack(obj, FALSE);
+    add_pack(obj, false);
 }
 #endif
 
@@ -354,7 +354,7 @@ teleport(void)
     coord c;
 
     mvaddch(hero.y, hero.x, floor_at());
-    find_floor(NULL, &c, FALSE, TRUE);
+    find_floor(NULL, &c, false, true);
     if (roomin(&c) != proom)
     {
 	leave_room(&hero);
@@ -364,7 +364,7 @@ teleport(void)
     else
     {
 	hero = c;
-	look(TRUE);
+	look(true);
     }
     mvaddch(hero.y, hero.x, PLAYER);
     /*
@@ -378,7 +378,7 @@ teleport(void)
     }
     no_move = 0;
     count = 0;
-    running = FALSE;
+    running = false;
     flush_type();
 }
 
@@ -405,7 +405,7 @@ passwd(void)
 	else
 	    *sp++ = (char) c;
     if (sp == buf)
-	return FALSE;
+	return false;
     *sp = '\0';
     return (strcmp(PASSWD, md_crypt(buf, "mT")) == 0);
 }

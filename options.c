@@ -125,9 +125,9 @@ option(void)
     waddstr(hw, "--Press space to continue--");
     wrefresh(hw);
     wait_for(hw, ' ');
-    clearok(curscr, TRUE);
+    clearok(curscr, true);
     touchwin(stdscr);
-    after = FALSE;
+    after = false;
 }
 
 /*
@@ -185,7 +185,7 @@ get_bool(void *vp, WINDOW *win)
     int oy, ox;
     int op_bad;
 
-    op_bad = TRUE;
+    op_bad = true;
     getyx(win, oy, ox);
     waddstr(win, *bp ? "True" : "False");
     while (op_bad)
@@ -196,17 +196,17 @@ get_bool(void *vp, WINDOW *win)
 	{
 	    case 't':
 	    case 'T':
-		*bp = TRUE;
-		op_bad = FALSE;
+		*bp = true;
+		op_bad = false;
 		break;
 	    case 'f':
 	    case 'F':
-		*bp = FALSE;
-		op_bad = FALSE;
+		*bp = false;
+		op_bad = false;
 		break;
 	    case '\n':
 	    case '\r':
-		op_bad = FALSE;
+		op_bad = false;
 		break;
 	    case ESCAPE:
 		return QUIT;
@@ -241,12 +241,12 @@ get_sf(void *vp, WINDOW *win)
     if (was_sf != see_floor)
     {
 	if (!see_floor) {
-	    see_floor = TRUE;
+	    see_floor = true;
 	    erase_lamp(&hero, proom);
-	    see_floor = FALSE;
+	    see_floor = false;
 	}
 	else
-	    look(FALSE);
+	    look(false);
     }
     return(NORM);
 }
@@ -342,7 +342,7 @@ get_inv_t(void *vp, WINDOW *win)
     int oy, ox;
     int op_bad;
 
-    op_bad = TRUE;
+    op_bad = true;
     getyx(win, oy, ox);
     waddstr(win, inv_t_name[*ip]);
     while (op_bad)
@@ -354,21 +354,21 @@ get_inv_t(void *vp, WINDOW *win)
 	    case 'o':
 	    case 'O':
 		*ip = INV_OVER;
-		op_bad = FALSE;
+		op_bad = false;
 		break;
 	    case 's':
 	    case 'S':
 		*ip = INV_SLOW;
-		op_bad = FALSE;
+		op_bad = false;
 		break;
 	    case 'c':
 	    case 'C':
 		*ip = INV_CLEAR;
-		op_bad = FALSE;
+		op_bad = false;
 		break;
 	    case '\n':
 	    case '\r':
-		op_bad = FALSE;
+		op_bad = false;
 		break;
 	    case ESCAPE:
 		return QUIT;
@@ -435,7 +435,7 @@ parse_opts(char *str)
 	    if (EQSTR(str, op->o_name, len))
 	    {
 		if (op->o_putfunc == put_bool)	/* if option is a boolean */
-		    *(int *)op->o_opt = TRUE;	/* NOSTRICT */
+		    *(int *)op->o_opt = true;	/* NOSTRICT */
 		else				/* string option */
 		{
 		    /*
@@ -482,7 +482,7 @@ parse_opts(char *str)
 	    else if (op->o_putfunc == put_bool
 	      && EQSTR(str, "no", 2) && EQSTR(str + 2, op->o_name, len - 2))
 	    {
-		*(int *)op->o_opt = FALSE;	/* NOSTRICT */
+		*(int *)op->o_opt = false;	/* NOSTRICT */
 		break;
 	    }
 

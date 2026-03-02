@@ -183,7 +183,7 @@ restore(const char *file)
     if (strlen(file) >= MAXSTR) {
 	printf("Sorry, the rogue save file path is too long: %s\n", file);
 	fflush(stdout);
-	return FALSE;
+	return false;
     }
 
     /*
@@ -206,13 +206,13 @@ restore(const char *file)
 	printf("Sorry, cannot stat rogue save file: %s - %s\n", file, strerror(errno));
 	fflush(stdout);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
     if ((sbuf2.st_mode & S_IFMT) != S_IFREG) {
 	printf("Sorry, rogue save file must be a regular file: %s\n", file);
 	fflush(stdout);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
 
     /*
@@ -226,7 +226,7 @@ restore(const char *file)
 	printf("Sorry, failed to open for reading rogue save file: %s - %s\n", file, strerror(errno));
 	fflush(stdout);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
 
     /*
@@ -238,14 +238,14 @@ restore(const char *file)
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
     if ((sbuf2.st_mode & S_IFMT) != S_IFREG) {
 	printf("Sorry, open rogue save file is not a regular file: %s\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
 
     fflush(stdout);
@@ -256,7 +256,7 @@ restore(const char *file)
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
     encread(buf,80,inf);
     ret = sscanf(buf,"%d x %d\n", &lines, &cols);
@@ -265,7 +265,7 @@ restore(const char *file)
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
 
     initscr();                          /* Start up cursor package */
@@ -278,7 +278,7 @@ restore(const char *file)
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-        return(FALSE);
+        return(false);
     }
     if (cols > COLS)
     {
@@ -287,7 +287,7 @@ restore(const char *file)
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-        return(FALSE);
+        return(false);
     }
 
     hw = newwin(LINES, COLS, 0, 0);
@@ -306,7 +306,7 @@ restore(const char *file)
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
 
     /*
@@ -322,7 +322,7 @@ restore(const char *file)
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
 
     /*
@@ -333,7 +333,7 @@ restore(const char *file)
 /*
     printw("%s: %s", file, ctime(&sbuf2.st_mtime));
 */
-    clearok(stdscr,TRUE);
+    clearok(stdscr,true);
 
     /*
      * defeat multiple restarting from the same place
@@ -347,7 +347,7 @@ restore(const char *file)
 	    fflush(stdout);
 	    fclose(inf);
 	    md_tstpresume();
-	    return FALSE;
+	    return false;
 	}
 
     /*
@@ -359,7 +359,7 @@ restore(const char *file)
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
-	return FALSE;
+	return false;
     }
 
     /*
@@ -373,7 +373,7 @@ restore(const char *file)
     /*
      * setup game conditions
      */
-    clearok(curscr, TRUE);
+    clearok(curscr, true);
     msg("file name: %s", file);
     fflush(stdout);
     fclose(inf);

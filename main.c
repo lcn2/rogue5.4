@@ -58,7 +58,7 @@ main(int argc, char **argv)
     if (argc >= 2 && argv[1][0] == '\0')
 	if (strcmp(PASSWD, md_crypt(md_getpass("wizard's password: "), "mT")) == 0)
 	{
-	    wizard = TRUE;
+	    wizard = true;
 	    player.t_flags |= SEEMONST;
 	    argv++;
 	    argc--;
@@ -156,7 +156,7 @@ main(int argc, char **argv)
      */
 #ifdef MASTER
     if (wizard) {
-	noscore = TRUE;
+	noscore = true;
     }
 #endif
 
@@ -216,7 +216,7 @@ main(int argc, char **argv)
 	 */
 	if (strcmp(argv[1], "-s") == 0)
 	{
-	    noscore = TRUE;
+	    noscore = true;
 	    score(0, -1, 0);
 	    exit(0);
 	}
@@ -330,11 +330,11 @@ main(int argc, char **argv)
      * Set up windows
      */
     hw = newwin(LINES, COLS, 0, 0);
-    idlok(stdscr, TRUE);
-    idlok(hw, TRUE);
+    idlok(stdscr, true);
+    idlok(hw, true);
 #ifdef MASTER
     if (wizard) {
-	noscore = TRUE;
+	noscore = true;
     }
 #endif
     new_level();			/* Draw current level */

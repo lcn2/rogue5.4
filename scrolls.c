@@ -30,7 +30,7 @@ read_scroll(void)
     int y, x;
     int ch;
     int i;
-    int discardit = FALSE;
+    int discardit = false;
     struct room *cur_room;
     THING *orig_obj;
     coord mp;
@@ -55,7 +55,7 @@ read_scroll(void)
      * Get rid of the thing
      */
     discardit = (obj->o_count == 1);
-    leave_pack(obj, FALSE, FALSE);
+    leave_pack(obj, false, false);
     orig_obj = obj;
 
     switch (obj->o_which)
@@ -99,7 +99,7 @@ read_scroll(void)
 		if (ch == 1)
 		    addmsg("s");
 		endmsg();
-		scr_info[S_HOLD].oi_know = TRUE;
+		scr_info[S_HOLD].oi_know = true;
 	    }
 	    else
 		msg("you feel a strange sense of loss");
@@ -107,7 +107,7 @@ read_scroll(void)
 	    /*
 	     * Scroll which makes you fall asleep
 	     */
-	    scr_info[S_SLEEP].oi_know = TRUE;
+	    scr_info[S_SLEEP].oi_know = true;
 	    no_command += rnd(SLEEPTIME) + 4;
 	    player.t_flags &= ~ISRUN;
 	    msg("you fall asleep");
@@ -145,7 +145,7 @@ read_scroll(void)
 	    else
 	    {
 		obj = new_thing_ptr();
-		new_monster(obj, randmonster(FALSE), &mp);
+		new_monster(obj, randmonster(false), &mp);
 	    }
 	when S_ID_POTION:
 	case S_ID_SCROLL:
@@ -158,15 +158,15 @@ read_scroll(void)
 	    /*
 	     * Identify, let him figure something out
 	     */
-	    scr_info[obj->o_which].oi_know = TRUE;
+	    scr_info[obj->o_which].oi_know = true;
 	    msg("this scroll is an %s scroll", scr_info[obj->o_which].oi_name);
-	    whatis(TRUE, id_type[obj->o_which]);
+	    whatis(true, id_type[obj->o_which]);
 	}
 	when S_MAP:
 	    /*
 	     * Scroll of magic mapping.
 	     */
-	    scr_info[S_MAP].oi_know = TRUE;
+	    scr_info[S_MAP].oi_know = true;
 	    msg("oh, now this scroll has a map on it");
 	    /*
 	     * take all the things we want to keep hidden out of the window
@@ -235,18 +235,18 @@ def:
 	    /*
 	     * Scroll of gold detection
 	     */
-	    ch = FALSE;
+	    ch = false;
 	    wclear(hw);
 	    for (obj = lvl_obj; obj != NULL; obj = next(obj))
 		if (obj->o_type == FOOD)
 		{
-		    ch = TRUE;
+		    ch = true;
 		    wmove(hw, obj->o_pos.y, obj->o_pos.x);
 		    waddch(hw, FOOD);
 		}
 	    if (ch)
 	    {
-		scr_info[S_FDET].oi_know = TRUE;
+		scr_info[S_FDET].oi_know = true;
 		show_win("Your nose tingles and you smell food.--More--");
 	    }
 	    else
@@ -260,7 +260,7 @@ def:
 		cur_room = proom;
 		teleport();
 		if (cur_room != proom)
-		    scr_info[S_TELEP].oi_know = TRUE;
+		    scr_info[S_TELEP].oi_know = true;
 	    }
 	when S_ENCH:
 	    if (cur_weapon == NULL || cur_weapon->o_type != WEAPON)
@@ -311,7 +311,7 @@ def:
 #endif
     }
     obj = orig_obj;
-    look(TRUE);	/* put the result of the scroll on the screen */
+    look(true);	/* put the result of the scroll on the screen */
     status();
 
     call_it(&scr_info[obj->o_which]);

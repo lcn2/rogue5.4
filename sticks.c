@@ -65,7 +65,7 @@ do_zap(void)
 	return;
     if (obj->o_type != STICK)
     {
-	after = FALSE;
+	after = false;
 	msg("you can't zap with that!");
 	return;
     }
@@ -80,7 +80,7 @@ do_zap(void)
 	    /*
 	     * Reddy Kilowatt wand.  Light up the room
 	     */
-	    ws_info[WS_LIGHT].oi_know = TRUE;
+	    ws_info[WS_LIGHT].oi_know = true;
 	    if (proom->r_flags & ISGONE)
 		msg("the corridor glows and then fades");
 	    else
@@ -166,7 +166,7 @@ do_zap(void)
 			{
 			    do
 			    {
-				find_floor(NULL, &new_pos, FALSE, TRUE);
+				find_floor(NULL, &new_pos, false, true);
 			    } while (ce(new_pos, hero));
 			}
 			else
@@ -181,7 +181,7 @@ do_zap(void)
 		}
 	    }
 	when WS_MISSILE:
-	    ws_info[WS_MISSILE].oi_know = TRUE;
+	    ws_info[WS_MISSILE].oi_know = true;
 	    bolt.o_type = '*';
 	    strlcpy(bolt.o_hurldmg, "1x4", sizeof(bolt.o_hurldmg)-1);
 	    bolt.o_hplus = 100;
@@ -221,7 +221,7 @@ do_zap(void)
 			tp->t_flags &= ~ISHASTE;
 		    else
 			tp->t_flags |= ISSLOW;
-		    tp->t_turn = TRUE;
+		    tp->t_turn = true;
 		}
 		delta.y = y;
 		delta.x = x;
@@ -237,7 +237,7 @@ do_zap(void)
 	    else
 		name = "ice";
 	    fire_bolt(&hero, &delta, name);
-	    ws_info[obj->o_which].oi_know = TRUE;
+	    ws_info[obj->o_which].oi_know = true;
 	when WS_NOP:
 	    break;
 #ifdef MASTER
@@ -329,8 +329,8 @@ fire_bolt(const coord *start, coord *dir, const char *name)
     }
     pos = *start;
     hit_hero = (start != &hero);
-    used = FALSE;
-    changed = FALSE;
+    used = false;
+    changed = false;
     for (c1 = spotpos; c1 <= &spotpos[BOLT_LENGTH-1] && !used; c1++)
     {
 	pos.y += dir->y;
@@ -353,7 +353,7 @@ fire_bolt(const coord *start, coord *dir, const char *name)
 	    case ' ':
 		if (!changed)
 		    hit_hero = !hit_hero;
-		changed = FALSE;
+		changed = false;
 		dir->y = -dir->y;
 		dir->x = -dir->x;
 		c1--;
@@ -363,13 +363,13 @@ fire_bolt(const coord *start, coord *dir, const char *name)
 def:
 		if (!hit_hero && (tp = moat(pos.y, pos.x)) != NULL)
 		{
-		    hit_hero = TRUE;
+		    hit_hero = true;
 		    changed = !changed;
 		    tp->t_oldch = chat(pos.y, pos.x);
 		    if (!save_throw(VS_MAGIC, tp))
 		    {
 			bolt.o_pos = pos;
-			used = TRUE;
+			used = true;
 			if (tp->t_type == 'D' && strcmp(name, "flame") == 0)
 			{
 			    addmsg("the flame bounces");
@@ -392,7 +392,7 @@ def:
 		}
 		else if (hit_hero && ce(pos, hero))
 		{
-		    hit_hero = FALSE;
+		    hit_hero = false;
 		    changed = !changed;
 		    if (!save(VS_MAGIC))
 		    {
@@ -403,7 +403,7 @@ def:
 			    else
 				death(moat(start->y, start->x)->t_type);
 			}
-			used = TRUE;
+			used = true;
 			if (terse)
 			    msg("the %s hits", name);
 			else

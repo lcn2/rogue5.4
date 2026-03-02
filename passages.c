@@ -51,8 +51,8 @@ do_passages(void)
     for (r1 = rdes; r1 <= &rdes[MAXROOMS-1]; r1++)
     {
 	for (j = 0; j < MAXROOMS; j++)
-	    r1->isconn[j] = FALSE;
-	r1->ingraph = FALSE;
+	    r1->isconn[j] = false;
+	r1->ingraph = false;
     }
 
     /*
@@ -61,7 +61,7 @@ do_passages(void)
      */
     roomcount = 1;
     r1 = &rdes[rnd(MAXROOMS)];
-    r1->ingraph = TRUE;
+    r1->ingraph = true;
     do
     {
 	/*
@@ -87,12 +87,12 @@ do_passages(void)
 	 */
 	else
 	{
-	    r2->ingraph = TRUE;
+	    r2->ingraph = true;
 	    i = (int)(r1 - rdes);
 	    j = (int)(r2 - rdes);
 	    conn(i, j);
-	    r1->isconn[j] = TRUE;
-	    r2->isconn[i] = TRUE;
+	    r1->isconn[j] = true;
+	    r2->isconn[i] = true;
 	    roomcount++;
 	}
     } while (roomcount < MAXROOMS);
@@ -120,8 +120,8 @@ do_passages(void)
 	    i = (int)(r1 - rdes);
 	    j = (int)(r2 - rdes);
 	    conn(i, j);
-	    r1->isconn[j] = TRUE;
-	    r2->isconn[i] = TRUE;
+	    r1->isconn[j] = true;
+	    r2->isconn[i] = true;
 	}
     }
     passnum();
@@ -370,7 +370,7 @@ passnum(void)
     int i;
 
     pnum = 0;
-    newpnum = FALSE;
+    newpnum = false;
     for (rp = passages; rp < &passages[MAXPASS]; rp++)
 	rp->r_nexits = 0;
     for (rp = rooms; rp < &rooms[MAXROOMS]; rp++)
@@ -401,7 +401,7 @@ numpass(int y, int x)
     if (newpnum)
     {
 	pnum++;
-	newpnum = FALSE;
+	newpnum = false;
     }
     /*
      * check to see if it is a door or secret door, i.e., a new exit,

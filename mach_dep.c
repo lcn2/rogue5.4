@@ -64,7 +64,7 @@ char *msgs[MAX_MSGS + 1] = { /* +1 for paranoia */
 #endif /* CHECKTIME */
 
 static int lock_fd = -1;		/* rogue lock file descriptor, <0 ==> rogue lock file not open */
-static bool locked = FALSE;		/* TRUE ==> locked, FALSE ==> not locked */
+static bool locked = false;		/* true ==> locked, false ==> not locked */
 
 /*
  * init_check:
@@ -103,9 +103,9 @@ open_score(void)
     numscores = NUMSCORES;
 
 #ifdef ALLSCORES
-    allscore = TRUE;
+    allscore = true;
 #else  /* ALLSCORES */
-    allscore = FALSE;
+    allscore = false;
 #endif /* ALLSCORES */
 
      /*
@@ -232,7 +232,7 @@ open_score(void)
 void
 getltchars(void)
 {
-    got_ltc = TRUE;
+    got_ltc = true;
     orig_dsusp = md_dsuspchar();
     md_setdsuspchar( md_suspchar() );
 }
@@ -316,9 +316,9 @@ too_much(void)
 #ifdef MAXLOAD
     md_loadav(avec);
     if (avec[1] > (MAXLOAD / 10.0))
-	return TRUE;
+	return true;
 #endif
-    return FALSE;
+    return false;
 }
 
 /*
@@ -330,14 +330,14 @@ author(void)
 {
 #ifdef MASTER
     if (wizard)
-	return TRUE;
+	return true;
 #endif
     switch (md_getuid())
     {
 	case -1:
-	    return TRUE;
+	    return true;
 	default:
-	    return FALSE;
+	    return false;
     }
 }
 #endif
@@ -400,7 +400,7 @@ chmsg(char *fmt, int arg)
 
 /*
  * lock_sc:
- *	lock the rogue lock file.  Return TRUE if the lock is successful.
+ *	lock the rogue lock file.  Return true if the lock is successful.
  */
 int
 lock_sc(void)
@@ -411,7 +411,7 @@ lock_sc(void)
      * do nothing if already locked
      */
     if (locked) {
-	return TRUE;
+	return true;
     }
 
     /*
@@ -430,7 +430,7 @@ lock_sc(void)
 	    /* failed to open and/or create the lock file */
 	    printf("ERROR: failed to open lock file: %s\n", lock_path);
 	    fflush(stdout);
-	    return FALSE;
+	    return false;
 	}
     }
 
@@ -442,14 +442,14 @@ lock_sc(void)
 	/* failed to lock */
 	printf("ERROR: failed to lock: %s\n", lock_path);
 	fflush(stdout);
-	return FALSE;
+	return false;
     }
 
     /*
      * lock successful
      */
-    locked = TRUE;
-    return TRUE;
+    locked = true;
+    return true;
 }
 
 /*
@@ -473,7 +473,7 @@ unlock_sc(void)
      * do nothing is lock file is not open
      */
     if (lock_fd < 0) {
-	locked = FALSE;
+	locked = false;
 	return;
     }
 
@@ -491,7 +491,7 @@ unlock_sc(void)
     /*
      * unlock successful
      */
-    locked = FALSE;
+    locked = false;
     return;
 }
 

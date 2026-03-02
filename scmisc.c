@@ -20,11 +20,6 @@
 # include	<time.h>
 # include	<stdbool.h>
 
-# undef		TRUE
-# define	TRUE true
-# undef		FALSE
-# define	FALSE false
-
 # include	"have_strlcat.h"
 # include	"have_strlcpy.h"
 # include	"strl.h"
@@ -135,7 +130,7 @@ s_killname(int monst, int doart)
     char *sp;
     int article;
 
-    article = TRUE;
+    article = true;
     switch (monst)
     {
 	case 'a':
@@ -146,17 +141,17 @@ s_killname(int monst, int doart)
 	    sp = "dart";
 	when 's':
 	    sp = "starvation";
-	    article = FALSE;
+	    article = false;
 	when 'h':
 	    sp = "hypothermia";
-	    article = FALSE;
+	    article = false;
 	otherwise:
 	    if (isupper(monst))
 		sp = monsters[monst-'A'].m_name;
 	    else
 	    {
 		sp = "God";
-		article = FALSE;
+		article = false;
 	    }
     }
     memset(prbuf, 0, sizeof(prbuf));

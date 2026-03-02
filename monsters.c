@@ -88,7 +88,7 @@ new_monster(THING *tp, int type, const coord *cp)
     tp->t_flags = mp->m_flags;
     if (level > 29)
 	tp->t_flags |= ISHASTE;
-    tp->t_turn = TRUE;
+    tp->t_turn = true;
     tp->t_pack = NULL;
     if (ISWEARING(R_AGGR))
 	runto(cp);
@@ -140,9 +140,9 @@ wanderer(void)
 	    discard(tp);
 	    return;
 	}
-	find_floor(NULL, &cp, FALSE, TRUE);
+	find_floor(NULL, &cp, false, true);
     } while (roomin(&cp) == proom && moat(cp.y, cp.x) == NULL);
-    new_monster(tp, randmonster(TRUE), &cp);
+    new_monster(tp, randmonster(true), &cp);
     if (on(player, SEEMONST))
     {
 	standout();
