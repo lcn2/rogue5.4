@@ -686,7 +686,6 @@ int	inventory(const THING *list, int type);
 void	invis_on(void);
 int	is_current(const THING *obj);
 int	is_magic(const THING *obj);
-int     is_symlink(const char *sp);
 void	kill_daemon(void (*func)(int));
 void	killed(THING *tp, int pr);
 const char *killname(int monst, int doart);

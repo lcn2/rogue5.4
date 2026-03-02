@@ -299,26 +299,6 @@ start_score(void)
 #endif
 }
 
-/*
- * is_symlink:
- *      See if the file has a symbolic link
-  */
-int
-is_symlink(const char *sp)
-{
-#ifdef S_IFLNK
-    struct stat sbuf2;
-
-    if (lstat(sp, &sbuf2) < 0)
-        return FALSE;
-    else
-        return ((sbuf2.st_mode & S_IFMT) != S_IFREG);
-#else
-	NOOP(sp);
-    return FALSE;
-#endif
-}
-
 #if defined(MAXLOAD)
 /*
  * too_much:

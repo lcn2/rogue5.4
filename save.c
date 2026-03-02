@@ -171,38 +171,91 @@ int
 restore(const char *file)
 {
     FILE *inf;
-    int syml;
     char buf[MAXSTR];
     struct stat sbuf2;
     int lines = 0;
     int cols = 0;
     int ret = 0;
 
-    if (strcmp(file, "-r") == 0) {
-	file = file_name;
-    }
+    /*
+     * paranoia
+     */
     if (strlen(file) >= MAXSTR) {
-	printf("Sorry, the rogue save file path is too long.\n");
+	printf("Sorry, the rogue save file path is too long: %s\n", file);
 	fflush(stdout);
 	return FALSE;
     }
 
+    /*
+     * -r arg bead restore the default rogue save file
+     */
+    if (strcmp(file, "-r") == 0) {
+	file = file_name;
+    }
+
+    /*
+     * hold off on suspending for now
+     */
     md_tstphold();
 
-    if ((inf = fopen(file,"r")) == NULL)
-    {
-	perror(file);
+    /*
+     * verify that the rogue save file is not a symlink
+     */
+    memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
+    if (stat(file, &sbuf2) < 0) {
+	printf("Sorry, cannot stat rogue save file: %s - %s\n", file, strerror(errno));
+	fflush(stdout);
+	md_tstpresume();
 	return FALSE;
     }
-    stat(file, &sbuf2);
-    syml = is_symlink(file);
+    if ((sbuf2.st_mode & S_IFMT) != S_IFREG) {
+	printf("Sorry, rogue save file must be a regular file: %s\n", file);
+	fflush(stdout);
+	md_tstpresume();
+	return FALSE;
+    }
+
+    /*
+     * try to open for rogue save file for reading
+     *
+     * Yes, there is a race condition between the stat regular file above, and the open below.
+     */
+    inf = fopen(file, "r");
+    if (inf == NULL)
+    {
+	printf("Sorry, failed to open for reading rogue save file: %s - %s\n", file, strerror(errno));
+	fflush(stdout);
+	md_tstpresume();
+	return FALSE;
+    }
+
+    /*
+     * verify that the file is not a symlink
+     */
+    memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
+    if (fstat(fileno(inf), &sbuf2) < 0) {
+	printf("Sorry, cannot stat open rogue save file: %s - %s\n", file, strerror(errno));
+	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
+	return FALSE;
+    }
+    if ((sbuf2.st_mode & S_IFMT) != S_IFREG) {
+	printf("Sorry, open rogue save file is not a regular file: %s\n", file);
+	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
+	return FALSE;
+    }
 
     fflush(stdout);
     encread(buf, strlen(version) + 1, inf);
     if (strcmp(buf, version) != 0)
     {
-	printf("Sorry, saved game is out of date.\n");
+	printf("Sorry, saved game is out of date: %s\n", file);
 	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
 	return FALSE;
     }
     encread(buf,80,inf);
@@ -210,6 +263,8 @@ restore(const char *file)
     if (ret != 2) {
 	printf("Failed to parse the lines and columns from: %s\n", file);
 	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
 	return FALSE;
     }
 
@@ -221,6 +276,8 @@ restore(const char *file)
         printf("Sorry, original game was played on a screen with %d lines.\n",lines);
         printf("Current screen only has %d lines. Unable to restore game\n",LINES);
 	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
         return(FALSE);
     }
     if (cols > COLS)
@@ -228,6 +285,8 @@ restore(const char *file)
         printf("Sorry, original game was played on a screen with %d columns.\n",cols);
         printf("Current screen only has %d columns. Unable to restore game\n",COLS);
 	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
         return(FALSE);
     }
 
@@ -235,58 +294,90 @@ restore(const char *file)
     setup();
 
     rs_restore_file(inf);
-    /*
-     * we do not close the file so that we will have a hold of the
-     * inode for as long as possible
-     */
 
+    /*
+     * stat the open rogue file again in case someone linked to it while we were restoring the game state
+     *
+     * NOTE: we do not close the file so that we will have a hold of the inode for as long as possible
+     */
+    memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
+    if (fstat(fileno(inf), &sbuf2) < 0) {
+	printf("Sorry, cannot re-stat open rogue save file: %s - %s\n", file, strerror(errno));
+	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
+	return FALSE;
+    }
+
+    /*
+     * unlink the rogue save file now that we have restored our game state
+     */
     if (
 #ifdef MASTER
 	!wizard &&
 #endif
         md_unlink_open_file(file, inf) < 0)
     {
-	printf("Cannot unlink file\n");
+	printf("Cannot remove rogue save file after restoring: %s: %s\n", file, strerror(errno));
 	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
 	return FALSE;
     }
+
+    /*
+     * next call to wrefresh with this window will clear the screen
+     */
     mpos = 0;
 /*    printw(0, 0, "%s: %s", file, ctime(&sbuf2.st_mtime)); */
 /*
     printw("%s: %s", file, ctime(&sbuf2.st_mtime));
 */
     clearok(stdscr,TRUE);
+
     /*
      * defeat multiple restarting from the same place
      */
 #ifdef MASTER
     if (!wizard)
 #endif
-	if (sbuf2.st_nlink != 1 || syml)
+	if (sbuf2.st_nlink != 1)
 	{
-	    printf("Cannot restore from a linked file\n");
+	    printf("Cannot restore from a rogue save file that linked elsewhere: %s\n", file);
 	    fflush(stdout);
+	    fclose(inf);
+	    md_tstpresume();
 	    return FALSE;
 	}
 
+    /*
+     * catch the attempt to save a dead player
+     */
     if (pstats.s_hpt <= 0)
     {
 	printf("\"He's dead, Jim\"\n");
 	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
 	return FALSE;
     }
 
-    md_tstpresume();
-
+    /*
+     * change rogue save filename if needed
+     */
     if (strcmp(file_name, file) != 0) {
 	memset(file_name, 0, sizeof(file_name)); /* paranoia */
 	strlcpy(file_name, file, MAXSTR);
     }
-    file_name[MAXSTR] = '\0'; /* paranoia */
+
+    /*
+     * setup game conditions
+     */
     clearok(curscr, TRUE);
-    srand(md_getpid());
     msg("file name: %s", file);
     fflush(stdout);
+    fclose(inf);
+    md_tstpresume();
     playit();
     /*NOTREACHED*/
     exit(0);

@@ -1472,7 +1472,6 @@ rs_restore_file(FILE *savef)
     rs_read_int(savef, &vf_hit);
 #if defined(NON_BSD_RN_GENERATOR)
     rs_read_uint(savef, &seed);
-    srandom((unsigned)seed);
 #else
     rs_read_uint(savef, &new_seed);
     srandom((unsigned)new_seed);

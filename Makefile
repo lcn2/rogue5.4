@@ -324,10 +324,10 @@ FSANITIZE+= -fsanitize=vptr
 # CCWARN+= -pedantic
 # CCWARN+= -Werror
 # COPT:= -O0
+# DEBUG:= -ggdb3
 #
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
-# DEBUG:= -ggdb3
 ####
 
 
