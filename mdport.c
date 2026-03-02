@@ -43,7 +43,6 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include <signal.h>
-#include <uuid/uuid.h>
 
 #include "modern_curses.h"
 #include "have_strlcat.h"
