@@ -160,7 +160,7 @@ maximum dungeon depth (and successful return to level 0) of 31.
 
 ## rogue options
 
-The `rogue(6)` game options may be displayed and changed by using the "**o**" command.
+The `rogue` game options may be displayed and changed by using the "**o**" command.
 
 The option names are:
 
@@ -290,7 +290,7 @@ Recommendation: \<\<leave as default\>\>
 
 ## ROGUEOPTS environment variable
 
-The `$ROGUEOPTS` environment variable may be used to change the `rogue(6)` at startup,
+The `$ROGUEOPTS` environment variable may be used to change the `rogue` options at startup,
 rather than having to use the "**o**" command each time you play.
 
 The `$ROGUEOPTS` environment variable would be a string that is a series
@@ -329,7 +329,7 @@ the "auto save" action is successfully completed.
 
 A rogue save file is not guaranteed to restore in a different system.
 
-If the rogue save file does not exist, `rogue(6)` will create it when a game is saved.
+If the rogue save file does not exist, the `rogue` game will create it when a game is saved.
 
 * ~/.rogue.scr
 
@@ -345,19 +345,26 @@ so the default rogue score file size is 1120 bytes.
 Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue scores,
 no matter how they were played, and no matter if they won the game or not.
 
-If the rogue score file does not exist, `rogue(6)` will create it.
+If the rogue score file does not exist, the `rogue` game will create it.
 
 If the rogue score file is corrupted, or the format is too old, then
-`rogue(6)` will display an error message and recommend removing it.
+the `rogue` game will display an error message and recommend removing it.
 
 **IMPORTANT NOTE**: Changing the `NUMSCORES` value will cause rogue score files
-with a different number of slots to become invalid.  A `rogue(6)` compiled
+with a different number of slots to become invalid.  A game compiled
 with a different value will treat the previous rogue score file as if
 it were corrupt.
 
-You may use the `scedit(1)` tool to modify the rogue score file for
-some important reason, such as restoring a lost score.  Use of the `scedit(1)`
-tool to create fake scores is not a nice thing to do.
+You may use the `scedit` tool to modify the rogue score file for
+some important reason, such as restoring a lost score.
+
+For example:
+
+```sh
+/usr/local/bin/rogue ~/.rogue.scr
+```
+
+**NOTE**: Use of the `scedit` tool to create fake scores is **NOT** a nice thing to do.
 
 
 # Changing the rogue directory
@@ -392,8 +399,8 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 
 * Improved the C source to be able to compile under recent C compilers
 * Fixed many bugs in the rogue code
-* Fixed the code to compile both the `findpw(6)` and `scedit(6)` rouge tools
-* Install the `findpw(6)` and `scedit(6)` rouge tools
+* Fixed the code to compile both the `findpw` and `scedit` rouge tools
+* Install the `findpw` and `scedit` rouge tools
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
 * To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
@@ -410,8 +417,11 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * If the rogue score file is empty or missing, the code will automatically re-initialize it
 * The top scores are recorded in the rogue score file, regardless of if the game was won or not
 * You may change the `NUMSCORES` value in `config.h` to a value other than 10
-* By default, `rogue(6)` is **NOT** installed setguid (`${GROUPOWNER}`, by default, is empty)
+* By default, the `rogue` game is **NOT** installed setguid (`${GROUPOWNER}`, by default, is empty)
 * etc.
+
+**NOTE**: We call this version of the `rogue` game "**version 5.4.5**"
+in order to distinguish it from older, and **MUCH MORE** buggy, version "5.4.4" code.
 
 **IMPORTANT NOTE**: While a number of significant bugs have been fixed,
 we are sure that there remain other bugs.  As such, we do **NOT**
@@ -419,8 +429,8 @@ recommend, nor support running rogue setuid/setgid.  We recommend that
 you maintain the `Makefile` default of **NOT** setting the `GROUPOWNER`
 make variable (leave them empty).  While you may need to `sudo(1)` in
 order to install rogue under `/usr/local/bin/`, `/usr/local/share/`,
-and `/usr/local/man/man6/`, you do **NOT** have to run `rogue(6)` with
-any privileges!  Just run `rogue(6)` as yourself and let the game use
+and `/usr/local/man/man6/`, you do **NOT** have to run `rogue` with
+any privileges!  Just run the game as yourself and let the game use
 "dot-files" under your home directory.
 
 
@@ -428,7 +438,7 @@ any privileges!  Just run `rogue(6)` as yourself and let the game use
 
 This [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4)
 was cloned from [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4).
-[Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing `rogue(1)` on the Vax running BSD, wanted to
+[Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing rogue on the Vax running BSD, wanted to
 port the original game to modern compilers and UNIX-like operating systems
 (such as those that resonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
 
@@ -447,7 +457,8 @@ source that used to generate the Vax binary. It was distributed on the
 4.3 BSD Reno tapes: the so-called "Toy/Wichman/Arnold Vax binary" Rogue game.
 The gameplay provided by this code is essentially the same.
 
-We call this version 5.4.5 in order to distinguish it from older, and much more buggy, version 5.4.4 code.
+**NOTE**: We call this version of the `rogue` game "**version 5.4.5**"
+in order to distinguish it from older, and **MUCH MORE** buggy, version "5.4.4" code.
 
 
 ## Compatibility
@@ -472,7 +483,7 @@ CPU architecture differences, and the whim of the C compiler.
 **2026 Feb 11**, might not be compatible.  The game will exit with an ERROR
 if your rogue score file format is too old and/or has been corrupted.
 Remove the damaged or old rogue score file and run the game to rebuild.
-You can use the `scedit` to restore old scores if you wish.
+You can use the `scedit` tool to restore old scores if you wish.
 
 
 ### Bug reports and Pull Requests welcome
@@ -579,7 +590,7 @@ When you quaff a potion:
 |   3   |   13 % | gain strength     | You feel stronger, now.  What bulging muscles!          |
 |   4   |    3 % | see invisible     | This potion tastes like ... juice                       |
 |   5   |   13 % | healing           | You begin to feel better                                |
-|   6   |    6 % | monster detection | ((you see the monitors on the current level))           |
+|   6   |    6 % | monster detection | ((you see the monsters on the current level))           |
 |   7   |    6 % | magic detection   | You sense the presence of magic on this level           |
 |   8   |    2 % | raise level       | You suddenly feel much more skillful                    |
 |   9   |    5 % | extra healing     | You begin to feel much better                           |
@@ -708,6 +719,86 @@ To use a dart, or shuriken:
 
 0) Throw the item, the t\<dir\> command, where \<dir\> is noted above.
 
+Often you have to "fire" more than once (or dagger, shuriken, or
+spear) at a monster.
+For example, you may need to "fire" multiple times as a significant
+monster in the distance that is moving towards you in an effort to weaken
+it before having to engage in direct combat.
+
+**TIP**: When you are "firing" arrows while wielding a bow
+(i.e., shooting arrows as descried above), use the "**a**" to
+repeat the last command to "fire" multiple arrows.
+
+For example: assume your bow is in inventory is:
+
+```
+ a) 3 rations of food
+ b) +1 ring mail [protection 4] (being worn)
+ c) A +1,+1 mace (weapon in hand)
+ d) A +1,+0 short bow
+ e) 37 +0,+0 arrows
+ ```
+
+Assume the monster "K" is in direction "h":
+
+
+```
+     --------------------
+     |..................|
+     |..................|
+     ---------+----------
+              #
+              #
+   ############               ------+------             --------------------
+  -+---                       |...........|             +...........K.....@|
+  |...|                       |...........|             |............:.....|
+  |...|                   ####+...........+             |........*?........|
+  |...+####################   -+-----------             ------------------+-
+  --+--                        #                                          #
+    #                          #                                          #
+    ##                         ################                           #
+                                            --+---                        #
+                                            |....|                        #
+                                            +....|     ####################
+                                            |....| #####
+                                            |....| #
+                                            |....+##
+                                            ------
+Level: 1  Gold: 15     Hp: 10(12)  Str: 16(16)  Arm: 4   Exp: 1/8
+```
+
+To fire multiple arrows, first wield the bow (inventory slot "d"),
+throw in direction "h" (left) an arrow (inventory slot "e"),
+and use the "a" command to repeat:
+
+```
+w d t h e a a ...
+```
+
+If you defeat the monster, **DO NOT FORGET** to switch to wielding your better hand combat weapon!
+
+For example (in the case inventory slot "c"):
+
+```
+w c
+```
+
+You can wield a bow as a hand combat weapon, but it only does "1x1" damage,
+assuming you manage to even hit the monster!
+
+If the monster has not been killed by the time it is 2 spaces away:
+
+```
+--------------------
++...............K.@|
+|............:((...|
+|........*?........|
+------------------+-
+```
+
+switch to wielding your better hand combat weapon as switching weapons takes a turn
+and want to be ready by the time the monster is right on top of you.
+
 
 ## armor spoilers ==> ]
 
@@ -787,7 +878,13 @@ Negative food units will cause you to start to faint, impairing your ability to 
 
 Below -850 food units, you die of starvation.
 
-Each turn, you consume 1 food unit (i.e., the number of food units goes down by 1).
+For most turns, you consume 1 food unit (i.e., the number of food units goes down by 1).
+In particular, actions that take time will cause your stomach to consume food unit(s).
+
+There are actions that do not appear to take time, such as printing your inventory,
+printing help, identifying an object, and thus food units will not be consumed.
+If you perform an action, and if the monsters nearby move, then you can assume
+that your stomach will consume food unit(s).
 
 As noted above, some rings consume food units, while other rings give you food units.
 A ring with a positive **food used** will consume that many food units each turn: making you hungry faster.
@@ -901,7 +998,8 @@ For "\*" ("_List types of an object_"), when it asks:
 
 > For what type of object do you want a list?
 
-enter the symbol you want to create.  See the symbol table under the "To play rogue" above.
+enter the symbol you want to create.
+Refer too the symbol table under the "To play rogue" above for wht to create.
 
 The "\*" ("_list types of an object_") command is only useful for:
 
@@ -938,6 +1036,6 @@ Enter "+" for a enhanced item, "-" for a reduced item, or "n" for normal item.
 
 # Reporting Security Issues
 
-**IMPORTANT NOTE**: We do **NOT** support running `rogue(6)` with setuid and/or setgid privileges.
+**IMPORTANT NOTE**: We do **NOT** support running the `rogue` game with setuid and/or setgid privileges.
 
 To report a security issue, please visit "[Reporting Security Issues](https://github.com/lcn2/rogue5.4/security/policy)".
