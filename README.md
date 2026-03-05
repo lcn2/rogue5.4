@@ -119,7 +119,7 @@ The following table may help explain the symbols you see when playing rogue:
 |    *   | gold    |
 |    !   | potion  |
 |    ?   | scroll  |
-|    $   | food    |
+|    :   | food    |
 |    )   | weapon  |
 |    ]   | armor   |
 |    ,   | amulet  |
@@ -773,6 +773,51 @@ still have a negative effect.
 When **food used** is negative, the ring effectively adds food per turn when worn.
 
 
+## food ==> :
+
+The condition of your stomach is measured in food units.
+
+Your stomach has a maximum capacity of 2000 food units.
+
+When your number of food units drops below 300 food units, you will start to become hungry.
+When your number of food units drops below 150 food units, you will start to become weak.
+
+Being hungry or weak does not impair you until the number of food units goes negative (\< 0).
+Negative food units will cause you to start to faint, impairing your ability to perform actions.
+
+Below -850 food units, you die of starvation.
+
+Each turn, you consume 1 food unit (i.e., the number of food units goes down by 1).
+
+As noted above, some rings consume food units, while other rings give you food units.
+A ring with a positive **food used** will consume that many food units each turn: making you hungry faster.
+A ring with a negative **food used** will provide that many food units each turn: prolonging the time when you become hungry.
+
+The **Amulet of Yendor** acts like a ring consumes 1 food unit per turn.
+
+When you eat food, you add a random number of food units to your stomach.
+Eating food adds a random number of food units between 1100 and 1500 units to your stomach
+until you reach the maximum capacity of 2000 food units.
+Eating food while your stomach is full does nothing other than to waste food.
+
+There are two types of foods, type 0 food (90% of the time), and type 1 food (10% of the time).
+
+Type 0 food, 70% of the time, will taste awful, and 30% of the time will taste good.
+
+Eating awful type 0 food does **NOT** harm you.  Awful type 0 food gives you an experience point!
+
+Type 1 food will always taste yummy.
+
+Both type 0 and type 1 food offer you a random number of food units as noted above,
+however only type 0 food 70% of the time, gives you an experience point.
+
+If the game has not created food for 3 levels, the game will force the next created object to be food.
+Of course, you have to find the food that was forced to be created.
+If you pass it by, that's your fault. :-)
+
+You start the game with 1300 food units in your stomach, and 1 piece of food in your pack.
+
+
 ## staff spoilers ==> /
 
 When you read use a staff:
@@ -794,6 +839,7 @@ When you read use a staff:
 |   b   |   6 % | teleport away | Teleport a monster somewhere else.          |
 |   c   |   6 % | teleport to   | Teleport a monster to near you.             |
 |   d   |   5 % | cancellation  | Suppresses monster's special abilities.     |
+
 
 ## wizard mode spoilers
 
