@@ -999,7 +999,7 @@ For "\*" ("_List types of an object_"), when it asks:
 > For what type of object do you want a list?
 
 enter the symbol you want to create.
-Refer too the symbol table under the "To play rogue" above for wht to create.
+Refer too the symbol table under the "To play rogue" above for what to create.
 
 The "\*" ("_list types of an object_") command is only useful for:
 
