@@ -263,7 +263,7 @@ main(int argc, char **argv)
     if (argc == 2)
 	/* if restore works, it will never return */
 	if (!restore(argv[1])) {
-	    exit(1);
+	    my_exit(1);
 	}
 
     /*
@@ -307,24 +307,37 @@ main(int argc, char **argv)
       }
     }
 
-    initscr();				/* Start up cursor package */
+    /*
+     * Start up cursor package
+     */
+    initscr();
+    keypad(stdscr, TRUE);
+
+    /*
+     * The screen must be at least NUMLINES x NUMCOLS
+     */
+    if (LINES < NUMLINES || COLS < NUMCOLS) {
+	endwin_and_ncurses_cleanup();
+	printf("\nSorry, current screen only has %d lines and %d columns.\n", LINES, COLS);
+	printf("The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
+	fflush(stdout);
+	my_exit(1);
+    }
+
+    /*
+     * initialize rogue same state
+     */
     init_probs();			/* Set up prob tables for objects */
     init_player();			/* Set up initial player stats */
     init_names();			/* Set up names of scrolls */
     init_colors();			/* Set up colors of potions */
     init_stones();			/* Set up stone settings of rings */
     init_materials();			/* Set up materials of wands */
-    setup();
 
     /*
-     * The screen must be at least NUMLINES x NUMCOLS
+     * Setup signal handlers to auto_save(), and get the terminal setup
      */
-    if (LINES < NUMLINES || COLS < NUMCOLS)
-    {
-	printf("Sorry, the screen must be at least %dx%d\n", NUMLINES, NUMCOLS);
-	fflush(stdout);
-	my_exit(1);
-    }
+    setup();
 
     /*
      * Set up windows
@@ -337,7 +350,18 @@ main(int argc, char **argv)
 	noscore = true;
     }
 #endif
-    new_level();			/* Draw current level */
+
+    /*
+     * next call to wrefresh with this window will clear the screen
+     */
+    mpos = 0;
+    clearok(stdscr, true);
+
+    /*
+     * Draw current level
+     */
+    new_level();
+
     /*
      * Start up daemons and fuses
      */

@@ -182,6 +182,7 @@ restore(const char *file)
      */
     if (strlen(file) >= MAXSTR) {
 	printf("Sorry, the rogue save file path is too long: %s\n", file);
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	return false;
     }
@@ -204,12 +205,14 @@ restore(const char *file)
     memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
     if (stat(file, &sbuf2) < 0) {
 	printf("Sorry, cannot stat rogue save file: %s - %s\n", file, strerror(errno));
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	md_tstpresume();
 	return false;
     }
     if ((sbuf2.st_mode & S_IFMT) != S_IFREG) {
 	printf("Sorry, rogue save file must be a regular file: %s\n", file);
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	md_tstpresume();
 	return false;
@@ -224,6 +227,7 @@ restore(const char *file)
     if (inf == NULL)
     {
 	printf("Sorry, failed to open for reading rogue save file: %s - %s\n", file, strerror(errno));
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	md_tstpresume();
 	return false;
@@ -235,6 +239,7 @@ restore(const char *file)
     memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
     if (fstat(fileno(inf), &sbuf2) < 0) {
 	printf("Sorry, cannot stat open rogue save file: %s - %s\n", file, strerror(errno));
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -242,58 +247,62 @@ restore(const char *file)
     }
     if ((sbuf2.st_mode & S_IFMT) != S_IFREG) {
 	printf("Sorry, open rogue save file is not a regular file: %s\n", file);
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
 	return false;
     }
 
-    fflush(stdout);
+    /*
+     * read version from the rogue save file
+     */
+    memset(buf, 0, sizeof(buf)); /* paranoia */
     encread(buf, strlen(version) + 1, inf);
     if (strcmp(buf, version) != 0)
     {
-	printf("Sorry, saved game is out of date: %s\n", file);
+	printf("Sorry, saved game is out of date.\n");
+	printf("Expected version: %s found version: %s\n", version, buf);
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
 	return false;
     }
-    encread(buf,80,inf);
-    ret = sscanf(buf,"%d x %d\n", &lines, &cols);
+
+    /*
+     * read screen size from the rogue save file
+     */
+    memset(buf, 0, sizeof(buf)); /* paranoia */
+    encread(buf, NUMCOLS, inf);
+    ret = sscanf(buf, "%d x %d\n", &lines, &cols);
     if (ret != 2) {
-	printf("Failed to parse the lines and columns from: %s\n", file);
+	printf("Sorry, failed to parse the lines and columns from: %s\n", file);
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
 	return false;
     }
 
-    initscr();                          /* Start up cursor package */
-    keypad(stdscr, 1);
-
-    if (lines > LINES)
-    {
-        printf("Sorry, original game was played on a screen with %d lines.\n",lines);
-        printf("Current screen only has %d lines. Unable to restore game\n",LINES);
-	fflush(stdout);
-	fclose(inf);
-	md_tstpresume();
-        return(false);
-    }
-    if (cols > COLS)
-    {
-        printf("Sorry, original game was played on a screen with %d columns.\n",cols);
-        printf("Current screen only has %d columns. Unable to restore game\n",COLS);
-	fflush(stdout);
-	fclose(inf);
-	md_tstpresume();
-        return(false);
-    }
-
+    /*
+     * Start up cursor package
+     */
+    initscr();
+    keypad(stdscr, TRUE);
     hw = newwin(LINES, COLS, 0, 0);
-    setup();
+    setup(); /* also setup signal handlers */
 
-    rs_restore_file(inf);
+    /*
+     * object if screen is too small
+     */
+    if (lines < NUMLINES || cols < NUMCOLS) {
+	endwin_and_ncurses_cleanup();
+	printf("\nSorry, current screen only has %d lines and %d columns.\n", LINES, COLS);
+	printf("The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
+	fflush(stdout);
+	return false;
+    }
 
     /*
      * stat the open rogue file again in case someone linked to it while we were restoring the game state
@@ -301,8 +310,12 @@ restore(const char *file)
      * NOTE: we do not close the file so that we will have a hold of the inode for as long as possible
      */
     memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
+    errno = 0; /* paranoia */
     if (fstat(fileno(inf), &sbuf2) < 0) {
-	printf("Sorry, cannot re-stat open rogue save file: %s - %s\n", file, strerror(errno));
+	endwin_and_ncurses_cleanup();
+	printf("Sorry, cannot re-stat open rogue save file: %s\n", strerror(errno));
+	printf("The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
+        printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -312,13 +325,54 @@ restore(const char *file)
     /*
      * unlink the rogue save file now that we have restored our game state
      */
+    errno = 0; /* paranoia */
     if (
 #ifdef MASTER
 	!wizard &&
 #endif
         md_unlink_open_file(file, inf) < 0)
     {
-	printf("Cannot remove rogue save file after restoring: %s: %s\n", file, strerror(errno));
+	endwin_and_ncurses_cleanup();
+	printf("Sorry, cannot remove rogue save file after restoring: %s\n", strerror(errno));
+        printf("Unable to restore: %s\n", file);
+	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
+	return false;
+    }
+
+    /*
+     * defeat multiple restarting from the same place
+     */
+#ifdef MASTER
+    if (!wizard)
+#endif
+	if (sbuf2.st_nlink != 1)
+	{
+	    endwin_and_ncurses_cleanup();
+	    printf("Sorry, cannot restore from a rogue save file that linked\n");
+	    printf("Link count: %ld != 1\n", sbuf2.st_nlink);
+	    printf("Unable to restore: %s\n", file);
+	    fflush(stdout);
+	    fclose(inf);
+	    md_tstpresume();
+	    return false;
+	}
+
+    /*
+     * complete the game state restoration process
+     */
+    rs_restore_file(inf);
+
+    /*
+     * catch the attempt to save a dead player
+     */
+    if (pstats.s_hpt <= 0)
+    {
+	endwin_and_ncurses_cleanup();
+	printf("\"He's dead, Jim\"\n");
+	printf("Attempt to restore a game of a dead rogue player, HP: %d\n", pstats.s_hpt);
+	printf("Unable to restore: %s\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -329,38 +383,7 @@ restore(const char *file)
      * next call to wrefresh with this window will clear the screen
      */
     mpos = 0;
-/*    printw(0, 0, "%s: %s", file, ctime(&sbuf2.st_mtime)); */
-/*
-    printw("%s: %s", file, ctime(&sbuf2.st_mtime));
-*/
-    clearok(stdscr,true);
-
-    /*
-     * defeat multiple restarting from the same place
-     */
-#ifdef MASTER
-    if (!wizard)
-#endif
-	if (sbuf2.st_nlink != 1)
-	{
-	    printf("Cannot restore from a rogue save file that linked elsewhere: %s\n", file);
-	    fflush(stdout);
-	    fclose(inf);
-	    md_tstpresume();
-	    return false;
-	}
-
-    /*
-     * catch the attempt to save a dead player
-     */
-    if (pstats.s_hpt <= 0)
-    {
-	printf("\"He's dead, Jim\"\n");
-	fflush(stdout);
-	fclose(inf);
-	md_tstpresume();
-	return false;
-    }
+    clearok(stdscr, true);
 
     /*
      * change rogue save filename if needed
@@ -374,8 +397,8 @@ restore(const char *file)
      * setup game conditions
      */
     clearok(curscr, true);
-    msg("file name: %s", file);
-    fflush(stdout);
+    printw("file name: %s", file);
+    refresh();
     fclose(inf);
     md_tstpresume();
     playit();
