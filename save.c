@@ -351,7 +351,7 @@ restore(const char *file)
 	{
 	    endwin_and_ncurses_cleanup();
 	    printf("Sorry, cannot restore from a rogue save file that linked\n");
-	    printf("Link count: %ld != 1\n", sbuf2.st_nlink);
+	    printf("Link count: %ld != 1\n", (long int)sbuf2.st_nlink);
 	    printf("Unable to restore: %s\n", file);
 	    fflush(stdout);
 	    fclose(inf);
