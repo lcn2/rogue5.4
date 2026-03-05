@@ -20,32 +20,29 @@ make clobber all
 sudo make install
 ```
 
-To run rogue after installing:
+To run rogue before installing:
 
 ```sh
-/usr/local/bin/rogue
+./rogue
 ```
 
 
 ## To play rogue
 
-After installing, run:
+Assuming that `/usr/local/bin` in your `$PATH`, after installing, to play rogue:
 
 ```
-/usr/local/bin/rogue
+rogue
 ```
 
-To quit, interrupt the program (type control-C), answer "y" to the question and press return.
+To quit, interrupt the program (type control-C), answer "**y**" to the question and press return.
 
-Your score file is store in the by default, is maintained under `${ROGUEDIR}` which
-defaults to your home directory (i.e., `~/rogue.scr`).
+To save your rogue game, press "**S**" and save.
 
-To save your rogue game, press "S" and save.
-
-To restore your make, run:
+To restore your game, run:
 
 ```sh
-/usr/local/bin/rogue ~/.rogue.save
+rogue -r
 ```
 
 **NOTE**: Restoring your rogue game will cause the rogue save file to be removed.
@@ -310,7 +307,10 @@ options will be used.  Unknown options are silently ignored.
 
 ## Rogue files
 
-By default, the rogue stores files in your home (i.e., '${HOME}`) directory:
+By default, the rogue game stores files in your home (i.e., '${HOME}`) directory.
+
+In this section we will assume that `${ROGUEDIR}` is your home directory (denoted as `~`).
+See the "**Changing the rogue directory**" section for details.
 
 * ~/.rogue.lck
 
@@ -350,6 +350,9 @@ If the rogue score file does not exist, the `rogue` game will create it.
 If the rogue score file is corrupted, or the format is too old, then
 the `rogue` game will display an error message and recommend removing it.
 
+The use of `rogue -r` will cause the default rogue save file, as defined by the
+`-DSCOREPATH=..` as used by the compile lines as specified by the `Makefile`.
+
 **IMPORTANT NOTE**: Changing the `NUMSCORES` value will cause rogue score files
 with a different number of slots to become invalid.  A game compiled
 with a different value will treat the previous rogue score file as if
@@ -361,7 +364,7 @@ some important reason, such as restoring a lost score.
 For example:
 
 ```sh
-/usr/local/bin/rogue ~/.rogue.scr
+scedit ~/.rogue.scr
 ```
 
 **NOTE**: Use of the `scedit` tool to create fake scores is **NOT** a nice thing to do.
@@ -369,10 +372,17 @@ For example:
 
 # Changing the rogue directory
 
-The make variable `${ROGUEDIR}` is the directory where the rogue
+The make variable `${ROGUEDIR}` is the "rogue directory" where the rogue
 lock file, rogue score file, and the rogue save file are used and stored.
-The make variable `${ROGUEDIR}` defaults to your home directory (i.e.,
-`$HOME`).  If you wish to use a different directory, then compile and
+
+By default, `${ROGUEDIR}` make variable in `Makefile` is `${HOME}`,
+your home directory path.
+
+The `Makefile` uses compile lines that include `-DLOCKPATH=...` for the
+rogue lock file, `-DSAVEPATH=...` for the rogue save file, and
+`-DSCOREPATH=...` for the rogue score file.
+
+If you wish to use a different directory, then force a recompile and
 install with a modified `${ROGUEDIR}`.
 
 For example:
@@ -940,7 +950,9 @@ When you read use a staff:
 
 ## wizard mode spoilers
 
-**IMPORTANT NOTE**: If you enter **wizard mode** at any time during the game, your score will not be posted to the scoreboard.
+**IMPORTANT NOTE**: If you enter **wizard mode** at any time during the game,
+your score will **NOT** be posted to the scoreboard, even if you turn of **wizard mode**
+in the game.
 
 **HINT**: **The historic wizard password** may be found in a comment about a defined symbol.
 
@@ -971,7 +983,32 @@ SEED=1227897957 rogue ""
 implement the BSD `random(3)` facility, for rogue release **2026-02-24**
 or later.
 For example, the **1227897957** seed is very likely to start you out in
-what is called a "treasure room": a fun room full of monsters and artifacts.
+what is called a "treasure room": a fun room full of monsters and artifacts:
+
+```
+----+--------
++:.K.=..%.HS+
+|.......S=..|
+|..K!.K.....|
+|....E...K..|
+|.@?.S..E...|
+--+----------
+```
+
+For an even more challenging "treasure room" start, try:
+
+```sh
+SEED=1230429961 rogue ""
+```
+
+```
+----------------------
+|.........B........K.|
+|.B........@..?..S...|
+|.:..?...B.....H.KE..+
++.?:...?.K?...B..HB..|
+---+------------------
+```
 
 When you are in **wizard mode**, you have these special commands available to you:
 
