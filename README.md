@@ -246,9 +246,9 @@ Recommendation: overwrite
 
 This is the name of your character, as displayed in the rogue score file.
 
-Default: <<Your account name>>
+Default: \<\<Your account name\>\>
 
-Recommendation: <<leave as default>>
+Recommendation: \<\<leave as default\>\>
 
 * fruit=fruit-name
 
@@ -265,7 +265,7 @@ The default file name for saving the game.
 
 Default: ~/.rogue.save
 
-Recommendation: <<leave as default>>
+Recommendation: \<\<leave as default\>\>
 
 * score=rogue-score-path
 
@@ -275,7 +275,7 @@ The path of the rogue score file.
 
 Default: ~/.rogue.scr
 
-Recommendation: <<leave as default>>
+Recommendation: \<\<leave as default\>\>
 
 * lock=rogue-lock-path
 
@@ -285,7 +285,7 @@ The rogue lock file used to protect the rogue score file.
 
 Default: ~/.rogue.lck
 
-Recommendation: <<leave as default>>
+Recommendation: \<\<leave as default\>\>
 
 
 ## ROGUEOPTS environment variable
@@ -380,7 +380,7 @@ sudo make install ROGUEDIR=/var/tmp
 
 * Modern C compiler (c17/gnu17 or better)
 * Modern `make(1)` (recommend [GNU make](https://www.gnu.org/software/make/))
-* [Ncurses](https://invisible-island.net/ncurses/announce.html) (<ncurses.h> and libncurses), or for NetBSD, NetBSD curses is likely to work
+* [Ncurses](https://invisible-island.net/ncurses/announce.html) (\<ncurses.h\> and libncurses), or for NetBSD, NetBSD curses is likely to work
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
@@ -495,7 +495,7 @@ You may also file a [rogue5.4 GitHub bug report](https://github.com/lcn2/rogue5.
 ## Spoilers
 
 The **Amulet of Yendor** is on level 26.  Look for a **,** (comma) in a room on that level.
-Once you have the **Amulet of Yendor**, you are allowed to go up a staircase (use the **<** command).
+Once you have the **Amulet of Yendor**, you are allowed to go up a staircase (use the **\<** command).
 
 You may try your hand at going below level 26; however, the deeper you go,
 the harder it becomes to survive.  For example, see notes under "**monster spoilers**".
@@ -693,20 +693,20 @@ To use a bow and arrow:
 
 0) Wield, the w command, the bow
 
-1) Throw an arrow, the t<dir> command, where <dir> is:
+1) Throw an arrow, the t\<dir\> command, where \<dir\> is:
 
-    h       left
-    j       down
-    k       up
-    l       right
-    y       up & left
-    u       up & right
-    b       down & left
-    n       down & right
+* h - left
+* j - down
+* k - up
+* l - right
+* y - up & left
+* u - up & right
+* b - down & left
+* n - down & right
 
 To use a dart, or shuriken:
 
-0) Throw the item, the t<dir> command, where <dir> is noted above.
+0) Throw the item, the t\<dir\> command, where \<dir\> is noted above.
 
 
 ## armor spoilers ==> ]
@@ -799,7 +799,7 @@ When you read use a staff:
 
 **IMPORTANT NOTE**: If you enter **wizard mode** at any time during the game, your score will not be posted to the scoreboard.
 
-**HINT**: **The historic wizard password**" may be found in a comment about a defined symbol.
+**HINT**: **The historic wizard password** may be found in a comment about a defined symbol.
 
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
@@ -827,6 +827,8 @@ SEED=1227897957 rogue ""
 **NOTE**: A seed is very likely portable across different systems that
 implement the BSD `random(3)` facility, for rogue release **2026-02-24**
 or later.
+For example, the **1227897957** seed is very likely to start you out in
+what is called a "treasure room": a fun room full of monsters and artifacts.
 
 When you are in **wizard mode**, you have these special commands available to you:
 
