@@ -773,7 +773,7 @@ still have a negative effect.
 When **food used** is negative, the ring effectively adds food per turn when worn.
 
 
-## food ==> :
+## food spoilers ==> :
 
 The condition of your stomach is measured in food units.
 
