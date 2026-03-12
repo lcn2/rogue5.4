@@ -36,6 +36,7 @@ main(int argc, char **argv)
 {
     char *env;
     struct timeval tp;
+    int len;
 
     /*
      * on exit: cleanup I/O, and shutdown ncurses (if needed)
@@ -171,6 +172,13 @@ main(int argc, char **argv)
     }
     dnum += (unsigned int)md_getpid();
     dnum += (unsigned int)md_getuid();
+    /* whoami rogue name starting with rogo- may use $ROGOSEED to set dungeon number for rogomatic debugging */
+    if (strncmp(whoami, "rogo-", strlen("rogo-")) == 0) {
+	env = getenv("ROGOSEED");
+	if (env != NULL) {
+	    dnum = (unsigned int)strtol(env, NULL, 0);
+	}
+    }
 #ifdef MASTER
     if (wizard) {
 	/*
@@ -193,6 +201,27 @@ main(int argc, char **argv)
 #endif
 
     /*
+     * special case: rogue -s score_path
+     *
+     * Specify the score file path on the command line.
+     */
+    if (argc > 2 && argv[1] != NULL && strcmp(argv[1], "-s") == 0 && argv[2] != NULL && argv[2][0] != '\0') {
+
+	/*
+	 * By overriding score_path below, the subsequent call to open_score() will read that score file path.
+	 * Then when we "-s ==> check for print-score option", the call to score(0, -1, 0) will cause us
+	 * to print the scores from that particular score file path.
+	 */
+	len = strlen(argv[2]);
+	if (len > MAXSTR) {
+	    printf("ERROR: score path length: %d > MAXSTR: %d\n", len, MAXSTR);
+	    exit(1);
+	}
+	strncpy(score_path, argv[2], len+1);
+	score_path[len] = '\0'; /* paranoia */
+    }
+
+    /*
      * open the rogue score file
      *
      * If there is no rogue score file, or if the rogue score file is empty,
@@ -208,7 +237,7 @@ main(int argc, char **argv)
     /*
      * parse 2nd arg
      */
-    if (argc == 2)
+    if (argc >= 2)
     {
 
 	/*

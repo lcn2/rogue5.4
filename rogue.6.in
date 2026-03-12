@@ -7,26 +7,29 @@
 .\"
 .\" See the file LICENSE for full copyright and licensing information.
 .\"
-.TH ROGUE 6 "Feb 27, 2026"
+.TH ROGUE 6 "Mar 12, 2026"
 .UC 4
 .SH NAME
 rogue \- Exploring The Dungeons of Doom \- version 5.4.5
 .SH SYNOPSIS
 .B @PROGRAM@
 [
-.B \-r
-]
-[
-.I save_file
-]
-[
 .B \-s
+[
+.I score_flle
+]
 ]
 [
 .B \-d
 ]
 [
 .B \-V
+]
+[
+.B \-r
+]
+[
+.I save_file
 ]
 .SH DESCRIPTION
 .PP
@@ -65,7 +68,12 @@ option is used, the save game file is presumed to be the default.
 .PP
 The
 .B \-s
-option will print out the list of scores.
+option will print out the list of scores from the default score file.
+.PP
+The
+.BR \-s \ score_file
+option will print out the list of scores from the given
+.IR score_file .
 .PP
 The
 .B \-d
@@ -283,6 +291,16 @@ If the
 .B $ROGUEOPTS
 environment value is missing or empty, the default options will be used.
 Unknown options are silently ignored.
+.PP
+To assist in the debugging of
+.BR rogomatic (6),
+if the name of your character (i.e.,
+.BR rogue-name )
+starts with
+.B rogo\-
+then the environment variable
+.B $ROGOSEED
+may be used to set the rogue dungeon number.
 .SH FILES
 .TP
 .BR Lock\ File \ \-\ @LOCKFILE@
