@@ -101,7 +101,7 @@ For your convenience, the full game help output is formatted below:
     Q       quit
     !       shell escape
     F<dir>  fight till either of you dies
-    v       print version number
+    v       print version, release date, and dungeon number
 ```
 
 The following table may help explain the symbols you see when playing rogue:
@@ -415,9 +415,12 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
 * Changed the rogue lock filename to `${ROGUEDIR}/.rogue.lck` (defaults to `.rogue.lck` under your home directory)
+* The `$ROGUEOPTS` environment variable may be used to set the rogue lock filename
 * Changed the rogue save filename to `${ROGUEDIR}/.rogue.save` (defaults to `.rogue.save` under your home directory)
+* The `$ROGUEOPTS` environment variable may be used to set the rogue save filename
 * Changed the rogue score filename to `${ROGUEDIR}/.rogue.scr` (`defaults to .rogue.scr` under your home directory)
-* Does not require use of `chown(1)`, nor `chgrp(1)` by default
+* The `$ROGUEOPTS` environment variable may be used to set the rogue score filename
+* Does **NOT** require use of `chown(1)`, nor `chgrp(1)` by default
 * Fixed cases where creating invalid type of an item in **wizard mode** crashed the game
 * Creating an item in **wizard mode** that does not have a sub-type no longer asks which type of item
 * Added extensive SPOILER section notes in the lower part of this `README.md` file
@@ -428,6 +431,10 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * The top scores are recorded in the rogue score file, regardless of if the game was won or not
 * You may change the `NUMSCORES` value in `config.h` to a value other than 10
 * By default, the `rogue` game is **NOT** installed setguid (`${GROUPOWNER}`, by default, is empty)
+* Rogue prints the version an exits when **rogue -V** command option is given
+* Answering **?**" to the question `What do you want to call it?` will set correct name of the potion
+* To assist debugging rogomatic, when rogue starts with a player name beginning with **rogo-**, then **$ROGOSEED** sets the dungeon seed
+* The **v** command prints the rogue version, rogue release date, and dungeon number
 * etc.
 
 **NOTE**: We call this version of the `rogue` game "**version 5.4.5**"
@@ -473,7 +480,7 @@ in order to distinguish it from older, and **MUCH MORE** buggy, version "5.4.4" 
 
 ## Compatibility
 
-**IMPORTANT NOTE**: This code is **NOT** so-called "Public domain rogue"
+**IMPORTANT NOTE**: This code is **NOT** the so-called "Public domain rogue"
 rogue game that distributions such as NetBSD imported from 386BSD.
 The "Public domain rogue" was a reverse engineering attempt of the
 Vax binary game found on BSD 4.3 Reno tapes.  As such, the "Public domain rogue"
@@ -954,10 +961,11 @@ When you read use a staff:
 your score will **NOT** be posted to the scoreboard, even if you turn of **wizard mode**
 in the game.
 
-**HINT**: **The historic wizard password** may be found in a comment about a defined symbol.
-
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
+
+**BONUS HINT**: **The historic wizard password** may be found in a source code comment about a defined symbol
+in the **rogue.h** header file.
 
 You may toggle **wizard mode** on and off by pressing the "+" key.
 When you successfully toggle **wizard mode** on, you will see the message:
@@ -980,7 +988,7 @@ SEED=1227897957 rogue ""
 ```
 
 **NOTE**: A seed is very likely portable across different systems that
-implement the BSD `random(3)` facility, for rogue release **2026-02-24**
+implement the BSD `random(3)` facility, for rogue release date **2026-02-24**
 or later.
 For example, the **1227897957** seed is very likely to start you out in
 what is called a "treasure room": a fun room full of monsters and artifacts:

@@ -300,7 +300,7 @@ over:
 		    wrefresh(curscr);
 		when 'v':
 		    after = false;
-		    msg("rogue version %s release %s (chongo was here)", version, release);
+		    msg("rogue version %s release %s (chongo was here) for dungeon %u", version, release, dnum);
 		when 'S':
 		    after = false;
 		    save_game();

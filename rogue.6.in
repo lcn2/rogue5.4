@@ -7,7 +7,7 @@
 .\"
 .\" See the file LICENSE for full copyright and licensing information.
 .\"
-.TH ROGUE 6 "Mar 12, 2026"
+.TH ROGUE 6 "Mar 18, 2026"
 .UC 4
 .SH NAME
 rogue \- Exploring The Dungeons of Doom \- version 5.4.5
@@ -54,7 +54,7 @@ among heroes.
 When the game ends, either by your death, when you quit, or if you (by
 some miracle) manage to win,
 .I rogue
-will give you a list of the top-ten scorers.  The scoring is based entirely
+will give you a list of the top scorers.  The scoring is based entirely
 upon how much gold you get.  There is a 10% penalty for getting yourself
 killed.
 .PP
@@ -81,11 +81,16 @@ option will kill you and try to add you to the score file.
 .PP
 The
 .B \-V
-will print the release and version (same as the rogue v command)
+will print the rogue version, release date,
 and then exit.
 .PP
-For more detailed directions, read the document
-.I "A Guide to the Dungeons of Doom."
+For more detailed directions, read the
+.B README.md
+file of the rogue5.4 GitHub repo:
+.PP
+.in +0.5i
+.I https://github.com/lcn2/rogue5.4#rogue-54
+.in -0.5i
 .SH OPTIONS
 The
 .B rogue
@@ -293,14 +298,49 @@ environment value is missing or empty, the default options will be used.
 Unknown options are silently ignored.
 .PP
 To assist in the debugging of
-.BR rogomatic (6),
+.BR rogomatic,
 if the name of your character (i.e.,
 .BR rogue-name )
 starts with
 .B rogo\-
-then the environment variable
+when
+.B rogue
+starts, then the environment variable
 .B $ROGOSEED
 may be used to set the rogue dungeon number.
+.PP
+The
+.B v
+rogue command, in when printing the rogue version, and release date,
+also prints the rogue dungeon number.
+.PP
+.BR NOTE :
+Changing the
+.B rogue-name
+with the
+.B o
+command does
+.B NOT
+st in the debugging of
+.B rogomatic
+as the
+.B rogue-name
+must be set, via the above mentioned
+.B $ROGUEOPTS
+environment variable method
+.B BEFORE
+.BR rogue
+starts.
+For example:
+.sp
+.in +0.5i
+ROGUEOPTS="name=rogo-bot" ROGOSEED=1227897957 rogue
+.in -0.5i
+.sp
+See the
+.BR rogomatic (6)
+man page for how rogue dungeon seed debugging is performed by
+.BR rogomatic .
 .SH FILES
 .TP
 .BR Lock\ File \ \-\ @LOCKFILE@
@@ -344,7 +384,17 @@ will create it.
 .sp
 If the rogue score file is corrupted, or the format is too old, then
 an error message will be displayed advising that the rogue score file be removed.
-.SH Source Code
+.sp
+If you enter into
+.B wizard mode
+at any time during the game,
+then your score will
+.B NOT
+be recorded in the rogue score file,
+even if you turn off
+.B wizard mode
+during the game.
+.SH SOURCE CODE
 The source code for rogue version 5.4.5 is available at:
 .PP
 .in +0.5i
@@ -358,19 +408,54 @@ The above GitHub repo is maintained by:
 (GitHub user @lcn2:
 .IR https://github.com/lcn2 ).
 .PP
-Rogue version 5.4.5 plays like the original Vax binary that was distributed on the BSD 4.3 Reno tapes.
-.PP
 The port to ISO C 2017 with GNU extensions, the port to various platforms
 such as NetBSD, Linux, and Cygwin, and many rogue bug fixes applied to
 rogue version 5.4.5 were made by Landon Curt Noll (chongo), and Anthony
 C Howe (SirWumpus).
 .PP
 .BR BONUS :
-The historic wizard mode password may be found in a source code comment about a defined symbol.
+The historic
+.B wizard mode password
+may be found in a source code comment about a defined symbol
+in the \fIrogue.h\fP header file.
 In other words,
 as the expression goes:
 .B RTFS
 (\fIhttps://en.wikipedia.org/wiki/RTFS\fP) :-).
+.PP
+For more information on
+.BR wizard\ mode ,
+see the
+.B wizard mode
+spoiler text at:
+.sp
+.in +0.5i
+.I github.com/lcn2/rogue5.4#wizard-mode-spoilers
+.in -0.5i
+.SH VERSION 5.4.5
+.PP
+The rogue version was changed from 5.4.4 to 5.4.5
+to help distinguish this code from various buggy 5.4.4 code.
+.PP
+Rogue version 5.4.5 plays like the original Vax binary that was distributed on the BSD 4.3 Reno tapes.
+.PP
+In addition to a port to ISO C 2017 with GNU extensions, this version contains a fair number
+of significant bug fixes to help avoid the game crashing.
+.PP
+For a general overview of code improvements, see:
+.sp
+.in +0.5i
+.I https://github.com/lcn2/rogue5.4#why-yet-another-rouge-repo
+.in -0.5i
+.PP
+.B IMPORTANT\ NOTE :
+This code is
+.B NOT the so-called "\fIPublic domain rogue\fP" rogue game that distributions such as NetBSD imported from 386BSD.
+That "\fIPublic domain rogue\fP" was an attempt to reverse engineer the original game found on
+the BSD distribution tapes, and as such the game play differs from the original game in a number of ways.
+Rogue version 5.4.5, thankfully, is
+.B NOT
+compatible with the NetBSD rogue.
 .SH SEE ALSO
 We recommend that you read the
 .B README.md
@@ -379,6 +464,11 @@ file of the above mentioned GitHub repo:
 .in +0.5i
 .I https://github.com/lcn2/rogue5.4#rogue-54
 .in -0.5i
+.PP
+The so-called "\fBspoiler section\fP", found in the lower section of
+the above URL may be useful for people who wish to learn how to
+play the game.
+It contains game details that have been derived from the source code.
 .PP
 For additional details read:
 .I "A guide to the Dungeons of Doom"
