@@ -399,12 +399,13 @@ const struct h_list helpstr[] = {
     {'o',	"	examine/set options",			true},
     {CTRL('R'),	"	redraw screen",				true},
     {CTRL('P'),	"	repeat last message",			true},
-    {ESCAPE,	"	cancel command",			true},
+    {ESCAPE,	"	cancel command, ^[ is the escape key",	true},
     {'S',	"	save game",				true},
     {'Q',	"	quit",					true},
     {'!',	"	shell escape",				true},
     {'F',	"<dir>	fight till either of you dies",		true},
-    {'v',	"	print version and release",		true},
+    {'v',	"	print version, release, dungeon number",true},
+    {';',	"	command is ignored, no time passes",	true},
     {0,		NULL }
 };
 int numscores = NUMSCORES;

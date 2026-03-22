@@ -374,6 +374,9 @@ over:
 		    after = false;
 		when CTRL('Z'):
 		    tstp(0);
+		when ';':
+		    /* The ; command is ignored, no time passes - often used by rogomatic */
+		    after = false;
 		otherwise:
 		    after = false;
 #ifdef MASTER
