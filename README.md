@@ -102,7 +102,6 @@ For your convenience, the full game help output is formatted below:
     !       shell escape
     F<dir>  fight till either of you dies
     v       print version, release, dungeon number
-    ;       command is ignored, no time passes
 ```
 
 The following table may help explain the symbols you see when playing rogue:

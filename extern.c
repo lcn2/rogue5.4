@@ -405,7 +405,6 @@ const struct h_list helpstr[] = {
     {'!',	"	shell escape",				true},
     {'F',	"<dir>	fight till either of you dies",		true},
     {'v',	"	print version, release, dungeon number",true},
-    {';',	"	command is ignored, no time passes",	true},
     {0,		NULL }
 };
 int numscores = NUMSCORES;
