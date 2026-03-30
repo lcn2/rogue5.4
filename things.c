@@ -93,6 +93,16 @@ inv_name(const THING *obj, int drop)
 		pb = &prbuf[strlen(prbuf)];
 		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), " called %s", obj->o_label);
 	    }
+#ifdef MASTER
+	    if (wizard) {
+		if (obj->o_flags & ISCURSED) {
+		    strcat(pb, " (cursed)");
+		}
+		if (obj->o_flags & ISPROT) {
+		    strcat(pb, " (protected)");
+		}
+	    }
+#endif
 	when ARMOR:
 	    sp = arm_info[which].oi_name;
 	    if (obj->o_flags & ISKNOW)
@@ -111,6 +121,16 @@ inv_name(const THING *obj, int drop)
 		pb = &prbuf[strlen(prbuf)];
 		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), " called %s", obj->o_label);
 	    }
+#ifdef MASTER
+	    if (wizard) {
+		if (obj->o_flags & ISCURSED) {
+		    strcat(pb, " (cursed)");
+		}
+		if (obj->o_flags & ISPROT) {
+		    strcat(pb, " (protected)");
+		}
+	    }
+#endif
 	when AMULET:
 	    strcpy(pb, "The Amulet of Yendor");
 	when GOLD:
@@ -123,10 +143,11 @@ inv_name(const THING *obj, int drop)
     }
     if (inv_describe)
     {
-	if (obj == cur_armor)
+	if (obj == cur_armor) {
 	    strcat(pb, " (being worn)");
-	if (obj == cur_weapon)
+	} else if (obj == cur_weapon) {
 	    strcat(pb, " (weapon in hand)");
+	}
 	if (obj == cur_ring[LEFT])
 	    strcat(pb, " (on left hand)");
 	else if (obj == cur_ring[RIGHT])

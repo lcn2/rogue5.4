@@ -290,29 +290,41 @@ create_obj(void)
     obj->o_which = which;
     obj->o_group = 0;
     obj->o_count = 1;
+    obj->o_text = NULL;
+    obj->o_label = NULL;
     mpos = 0;
     if (obj->o_type == WEAPON || obj->o_type == ARMOR)
     {
-	msg("blessing? (+,-,n)");
+	msg("blessing? (+,-,n) ");
 	bless = readchar();
 	mpos = 0;
-	if (bless == '-')
-	    obj->o_flags |= ISCURSED;
 	if (obj->o_type == WEAPON)
 	{
 	    init_weapon(obj, obj->o_which);
-	    if (bless == '-')
-		obj->o_hplus -= rnd(3)+1;
-	    if (bless == '+')
-		obj->o_hplus += rnd(3)+1;
+	    if (bless == '-') {
+		obj->o_hplus -= rnd(3)+1;   /* decrease the ability to hit */
+		obj->o_dplus -= rnd(3)+1;   /* decrease the hit damaged */
+		obj->o_flags |= ISCURSED;   /* curse */
+	    } else if (bless == '+') {
+		obj->o_hplus += rnd(3)+1;   /* increase the ability to hit */
+		obj->o_dplus += rnd(3)+1;   /* increase the hit damaged */
+		obj->o_flags &= ~ISCURSED;  /* not cursed */
+	    } else {
+		obj->o_flags &= ~ISCURSED;  /* not cursed */
+	    }
 	}
 	else
 	{
 	    obj->o_arm = a_class[obj->o_which];
-	    if (bless == '-')
-		obj->o_arm += rnd(3)+1;
-	    if (bless == '+')
-		obj->o_arm -= rnd(3)+1;
+	    if (bless == '-') {
+		obj->o_arm += rnd(3)+1;	    /* decrease the protection */
+		obj->o_flags |= ISCURSED;   /* curse */
+	    } else if (bless == '+') {
+		obj->o_arm -= rnd(3)+1;	    /* increase the protection */
+		obj->o_flags &= ~ISCURSED;  /* not cursed */
+	    } else {
+		obj->o_flags &= ~ISCURSED;  /* not cursed */
+	    }
 	}
     }
     else if (obj->o_type == RING)
@@ -394,7 +406,7 @@ passwd(void)
     int c;
     static char buf[MAXSTR];
 
-    msg("wizard's Password:");
+    msg("wizard's Password: ");
     mpos = 0;
     sp = buf;
     while ((c = readchar()) != '\n' && c != '\r' && c != ESCAPE)

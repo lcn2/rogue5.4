@@ -102,18 +102,19 @@ new_thing_ptr(void)
 {
     THING *item;
 
-	if ((item = calloc(1, sizeof *item)) == NULL) {
+    item = calloc(1, sizeof(THING));
+    if (item == NULL) {
 #ifdef MASTER
-		msg("ran out of memory after %d items", total);
+	msg("ran out of memory after %d items", total);
 #endif
-		return NULL;
-	}
+	return NULL;
+    }
 
 #ifdef MASTER
-	total++;
+    total++;
 #endif
 
-	item->l_next = NULL;
+    item->l_next = NULL;
     item->l_prev = NULL;
     return item;
 }
