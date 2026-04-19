@@ -11,8 +11,10 @@
  */
 
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
 #include <string.h>
@@ -203,55 +205,55 @@ restore(const char *file)
      * verify that the rogue save file is not a symlink
      */
     memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
-    if (stat(file, &sbuf2) < 0) {
-	printf("Sorry, cannot stat rogue save file: %s - %s\n", file, strerror(errno));
-        printf("Unable to restore: %s\n", file);
-	fflush(stdout);
-	md_tstpresume();
-	return false;
-    }
-    if ((sbuf2.st_mode & S_IFMT) != S_IFREG) {
-	printf("Sorry, rogue save file must be a regular file: %s\n", file);
-        printf("Unable to restore: %s\n", file);
-	fflush(stdout);
-	md_tstpresume();
-	return false;
-    }
-
-    /*
-     * try to open for rogue save file for reading
-     *
-     * Yes, there is a race condition between the stat regular file above, and the open below.
-     */
-    inf = fopen(file, "r");
-    if (inf == NULL)
     {
-	printf("Sorry, failed to open for reading rogue save file: %s - %s\n", file, strerror(errno));
-        printf("Unable to restore: %s\n", file);
-	fflush(stdout);
-	md_tstpresume();
-	return false;
-    }
+	int fd;	    /* temporary open rogue save file descriptor */
 
-    /*
-     * verify that the file is not a symlink
-     */
-    memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
-    if (fstat(fileno(inf), &sbuf2) < 0) {
-	printf("Sorry, cannot stat open rogue save file: %s - %s\n", file, strerror(errno));
-        printf("Unable to restore: %s\n", file);
-	fflush(stdout);
-	fclose(inf);
-	md_tstpresume();
-	return false;
-    }
-    if ((sbuf2.st_mode & S_IFMT) != S_IFREG) {
-	printf("Sorry, open rogue save file is not a regular file: %s\n", file);
-        printf("Unable to restore: %s\n", file);
-	fflush(stdout);
-	fclose(inf);
-	md_tstpresume();
-	return false;
+	/*
+	 * attempt to open rogue save file
+	 */
+	fd = open(file, O_RDONLY | O_NOFOLLOW);
+	if (fd < 0) {
+	    printf("Sorry, failed to open for reading rogue save file: %s - %s\n", file, strerror(errno));
+	    printf("Unable to restore: %s\n", file);
+	    fflush(stdout);
+	    md_tstpresume();
+	    return false;
+	}
+
+	/*
+	 * verify that the rogue save file is a regular file
+	 */
+	memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
+	if (fstat(fd, &sbuf2) < 0) {
+	    printf("Sorry, cannot stat rogue save file: %s - %s\n", file, strerror(errno));
+	    printf("Unable to restore: %s\n", file);
+	    fflush(stdout);
+	    close(fd);
+	    md_tstpresume();
+	    return false;
+	}
+	if (!S_ISREG(sbuf2.st_mode)) {
+	    printf("Sorry, rogue save file must be a regular file: %s\n", file);
+	    printf("Unable to restore: %s\n", file);
+	    fflush(stdout);
+	    close(fd);
+	    md_tstpresume();
+	    return false;
+	}
+
+	/*
+	 * reopen the verified rogue save file
+	 */
+	inf = fdopen(fd, "r");
+	if (inf == NULL)
+	{
+	    printf("Sorry, failed to open for reading rogue save file: %s - %s\n", file, strerror(errno));
+	    printf("Unable to restore: %s\n", file);
+	    fflush(stdout);
+	    close(fd);
+	    md_tstpresume();
+	    return false;
+	}
     }
 
     /*
