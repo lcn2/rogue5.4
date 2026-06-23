@@ -52,10 +52,10 @@ command(void)
 	}
 	/*
 	 * these are illegal things for the player to be, so if any are
-	 * set, someone's been poking in memeory
+	 * set, someone's been poking in memory
 	 */
 	if (on(player, ISSLOW|ISGREED|ISINVIS|ISREGEN|ISTARGET))
-	    exit(1);
+	    exit(10); /*coo*/
 
 	look(true);
 	if (!running)
@@ -599,7 +599,7 @@ help(void)
 		break;
 	}
     wmove(hw, LINES - 1, 0);
-    waddstr(hw, "--Press space to continue--");
+    waddstr(hw, " --More--");
     wrefresh(hw);
     wait_for(hw, ' ');
     clearok(stdscr, true);

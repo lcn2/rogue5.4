@@ -45,7 +45,7 @@ fatal(const char *s)
 {
     mvaddstr(LINES - 2, 0, s);
     refresh();
-    my_exit(0);
+    my_exit(20); /*ooo*/
 }
 
 /*

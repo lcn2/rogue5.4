@@ -247,7 +247,7 @@ def:
 	    if (ch)
 	    {
 		scr_info[S_FDET].oi_know = true;
-		show_win("Your nose tingles and you smell food.--More--");
+		show_win("Your nose tingles and you smell food. --More--");
 	    }
 	    else
 		msg("your nose tingles");

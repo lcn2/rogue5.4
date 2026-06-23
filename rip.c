@@ -496,7 +496,7 @@ death(int monst)
 #if defined(SIGTERM)
     signal(SIGTERM, sig_term);
 #endif
-    my_exit(0);
+    my_exit(0); /*ooo*/
 }
 
 /*
@@ -566,7 +566,7 @@ total_winner(void)
     addstr("\nYou have joined the elite ranks of those who have escaped the\n");
     addstr("Dungeons of Doom alive.  You journey home and sell all your loot at\n");
     addstr("a great profit and are admitted to the Fighters' Guild.\n");
-    mvaddstr(LINES - 1, 0, "--Press space to continue--");
+    mvaddstr(LINES - 1, 0, " --More--");
     refresh();
     wait_for(stdscr, ' ');
     clear();
@@ -635,7 +635,7 @@ total_winner(void)
     printw("   %5d  Gold Pieces          ", oldpurse);
     refresh();
     score(purse, 2, ' ');
-    my_exit(0);
+    my_exit(0); /*ooo*/
 
     /*
      * restore SIGHUP, SIGINT, SIGQUIT, and SIGTERM

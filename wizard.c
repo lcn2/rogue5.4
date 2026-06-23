@@ -444,6 +444,6 @@ show_map(void)
 	    if (!(real & F_REAL))
 		wstandend(hw);
 	}
-    show_win("---More (level map)---");
+    show_win(" --More--");
 }
 #endif

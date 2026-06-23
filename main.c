@@ -25,6 +25,30 @@
 #include "score.h"
 #include "rogue.h"
 
+static char *program = "rogue"; /* our name */
+
+static char *usage =
+    "usage: %s [-h] [-s [ score_file ] ] [-d] [-V] [-r] [ save_file ]\n"
+    "\n"
+    "\t-h\t\toutput this message and exit\n"
+    "\t-s\t\tprint out the list of scores from the default score file\n"
+    "\t-s score_file\tprint out the list of scores from score_file\n"
+    "\t-d\t\tkill the rogue and try to add the rogue to the score file\n"
+    "\t-V\t\tprint version string and exit\n"
+    "\t-r\t\tsave game file will be the default save game file\n"
+    "\n"
+    "Exit codes:\n"
+    "     0   rogue exited normally, all OK\n"
+    "     2   -h and help string printed or -V and version string printed\n"
+    "     3   invalid command line, invalid option or option missing an argument\n"
+    "     4   score file path too long\n"
+    "     5   failed to restore game\n"
+    "     6   failed to open rogue pid file for writing\n"
+    "     7   screen to small to restore game\n"
+    " >= 10   internal rogue error\n"
+    "\n"
+    "rogue version: %s %s";
+
 char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
 
 /*
@@ -37,6 +61,11 @@ main(int argc, char **argv)
     char *env;
     struct timeval tp;
     int len;
+
+    /*
+     * save our name
+     */
+    program = argv[0];
 
     /*
      * on exit: cleanup I/O, and shutdown ncurses (if needed)
@@ -205,7 +234,7 @@ main(int argc, char **argv)
      *
      * Specify the score file path on the command line.
      */
-    if (argc > 2 && argv[1] != NULL && strcmp(argv[1], "-s") == 0 && argv[2] != NULL && argv[2][0] != '\0') {
+    if (argc > 2 && argv[1] != NULL && argv[1][0] != '-' && argv[2] != NULL && argv[2][0] != '\0') {
 
 	/*
 	 * By overriding score_path below, the subsequent call to open_score() will read that score file path.
@@ -215,7 +244,7 @@ main(int argc, char **argv)
 	len = strlen(argv[2]);
 	if (len > MAXSTR) {
 	    printf("ERROR: score path length: %d > MAXSTR: %d\n", len, MAXSTR);
-	    exit(1);
+	    exit(4); /*ooo*/
 	}
 	strncpy(score_path, argv[2], len+1);
 	score_path[len] = '\0'; /* paranoia */
@@ -247,7 +276,7 @@ main(int argc, char **argv)
 	{
 	    noscore = true;
 	    score(0, -1, 0);
-	    exit(0);
+	    exit(0); /*ooo*/
 	}
 
 	/*
@@ -273,7 +302,7 @@ main(int argc, char **argv)
 	    } else {
 		death('B');
 	    }
-	    exit(0);
+	    exit(0); /*ooo*/
 	}
 
 	/*
@@ -284,7 +313,26 @@ main(int argc, char **argv)
 	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
 	    printf("rogue version %s release %s (chongo was here)", version, release);
 	    fflush(stdout);
-	    exit(0);
+	    exit(2); /*ooo*/
+	}
+
+	/*
+	 * -h ==> print usage message and exit
+	 */
+	else if (strcmp(argv[1], "-h") == 0)
+	{
+	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
+	    printf(usage, program, version, release);
+	    fflush(stdout);
+	    exit(2); /*ooo*/
+	}
+
+	else if (argv[1][0] == '-')
+	{
+	    printf("unknown command line option: %s\n", argv[1]);
+	    printf(usage, program, version, release);
+	    fflush(stdout);
+	    exit(3); /*ooo*/
 	}
     }
 
@@ -292,7 +340,7 @@ main(int argc, char **argv)
     if (argc == 2)
 	/* if restore works, it will never return */
 	if (!restore(argv[1])) {
-	    my_exit(1);
+	    my_exit(5); /*ooo*/
 	}
 
     /*
@@ -332,7 +380,7 @@ main(int argc, char **argv)
       if ((pidfp = fopen (pidfilename, "w")) == NULL) {
         printf("Can't open '%s'.\n", pidfilename);
 	fflush(stdout);
-        exit(1);
+        exit(6); /*ooo*/
       }
     }
 
@@ -350,7 +398,7 @@ main(int argc, char **argv)
 	printf("\nSorry, current screen only has %d lines and %d columns.\n", LINES, COLS);
 	printf("The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
 	fflush(stdout);
-	my_exit(1);
+	my_exit(7); /*ooo*/
     }
 
     /*

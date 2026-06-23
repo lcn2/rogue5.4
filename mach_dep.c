@@ -85,7 +85,7 @@ init_check(void)
 	    printf("However, since you're a good guy, it's up to you\n");
 	    fflush(stdout);
 	} else {
-	    exit(1);
+	    exit(30); /*coo*/
 	}
     }
 #endif
@@ -188,7 +188,7 @@ open_score(void)
 	if (scoreboard == NULL) {
 	     printf("Could not open %s for writing: %s\n", score_path, strerror(errno));
 	     fflush(stdout);
-	     exit(1);
+	     exit(31);
 	}
         md_chmod(score_path, 0664);
 
@@ -554,7 +554,7 @@ form_lock_path(void)
     if (lock_path[0] == '\0') { /* paranoia */
 	printf("ERROR: LOCKPATH is an empty string!\n");
 	fflush(stdout);
-	exit(1);
+	exit(32);
     }
     lock_path[MAXSTR] = '\0'; /* paranoia */
     return;
@@ -583,7 +583,7 @@ form_save_path(void)
     if (file_name[0] == '\0') { /* paranoia */
 	printf("ERROR: SAVEPATH is an empty string!\n");
 	fflush(stdout);
-	exit(1);
+	exit(33);
     }
     file_name[MAXSTR] = '\0'; /* paranoia */
     return;
@@ -612,7 +612,7 @@ form_score_path(void)
     if (score_path[0] == '\0') { /* paranoia */
 	printf("ERROR: SCOREPATH is an empty string!\n");
 	fflush(stdout);
-	exit(1);
+	exit(34);
     }
     score_path[MAXSTR] = '\0'; /* paranoia */
     return;

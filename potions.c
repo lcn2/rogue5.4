@@ -152,7 +152,7 @@ quaff(void)
 	    if (show)
 	    {
 		pot_info[P_TFIND].oi_know = true;
-		show_win("You sense the presence of magic on this level.--More--");
+		show_win("You sense the presence of magic on this level. --More--");
 	    }
 	    else
 		msg("you have a %s feeling for a moment, then it passes",

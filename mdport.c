@@ -172,7 +172,7 @@ static void
 signal_exit(int sig)
 {
     NOOP(sig);
-    exit(0);
+    exit(0); /*ooo*/
 }
 
 void
@@ -479,13 +479,13 @@ md_normaluser(void)
     if (setregid(realgid, realgid) != 0)
     {
 	perror("Could not drop setgid privileges.  Aborting.");
-	exit(1);
+	exit(40); /*coo*/
     }
 
     if (setreuid(realuid, realuid) != 0)
     {
 	perror("Could not drop setuid privileges.  Aborting.");
-	exit(1);
+	exit(41);
     }
 }
 
@@ -642,7 +642,7 @@ md_shellescape(void)
         md_normaluser();
         execl(sh == NULL ? "/bin/sh" : sh, "shell", "-i", NULL);
         perror("No shelly");
-        _exit(-1);
+        _exit(42);
     }
     else /* Application */
     {
@@ -753,7 +753,7 @@ md_getpass(char *prompt)
 
         /* Exit on interrupt (^c or ^break) */
         if (c == '\003' || c == 0x100)
-            exit(1);
+            exit(43);
 
         /* Terminate on end of line or file (^j, ^m, ^d, ^z) */
         if (c == '\r' || c == '\n' || c == '\004' || c == '\032')

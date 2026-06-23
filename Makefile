@@ -293,7 +293,7 @@ OTHER_FSANITIZE+= -fstack-protector-all
 #
 # For Homebrew gcc version 15 only:
 #
-# CC:= gcc-15
+# CC:= gcc-16
 # DEBUG:= -g2
 #
 # For Apple clang and Homebrew gcc:
@@ -374,7 +374,7 @@ scedit: ${OBJS} scmisc.o scedit.o
 # other targets that are not automatically built #
 ##################################################
 
-# compile all with gcc-15, full warnings, no optimizer, no ASAN
+# compile all with gcc-16, full warnings, no optimizer, no ASAN
 #
 # NOTE: Consider doing a "make clobber" first, especially when switching from a previous "make all", "make clang", etc.
 #
@@ -382,7 +382,7 @@ gcc:
 ifeq ($(target),Linux)
 	${MAKE} -f ${MAKE_FILE} all CC='gcc' CCWARN='-Wall -pedantic -Werror' COPT='-O0' DEBUG='-ggdb3'
 else
-	${MAKE} -f ${MAKE_FILE} all CC='gcc-15' CCWARN='-Wall -pedantic -Werror' COPT='-O0' DEBUG='-g2'
+	${MAKE} -f ${MAKE_FILE} all CC='gcc-16' CCWARN='-Wall -pedantic -Werror' COPT='-O0' DEBUG='-g2'
 endif
 
 # compile all with clang, full warnings, no optimizer, no ASAN

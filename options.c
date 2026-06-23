@@ -122,7 +122,7 @@ option(void)
      * Switch back to original screen
      */
     wmove(hw, LINES - 1, 0);
-    waddstr(hw, "--Press space to continue--");
+    waddstr(hw, " --More--");
     wrefresh(hw);
     wait_for(hw, ' ');
     clearok(curscr, true);

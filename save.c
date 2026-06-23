@@ -140,7 +140,7 @@ auto_save(int sig)
     if (file_name[0] != '\0' && ((savef = fopen(file_name, "w")) != NULL ||
 	(md_unlink_open_file(file_name, savef) >= 0 && (savef = fopen(file_name, "w")) != NULL)))
 	    save_file(savef);
-    exit(0);
+    exit(0); /*ooo*/
 }
 
 /*
@@ -161,7 +161,7 @@ save_file(FILE *savef)
     rs_save_file(savef);
     fflush(savef);
     fclose(savef);
-    exit(0);
+    exit(0); /*ooo*/
 }
 
 /*
@@ -405,7 +405,7 @@ restore(const char *file)
     md_tstpresume();
     playit();
     /*NOTREACHED*/
-    exit(0);
+    exit(0); /*ooo*/
 }
 
 static int encerrno = 0;
@@ -560,7 +560,7 @@ rd_score(SCORE *top_score)
 	printf("ERROR: The score file format is too old and/or has been corrupted!\n");
 	printf("WARNING: Before running rouge again, remove the score file: %s\n", score_path);
 	fflush(stdout);
-	exit(1);
+	exit(50); /*coo*/
     }
 
     rewind(scoreboard);

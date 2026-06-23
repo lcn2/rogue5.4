@@ -7,12 +7,15 @@
 .\"
 .\" See the file LICENSE for full copyright and licensing information.
 .\"
-.TH ROGUE 6 "2026 Mar 18"
+.TH ROGUE 6 "2026 Jun 22"
 .UC 4
 .SH NAME
 rogue \- Exploring The Dungeons of Doom \- version 5.4.5
 .SH SYNOPSIS
 .B @PROGRAM@
+[
+.B \-h
+]
 [
 .B \-s
 [
@@ -58,17 +61,13 @@ will give you a list of the top scorers.  The scoring is based entirely
 upon how much gold you get.  There is a 10% penalty for getting yourself
 killed.
 .PP
-If
-.I save_file
-is specified,
-rogue will be restored from the specified saved game file.
-If the
-.B \-r
-option is used, the save game file is presumed to be the default.
+The
+.B \-h
+will print a help message, and then exit.
 .PP
 The
 .B \-s
-option will print out the list of scores from the default score file.
+option, by itself, will print out the list of scores from the default score file.
 .PP
 The
 .BR \-s \ score_file
@@ -83,6 +82,10 @@ The
 .B \-V
 will print the rogue version, release date,
 and then exit.
+.PP
+The
+.B \-r
+will presume that the save game file will be the default save game file.
 .PP
 For more detailed directions, read the
 .B README.md

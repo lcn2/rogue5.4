@@ -143,7 +143,7 @@ main(int ac, char *av[])
 	 */
 	if ((scoreboard = fopen(scorefile, "r+")) == NULL) {
 		perror(scorefile);
-		exit(1);
+		exit(1); /*ooo*/
 	}
 
 	/*
@@ -160,7 +160,7 @@ main(int ac, char *av[])
 	while (do_comm())
 		continue;
 	fclose(scoreboard);
-	exit(0);
+	exit(0); /*ooo*/
 }
 
 /*

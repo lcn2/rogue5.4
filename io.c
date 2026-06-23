@@ -19,7 +19,7 @@
  * msg:
  *	Display a message at the top of the screen.
  */
-#define MAXMSG	(NUMCOLS - sizeof "--More--")
+#define MAXMSG	(NUMCOLS - sizeof " --More--")
 
 static char msgbuf[2*MAXMSG+1];
 static int newpos = 0;
@@ -79,7 +79,7 @@ endmsg(void)
     if (mpos)
     {
 	look(false);
-	mvaddstr(0, mpos, "--More--");
+	mvaddstr(0, mpos, " --More--");
 	refresh();
 	if (!msg_esc)
 	    wait_for(stdscr, ' ');

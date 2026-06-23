@@ -503,7 +503,7 @@ add_line(const char *fmt, const char *arg)
 {
     WINDOW *tw, *sw;
     int x, y;
-    char *prompt = "--Press space to continue--";
+    char *prompt = " --More--";
     static int maxlen = -1;
 
     if (line_cnt == 0)

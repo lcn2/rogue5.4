@@ -279,7 +279,7 @@ main(int argc, char **argv)
     /*
      * all done
      */
-    exit(0);
+    exit(0); /*ooo*/
 }
 
 #endif /* STRL_TEST */
