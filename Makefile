@@ -281,17 +281,17 @@ OTHER_FSANITIZE+= -fstack-protector-all
 #
 # This comment block was tested under:
 #
-#       macOS 26.2 with Apple clang version 17.0.0 (clang-1700.6.3.2)
+#       macOS 26.5.1 with Apple clang version 21.0.0 (clang-2100.1.1.101)
 #
-#       See: https://releases.llvm.org/17.0.1/tools/clang/docs/AddressSanitizer.html
+#       See: https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early
 #
 # To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
 #
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
-# See also: https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early
+#
 # And also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
 #
-# For Homebrew gcc version 15 only:
+# For Homebrew gcc version 16 only:
 #
 # CC:= gcc-16
 # DEBUG:= -g2
@@ -319,16 +319,17 @@ OTHER_FSANITIZE+= -fstack-protector-all
 #
 # This comment block was tested under:
 #
-#       RHEL9.7 with clang version 20.1.8 (Red Hat, Inc. 20.1.8-3.el9)
+#       RHEL 10.2 with clang version 21.1.8 (Red Hat, Inc. 21.1.8-1.el10)
 #
 # with these RPMs installed:
 #
-#       libasan-11.5.0-11.el9.x86_64
-#       libubsan-11.5.0-11.el9.x86_64
+#       libasan-14.3.1-4.4.el10.x86_64
+#       libubsan-14.3.1-4.4.el10.x86_64
 #
 # To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
 #
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
+#
 # And also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
 #
 # Be sure you have the following dnf packages installed:
