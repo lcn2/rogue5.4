@@ -59,6 +59,7 @@ char home[MAXSTR + 1] = {'\0'};		/* User's home directory plus a trailing /, +1 
 char file_name[MAXSTR + 1] = {'\0'};	/* rogue save file path, +1 for paranoia */
 char lock_path[MAXSTR + 1] = {'\0'};	/* rogue lock file path, +1 for paranoia */
 char score_path[MAXSTR + 1] = {'\0'};	/* rogue score file path, +1 for paranoia */
+int  signal_quit = false;		/* True if terminating signal will quit the game, False will save game state */
 char huh[MAXSTR+1];			/* The last message printed, +1 for paranoia */
 const char *p_colors[MAXPOTIONS + 1];	/* Colors of the potions, +1 for paranoia */
 char prbuf[PFBUF_LEN + 1] = {'\0'};	/* buffer for snprintfs, +1 for paranoia */

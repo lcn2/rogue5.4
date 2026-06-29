@@ -7,28 +7,27 @@
 .\"
 .\" See the file LICENSE for full copyright and licensing information.
 .\"
-.TH ROGUE 6 "2026 Jun 22"
+.TH ROGUE 6 "2026 Jun 28"
 .UC 4
 .SH NAME
 rogue \- Exploring The Dungeons of Doom \- version 5.4.5
 .SH SYNOPSIS
 .B @PROGRAM@
 [
-.B \-h
+.B \-S
 ]
 [
 .B \-s
 [
-.I score_flle
+.I score_file
 ]
-]
-[
+|
 .B \-d
-]
-[
+|
 .B \-V
-]
-[
+|
+.B \-h
+|
 .B \-r
 ]
 [
@@ -59,7 +58,30 @@ some miracle) manage to win,
 .I rogue
 will give you a list of the top scorers.  The scoring is based entirely
 upon how much gold you get.  There is a 10% penalty for getting yourself
-killed.
+killed, unless the
+.B \-S
+is used.
+.PP
+The
+.B \-S
+will cause a terminating signal, such as
+.BR SIGHUP ,
+.BR SIGINT ,
+.BR SIGQUIT ,
+or
+.BR SIGTERM ,
+to kill the rogue without a 10% penalty.
+If the score is high enough to be recorded on the score file,
+the reason for death will be recorded as "\fBKilled by signal\fP".
+This command line option used by
+.BR rogomatic (6),
+and is
+.B NOT
+recommended for human players.
+.sp
+Without the \fB\-S\fP flag,
+terminating signals will cause the game state to be saved, allowing for the
+possibility trying to restore the game later.
 .PP
 The
 .B \-h
@@ -301,7 +323,7 @@ environment value is missing or empty, the default options will be used.
 Unknown options are silently ignored.
 .PP
 To assist in the debugging of
-.BR rogomatic,
+.BR rogomatic ,
 if the name of your character (i.e.,
 .BR rogue-name )
 starts with
