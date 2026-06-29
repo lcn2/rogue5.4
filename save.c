@@ -123,6 +123,12 @@ gotfile:
  *	The md_onsignal_autosave() in mdport.c, which is called via
  *	setup() from mach_dep.c, and md_init() from mdport.c.
  *
+ *	Without rogue -S, signal_quit == false, and thus md_onsignal_autosave() in mdport.c
+ *	will tie the signal handler to auto_save() (instead of auto_quit()).
+ *
+ *	With rogue -S, signal_quit == true, and thus md_onsignal_autosave() in mdport.c
+ *	will tie the signal handler to auto_quit() (instead of auto_save()).
+ *
  *	The setup() function is called from main() (short after the
  *	"just a moment while I dig the dungeon" message a printed,
  *	and after ncurses setup and data structures are setup) in main.c,
@@ -136,10 +142,35 @@ auto_save(int sig)
     FILE *savef;
     NOOP(sig);
 
+    /* paranoia - ignore signals until we exit */
     md_ignoreallsignals();
-    if (file_name[0] != '\0' && ((savef = fopen(file_name, "w")) != NULL ||
-	(md_unlink_open_file(file_name, savef) >= 0 && (savef = fopen(file_name, "w")) != NULL)))
-	    save_file(savef);
+
+    /*
+     * case: rogue -S
+     */
+    if (signal_quit == true) {
+
+	/*
+	 * report death by signal
+	 */
+	death('z'); /* rogue death by signal */
+	/*NOTREACHED*/
+
+    /*
+     * case: rogue w/o -S
+     */
+    } else {
+
+	/*
+	 * save game so that it might be restored later
+	 */
+	if (file_name[0] != '\0' && ((savef = fopen(file_name, "w")) != NULL ||
+	    (md_unlink_open_file(file_name, savef) >= 0 && (savef = fopen(file_name, "w")) != NULL)))
+	{
+		save_file(savef);
+	}
+    }
+
     exit(0); /*ooo*/
 }
 

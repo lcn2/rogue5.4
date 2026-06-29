@@ -15,6 +15,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #include "modern_curses.h"
 #include "have_strlcat.h"
@@ -28,14 +29,22 @@
 static char *program = "rogue"; /* our name */
 
 static char *usage =
-    "usage: %s [-h] [-s [ score_file ] ] [-d] [-V] [-r] [ save_file ]\n"
+    "usage: %s [-S] [-s [ score_file ] | -d | -V | -h | -r] [ save_file ]\n"
+    "\n"
+    "\t-S\t\tquit game catching a terminating signal (def: save game)\n"
+    "\n"
+    "\t-s\t\tprint out the list of scores from: %s\n"
+    "\t-s score_file\tprint out the list of scores from score_file\n"
+    "\n"
+    "\t-d\t\tkill the rogue and try to add the rogue to the score file\n"
     "\n"
     "\t-h\t\toutput this message and exit\n"
-    "\t-s\t\tprint out the list of scores from the default score file\n"
-    "\t-s score_file\tprint out the list of scores from score_file\n"
-    "\t-d\t\tkill the rogue and try to add the rogue to the score file\n"
+    "\n"
     "\t-V\t\tprint version string and exit\n"
+    "\n"
     "\t-r\t\tsave game file will be the default save game file\n"
+    "\n"
+    "\t[ save_file ]\tset the save file path (def save file path: %s)\n"
     "\n"
     "Exit codes:\n"
     "     0   rogue exited normally, all OK\n"
@@ -47,7 +56,7 @@ static char *usage =
     "     7   screen to small to restore game\n"
     " >= 10   internal rogue error\n"
     "\n"
-    "rogue version: %s %s";
+    "rogue version: %s %s (chongo was here)";
 
 char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
 
@@ -61,6 +70,9 @@ main(int argc, char **argv)
     char *env;
     struct timeval tp;
     int len;
+    extern char *optarg;	/* option argument */
+    extern int optind;		/* argv index of the next arg */
+    int i;
 
     /*
      * save our name
@@ -83,17 +95,26 @@ main(int argc, char **argv)
 
 #ifdef MASTER
     /*
-     * Check to see if he is a wizard
+     * If the 1st argument (after argv[0] program name), is an empty string,
+     * then ask then to prove they are a wizard.
+     *
+     * Skip over 1st argument empty string, regardless of if they prove
+     * they are a wizard, or not.
      */
-    if (argc >= 2 && argv[1][0] == '\0')
+    if (argc >= 2 && argv[1] != NULL && argv[1][0] == '\0')
+    {
+
+	/* ask them to prove they are a wizard */
 	if (strcmp(PASSWD, md_crypt(md_getpass("wizard's password: "), "mT")) == 0)
 	{
 	    wizard = true;
 	    player.t_flags |= SEEMONST;
-	    argv++;
-	    argc--;
 	}
 
+	/* skip the empty string, regardless */
+	argv++;
+	argc--;
+    }
 #endif
 
     /*
@@ -230,25 +251,128 @@ main(int argc, char **argv)
 #endif
 
     /*
-     * special case: rogue -s score_path
-     *
-     * Specify the score file path on the command line.
+     * parse args
      */
-    if (argc > 2 && argv[1] != NULL && argv[1][0] != '-' && argv[2] != NULL && argv[2][0] != '\0') {
+    while ((i = getopt(argc, argv, ":Ss::dVhr")) != -1) {
+	switch (i) {
+	case 'S':   /* -S ==> terminating signal will quit the game */
+	    signal_quit = true;
+	    break;
 
-	/*
-	 * By overriding score_path below, the subsequent call to open_score() will read that score file path.
-	 * Then when we "-s ==> check for print-score option", the call to score(0, -1, 0) will cause us
-	 * to print the scores from that particular score file path.
-	 */
-	len = strlen(argv[2]);
-	if (len > MAXSTR) {
-	    printf("ERROR: score path length: %d > MAXSTR: %d\n", len, MAXSTR);
-	    exit(4); /*ooo*/
+	case 's':   /* -s ==> list of scores from default score file, -s score_file ==> list of scores from score_file */
+	    if (optarg != NULL) {
+		/*
+		 * By overriding score_path below, the subsequent call to open_score() will read that score file path.
+		 * Then when we "-s ==> check for print-score option", the call to score(0, -1, 0) will cause us
+		 * to print the scores from that particular score file path.
+		 */
+		len = strlen(optarg);
+		if (len > MAXSTR) {
+		    fprintf(stderr, "ERROR: score path length: %d > MAXSTR: %d\n", len, MAXSTR);
+		    exit(4); /*ooo*/
+		}
+		strncpy(score_path, optarg, len+1);
+		score_path[len] = '\0'; /* paranoia */
+	    }
+
+	    /*
+	     * print score file and exit
+	     */
+	    noscore = true;
+	    open_score();
+	    score(0, -1, 0);
+	    exit(0); /*ooo*/
+	    break;
+
+	case 'd':   /* -d ==> die immediately by bat (or random monster if wizard mode) */
+	    /*
+	     * throw away some rnd()s to break patterns
+	     */
+	    {
+		unsigned int rnum = rnd(100)+1;
+		while (--rnum > 0) {
+		    rnd(100);
+		}
+	    }
+
+	    /*
+	     * set the level
+	     */
+	    if (wizard) {
+		level = rnd(30) + 1;
+	    } else {
+		level = 1;
+	    }
+
+	    /*
+	     * set the purse size
+	     */
+	    purse = GOLDCALC;
+
+	    /*
+	     * setup the screen
+	     */
+	    initscr();
+	    getltchars();
+
+	    /*
+	     * die due to a monster
+	     */
+	    if (wizard) {
+		death(death_monst());
+	    } else {
+		death('B');
+	    }
+	    exit(0); /*ooo*/
+	    break;
+
+	case 'V':   /* -V ==> print the rogue version, release date, and then exit */
+	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
+	    printf("%s %s", version, release);
+	    fflush(stdout);
+	    exit(2); /*ooo*/
+
+	case 'h':   /* -h ==> print usage message and exit */
+	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
+	    fflush(stdout);
+	    fprintf(stderr, usage, program, score_path, file_name, version, release);
+	    fflush(stderr);
+	    exit(2); /*ooo*/
+
+	case 'r':   /* -r ==>  that the save game file will be the default save game file */
+	    break;
+
+	case ':':
+	    fflush(stdout);
+            (void) fprintf(stderr, "%s: ERROR: requires an argument -- %c\n", program, optopt);
+	    (void) fprintf(stderr, usage, program, score_path, file_name, version, release);
+	    fflush(stderr);
+	    exit(3); /* ooo */
+	    /*NOTREACHED*/
+	    break;
+
+	case '?':
+	    fflush(stdout);
+            (void) fprintf(stderr, "%s: ERROR: illegal option -- %c\n", program, optopt);
+	    (void) fprintf(stderr, usage, program, score_path, file_name, version, release);
+	    fflush(stderr);
+	    exit(3); /* ooo */
+	    /*NOTREACHED*/
+	    break;
+
+	default:
+	    fflush(stdout);
+	    (void) fprintf(stderr, "%s: ERROR: invalid -flag\n", program);
+	    (void) fprintf(stderr, usage, program, score_path, file_name, version, release);
+	    fflush(stderr);
+	    exit(3); /* ooo */
+	    /*NOTREACHED*/
+	    break;
 	}
-	strncpy(score_path, argv[2], len+1);
-	score_path[len] = '\0'; /* paranoia */
     }
+    /* skip over command line options */
+    argv += optind;
+    argc -= optind;
 
     /*
      * open the rogue score file
@@ -264,84 +388,19 @@ main(int argc, char **argv)
     md_normaluser();
 
     /*
-     * parse 2nd arg
+     * check for legal startup
      */
-    if (argc >= 2)
-    {
+    init_check();
 
-	/*
-	 * -s ==> check for print-score option
-	 */
-	if (strcmp(argv[1], "-s") == 0)
-	{
-	    noscore = true;
-	    score(0, -1, 0);
-	    exit(0); /*ooo*/
-	}
-
-	/*
-	 * -d ==> die immediately by bat (or random monster if wizard mode)
-	 */
-	else if (strcmp(argv[1], "-d") == 0)
-	{
-	    unsigned int rnum;
-
-	    rnum = rnd(100)+1;	/* throw away some rnd()s to break patterns */
-	    while (--rnum)
-		rnd(100);
-	    purse = GOLDCALC;
-	    if (wizard) {
-		level = rnd(100) + 1;
-	    } else {
-		level = 1;
-	    }
-	    initscr();
-	    getltchars();
-	    if (wizard) {
-		death(death_monst());
-	    } else {
-		death('B');
-	    }
-	    exit(0); /*ooo*/
-	}
-
-	/*
-	 * -V ==> print version and exit
-	 */
-	else if (strcmp(argv[1], "-V") == 0)
-	{
-	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
-	    printf("rogue version %s release %s (chongo was here)", version, release);
-	    fflush(stdout);
-	    exit(2); /*ooo*/
-	}
-
-	/*
-	 * -h ==> print usage message and exit
-	 */
-	else if (strcmp(argv[1], "-h") == 0)
-	{
-	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
-	    printf(usage, program, version, release);
-	    fflush(stdout);
-	    exit(2); /*ooo*/
-	}
-
-	else if (argv[1][0] == '-')
-	{
-	    printf("unknown command line option: %s\n", argv[1]);
-	    printf(usage, program, version, release);
-	    fflush(stdout);
-	    exit(3); /*ooo*/
-	}
-    }
-
-    init_check();			/* check for legal startup */
-    if (argc == 2)
+    /*
+     * use any remaining command line option as the save_file to restore from
+     */
+    if (argc > 0) {
 	/* if restore works, it will never return */
-	if (!restore(argv[1])) {
+	if (!restore(argv[0])) {
 	    my_exit(5); /*ooo*/
 	}
+    }
 
     /*
      * report dungeon (or wizard dungeon)
@@ -378,8 +437,9 @@ main(int argc, char **argv)
       memset (pidfilename, '\0', sizeof(pidfilename));
       snprintf (pidfilename, SHORTSTR, "roguepid.%d", pid);
       if ((pidfp = fopen (pidfilename, "w")) == NULL) {
-        printf("Can't open '%s'.\n", pidfilename);
 	fflush(stdout);
+        fprintf(stderr, "Can't open '%s'.\n", pidfilename);
+	fflush(stderr);
         exit(6); /*ooo*/
       }
     }
@@ -395,9 +455,10 @@ main(int argc, char **argv)
      */
     if (LINES < NUMLINES || COLS < NUMCOLS) {
 	endwin_and_ncurses_cleanup();
-	printf("\nSorry, current screen only has %d lines and %d columns.\n", LINES, COLS);
-	printf("The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
 	fflush(stdout);
+	fprintf(stderr, "\nSorry, current screen only has %d lines and %d columns.\n", LINES, COLS);
+	fprintf(stderr, "The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
+	fflush(stderr);
 	my_exit(7); /*ooo*/
     }
 

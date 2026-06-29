@@ -443,8 +443,17 @@ death(int monst)
 
     /*
      * 10% death tax :-)
+     *
+     * Unless we are being killed by a signal, that can happen when rogue is run with the -S option.
      */
-    purse -= purse / 10;
+    if (monst != 'z')
+    {
+	purse -= purse / 10;
+    }
+
+    /*
+     * report death
+     */
     clear();
     killer = killname(monst, false);
     if (!tombstone)
@@ -479,6 +488,10 @@ death(int monst)
     }
     move(LINES - 1, 0);
     refresh();
+
+    /*
+     * update score file if needed
+     */
     score(purse, amulet ? 3 : 0, monst);
 
     /*
@@ -670,6 +683,7 @@ killname(int monst, int doart)
 	{'d',	"dart",			true},
 	{'h',	"hypothermia",		false},
 	{'s',	"starvation",		false},
+	{'z',	"signal",		false},
 	{'\0'}
     };
 
@@ -711,7 +725,7 @@ death_monst(void)
     {
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 	'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-	'Y', 'Z', 'a', 'b', 'h', 'd', 's',
+	'Y', 'Z', 'a', 'b', 'd', 'h', 's', 'z',
 	' '	/* This is provided to generate the "Wally the Wonder Badger"
 		   message for killer */
     };

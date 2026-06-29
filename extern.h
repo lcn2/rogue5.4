@@ -70,6 +70,7 @@ extern char home[MAXSTR + 1];			/* home path plus trailing /, +1 for paranoia */
 extern char lock_path[MAXSTR + 1];		/* rogue lock file path, +1 for paranoia */
 extern char file_name[MAXSTR + 1];		/* rogue save file path, +1 for paranoia */
 extern char score_path[MAXSTR + 1];		/* rogue score file path, +1 for paranoia */
+extern int signal_quit;				/* True if terminating signal will quit the game, False will save game state */
 
 /*
  * Function types
