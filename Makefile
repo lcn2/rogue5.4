@@ -391,7 +391,7 @@ endif
 # NOTE: Consider doing a "make clobber" first, especially when switching from a previous "make all", "make gcc", etc.
 #
 clang:
-	${MAKE} -f ${MAKE_FILE} all CC='clang' CCWARN='-Wall -pedantic -Werror' COPT='-O0' DEBUG='-ggdb3'
+	${MAKE} -f ${MAKE_FILE} all CC='clang' CCWARN='-Wall -pedantic -Werror -Wno-char-subscripts' COPT='-O0' DEBUG='-ggdb3'
 
 # compile all with Address Sanitizer (ASAN) enabled
 #
