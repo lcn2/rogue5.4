@@ -16,6 +16,8 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
 
 #include "modern_curses.h"
 #include "have_strlcat.h"
@@ -226,7 +228,19 @@ main(int argc, char **argv)
     if (strncmp(whoami, "rogo-", strlen("rogo-")) == 0) {
 	env = getenv("ROGOSEED");
 	if (env != NULL) {
-	    dnum = (unsigned int)strtol(env, NULL, 0);
+	    long ret;	/* $ROGOSEED as a long */
+
+	    /*
+	     * convert $ROGOSEED into dungeon number, if possible
+	     */
+	    errno = 0;
+	    ret = strtol(env, NULL, 0);
+	    if (errno == 0) {
+		dnum = (unsigned int)ret;
+	    } else {
+		fprintf(stderr, "ERROR: whoami: %s unable to convert $ROGOSEED into dungeon number: %s error: %s\n",
+				whoami, env, strerror(errno));
+	    }
 	}
     }
 #ifdef MASTER
@@ -236,7 +250,20 @@ main(int argc, char **argv)
 	 */
 	env = getenv("SEED");
 	if (env != NULL) {
+	    long ret;	/* $SEED as a long */
 	    dnum = (unsigned int)strtol(env, NULL, 0);
+
+	    /*
+	     * convert $SEED into dungeon number, if possible
+	     */
+	    errno = 0;
+	    ret = strtol(env, NULL, 0);
+	    if (errno == 0) {
+		dnum = (unsigned int)ret;
+	    } else {
+		fprintf(stderr, "ERROR: as wizard, unable to convert $SEED into dungeon number: %s error: %s\n",
+				env, strerror(errno));
+	    }
 	}
     }
 #endif
@@ -253,13 +280,13 @@ main(int argc, char **argv)
     /*
      * parse args
      */
-    while ((i = getopt(argc, argv, ":Ss::dVhr")) != -1) {
+    while ((i = getopt(argc, argv, ":Ss:dVhr")) != -1) {
 	switch (i) {
 	case 'S':   /* -S ==> terminating signal will quit the game */
 	    signal_quit = true;
 	    break;
 
-	case 's':   /* -s ==> list of scores from default score file, -s score_file ==> list of scores from score_file */
+	case 's':   /* -s score_file ==> list of scores from score_file */
 	    if (optarg != NULL) {
 		/*
 		 * By overriding score_path below, the subsequent call to open_score() will read that score file path.
@@ -343,6 +370,22 @@ main(int argc, char **argv)
 	    break;
 
 	case ':':
+	    /*
+	     * case: -s without an argument
+	     */
+	    if (optopt == 's') {
+		/*
+		 * print score file and exit
+		 */
+		noscore = true;
+		open_score();
+		score(0, -1, 0);
+		exit(0); /*ooo*/
+	    }
+
+	    /*
+	     * otherwise report illegal option
+	     */
 	    fflush(stdout);
             (void) fprintf(stderr, "%s: ERROR: requires an argument -- %c\n", program, optopt);
 	    (void) fprintf(stderr, usage, program, score_path, file_name, version, release);

@@ -7,20 +7,18 @@
 .\"
 .\" See the file LICENSE for full copyright and licensing information.
 .\"
-.TH ROGUE 6 "2026 Jun 28"
+.TH ROGUE 6 "2026 Jun 29"
 .UC 4
 .SH NAME
 rogue \- Exploring The Dungeons of Doom \- version 5.4.5
 .SH SYNOPSIS
 .B @PROGRAM@
+[ "" ]
 [
 .B \-S
 ]
 [
-.B \-s
-[
-.I score_file
-]
+.BR \-s\  [\ score_file\ ]
 |
 .B \-d
 |
@@ -68,8 +66,8 @@ will cause a terminating signal, such as
 .BR SIGHUP ,
 .BR SIGINT ,
 .BR SIGQUIT ,
-or
 .BR SIGTERM ,
+etc.,
 to kill the rogue without a 10% penalty.
 If the score is high enough to be recorded on the score file,
 the reason for death will be recorded as "\fBKilled by signal\fP".
@@ -89,7 +87,9 @@ will print a help message, and then exit.
 .PP
 The
 .B \-s
-option, by itself, will print out the list of scores from the default score file.
+option, by itself, will print out the list of scores from
+.BR @SCOREFILE@ ,
+the default score file.
 .PP
 The
 .BR \-s \ score_file
@@ -116,6 +116,19 @@ file of the rogue5.4 GitHub repo:
 .in +0.5i
 .I https://github.com/lcn2/rogue5.4#rogue-54
 .in -0.5i
+.PP
+If the 1st argument is an empty string, you will be challenged to prove
+that you are a wizard by entering the wizard's secret password.
+If you are successful in proving that you are a wizard,
+then you will be granted wizard special powers, but at a cost.
+As a wizard, any accomplishments you make will
+.B NOT
+be recorded in the list of the top scorers.
+If you are unsuccessful in proving that you are a wizard,
+then you will proceed as a normal mortal being.
+See the
+.B WIZARD MODE
+section below for more information.
 .SH OPTIONS
 The
 .B rogue
@@ -266,7 +279,7 @@ Recommendation:
 .sp
 The path of the rogue score file.
 .sp
-.B IMPORTANT NOTE:
+.BR IMPORTANT\ NOTE :
 Changing the rogue score file path without also changing the rogue lock file path is
 .B NOT
 a good idea.
@@ -281,7 +294,7 @@ Recommendation:
 .sp
 The rogue lock file used to protect the rogue score file.
 .sp
-.B IMPORTANT NOTE:
+.BR IMPORTANT\ NOTE :
 Changing the rogue lock file path without also changing the rogue score file path is
 .B NOT
 a good idea.
@@ -437,7 +450,7 @@ The port to ISO C 2017 with GNU extensions, the port to various platforms
 such as NetBSD, Linux, and Cygwin, and many rogue bug fixes applied to
 rogue version 5.4.5 were made by Landon Curt Noll (chongo), and Anthony
 C Howe (SirWumpus).
-.PP
+.SH WIZARD MODE
 .BR BONUS :
 The historic
 .B wizard mode password
@@ -460,7 +473,7 @@ spoiler text at:
 .SH VERSION 5.4.5
 .PP
 The rogue version was changed from 5.4.4 to 5.4.5
-to help distinguish this code from various buggy 5.4.4 code.
+to help distinguish this code from various buggy versions of 5.4.4 code.
 .PP
 Rogue version 5.4.5 plays like the original Vax binary that was distributed on the BSD 4.3 Reno tapes.
 .PP
@@ -473,7 +486,7 @@ For a general overview of code improvements, see:
 .I https://github.com/lcn2/rogue5.4#why-yet-another-rouge-repo
 .in -0.5i
 .PP
-.B IMPORTANT\ NOTE :
+.BR IMPORTANT\ NOTE :
 This code is
 .B NOT the so-called "\fIPublic domain rogue\fP" rogue game that distributions such as NetBSD imported from 386BSD.
 That "\fIPublic domain rogue\fP" was an attempt to reverse engineer the original game found on
@@ -515,6 +528,21 @@ that Ice Monsters sometimes transfix you permanently is
 .I not
 a bug.
 It's a feature.
+.PP
+That this version of rogue doesn't play like
+the NetBSD rogue, or that it isn't bug compatible
+with version 5.4.4 (or earlier) is
+.B NOT
+a bug, it is a feature! :\-)
+.PP
+Finding the Amulet of Yendor, and then getting out of the dungeon is
+.B NOT
+easy.
+The statement near the top of this man page that "\fINobody has achieved this yet\fP"
+is hyperbole and not intended to imply that nobody has achieved the goal.
+.B Landon\ Curt\ Noll
+has completed the goal (won) at least 3 times (without using wizard mode),
+and reached a maximum dungeon depth (and successful return to level 0) of 31.
 .PP
 We very much welcome rogue5.4 GutHub pull requests
 (\fIhttps://github.com/lcn2/rogue5.4/pulls\fP) to fix any
