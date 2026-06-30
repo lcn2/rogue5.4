@@ -7,7 +7,7 @@
 .\"
 .\" See the file LICENSE for full copyright and licensing information.
 .\"
-.TH ROGUE 6 "2026 Jun 29"
+.TH ROGUE 6 "2026 Jun 30"
 .UC 4
 .SH NAME
 rogue \- Exploring The Dungeons of Doom \- version 5.4.5
@@ -18,6 +18,9 @@ rogue \- Exploring The Dungeons of Doom \- version 5.4.5
 .B \-S
 ]
 [
+.B \-r
+]
+[
 .BR \-s\  [\ score_file\ ]
 |
 .B \-d
@@ -25,8 +28,6 @@ rogue \- Exploring The Dungeons of Doom \- version 5.4.5
 .B \-V
 |
 .B \-h
-|
-.B \-r
 ]
 [
 .I save_file
@@ -51,14 +52,33 @@ the 20th level of the dungeon and get it out.  Nobody has achieved this
 yet and if somebody does, they will probably go down in history as a hero
 among heroes.
 .PP
+For more detailed directions, read the
+.B README.md
+file of the rogue5.4 GitHub repo:
+.PP
+.in +0.5i
+.I https://github.com/lcn2/rogue5.4#rogue-54
+.in -0.5i
+.PP
 When the game ends, either by your death, when you quit, or if you (by
 some miracle) manage to win,
 .I rogue
 will give you a list of the top scorers.  The scoring is based entirely
-upon how much gold you get.  There is a 10% penalty for getting yourself
-killed, unless the
-.B \-S
-is used.
+upon how much gold you get.
+By default, there is a 10% penalty for getting yourself killed.
+.SH OPTIONS
+If the 1st argument is an empty string, you will be challenged to prove
+that you are a wizard by entering the wizard's secret password.
+If you are successful in proving that you are a wizard,
+then you will be granted wizard special powers, but at a cost.
+As a wizard, any accomplishments you make will
+.B NOT
+be recorded in the list of the top scorers.
+If you are unsuccessful in proving that you are a wizard,
+then you will proceed as a normal mortal being.
+See the
+.B WIZARD MODE
+section below for more information.
 .PP
 The
 .B \-S
@@ -82,14 +102,26 @@ terminating signals will cause the game state to be saved, allowing for the
 possibility trying to restore the game later.
 .PP
 The
-.B \-h
-will print a help message, and then exit.
+.B \-r
+option is ignored.
+.PP
+.BR NOTE :
+.sp
+The following set of options are exclusive.
+That is, only one of the following options may be used on the command line:
 .PP
 The
 .B \-s
 option, by itself, will print out the list of scores from
 .BR @SCOREFILE@ ,
 the default score file.
+.sp
+When using
+.B \-s
+without a \fIscore_file\fP while also specifying a \fIsave_file\fP,
+you must use an
+.B \-\-
+option before the \fIsave_file\fP argument.
 .PP
 The
 .BR \-s \ score_file
@@ -106,35 +138,22 @@ will print the rogue version, release date,
 and then exit.
 .PP
 The
-.B \-r
-will presume that the save game file will be the default save game file.
-.PP
-For more detailed directions, read the
-.B README.md
-file of the rogue5.4 GitHub repo:
-.PP
-.in +0.5i
-.I https://github.com/lcn2/rogue5.4#rogue-54
-.in -0.5i
-.PP
-If the 1st argument is an empty string, you will be challenged to prove
-that you are a wizard by entering the wizard's secret password.
-If you are successful in proving that you are a wizard,
-then you will be granted wizard special powers, but at a cost.
-As a wizard, any accomplishments you make will
-.B NOT
-be recorded in the list of the top scorers.
-If you are unsuccessful in proving that you are a wizard,
-then you will proceed as a normal mortal being.
-See the
-.B WIZARD MODE
-section below for more information.
-.SH OPTIONS
+.B \-h
+will print a help message, and then exit.
+.SH ROGUE OPTIONS
 The
 .B rogue
 game options may be displayed and changed by using the
 .B o
 command.
+.PP
+The
+.B $ROGUEOPTS
+environment variable may be used to change the
+.B rogue
+at startup, rather than having to use the
+.B o
+command each time you play.
 .PP
 The option names are:
 .PP

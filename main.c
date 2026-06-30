@@ -31,9 +31,13 @@
 static char *program = "rogue"; /* our name */
 
 static char *usage =
-    "usage: %s [-S] [-s [ score_file ] | -d | -V | -h | -r] [ save_file ]\n"
+    "usage: %s [\"\"] [-S] [-r] [-s [ score_file ] | -d | -V | -h] [ save_file ]\n"
+    "\n"
+    "\t\"\"\t\tempty option MUST be the first option: attempt to enter into wizard mode\n"
     "\n"
     "\t-S\t\tquit game catching a terminating signal (def: save game)\n"
+    "\n"
+    "\t-r\t\tthis option is ignored and is here for backward compatibility only\n"
     "\n"
     "\t-s\t\tprint out the list of scores from: %s\n"
     "\t-s score_file\tprint out the list of scores from score_file\n"
@@ -43,8 +47,6 @@ static char *usage =
     "\t-h\t\toutput this message and exit\n"
     "\n"
     "\t-V\t\tprint version string and exit\n"
-    "\n"
-    "\t-r\t\tsave game file will be the default save game file\n"
     "\n"
     "\t[ save_file ]\tset the save file path (def save file path: %s)\n"
     "\n"
@@ -280,14 +282,17 @@ main(int argc, char **argv)
     /*
      * parse args
      */
-    while ((i = getopt(argc, argv, ":Ss:dVhr")) != -1) {
+    while ((i = getopt(argc, argv, ":Srs:dVh")) != -1) {
 	switch (i) {
 	case 'S':   /* -S ==> terminating signal will quit the game */
 	    signal_quit = true;
 	    break;
 
+	case 'r':   /* -r ==>  option ignored */
+	    break;
+
 	case 's':   /* -s score_file ==> list of scores from score_file */
-	    if (optarg != NULL) {
+	    if (optarg != NULL && (strcmp(optarg, "--") != 0)) {
 		/*
 		 * By overriding score_path below, the subsequent call to open_score() will read that score file path.
 		 * Then when we "-s ==> check for print-score option", the call to score(0, -1, 0) will cause us
@@ -366,9 +371,6 @@ main(int argc, char **argv)
 	    fflush(stderr);
 	    exit(2); /*ooo*/
 
-	case 'r':   /* -r ==>  that the save game file will be the default save game file */
-	    break;
-
 	case ':':
 	    /*
 	     * case: -s without an argument
@@ -384,7 +386,7 @@ main(int argc, char **argv)
 	    }
 
 	    /*
-	     * otherwise report illegal option
+	     * otherwise report missing argument
 	     */
 	    fflush(stdout);
             (void) fprintf(stderr, "%s: ERROR: requires an argument -- %c\n", program, optopt);
@@ -395,6 +397,22 @@ main(int argc, char **argv)
 	    break;
 
 	case '?':
+	    /*
+	     * case: -s without an argument
+	     */
+	    if (optopt == 's') {
+		/*
+		 * print score file and exit
+		 */
+		noscore = true;
+		open_score();
+		score(0, -1, 0);
+		exit(0); /*ooo*/
+	    }
+
+	    /*
+	     * otherwise report illegal argument
+	     */
 	    fflush(stdout);
             (void) fprintf(stderr, "%s: ERROR: illegal option -- %c\n", program, optopt);
 	    (void) fprintf(stderr, usage, program, score_path, file_name, version, release);
