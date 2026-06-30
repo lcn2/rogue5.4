@@ -120,9 +120,7 @@ The
 option is ignored.
 .PP
 .BR NOTE :
-.sp
-The following set of options are exclusive.
-That is, only one of the following options may be used on the command line:
+At most only one of the following options may be used on the command line:
 .PP
 The
 .B \-s
