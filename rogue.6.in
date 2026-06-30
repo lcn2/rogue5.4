@@ -21,7 +21,8 @@ rogue \- Exploring The Dungeons of Doom \- version 5.4.5
 .B \-r
 ]
 [
-.BR \-s\  [\ score_file\ ]
+.B \-s
+[ \fIscore_file\fP ]
 |
 .B \-d
 |
@@ -79,6 +80,19 @@ then you will proceed as a normal mortal being.
 See the
 .B WIZARD MODE
 section below for more information.
+.PP
+When
+.I save_file
+is given, that file will be assumed to be a rogue game save file.
+Instead of starting the game, the state of the game will be restored
+from the rogue game save file.
+By default,
+.B @SAVEFILE@
+is the default rogue game save file.
+.sp
+.BR IMPORTANT\ NOTE :
+When a game is restored from a rogue game save file,
+the save file is removed.
 .PP
 The
 .B \-S

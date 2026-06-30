@@ -39,10 +39,10 @@ To quit, interrupt the program (type control-C), answer "**y**" to the question 
 
 To save your rogue game, press "**S**" and save.
 
-To restore your game, run:
+To restore your game from the default rogue save file, run:
 
 ```sh
-rogue -r
+rogue ~/.rogue.save
 ```
 
 **NOTE**: Restoring your rogue game will cause the rogue save file to be removed.
