@@ -706,11 +706,6 @@ install: all
 	    echo 'ERROR: The ROGUEDIR make variable CANNOT be empty!!!' ; \
 	    exit 3 ; \
 	fi
-	-${INSTALL} -d -m 0755 ${ROGUEDIR}
-	@if [[ ! -d "${ROGUEDIR}" ]]; then \
-	    echo 'ERROR: failed to create ROGUEDIR directory: ${ROGUEDIR}' 1>&2 ; \
-	    exit 4 ; \
-	fi
 	@if [[ -z "${MANDIR}" ]]; then \
 	    echo 'ERROR: The MANDIR make variable CANNOT be empty!!!' ; \
 	    exit 5 ; \
