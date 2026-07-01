@@ -958,7 +958,7 @@ When you read use a staff:
 ## wizard mode spoilers
 
 **IMPORTANT NOTE**: If you enter **wizard mode** at any time during the game,
-your score will **NOT** be posted to the scoreboard, even if you turn of **wizard mode**
+your score will **NOT** be posted to the scoreboard, even if you turn off **wizard mode**
 in the game.
 
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
