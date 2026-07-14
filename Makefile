@@ -473,11 +473,11 @@ modern_curses.h: ${MAKE_FILE}
 	-${Q} if echo '#include <ncurses.h>' | ${CC} -E - ${S}; then \
 	    echo '#include <ncurses.h> /* yes, using new curses */' >> $@; \
 	    echo >> $@; \
-	    echo '#define MODERN_CUESES NEW_CURSES' >> $@; \
+	    echo '#define MODERN_CURSES NEW_CURSES' >> $@; \
 	elif echo '#include <curses.h>' | ${CC} -E - ${S}; then \
 	    echo '#include <curses.h> /* no, you have old curses, or what NetBSD calls curses */' >> $@; \
 	    echo >> $@; \
-	    echo '#define MODERN_CUESES OLD_CURSES' >> $@; \
+	    echo '#define MODERN_CURSES OLD_CURSES' >> $@; \
 	else \
 	    echo 'Neither <ncurses.h> nor <curses.h> found' 1>&2; \
 	    echo 'Perhaps you need you install both ncurses and ncurses-devel ?' 1>&2; \
