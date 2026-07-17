@@ -162,51 +162,6 @@ main(int argc, char **argv)
     }
 
     /*
-     * correct any lack of rogue lock path (lock_path[])
-     *
-     * The lock_path[] string is set by the form_lock_path() function.
-     * However, the parse_opts() could fail to set the rogue lock path, or
-     * the parse_opts() could set the rogue name (via the "lock" option) to an empty string.
-     *
-     * In such a case, we will use the LOCKPATH string constant.
-     *
-     * NOTE: The form_lock_path() function will NOT return if LOCKPATH is an empty string.
-     */
-    if (lock_path[0] == '\0') {
-	strlcpy(lock_path, LOCKPATH, MAXSTR); /* paranoia */
-    }
-
-    /*
-     * correct any lack of rogue save path (file_name[])
-     *
-     * The file_name[] string is set by the form_save_path() function.
-     * However, the parse_opts() could fail to set the rogue save path, or
-     * the parse_opts() could set the rogue name (via the "file" option) to an empty string.
-     *
-     * In such a case, we will use the SAVEPATH string constant.
-     *
-     * NOTE: The form_save_path() function will NOT return if SAVEPATH is an empty string.
-     */
-    if (file_name[0] == '\0') {
-	strlcpy(file_name, SAVEPATH, MAXSTR); /* paranoia */
-    }
-
-    /*
-     * correct any lack of rogue score path (score_path[])
-     *
-     * The file_name[] string is set by the form_score_path() function.
-     * However, the parse_opts() could fail to set the rogue score path, or
-     * the parse_opts() could set the rogue name (via the "score" option) to an empty string.
-     *
-     * In such a case, we will use the SCOREPATH string constant.
-     *
-     * NOTE: The form_score_path() function will NOT return if SCOREPATH is an empty string.
-     */
-    if (score_path[0] == '\0') {
-	strlcpy(score_path, SCOREPATH, MAXSTR); /* paranoia */
-    }
-
-    /*
      * disable score file use if starting out in wizard mode
      */
 #ifdef MASTER
@@ -268,15 +223,6 @@ main(int argc, char **argv)
 	    }
 	}
     }
-#endif
-
-    /*
-     * seed the game with the dungeon number
-     */
-#if defined(NON_BSD_RN_GENERATOR)
-    seed = md_getpid();
-#else
-    srandom((unsigned)dnum);
 #endif
 
     /*
@@ -475,6 +421,15 @@ main(int argc, char **argv)
     printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
 #endif
     fflush(stdout);
+
+    /*
+     * seed the game with the dungeon number
+     */
+#if defined(NON_BSD_RN_GENERATOR)
+    seed = md_getpid();
+#else
+    srandom((unsigned)dnum);
+#endif
 
    /*
     * Get the process id of this rogue program if the

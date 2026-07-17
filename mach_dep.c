@@ -221,7 +221,6 @@ open_score(void)
 	signal(SIGTERM, sig_term);
 #endif
     }
-
 }
 
 /*

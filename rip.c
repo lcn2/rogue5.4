@@ -46,16 +46,6 @@ static char *rip[] = {
 };
 
 /*
- * max length of a randomly generated username
- *
- * NOTE: Must be 1 <= RND_NAME_LEN <= MAX_USERNAME
- */
-#define RND_NAME_LEN 8
-#if RND_NAME_LEN > MAX_USERNAME
-#error "invalid RND_NAME_LEN: Must be 1 <= RND_NAME_LEN <= MAX_USERNAME"
-#endif
-
-/*
  * init_score_value:
  *	Initialize a SCORE with random data.
  */
@@ -63,14 +53,11 @@ static char *rip[] = {
 void
 init_score_value(SCORE *scp)
 {
-    long rndname_len = 0;    /* length of a random name */
-    int i;
-
     /*
      * initialize leading values in a SCORE
      */
     memset(scp, 0, sizeof(SCORE));
-    scp->sc_uid = (uid_t) ((random()%59000)+1000); /* random UID from 1000 to 59999 */
+    scp->sc_uid = 1; /* the BSD traditional UID of user daemon - for grins */
     scp->sc_score = 0; /* 0 score will be at the bottom of the score set, and will NOT be printed */
     scp->sc_flags = 0; /* set death flag */
     scp->sc_monster = 'B'; /* just use the lowly bat as the monster */
@@ -79,23 +66,20 @@ init_score_value(SCORE *scp)
      * form a random name using ASCII bytes from 33 (!) thru 126 (~)
      */
     memset(scp->sc_name, 0, sizeof(scp->sc_name)); /* paranoia */
-    rndname_len = (random()%RND_NAME_LEN)+1; /* random name length from 1 to RND_NAME_LEN */
-    for (i = 0; i < rndname_len; i++) {
-	scp->sc_name[i] = (char) ((random()%94)+33); /* form ASCII bytes from 33 (!) thru 126 (~) */
-    }
+    strlcpy(scp->sc_name, "daemon", sizeof(scp->sc_name));
     scp->sc_name[MAX_USERNAME] = '\0'; /* paranoia */
 
     /*
      * random level that does NOT include the amulet level
      */
-    scp->sc_level = (int) random()%25; /* random level 0 to 25 */
+    scp->sc_level = 0;
 
     /*
      * Random timestamp from 0 to 2^62-1
      *
      * NOTE: random(3) returns a value from 0 to 2^30-1
      */
-    scp->sc_time = (((uintmax_t) random()) ^ (((uintmax_t) random()) << 31));
+    scp->sc_time = 0;
     return;
 }
 
