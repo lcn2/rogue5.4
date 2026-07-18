@@ -543,7 +543,7 @@ The following table lists the known monsters in the dungeon and their properties
 |    A   | aquator       | 09..18 |    0 % | m     |   20 |  5d8 |   5   |   2   | 0x0 / 0x0        |
 |    B   | bat           | 01..08 |    0 % | f     |    1 |  1d8 |   1   |   3   | 1x2              |
 |    C   | centaur       | 07..16 |   15 % |       |   17 |  4d8 |   4   |   4   | 1x2 / 1x5 / 1x5  |
-|    D   | dragon        | 22..   |  100 % | m     | 5000 | 10x8 |  10   |  -1   | 1x8 / 1x8 / 3x10 |
+|    D   | dragon        | 22..   |  100 % | m     | 5000 | 10d8 |  10   |  -1   | 1x8 / 1x8 / 3x10 |
 |    E   | emu           | 01..07 |    0 % | m     |    2 |  1d8 |   1   |   7   | 1x2              |
 |    F   | venus flytrap | 12..21 |    0 % | m     |   80 |  8d8 |   8   |   3   | ++               |
 |    G   | griffin       | 20..29 |   20 % | m f r | 2000 | 13d8 |  13   |   2   | 4x3 / 3x5        |
