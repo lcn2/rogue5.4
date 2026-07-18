@@ -104,7 +104,7 @@ quaff(void)
 	    }
 	when P_HEALING:
 	    pot_info[P_HEALING].oi_know = true;
-	    if ((pstats.s_hpt += roll(pstats.s_lvl, 4)) > max_hp)
+	    if ((pstats.s_hpt += roll(pstats.s_class, 4)) > max_hp)
 		pstats.s_hpt = ++max_hp;
 	    sight(0);
 	    msg("you begin to feel better");
@@ -179,9 +179,9 @@ quaff(void)
 	    raise_level();
 	when P_XHEAL:
 	    pot_info[P_XHEAL].oi_know = true;
-	    if ((pstats.s_hpt += roll(pstats.s_lvl, 8)) > max_hp)
+	    if ((pstats.s_hpt += roll(pstats.s_class, 8)) > max_hp)
 	    {
-		if (pstats.s_hpt > max_hp + pstats.s_lvl + 1)
+		if (pstats.s_hpt > max_hp + pstats.s_class + 1)
 		    ++max_hp;
 		pstats.s_hpt = ++max_hp;
 	    }
@@ -346,7 +346,7 @@ seen_stairs(void)
 void
 raise_level(void)
 {
-    pstats.s_exp = e_levels[pstats.s_lvl-1] + 1L;
+    pstats.s_exp = e_levels[pstats.s_class-1] + 1L;
     check_level();
 }
 

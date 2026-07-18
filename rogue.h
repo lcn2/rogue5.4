@@ -378,12 +378,14 @@ struct room {
 
 /*
  * Structure describing a fighting being
+ *
+ * NOTE: This structure is used by BOTH monsters and the rogue player.
  */
 #define MAX_DMG_STR 14
 struct stats {
     int s_str;				/* Strength */
     int s_exp;				/* Experience */
-    int s_lvl;				/* level of mastery */
+    int s_class;			/* Base class */
     int s_arm;				/* Armor class */
     int s_hpt;				/* Hit points */
     char s_dmg[MAX_DMG_STR + 1];	/* String describing damage done, +1 for paranoia */

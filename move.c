@@ -305,7 +305,7 @@ be_trapped(const coord *tc)
 	    player.t_flags &= ~ISRUN;
 	    msg("a strange white mist envelops you and you fall asleep");
 	when T_ARROW:
-	    if (swing(pstats.s_lvl - 1, pstats.s_arm, 1))
+	    if (swing(pstats.s_class - 1, pstats.s_arm, 1))
 	    {
 		pstats.s_hpt -= roll(1, 6);
 		if (pstats.s_hpt <= 0)
@@ -333,7 +333,7 @@ be_trapped(const coord *tc)
 	    teleport();
 	    mvaddch(tc->y, tc->x, TRAP);
 	when T_DART:
-	    if (!swing(pstats.s_lvl+1, pstats.s_arm, 1))
+	    if (!swing(pstats.s_class+1, pstats.s_arm, 1))
 		msg("a small dart whizzes by your ear and vanishes");
 	    else
 	    {

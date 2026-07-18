@@ -425,7 +425,7 @@ rs_write_stats(FILE *savef, struct stats *s)
     rs_write_marker(savef, RSID_STATS);
     rs_write_int(savef, s->s_str);
     rs_write_int(savef, s->s_exp);
-    rs_write_int(savef, s->s_lvl);
+    rs_write_int(savef, s->s_class);
     rs_write_int(savef, s->s_arm);
     rs_write_int(savef, s->s_hpt);
     rs_write_chars(savef, s->s_dmg, sizeof(s->s_dmg));
@@ -439,7 +439,7 @@ rs_read_stats(FILE *savef, struct stats *s)
     memset(s, 0, sizeof(*s));
     rs_read_int(savef,&s->s_str);
     rs_read_int(savef,&s->s_exp);
-    rs_read_int(savef,&s->s_lvl);
+    rs_read_int(savef,&s->s_class);
     rs_read_int(savef,&s->s_arm);
     rs_read_int(savef,&s->s_hpt);
     rs_read_chars(savef,s->s_dmg,sizeof(s->s_dmg));

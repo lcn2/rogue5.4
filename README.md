@@ -624,7 +624,12 @@ the hit bonus (H) starts about 1m and increases each turn as you are being held.
 
 Below level 29, all monsters are hasted (are fast).
 
-The base monster class levels go up by 1 for each dungeon level below level 26.
+The base monster class levels go up by 1 for each dungeon level below
+level 26.  Thus, one additional 8-sided die is rolled for each dungeon
+level below level 26, to determine that monster's "**HP**".  For example,
+a **D** (dragon) found on dungeon level 26 will have an initial "**HP**"
+of "10d8", whereas a **D** (dragon) found on dungeon level 28 (2 dungeon
+levels deeper) they will have an initial "**HP**" of "12d8".
 
 
 ## potion spoilers ==> !

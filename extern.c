@@ -198,7 +198,7 @@ struct room passages[MAXPASS + 1] =	/* One for each passage, +1 for paranoia */
 #define XX 10
 struct monster monsters[26 + 1] =
     {
-/* Name		 CARRY	FLAG    str, exp, lvl, amr, hpt, dmg */
+/* Name		 CARRY	FLAG    str, exp, class, amr, hpt, dmg */
 { "aquator",	   0,	ISMEAN,	{ XX, 20,   5,   2, ___, "0x0/0x0" } },
 { "bat",	   0,	ISFLY,	{ XX,  1,   1,   3, ___, "1x2" } },
 { "centaur",	  15,	0,	{ XX, 17,   4,   4, ___, "1x2/1x5/1x5" } },

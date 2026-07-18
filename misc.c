@@ -334,8 +334,8 @@ check_level(void)
 	if (e_levels[i] > pstats.s_exp)
 	    break;
     i++;
-    olevel = pstats.s_lvl;
-    pstats.s_lvl = i;
+    olevel = pstats.s_class;
+    pstats.s_class = i;
     if (i > olevel)
     {
 	add = roll(i - olevel, 10);

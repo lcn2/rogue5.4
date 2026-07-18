@@ -29,4 +29,4 @@ additional information or guidance.
 
 ## Supported Versions
 
-Only rogue **version 5.4.5 release 2026-06-28** (chongo was here), or later are supported.
+Only rogue **version 5.4.5 release 2026-07-18** (chongo was here), or later are supported.

@@ -24,12 +24,12 @@
 /*
  * List of monsters in rough order of vorpalness
  */
-static const int lvl_mons[] =  {
+static const int lvl_mons[MAXMONSTERS] =  {
     'K', 'E', 'B', 'S', 'H', 'I', 'R', 'O', 'Z', 'L', 'C', 'Q', 'A',
     'N', 'Y', 'F', 'T', 'W', 'P', 'X', 'U', 'M', 'V', 'G', 'J', 'D'
 };
 
-static const int wand_mons[] = {
+static const int wand_mons[MAXMONSTERS] = {
     'K', 'E', 'B', 'S', 'H',   0, 'R', 'O', 'Z',   0, 'C', 'Q', 'A',
       0, 'Y',   0, 'T', 'W', 'P',   0, 'U', 'M', 'V', 'G', 'J',   0
 };
@@ -42,17 +42,57 @@ static const int wand_mons[] = {
 int
 randmonster(int wander)
 {
-    int d;
-    const int *mons;
+    int d;		/* monster index into lvl_mons[] or wand_mons[] */
+    const int *mons;	/* monster from lvl_mons[] or wand_mons[] to return */
 
     mons = (wander ? wand_mons : lvl_mons);
     do
     {
-	d = level + (rnd(10) - 6);
+	/*
+	 * given a dungeon level, select a monster index
+	 *
+	 * NOTE: Because (rnd(10) - 6) has a range of 10 values -6..3,
+	 *	 a monster can only appear on 10 different dungeon levels.
+	 */
+	d = level + (rnd(10) - 6);	/* d = level + -6..3 */
+
+	/*
+	 * convert any potential negative monster index into a 0..4 monster index
+	 *
+	 * The effect of this next test is:
+	 *
+	 * NOTE: On level 1, the first 4 monsters are possible.
+	 *       On level 2, the first 5 monsters are possible.
+	 *       On level 3, the first 6 monsters are possible.
+	 *       On level 4, the first 7 monsters are possible.
+	 *       On level 5, the first 8 monsters are possible.
+	 *       On level 6, the first 9 monsters are possible.
+	 *       On level 7, the first 10 monsters are possible.
+	 */
 	if (d < 0)
 	    d = rnd(5);
-	if (d > 25)
+
+	/*
+	 * convert any monster index from going off the end of the array
+	 *
+	 * The effect of this next test is:
+	 *
+	 * NOTE: On level 21, the last 10 monsters are possible.
+	 *       On level 22, the last 9 monsters are possible.
+	 *       On level 23, the last 8 monsters are possible.
+	 *       On level 24, the last 7 monsters are possible.
+	 *       On level 25, the last 6 monsters are possible.
+	 *       On level 26, the last 5 monsters are possible.
+	 *       On level 27, the last 4 monsters are possible.
+	 *       On level 28, the last 3 monsters are possible.
+	 *       On level 29, the last 3 monsters are possible.
+	 *       On level 30, the last 2 monsters are possible.
+	 *       On level 31, the last 1 monster are possible.
+	 *       On level 32 and beyond, the last 15 monsters are possible.
+	 */
+	if (d > MAXMONSTERS-1)
 	    d = rnd(5) + 21;
+
     } while (mons[d] == 0);
     return mons[d];
 }
@@ -79,8 +119,9 @@ new_monster(THING *tp, int type, const coord *cp)
     tp->t_room = roomin(cp);
     moat(cp->y, cp->x) = tp;
     mp = &monsters[tp->t_type-'A'];
-    tp->t_stats.s_lvl = mp->m_stats.s_lvl + lev_add;
-    tp->t_stats.s_maxhp = tp->t_stats.s_hpt = roll(tp->t_stats.s_lvl, 8);
+    /* monster classes increase one per dungeon level below AMULETLEVEL! */
+    tp->t_stats.s_class = mp->m_stats.s_class + lev_add;
+    tp->t_stats.s_maxhp = tp->t_stats.s_hpt = roll(tp->t_stats.s_class, 8);
     tp->t_stats.s_arm = mp->m_stats.s_arm - lev_add;
     strcpy(tp->t_stats.s_dmg,mp->m_stats.s_dmg);
     tp->t_stats.s_str = mp->m_stats.s_str;
@@ -105,13 +146,13 @@ exp_add(const THING *tp)
 {
     int mod;
 
-    if (tp->t_stats.s_lvl == 1)
+    if (tp->t_stats.s_class == 1)
 	mod = tp->t_stats.s_maxhp / 8;
     else
 	mod = tp->t_stats.s_maxhp / 6;
-    if (tp->t_stats.s_lvl > 9)
+    if (tp->t_stats.s_class > 9)
 	mod *= 20;
-    else if (tp->t_stats.s_lvl > 6)
+    else if (tp->t_stats.s_class > 6)
 	mod *= 4;
     return mod;
 }
@@ -246,7 +287,7 @@ save_throw(int which, const THING *tp)
 {
     int need;
 
-    need = 14 + which - tp->t_stats.s_lvl / 2;
+    need = 14 + which - tp->t_stats.s_class / 2;
     return (roll(1, 20) >= need);
 }
 

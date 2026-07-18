@@ -251,13 +251,13 @@ attack(THING *mp)
 			{
 			    if (pstats.s_exp == 0)
 				death('W');		/* All levels gone */
-			    if (--pstats.s_lvl == 0)
+			    if (--pstats.s_class == 0)
 			    {
 				pstats.s_exp = 0;
-				pstats.s_lvl = 1;
+				pstats.s_class = 1;
 			    }
 			    else
-				pstats.s_exp = e_levels[pstats.s_lvl-1]+1;
+				pstats.s_exp = e_levels[pstats.s_class-1]+1;
 			    fewer = roll(1, 10);
 			}
 			else
@@ -467,7 +467,7 @@ roll_em(const THING *thatt, THING *thdef, const THING *weap, int hurl)
 	if ((cp = strchr(cp, 'x')) == NULL)
 	    break;
 	nsides = atoi(++cp);
-	if (swing(att->s_lvl, def_arm, hplus + str_plus[att->s_str]))
+	if (swing(att->s_class, def_arm, hplus + str_plus[att->s_str]))
 	{
 	    int proll;
 

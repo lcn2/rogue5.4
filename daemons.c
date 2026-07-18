@@ -16,24 +16,24 @@
 
 /*
  * doctor:
- *	A healing daemon that restors hit points after rest
+ *	A healing daemon that restores hit points after rest
  */
 void
 doctor(int d_arg __attribute__ ((__unused__)))
 {
-    int lv, ohp;
+    int class, ohp;
 
-    lv = pstats.s_lvl;
+    class = pstats.s_class;
     ohp = pstats.s_hpt;
     quiet++;
-    if (lv < 8)
+    if (class < 8)
     {
-	if (quiet + (lv << 1) > 20)
+	if (quiet + (class << 1) > 20)
 	    pstats.s_hpt++;
     }
     else
 	if (quiet >= 3)
-	    pstats.s_hpt += rnd(lv - 7) + 1;
+	    pstats.s_hpt += rnd(class - 7) + 1;
     if (ISRING(LEFT, R_REGEN))
 	pstats.s_hpt++;
     if (ISRING(RIGHT, R_REGEN))
