@@ -545,7 +545,7 @@ The following table lists the known monsters in the dungeon and their properties
 |    C   | centaur       | 07..16 |   15 % |       |   17 |  4d8 |   4   | 1x2 / 1x5 / 1x5  |
 |    D   | dragon        | 22..   |  100 % | m     | 5000 | 10d8 |  -1   | 1x8 / 1x8 / 3x10 |
 |    E   | emu           | 01..07 |    0 % | m     |    2 |  1d8 |   7   | 1x2              |
-|    F   | venus flytrap | 12..21 |    0 % | m     |   80 |  8d8 |   3   | ++               |
+|    F   | venus flytrap | 12..21 |    0 % | m     |   80 |  8d8 |   3   | (note 3 below)   |
 |    G   | griffin       | 20..29 |   20 % | m f r | 2000 | 13d8 |   2   | 4x3 / 3x5        |
 |    H   | hobgoblin     | 01..10 |    0 % | m     |    3 |  1d8 |   1   | 1x8              |
 |    I   | ice monster   | 02..11 |    0 % |       |    5 |  1d8 |   1   | 0x0              |
@@ -619,9 +619,6 @@ might start out with anywhere between 15 and 120 "**HP**"!
 The "**HP**" value depends on total sum of the dice "rolls".  Thus, the
 extremes of the range are more rare than the middle of the range.
 
-The **V** (venus flytrap) "**damage**" of "*++**" means that
-the hit bonus (H) starts about 1m and increases each turn as you are being held.
-
 Below level 29, all monsters are hasted (are fast).
 
 The base monster class levels go up by 1 for each dungeon level below
@@ -630,6 +627,46 @@ level below level 26, to determine that monster's "**HP**".  For example,
 a **D** (dragon) found on dungeon level 26 will have an initial "**HP**"
 of "10d8", whereas a **D** (dragon) found on dungeon level 28 (2 dungeon
 levels deeper) they will have an initial "**HP**" of "12d8".
+
+
+### special attacks
+
+| symbol |    monster    | special abilities and attacks         |
+|--------|---------------|---------------------------------------|
+|    A   | aquator       | able to rust armor
+|    B   | bat           | flitters in random directions
+|    C   | centaur       |
+|    D   | dragon        | has long range "6d6" flame attack (note 3)
+|    E   | emu           |
+|    F   | venus flytrap | holds / damage increases (note 1)
+|    G   | griffin       |
+|    H   | hobgoblin     |
+|    I   | ice monster   | freezes (note 2)
+|    J   | jabberwock    |
+|    K   | kestrel       |
+|    L   | leprechaun    | steals gold (note 3)
+|    M   | medusa        | confuses (note 3)
+|    N   | nymph         | steals unused magic item
+|    O   | orc           | runs towards gold
+|    P   | phantom       | invisible
+|    Q   | quagga        |
+|    R   | rattlesnake   | reduces strength (note 2)
+|    S   | snake         |
+|    T   | troll         |
+|    U   | black unicorn |
+|    V   | vampire       | 30% to reduce max HP by 1..3
+|    W   | wraith        | 15% change to drain level (note 4)
+|    X   | xeroc         | imitates an object
+|    Y   | yeti          |
+|    Z   | zombie        |
+
+* note 1: The **F** (venus flytrap) does no damage at first. However, the damage increases by 1 each turn being held.
+
+* note 2: The special attack has a 1d20 saving throw where the value needed to save is: 14 - int(experence_level/2)^2.
+
+* note 3: The special attack has a 1d20 saving throw where the value needed to save is: 17 - armor_class - int(experence_level/2).
+
+* note 4: The special attack removed 1d10 from player maximum HP, and reduces experence_level by 1. 0 experence_level causes death.
 
 
 ## potion spoilers ==> !
