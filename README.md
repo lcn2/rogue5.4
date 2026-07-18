@@ -538,34 +538,34 @@ the game will place the **Amulet of Yendor** on the deeper levels until you mana
 
 The following table lists the known monsters in the dungeon and their properties:
 
-| symbol |    monster    | levels |  carry | flags |  Exp | class | armour| damage           |
-|--------|---------------|--------|--------|-------|------|-------|-------|------------------|
-|    A   | aquator       | 09..18 |    0 % | m     |   20 |   5   |   2   | 0x0 / 0x0        |
-|    B   | bat           | 01..08 |    0 % | f     |    1 |   1   |   3   | 1x2              |
-|    C   | centaur       | 07..16 |   15 % |       |   17 |   4   |   4   | 1x2 / 1x5 / 1x5  |
-|    D   | dragon        | 22..   |  100 % | m     | 5000 |  10   |  -1   | 1x8 / 1x8 / 3x10 |
-|    E   | emu           | 01..07 |    0 % | m     |    2 |   1   |   7   | 1x2              |
-|    F   | venus flytrap | 12..21 |    0 % | m     |   80 |   8   |   3   | ++               |
-|    G   | griffin       | 20..29 |   20 % | m f r | 2000 |  13   |   2   | 4x3 / 3x5        |
-|    H   | hobgoblin     | 01..10 |    0 % | m     |    3 |   3   |   1   | 1x8              |
-|    I   | ice monster   | 02..11 |    0 % |       |    5 |   5   |   1   | 0x0              |
-|    J   | jabberwock    | 21..30 |   70 % |       | 3000 |  15   |   6   | 2x12 / 2x4       |
-|    K   | kestrel       | 01..06 |    0 % | m f   |    1 |   1   |   1   | 1x4              |
-|    L   | leprechaun    | 06..15 |    0 % |       |   10 |   3   |   8   | 1x1              |
-|    M   | medusa        | 18..27 |   40 % | m     |  200 |   8   |   2   | 3x4 / 3x4 / 2x5  |
-|    N   | nymph         | 10..19 |  100 % | g     |   37 |   3   |   9   | 0x0              |
-|    O   | orc           | 04..13 |   15 % | i     |    5 |   1   |   6   | 1x8              |
-|    P   | phantom       | 15..24 |    0 % | m     |  120 |   8   |   3   | 4x4              |
-|    Q   | quagga        | 08..17 |    0 % | m     |   15 |   3   |   3   | 1x5 / 1x5        |
-|    R   | rattlesnake   | 03..12 |    0 % | m     |    9 |   2   |   3   | 1x6              |
-|    S   | snake         | 01..09 |    0 % | m     |    2 |   1   |   5   | 1x3              |
-|    T   | troll         | 13..22 |   50 % | m   r |  120 |   6   |   4   | 1x8 / 1x8 / 2x6  |
-|    U   | black unicorn | 17..26 |    0 % | m     |    7 |   7   |  -2   | 1x9 / 1x9 / 2x9  |
-|    V   | vampire       | 19..28 |   20 % | m   r |  350 |   8   |   1   | 1x10             |
-|    W   | wraith        | 14..23 |    0 % |       |   55 |   5   |   4   | 1x6              |
-|    X   | xeroc         | 16..25 |   30 % |       |  100 |   7   |   7   | 4x4              |
-|    Y   | yeti          | 11..20 |   30 % |       |   50 |   4   |   6   | 1x6 / 1x6        |
-|    Z   | zombie        | 05..14 |    0 % | m     |    6 |   2   |   8   | 1x8              |
+| symbol |    monster    | levels |  carry | flags |  exp |   HP | class | armor | damage           |
+|--------|---------------|--------|--------|-------|------|------|-------|-------|------------------|
+|    A   | aquator       | 09..18 |    0 % | m     |   20 |  5d8 |   5   |   2   | 0x0 / 0x0        |
+|    B   | bat           | 01..08 |    0 % | f     |    1 |  1d8 |   1   |   3   | 1x2              |
+|    C   | centaur       | 07..16 |   15 % |       |   17 |  4d8 |   4   |   4   | 1x2 / 1x5 / 1x5  |
+|    D   | dragon        | 22..   |  100 % | m     | 5000 | 10x8 |  10   |  -1   | 1x8 / 1x8 / 3x10 |
+|    E   | emu           | 01..07 |    0 % | m     |    2 |  1d8 |   1   |   7   | 1x2              |
+|    F   | venus flytrap | 12..21 |    0 % | m     |   80 |  8d8 |   8   |   3   | ++               |
+|    G   | griffin       | 20..29 |   20 % | m f r | 2000 | 13d8 |  13   |   2   | 4x3 / 3x5        |
+|    H   | hobgoblin     | 01..10 |    0 % | m     |    3 |  1d8 |   3   |   1   | 1x8              |
+|    I   | ice monster   | 02..11 |    0 % |       |    5 |  1d8 |   5   |   1   | 0x0              |
+|    J   | jabberwock    | 21..30 |   70 % |       | 3000 |  3d8 |  15   |   6   | 2x12 / 2x4       |
+|    K   | kestrel       | 01..06 |    0 % | m f   |    1 |  8d8 |   1   |   1   | 1x4              |
+|    L   | leprechaun    | 06..15 |    0 % |       |   10 |  3d8 |   3   |   8   | 1x1              |
+|    M   | medusa        | 18..27 |   40 % | m     |  200 |  8d8 |   8   |   2   | 3x4 / 3x4 / 2x5  |
+|    N   | nymph         | 10..19 |  100 % | g     |   37 |  3d8 |   3   |   9   | 0x0              |
+|    O   | orc           | 04..13 |   15 % | i     |    5 |  1d8 |   1   |   6   | 1x8              |
+|    P   | phantom       | 15..24 |    0 % | m     |  120 |  8d8 |   8   |   3   | 4x4              |
+|    Q   | quagga        | 08..17 |    0 % | m     |   15 |  3d8 |   3   |   3   | 1x5 / 1x5        |
+|    R   | rattlesnake   | 03..12 |    0 % | m     |    9 |  2d8 |   2   |   3   | 1x6              |
+|    S   | snake         | 01..09 |    0 % | m     |    2 |  1d8 |   1   |   5   | 1x3              |
+|    T   | troll         | 13..22 |   50 % | m   r |  120 |  6d8 |   6   |   4   | 1x8 / 1x8 / 2x6  |
+|    U   | black unicorn | 17..26 |    0 % | m     |    7 |  7d8 |   7   |  -2   | 1x9 / 1x9 / 2x9  |
+|    V   | vampire       | 19..28 |   20 % | m   r |  350 |  8d8 |   8   |   1   | 1x10             |
+|    W   | wraith        | 14..23 |    0 % |       |   55 |  5d8 |   5   |   4   | 1x6              |
+|    X   | xeroc         | 16..25 |   30 % |       |  100 |  7d8 |   7   |   7   | 4x4              |
+|    Y   | yeti          | 11..20 |   30 % |       |   50 |  4d8 |   4   |   6   | 1x6 / 1x6        |
+|    Z   | zombie        | 05..14 |    0 % | m     |    6 |  2d8 |   2   |   8   | 1x8              |
 
 The "**levels**" refers to the dungeon level range on which the given monoster may be found.
 
@@ -586,19 +586,38 @@ The "**flags**" are:
 * g ==> is greedy (can take things)
 * i ==> may start out as invisible
 
-The "**Exp**" is the experience gained when you kill such a monster.
+The "**exp**" is the experience gained when you kill such a monster.
 
 The "**class**" refers to the monster’s armor class.  The smaller the
-monster’s armor class, the harder they are to hit.  Thus, a **U** (black unicorn)
-armor class of -2 is the toughest to hit, whereas a **N** (nymph) armor
-class of 9 is the easiest.
+monster’s armor class, the harder they are to hit.
 
-The "HxD" of "**danage**" indicates hit bonus (H), which improves the monster’s
+For example, a **U** (black unicorn) armor class of -2 is the toughest
+to hit, whereas a **N** (nymph) armor class of 9 is the easiest.
+
+The "HxD" of "**damage**" indicates hit bonus (H), which improves the monster’s
 ability to hit you, and damage bonus (D), which increases
-the damage they cause when they hit you.  Monsters with multiple "HxD"
-values indicate that the given monster has more than one method of attack.
+the damage they cause when they hit you.
 
-The **V** (venus flytrap) "**danage**" of "*++**" means that
+Monsters with multiple "HxD" values under "**damage**" indicate that the given
+monster has more than one method of attack.  Each time the monster attacks,
+**each** of its attacks is attempted.  For example, a **D** (dragon), when it
+attacks, will attempt 3 attacks of "1x8", and again at "1x8", and finally "3x10".
+
+The "**HP**" indicates the amount of damage the monster will take before
+it is killed.  A "**HP**" of "Cd8" means that "C" number of 8-sided dice
+are "rolled" when the monster is created to determine the initial amount of
+damage the newly created monster can take.  Other circumstances may further
+boost, or reduce the damage the monster will take before it is killed.
+
+For example, a **Z** (zombie) has a "**HP**" of "2d8", which means that
+2 8-sided dice are rolled to determine the initial "**HP**".  Thus a
+**Z** (zombie) might start out with anywhere between 2 and 16 "**HP**".
+A **J** (Jabberwock) has a "**HP**" of "15d8", so the **J** (Jabberwock)
+might start out with anywhere between 15 and 120 "**HP**"!
+The "**HP**" value depends on total sum of the dice "rolls".  Thus, the
+extremes of the range are more rare than the middle of the range.
+
+The **V** (venus flytrap) "**damage**" of "*++**" means that
 the hit bonus (H) starts about 1m and increases each turn as you are being held.
 
 Below level 29, all monsters are hasted (are fast).
