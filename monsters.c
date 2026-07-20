@@ -61,13 +61,12 @@ randmonster(int wander)
 	 *
 	 * The effect of this next test is:
 	 *
-	 * NOTE: On level 1, the first 4 monsters are possible.
-	 *       On level 2, the first 5 monsters are possible.
-	 *       On level 3, the first 6 monsters are possible.
-	 *       On level 4, the first 7 monsters are possible.
-	 *       On level 5, the first 8 monsters are possible.
-	 *       On level 6, the first 9 monsters are possible.
-	 *       On level 7, the first 10 monsters are possible.
+	 * NOTE: On level 1, the first 5 monsters are possible.
+	 *       On level 2, the first 6 monsters are possible.
+	 *       On level 3, the first 7 monsters are possible.
+	 *       On level 4, the first 8 monsters are possible.
+	 *       On level 5, the first 9 monsters are possible.
+	 *       On level 6, the first 10 monsters are possible.
 	 */
 	if (d < 0)
 	    d = rnd(5);
@@ -77,18 +76,17 @@ randmonster(int wander)
 	 *
 	 * The effect of this next test is:
 	 *
-	 * NOTE: On level 21, the last 10 monsters are possible.
-	 *       On level 22, the last 9 monsters are possible.
-	 *       On level 23, the last 8 monsters are possible.
-	 *       On level 24, the last 7 monsters are possible.
-	 *       On level 25, the last 6 monsters are possible.
-	 *       On level 26, the last 5 monsters are possible.
-	 *       On level 27, the last 4 monsters are possible.
-	 *       On level 28, the last 3 monsters are possible.
+	 * NOTE: On level 22, the last 10 monsters are possible.
+	 *       On level 23, the last 9 monsters are possible.
+	 *       On level 24, the last 8 monsters are possible.
+	 *       On level 25, the last 7 monsters are possible.
+	 *       On level 26, the last 6 monsters are possible.
+	 *       On level 27, the last 5 monsters are possible.
+	 *       On level 28, the last 4 monsters are possible.
 	 *       On level 29, the last 3 monsters are possible.
 	 *       On level 30, the last 2 monsters are possible.
 	 *       On level 31, the last 1 monster are possible.
-	 *       On level 32 and beyond, the last 15 monsters are possible.
+	 *       On level 32 and beyond, the last 5 monsters are possible.
 	 */
 	if (d > MAXMONSTERS-1)
 	    d = rnd(5) + 21;
