@@ -468,12 +468,14 @@ main(int argc, char **argv)
 
     /*
      * The screen must be at least NUMLINES x NUMCOLS
+     *
+     * We output carriage return before newline in case we are in cooked mode.
      */
     if (LINES < NUMLINES || COLS < NUMCOLS) {
 	endwin_and_ncurses_cleanup();
 	fflush(stdout);
-	fprintf(stderr, "\nSorry, current screen only has %d lines and %d columns.\n", LINES, COLS);
-	fprintf(stderr, "The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
+	fprintf(stderr, "\r\nSorry, the current screen only has %d lines and %d columns.\r\n", LINES, COLS);
+	fprintf(stderr, "The screen must have at least %d lines and %d columns.\r\n", NUMLINES, NUMCOLS);
 	fflush(stderr);
 	my_exit(7); /*ooo*/
     }

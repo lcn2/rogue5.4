@@ -199,6 +199,9 @@ save_file(FILE *savef)
  * restore:
  *	Restore a saved game from a file with elaborate checks for file
  *	integrity from cheaters
+ *
+ * NOTE: For multi-line error messages, we output a carriage return before a newline
+ *       in case the terminal is no cooked mode.
  */
 int
 restore(const char *file)
@@ -214,8 +217,8 @@ restore(const char *file)
      * paranoia
      */
     if (strlen(file) >= MAXSTR) {
-	printf("Sorry, the rogue save file path is too long: %s\n", file);
-        printf("Unable to restore: %s\n", file);
+	printf("Sorry, the rogue save file path is too long: %s\r\n", file);
+        printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	return false;
     }
@@ -244,8 +247,8 @@ restore(const char *file)
 	 */
 	fd = open(file, O_RDONLY | O_NOFOLLOW);
 	if (fd < 0) {
-	    printf("Sorry, failed to open for reading rogue save file: %s - %s\n", file, strerror(errno));
-	    printf("Unable to restore: %s\n", file);
+	    printf("Sorry, failed to open for reading rogue save file: %s - %s\r\n", file, strerror(errno));
+	    printf("Unable to restore: %s\r\n", file);
 	    fflush(stdout);
 	    md_tstpresume();
 	    return false;
@@ -256,16 +259,16 @@ restore(const char *file)
 	 */
 	memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
 	if (fstat(fd, &sbuf2) < 0) {
-	    printf("Sorry, cannot stat rogue save file: %s - %s\n", file, strerror(errno));
-	    printf("Unable to restore: %s\n", file);
+	    printf("Sorry, cannot stat rogue save file: %s - %s\r\n", file, strerror(errno));
+	    printf("Unable to restore: %s\r\n", file);
 	    fflush(stdout);
 	    close(fd);
 	    md_tstpresume();
 	    return false;
 	}
 	if (!S_ISREG(sbuf2.st_mode)) {
-	    printf("Sorry, rogue save file must be a regular file: %s\n", file);
-	    printf("Unable to restore: %s\n", file);
+	    printf("Sorry, rogue save file must be a regular file: %s\r\n", file);
+	    printf("Unable to restore: %s\r\n", file);
 	    fflush(stdout);
 	    close(fd);
 	    md_tstpresume();
@@ -278,8 +281,8 @@ restore(const char *file)
 	inf = fdopen(fd, "r");
 	if (inf == NULL)
 	{
-	    printf("Sorry, failed to open for reading rogue save file: %s - %s\n", file, strerror(errno));
-	    printf("Unable to restore: %s\n", file);
+	    printf("Sorry, failed to open for reading rogue save file: %s - %s\r\n", file, strerror(errno));
+	    printf("Unable to restore: %s\r\n", file);
 	    fflush(stdout);
 	    close(fd);
 	    md_tstpresume();
@@ -294,9 +297,9 @@ restore(const char *file)
     encread(buf, strlen(version) + 1, inf);
     if (strcmp(buf, version) != 0)
     {
-	printf("Sorry, saved game is out of date.\n");
-	printf("Expected version: %s found version: %s\n", version, buf);
-        printf("Unable to restore: %s\n", file);
+	printf("Sorry, saved game is out of date.\r\n");
+	printf("Expected version: %s found version: %s\r\n", version, buf);
+        printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -310,8 +313,8 @@ restore(const char *file)
     encread(buf, NUMCOLS, inf);
     ret = sscanf(buf, "%d x %d\n", &lines, &cols);
     if (ret != 2) {
-	printf("Sorry, failed to parse the lines and columns from: %s\n", file);
-        printf("Unable to restore: %s\n", file);
+	printf("Sorry, failed to parse the lines and columns from: %s\r\n", file);
+        printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -331,8 +334,8 @@ restore(const char *file)
      */
     if (lines < NUMLINES || cols < NUMCOLS) {
 	endwin_and_ncurses_cleanup();
-	printf("\nSorry, current screen only has %d lines and %d columns.\n", LINES, COLS);
-	printf("The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
+	fprintf(stderr, "\r\nSorry, the current screen only has %d lines and %d columns.\r\n", LINES, COLS);
+	fprintf(stderr, "The screen must have at least %d lines and %d columns.\r\n", NUMLINES, NUMCOLS);
 	fflush(stdout);
 	return false;
     }
@@ -346,9 +349,7 @@ restore(const char *file)
     errno = 0; /* paranoia */
     if (fstat(fileno(inf), &sbuf2) < 0) {
 	endwin_and_ncurses_cleanup();
-	printf("Sorry, cannot re-stat open rogue save file: %s\n", strerror(errno));
-	printf("The screen have at least %d lines and %d columns.\n", NUMLINES, NUMCOLS);
-        printf("Unable to restore: %s\n", file);
+        printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -366,8 +367,8 @@ restore(const char *file)
         md_unlink_open_file(file, inf) < 0)
     {
 	endwin_and_ncurses_cleanup();
-	printf("Sorry, cannot remove rogue save file after restoring: %s\n", strerror(errno));
-        printf("Unable to restore: %s\n", file);
+	printf("Sorry, cannot remove rogue save file after restoring: %s\r\n", strerror(errno));
+        printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -383,9 +384,9 @@ restore(const char *file)
 	if (sbuf2.st_nlink != 1)
 	{
 	    endwin_and_ncurses_cleanup();
-	    printf("Sorry, cannot restore from a rogue save file that linked\n");
-	    printf("Link count: %ld != 1\n", (long int)sbuf2.st_nlink);
-	    printf("Unable to restore: %s\n", file);
+	    printf("Sorry, cannot restore from a rogue save file that linked\r\n");
+	    printf("Link count: %ld != 1\r\n", (long int)sbuf2.st_nlink);
+	    printf("Unable to restore: %s\r\n", file);
 	    fflush(stdout);
 	    fclose(inf);
 	    md_tstpresume();
@@ -404,8 +405,8 @@ restore(const char *file)
     {
 	endwin_and_ncurses_cleanup();
 	printf("\"He's dead, Jim\"\n");
-	printf("Attempt to restore a game of a dead rogue player, HP: %d\n", pstats.s_hpt);
-	printf("Unable to restore: %s\n", file);
+	printf("Attempt to restore a game of a dead rogue player, HP: %d\r\n", pstats.s_hpt);
+	printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -588,8 +589,8 @@ rd_score(SCORE *top_score)
 	}
     }
     if (failed) {
-	printf("ERROR: The score file format is too old and/or has been corrupted!\n");
-	printf("WARNING: Before running rouge again, remove the score file: %s\n", score_path);
+	printf("ERROR: The score file format is too old and/or has been corrupted!\r\n");
+	printf("WARNING: Before running rouge again, remove the score file: %s\r\n", score_path);
 	fflush(stdout);
 	exit(50); /*coo*/
     }
