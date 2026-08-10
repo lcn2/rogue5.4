@@ -1039,7 +1039,7 @@ If you do not know the **wizard password**, you will need to do a little reading
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
 
 **BONUS HINT**: **The historic wizard password** may be found in a source code comment about a defined symbol
-in the **rogue.h** header file.
+in the **`rogue.h`** header file.
 
 You may toggle **wizard mode** on and off by pressing the "+" key.
 When you successfully toggle **wizard mode** on, you will see the message:
@@ -1054,16 +1054,19 @@ rogue ""
 
 If you start start rogue in **wizard mode**, then the `$SEED` environment variable
 may be used to set a specific dungeon number and pseudo-random number seed.
-This will allow you to run specific dungeon, say for debugging purposes.
+
+**NOTE**: A seed is likely portable across different systems that implement
+the BSD `random(3)` facility, for rogue release date **2026-02-24**
+or later, though not guaranteed on non-BSD systems.
+
+Setting the `$SEED` environment variable, and starting in  **wizard mode**
+will allow you to run specific dungeon, say for debugging purposes.
 For example:
 
 ```sh
 SEED=1227897957 rogue ""
 ```
 
-**NOTE**: A seed is very likely portable across different systems that
-implement the BSD `random(3)` facility, for rogue release date **2026-02-24**
-or later.
 For example, the **1227897957** seed is very likely to start you out in
 what is called a "treasure room": a fun room full of monsters and artifacts:
 
@@ -1075,6 +1078,23 @@ what is called a "treasure room": a fun room full of monsters and artifacts:
 |....E...K..|
 |.@?.S..E...|
 --+----------
+```
+
+And with seed **559274574**:
+
+```sh
+SEED=559274574 rogue ""
+```
+
+you will start in this fun "treasure room":
+
+```
+---------
+|..?)..S|
+|*SSHB@.|
+|K.KI?EE+
++E....!!|
+-------+-
 ```
 
 For an even more challenging "treasure room" start, try:
