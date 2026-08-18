@@ -131,7 +131,13 @@ CPPFLAGS= -DLOCKPATH='"${ROGUEDIR}/${LOCKFILE_BASENAME}"' \
 COPT= -O3
 DEBUG= -ggdb3
 
-CFLAGS= ${CSTD} ${CCWARN} ${CPPFLAGS} ${COPT} ${DEBUG}
+# Common C compiler warnings to silence:
+#
+# -Wno-char-subscripts			often caused by ctypes macros
+#
+CSILENCE= -Wno-char-subscripts
+
+CFLAGS= ${CSTD} ${CCWARN} ${CSILENCE} ${CPPFLAGS} ${COPT} ${DEBUG}
 
 LDFLAGS=
 
@@ -455,7 +461,7 @@ endif
 # NOTE: Consider doing a "make clobber" first, especially when switching from a previous "make all", "make gcc", etc.
 #
 clang:
-	${MAKE} -f ${MAKE_FILE} all CC='clang' CCWARN='-Wall -pedantic -Werror -Wno-char-subscripts' COPT='-O0' DEBUG='-ggdb3'
+	${MAKE} -f ${MAKE_FILE} all CC='clang' CCWARN='-Wall -pedantic -Werror' COPT='-O0' DEBUG='-ggdb3'
 
 # compile all with Address Sanitizer (ASAN) enabled
 #
