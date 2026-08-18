@@ -20,8 +20,10 @@
  * places in the program.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include "modern_curses.h"
 
 #define MAXSTR		1024	/* maximum length of strings */
 #define SHORTSTR	32	/* typical short string */

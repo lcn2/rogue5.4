@@ -391,11 +391,7 @@ scedit: ${OBJS} scmisc.o scedit.o
 # NOTE: Consider doing a "make clobber" first, especially when switching from a previous "make all", "make clang", etc.
 #
 gcc:
-ifeq ($(target),Linux)
-	${MAKE} -f ${MAKE_FILE} all CC='gcc' CCWARN='-Wall -pedantic -Werror' COPT='-O0' DEBUG='-ggdb3'
-else
-	${MAKE} -f ${MAKE_FILE} all CC='gcc-16' CCWARN='-Wall -pedantic -Werror' COPT='-O0' DEBUG='-g2'
-endif
+	${MAKE} -f ${MAKE_FILE} all CC='gcc' CCWARN='-Wall -pedantic -Werror -Wno-char-subscripts' COPT='-O0' DEBUG='-ggdb3'
 
 # compile all with clang, full warnings, no optimizer, no ASAN
 #
