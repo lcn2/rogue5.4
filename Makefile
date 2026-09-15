@@ -298,7 +298,7 @@ OTHER_FSANITIZE+= -fstack-protector-all
 #
 # This comment block was tested under:
 #
-#       macOS 26.5.1 with Apple clang version 21.0.0 (clang-2100.1.1.101)
+#       macOS 27.0 with Apple clang version 21.0.0 (clang-2100.3.34.2)
 #
 #       See: https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early
 #
