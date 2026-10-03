@@ -10,97 +10,95 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-
 #if !defined(INCLUDE_EXTERN_H)
-#define INCLUDE_EXTERN_H
-
+#  define INCLUDE_EXTERN_H
 
 /*
  * Don't change the constants, since they are used for sizes in many
  * places in the program.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include "modern_curses.h"
+#  include <stdio.h>
+#  include <stdlib.h>
+#  include <sys/types.h>
+#  include "modern_curses.h"
 
-#define MAXSTR		1024	/* maximum length of strings */
-#define SHORTSTR	32	/* typical short string */
-#define MAXLINES	32	/* maximum number of screen lines used */
-#define MAXCOLS		80	/* maximum number of screen columns used */
+#  define MAXSTR 1024 /* maximum length of strings */
+#  define SHORTSTR 32 /* typical short string */
+#  define MAXLINES 32 /* maximum number of screen lines used */
+#  define MAXCOLS 80  /* maximum number of screen columns used */
 
-#if defined(NON_BSD_RN_GENERATOR)
+#  if defined(NON_BSD_RN_GENERATOR)
 /*
  * NOTE: The RN is a poor way to generate pseudo-random numbers.
  *	 Worse, the RN value limits the seed value to a 16-bit pseudo-random number.
  */
-#  define RN		(((seed = seed*11109+13849) >> 16) & 0xffff)
-#else
+#    define RN (((seed = seed * 11109 + 13849) >> 16) & 0xffff)
+#  else
 /*
  * use the BSD random(3) generator, seed by he dungeon number to generate a 31-bit pseudo-random number.
  */
-#  define RN		((unsigned int)random())
-#endif
+#    define RN ((unsigned int)random())
+#  endif
 
-#ifdef CTRL
-#undef CTRL
-#endif
-#define CTRL(c)		(c & 037)
+#  ifdef CTRL
+#    undef CTRL
+#  endif
+#  define CTRL(c) (c & 037)
 
 /* maximum length the score line apart from the username */
-#define	MAX_OTHER_SCORE 80
+#  define MAX_OTHER_SCORE 80
 
 /* must be an just integer = MAX_USERNAME+MAX_OTHER_SCORE */
-#define	MAXSCORELINE   (MAX_USERNAME+MAX_OTHER_SCORE)
+#  define MAXSCORELINE (MAX_USERNAME + MAX_OTHER_SCORE)
 
 /*
  * Now all the global variables
  */
 
-#define PFBUF_LEN (2*MAXSTR)
+#  define PFBUF_LEN (2 * MAXSTR)
 extern int got_ltc, in_shell;
-extern int	wizard;
-extern char	fruit[MAXSTR+1]; /* +1 for paranoia */
-extern char	prbuf[PFBUF_LEN+1]; /* +1 for paranoia */
+extern int wizard;
+extern char fruit[MAXSTR + 1];	  /* +1 for paranoia */
+extern char prbuf[PFBUF_LEN + 1]; /* +1 for paranoia */
 extern int orig_dsusp;
-extern FILE	*scoreboard;
+extern FILE *scoreboard;
 extern int numscores;
 extern char *Numname;
 extern int allscore;
-extern char home[MAXSTR + 1];			/* home path plus trailing /, +1 for paranoia */
-extern char lock_path[MAXSTR + 1];		/* rogue lock file path, +1 for paranoia */
-extern char file_name[MAXSTR + 1];		/* rogue save file path, +1 for paranoia */
-extern char score_path[MAXSTR + 1];		/* rogue score file path, +1 for paranoia */
-extern int signal_quit;				/* True if terminating signal will quit the game, False will save game state */
+extern char home[MAXSTR + 1];	    /* home path plus trailing /, +1 for paranoia */
+extern char lock_path[MAXSTR + 1];  /* rogue lock file path, +1 for paranoia */
+extern char file_name[MAXSTR + 1];  /* rogue save file path, +1 for paranoia */
+extern char score_path[MAXSTR + 1]; /* rogue score file path, +1 for paranoia */
+extern int signal_quit;		    /* True if terminating signal will quit the game, False will save game state */
 
 /*
  * Function types
  */
 
-int	md_chmod(const char *filename, int mode);
-char	*md_crypt(const char *key, const char *salt);
-int	md_dsuspchar(void);
-int	md_erasechar(void);
-char	*md_gethomedir(void);
-char	*md_getusername(void);
-uid_t	md_getuid(void);
-char	*md_getpass(char *prompt);
-pid_t	md_getpid(void);
-char	*md_getrealname(uid_t uid);
-void	md_init(void);
-int	md_killchar(void);
-void	md_normaluser(void);
-void	md_raw_standout(void);
-void	md_raw_standend(void);
-int	md_readchar(WINDOW *win);
-int	md_setdsuspchar(int c);
-int	md_shellescape(void);
-void	md_sleep(int s);
-int	md_suspchar(void);
-int	md_hasclreol(void);
-int	md_unlink(char *file);
-int	md_unlink_open_file(const char *file, FILE *inf);
+int md_chmod(const char *filename, int mode);
+char *md_crypt(const char *key, const char *salt);
+int md_dsuspchar(void);
+int md_erasechar(void);
+char *md_gethomedir(void);
+char *md_getusername(void);
+uid_t md_getuid(void);
+char *md_getpass(char *prompt);
+pid_t md_getpid(void);
+char *md_getrealname(uid_t uid);
+void md_init(void);
+int md_killchar(void);
+void md_normaluser(void);
+void md_raw_standout(void);
+void md_raw_standend(void);
+int md_readchar(WINDOW *win);
+int md_setdsuspchar(int c);
+int md_shellescape(void);
+void md_sleep(int s);
+int md_suspchar(void);
+int md_hasclreol(void);
+int md_unlink(char *file);
+int md_unlink_open_file(const char *file, FILE *inf);
 void md_tstpsignal(void);
 void md_tstphold(void);
 void md_tstpresume(void);
@@ -117,6 +115,5 @@ extern void form_save_path(void);
 extern void form_score_path(void);
 
 extern void endwin_and_ncurses_cleanup(void);
-
 
 #endif

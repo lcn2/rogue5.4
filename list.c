@@ -18,7 +18,7 @@
 #include "rogue.h"
 
 #ifdef MASTER
-int total = 0;			/* total dynamic memory bytes */
+int total = 0; /* total dynamic memory bytes */
 #endif
 
 /*
@@ -29,12 +29,15 @@ int total = 0;			/* total dynamic memory bytes */
 void
 _detach(THING **list, THING *item)
 {
-    if (*list == item)
+    if (*list == item) {
 	*list = next(item);
-    if (prev(item) != NULL)
+    }
+    if (prev(item) != NULL) {
 	item->l_prev->l_next = next(item);
-    if (next(item) != NULL)
+    }
+    if (next(item) != NULL) {
 	item->l_next->l_prev = prev(item);
+    }
     item->l_next = NULL;
     item->l_prev = NULL;
 }
@@ -47,14 +50,11 @@ _detach(THING **list, THING *item)
 void
 _attach(THING **list, THING *item)
 {
-    if (*list != NULL)
-    {
+    if (*list != NULL) {
 	item->l_next = *list;
 	(*list)->l_prev = item;
 	item->l_prev = NULL;
-    }
-    else
-    {
+    } else {
 	item->l_next = NULL;
 	item->l_prev = NULL;
     }
@@ -71,8 +71,7 @@ _free_list(THING **ptr)
 {
     THING *item;
 
-    while (*ptr != NULL)
-    {
+    while (*ptr != NULL) {
 	item = *ptr;
 	*ptr = next(item);
 	discard(item);

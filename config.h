@@ -5,10 +5,8 @@
  * If in doubt, follow the "Suggestion:" line.
  */
 
-
 #if !defined(INCLUDE_CONFIG_H)
-#define INCLUDE_CONFIG_H
-
+#  define INCLUDE_CONFIG_H
 
 /*
  * ALLSCORES - use top scores or top player scores
@@ -18,7 +16,7 @@
  *
  * Suggestion: define
  */
-#define ALLSCORES
+#  define ALLSCORES
 /* #undef ALLSCORES */
 
 /*
@@ -35,8 +33,7 @@
  *
  * Suggestion: define as 10
  */
-#define NUMSCORES 10
-
+#  define NUMSCORES 10
 
 /*
  * MASTER - to include wizard mode
@@ -46,9 +43,8 @@
  *
  * Suggestion: define
  */
-#define MASTER
+#  define MASTER
 /* #undef MASTER */
-
 
 /*
  * CHECKTIME - number of minutes between load average checks
@@ -62,8 +58,7 @@
  * Suggestion: undef
  */
 /* #define CHECKTIME 5 */
-#undef CHECKTIME
-
+#  undef CHECKTIME
 
 /*
  * HAVE_ERASECHAR - if ncurses has the erasechar() function
@@ -73,9 +68,8 @@
  *
  * Suggestion: define
  */
-#define HAVE_ERASECHAR
+#  define HAVE_ERASECHAR
 /* #undef HAVE_ERASECHAR */
-
 
 /*
  * HAVE_GETPASS - if system has a getpass() function
@@ -85,9 +79,8 @@
  *
  * Suggestion: define
  */
-#define HAVE_GETPASS
+#  define HAVE_GETPASS
 /* #undef HAVE_GETPASS */
-
 
 /*
  * HAVE_KILLCHAR - if system as a killchar() function
@@ -97,9 +90,8 @@
  *
  * Suggestion: define
  */
-#define HAVE_KILLCHAR
+#  define HAVE_KILLCHAR
 /* #undef HAVE_KILLCHAR */
-
 
 /*
  * MAXLOAD - if a maximum 5 minute load average game play limit should be used
@@ -110,7 +102,6 @@
  * Suggestion: undef
  */
 /* #define MAXLOAD 40 */
-#undef MAXLOAD
-
+#  undef MAXLOAD
 
 #endif

@@ -38,126 +38,136 @@ inv_name(const THING *obj, int drop)
 
     pb = prbuf;
     which = obj->o_which;
-    switch (obj->o_type)
-    {
-        case POTION:
-	    nameit(obj, "potion", p_colors[which], &pot_info[which], nullstr);
-	when RING:
-	    nameit(obj, "ring", r_stones[which], &ring_info[which], ring_num);
-	when STICK:
-	    nameit(obj, ws_type[which], ws_made[which], &ws_info[which], charge_str);
-	when SCROLL:
-	    if (obj->o_count == 1)
-	    {
-		strcpy(pb, "A scroll ");
-		pb = &prbuf[9];
-	    }
-	    else
-	    {
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%d scrolls ", obj->o_count);
-		pb = &prbuf[strlen(prbuf)];
-	    }
-	    op = &scr_info[which];
-	    if (op->oi_know)
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "of %s", op->oi_name);
-	    else if (op->oi_guess)
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "called %s", op->oi_guess);
-	    else
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "titled '%s'", s_names[which]);
-	when FOOD:
-	    if (which == 1)
-		if (obj->o_count == 1)
-		    snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "A%s %s", vowelstr(fruit), fruit);
-		else
-		    snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%d %ss", obj->o_count, fruit);
-	    else
-		if (obj->o_count == 1)
-		    strcpy(pb, "Some food");
-		else
-		    snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%d rations of food", obj->o_count);
-	when WEAPON:
-	    sp = weap_info[which].oi_name;
-	    if (obj->o_count > 1)
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%d ", obj->o_count);
-	    else
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "A%s ", vowelstr(sp));
+    switch (obj->o_type) {
+    case POTION:
+	nameit(obj, "potion", p_colors[which], &pot_info[which], nullstr);
+	break;
+    case RING:
+	nameit(obj, "ring", r_stones[which], &ring_info[which], ring_num);
+	break;
+    case STICK:
+	nameit(obj, ws_type[which], ws_made[which], &ws_info[which], charge_str);
+	break;
+    case SCROLL:
+	if (obj->o_count == 1) {
+	    strcpy(pb, "A scroll ");
+	    pb = &prbuf[9];
+	} else {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%d scrolls ", obj->o_count);
 	    pb = &prbuf[strlen(prbuf)];
-	    if (obj->o_flags & ISKNOW)
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%s %s", num(obj->o_hplus,obj->o_dplus,WEAPON), sp);
-	    else
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%s", sp);
-	    if (obj->o_count > 1)
-		strcat(pb, "s");
-	    if (obj->o_label != NULL)
-	    {
-		pb = &prbuf[strlen(prbuf)];
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), " called %s", obj->o_label);
+	}
+	op = &scr_info[which];
+	if (op->oi_know) {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "of %s", op->oi_name);
+	} else if (op->oi_guess) {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "called %s", op->oi_guess);
+	} else {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "titled '%s'", s_names[which]);
+	}
+	break;
+    case FOOD:
+	if (which == 1) {
+	    if (obj->o_count == 1) {
+		snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "A%s %s", vowelstr(fruit), fruit);
+	    } else {
+		snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%d %ss", obj->o_count, fruit);
 	    }
+	} else if (obj->o_count == 1) {
+	    strcpy(pb, "Some food");
+	} else {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%d rations of food", obj->o_count);
+	}
+	break;
+    case WEAPON:
+	sp = weap_info[which].oi_name;
+	if (obj->o_count > 1) {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%d ", obj->o_count);
+	} else {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "A%s ", vowelstr(sp));
+	}
+	pb = &prbuf[strlen(prbuf)];
+	if (obj->o_flags & ISKNOW) {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%s %s", num(obj->o_hplus, obj->o_dplus, WEAPON), sp);
+	} else {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%s", sp);
+	}
+	if (obj->o_count > 1) {
+	    strcat(pb, "s");
+	}
+	if (obj->o_label != NULL) {
+	    pb = &prbuf[strlen(prbuf)];
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), " called %s", obj->o_label);
+	}
 #ifdef MASTER
-	    if (wizard) {
-		if (obj->o_flags & ISCURSED) {
-		    strcat(pb, " (cursed)");
-		}
-		if (obj->o_flags & ISPROT) {
-		    strcat(pb, " (protected)");
-		}
+	if (wizard) {
+	    if (obj->o_flags & ISCURSED) {
+		strcat(pb, " (cursed)");
 	    }
+	    if (obj->o_flags & ISPROT) {
+		strcat(pb, " (protected)");
+	    }
+	}
 #endif
-	when ARMOR:
-	    sp = arm_info[which].oi_name;
-	    if (obj->o_flags & ISKNOW)
-	    {
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%s %s [",
-		    num(a_class[which] - obj->o_arm, 0, ARMOR), sp);
-		if (!terse)
-		    strcat(pb, "protection ");
-		pb = &prbuf[strlen(prbuf)];
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%d]", 10 - obj->o_arm);
+	break;
+    case ARMOR:
+	sp = arm_info[which].oi_name;
+	if (obj->o_flags & ISKNOW) {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%s %s [", num(a_class[which] - obj->o_arm, 0, ARMOR), sp);
+	    if (!terse) {
+		strcat(pb, "protection ");
 	    }
-	    else
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "%s", sp);
-	    if (obj->o_label != NULL)
-	    {
-		pb = &prbuf[strlen(prbuf)];
-		snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), " called %s", obj->o_label);
-	    }
+	    pb = &prbuf[strlen(prbuf)];
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%d]", 10 - obj->o_arm);
+	} else {
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "%s", sp);
+	}
+	if (obj->o_label != NULL) {
+	    pb = &prbuf[strlen(prbuf)];
+	    snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), " called %s", obj->o_label);
+	}
 #ifdef MASTER
-	    if (wizard) {
-		if (obj->o_flags & ISCURSED) {
-		    strcat(pb, " (cursed)");
-		}
-		if (obj->o_flags & ISPROT) {
-		    strcat(pb, " (protected)");
-		}
+	if (wizard) {
+	    if (obj->o_flags & ISCURSED) {
+		strcat(pb, " (cursed)");
 	    }
+	    if (obj->o_flags & ISPROT) {
+		strcat(pb, " (protected)");
+	    }
+	}
 #endif
-	when AMULET:
-	    strcpy(pb, "The Amulet of Yendor");
-	when GOLD:
-	    snprintf(prbuf, sizeof(prbuf), "%d Gold pieces", obj->o_goldval);
+	break;
+    case AMULET:
+	strcpy(pb, "The Amulet of Yendor");
+	break;
+    case GOLD:
+	snprintf(prbuf, sizeof(prbuf), "%d Gold pieces", obj->o_goldval);
+	break;
+    default:
 #ifdef MASTER
-	otherwise:
-	    debug("Picked up something funny %s", unctrl(obj->o_type));
-	    snprintf(pb, sizeof(prbuf)-((size_t)(pb-prbuf)), "Something bizarre %s", unctrl(obj->o_type));
+	if (wizard) {
+	    msg("Picked up something funny %s", unctrl(obj->o_type));
+	}
+	snprintf(pb, sizeof(prbuf) - ((size_t)(pb - prbuf)), "Something bizarre %s", unctrl(obj->o_type));
 #endif
     }
-    if (inv_describe)
-    {
+    if (inv_describe) {
 	if (obj == cur_armor) {
 	    strcat(pb, " (being worn)");
 	} else if (obj == cur_weapon) {
 	    strcat(pb, " (weapon in hand)");
 	}
-	if (obj == cur_ring[LEFT])
+	if (obj == cur_ring[LEFT]) {
 	    strcat(pb, " (on left hand)");
-	else if (obj == cur_ring[RIGHT])
+	} else if (obj == cur_ring[RIGHT]) {
 	    strcat(pb, " (on right hand)");
+	}
     }
-    if (drop && isupper((int)prbuf[0]))
-	prbuf[0] = (char) tolower(prbuf[0]);
-    else if (!drop && islower((int)*prbuf))
-	*prbuf = (char) toupper(*prbuf);
-    prbuf[MAXSTR-1] = '\0';
+    if (drop && isupper((int)prbuf[0])) {
+	prbuf[0] = (char)tolower(prbuf[0]);
+    } else if (!drop && islower((int)*prbuf)) {
+	*prbuf = (char)toupper(*prbuf);
+    }
+    prbuf[MAXSTR - 1] = '\0';
     return prbuf;
 }
 
@@ -173,16 +183,17 @@ drop(void)
     THING *obj;
 
     ch = chat(hero.y, hero.x);
-    if (ch != FLOOR && ch != PASSAGE)
-    {
+    if (ch != FLOOR && ch != PASSAGE) {
 	after = false;
 	msg("there is something there already");
 	return;
     }
-    if ((obj = get_item("drop", 0)) == NULL)
+    if ((obj = get_item("drop", 0)) == NULL) {
 	return;
-    if (!dropcheck(obj))
+    }
+    if (!dropcheck(obj)) {
 	return;
+    }
     obj = leave_pack(obj, true, !ISMULT(obj->o_type));
     /*
      * Link it into the level object list
@@ -191,8 +202,9 @@ drop(void)
     chat(hero.y, hero.x) = obj->o_type;
     flat(hero.y, hero.x) |= F_DROPPED;
     obj->o_pos = hero;
-    if (obj->o_type == AMULET)
+    if (obj->o_type == AMULET) {
 	amulet = false;
+    }
     msg("dropped %s", inv_name(obj, true));
 }
 
@@ -203,35 +215,31 @@ drop(void)
 int
 dropcheck(const THING *obj)
 {
-    if (obj == NULL)
+    if (obj == NULL) {
 	return true;
-    if (obj != cur_armor && obj != cur_weapon
-	&& obj != cur_ring[LEFT] && obj != cur_ring[RIGHT])
-	    return true;
-    if (obj->o_flags & ISCURSED)
-    {
+    }
+    if (obj != cur_armor && obj != cur_weapon && obj != cur_ring[LEFT] && obj != cur_ring[RIGHT]) {
+	return true;
+    }
+    if (obj->o_flags & ISCURSED) {
 	msg("you can't.  It appears to be cursed");
 	return false;
     }
-    if (obj == cur_weapon)
+    if (obj == cur_weapon) {
 	cur_weapon = NULL;
-    else if (obj == cur_armor)
-    {
+    } else if (obj == cur_armor) {
 	waste_time();
 	cur_armor = NULL;
-    }
-    else
-    {
+    } else {
 	cur_ring[obj == cur_ring[LEFT] ? LEFT : RIGHT] = NULL;
-	switch (obj->o_which)
-	{
-	    case R_ADDSTR:
-		chg_str(-obj->o_arm);
-		break;
-	    case R_SEEINVIS:
-		unsee(0);
-		extinguish(unsee);
-		break;
+	switch (obj->o_which) {
+	case R_ADDSTR:
+	    chg_str(-obj->o_arm);
+	    break;
+	case R_SEEINVIS:
+	    unsee(0);
+	    extinguish(unsee);
+	    break;
 	}
     }
     return true;
@@ -250,8 +258,8 @@ new_thing(void)
     cur = new_thing_ptr();
     cur->o_hplus = 0;
     cur->o_dplus = 0;
-    strlcpy(cur->o_damage, "0x0", sizeof(cur->o_damage)-1);
-    strlcpy(cur->o_hurldmg, "0x0", sizeof(cur->o_hurldmg)-1);
+    strlcpy(cur->o_damage, "0x0", sizeof(cur->o_damage) - 1);
+    strlcpy(cur->o_hurldmg, "0x0", sizeof(cur->o_hurldmg) - 1);
     cur->o_arm = 11;
     cur->o_count = 1;
     cur->o_group = 0;
@@ -260,67 +268,73 @@ new_thing(void)
      * Decide what kind of object it will be
      * If we haven't had food for a while, let it be food.
      */
-    switch (no_food > 3 ? 2 : pick_one(things, NUMTHINGS))
-    {
-	case 0:
-	    cur->o_type = POTION;
-	    cur->o_which = pick_one(pot_info, MAXPOTIONS);
-	when 1:
-	    cur->o_type = SCROLL;
-	    cur->o_which = pick_one(scr_info, MAXSCROLLS);
-	when 2:
-	    cur->o_type = FOOD;
-	    no_food = 0;
-	    if (rnd(10) != 0)
-		cur->o_which = 0;
-	    else
-		cur->o_which = 1;
-	when 3:
-	    init_weapon(cur, pick_one(weap_info, MAXWEAPONS));
-	    if ((r = rnd(100)) < 10)
-	    {
+    switch (no_food > 3 ? 2 : pick_one(things, NUMTHINGS)) {
+    case 0:
+	cur->o_type = POTION;
+	cur->o_which = pick_one(pot_info, MAXPOTIONS);
+	break;
+    case 1:
+	cur->o_type = SCROLL;
+	cur->o_which = pick_one(scr_info, MAXSCROLLS);
+	break;
+    case 2:
+	cur->o_type = FOOD;
+	no_food = 0;
+	if (rnd(10) != 0) {
+	    cur->o_which = 0;
+	} else {
+	    cur->o_which = 1;
+	}
+	break;
+    case 3:
+	init_weapon(cur, pick_one(weap_info, MAXWEAPONS));
+	if ((r = rnd(100)) < 10) {
+	    cur->o_flags |= ISCURSED;
+	    cur->o_hplus -= rnd(3) + 1;
+	} else if (r < 15) {
+	    cur->o_hplus += rnd(3) + 1;
+	}
+	break;
+    case 4:
+	cur->o_type = ARMOR;
+	cur->o_which = pick_one(arm_info, MAXARMORS);
+	cur->o_arm = a_class[cur->o_which];
+	if ((r = rnd(100)) < 20) {
+	    cur->o_flags |= ISCURSED;
+	    cur->o_arm += rnd(3) + 1;
+	} else if (r < 28) {
+	    cur->o_arm -= rnd(3) + 1;
+	}
+	break;
+    case 5:
+	cur->o_type = RING;
+	cur->o_which = pick_one(ring_info, MAXRINGS);
+	switch (cur->o_which) {
+	case R_ADDSTR:
+	case R_PROTECT:
+	case R_ADDHIT:
+	case R_ADDDAM:
+	    if ((cur->o_arm = rnd(3)) == 0) {
+		cur->o_arm = -1;
 		cur->o_flags |= ISCURSED;
-		cur->o_hplus -= rnd(3) + 1;
 	    }
-	    else if (r < 15)
-		cur->o_hplus += rnd(3) + 1;
-	when 4:
-	    cur->o_type = ARMOR;
-	    cur->o_which = pick_one(arm_info, MAXARMORS);
-	    cur->o_arm = a_class[cur->o_which];
-	    if ((r = rnd(100)) < 20)
-	    {
-		cur->o_flags |= ISCURSED;
-		cur->o_arm += rnd(3) + 1;
-	    }
-	    else if (r < 28)
-		cur->o_arm -= rnd(3) + 1;
-	when 5:
-	    cur->o_type = RING;
-	    cur->o_which = pick_one(ring_info, MAXRINGS);
-	    switch (cur->o_which)
-	    {
-		case R_ADDSTR:
-		case R_PROTECT:
-		case R_ADDHIT:
-		case R_ADDDAM:
-		    if ((cur->o_arm = rnd(3)) == 0)
-		    {
-			cur->o_arm = -1;
-			cur->o_flags |= ISCURSED;
-		    }
-		when R_AGGR:
-		case R_TELEPORT:
-		    cur->o_flags |= ISCURSED;
-	    }
-	when 6:
-	    cur->o_type = STICK;
-	    cur->o_which = pick_one(ws_info, MAXSTICKS);
-	    fix_stick(cur);
+	    break;
+	case R_AGGR:
+	case R_TELEPORT:
+	    cur->o_flags |= ISCURSED;
+	}
+	break;
+    case 6:
+	cur->o_type = STICK;
+	cur->o_which = pick_one(ws_info, MAXSTICKS);
+	fix_stick(cur);
+	break;
+    default:
 #ifdef MASTER
-	otherwise:
-	    debug("Picked a bad kind of object");
-	    wait_for(stdscr, ' ');
+	if (wizard) {
+	    msg("Picked a bad kind of object");
+	}
+	wait_for(stdscr, ' ');
 #endif
     }
     return cur;
@@ -338,17 +352,18 @@ pick_one(const struct obj_info *info, int nitems)
     int i;
 
     start = info;
-    for (end = &info[nitems], i = rnd(100); info < end; info++)
-	if (i < info->oi_prob)
+    for (end = &info[nitems], i = rnd(100); info < end; info++) {
+	if (i < info->oi_prob) {
 	    break;
-    if (info == end)
-    {
+	}
+    }
+    if (info == end) {
 #ifdef MASTER
-	if (wizard)
-	{
+	if (wizard) {
 	    msg("bad pick_one: %d from %d items", i, nitems);
-	    for (info = start; info < end; info++)
+	    for (info = start; info < end; info++) {
 		msg("%s: %d%%", info->oi_name, info->oi_prob);
+	    }
 	}
 #endif
 	info = start;
@@ -366,7 +381,6 @@ static int newpage = false;
 
 static const char *lastfmt, *lastarg;
 
-
 void
 discovered(void)
 {
@@ -375,34 +389,35 @@ discovered(void)
 
     do {
 	disc_list = false;
-	if (!terse)
+	if (!terse) {
 	    addmsg("for ");
+	}
 	addmsg("what type");
-	if (!terse)
+	if (!terse) {
 	    addmsg(" of object do you want a list");
+	}
 	msg("? (* for all)");
 	ch = readchar();
-	switch (ch)
-	{
-	    case ESCAPE:
-		msg("");
-		return;
-	    case POTION:
-	    case SCROLL:
-	    case RING:
-	    case STICK:
-	    case '*':
-		disc_list = true;
-		break;
-	    default:
-		if (terse)
-		    msg("Not a type");
-		else
-		    msg("Please type one of %c%c%c%c (ESCAPE to quit)", POTION, SCROLL, RING, STICK);
+	switch (ch) {
+	case ESCAPE:
+	    msg("");
+	    return;
+	case POTION:
+	case SCROLL:
+	case RING:
+	case STICK:
+	case '*':
+	    disc_list = true;
+	    break;
+	default:
+	    if (terse) {
+		msg("Not a type");
+	    } else {
+		msg("Please type one of %c%c%c%c (ESCAPE to quit)", POTION, SCROLL, RING, STICK);
+	    }
 	}
     } while (!disc_list);
-    if (ch == '*')
-    {
+    if (ch == '*') {
 	print_disc(POTION);
 	add_line("", NULL);
 	print_disc(SCROLL);
@@ -411,9 +426,7 @@ discovered(void)
 	add_line("", NULL);
 	print_disc(STICK);
 	end_line();
-    }
-    else
-    {
+    } else {
 	print_disc(ch);
 	end_line();
     }
@@ -425,8 +438,7 @@ discovered(void)
  *	Print what we've discovered of type 'type'
  */
 
-#define MAX4(a,b,c,d)	(a > b ? (a > c ? (a > d ? a : d) : (c > d ? c : d)) : (b > c ? (b > d ? b : d) : (c > d ? c : d)))
-
+#define MAX4(a, b, c, d) (a > b ? (a > c ? (a > d ? a : d) : (c > d ? c : d)) : (b > c ? (b > d ? b : d) : (c > d ? c : d)))
 
 void
 print_disc(int type)
@@ -436,39 +448,39 @@ print_disc(int type)
     THING obj;
     int order[MAX4(MAXSCROLLS, MAXPOTIONS, MAXRINGS, MAXSTICKS)];
 
-    switch (type)
-    {
-	case SCROLL:
-	    maxnum = MAXSCROLLS;
-	    info = scr_info;
-	    break;
-	case POTION:
-	    maxnum = MAXPOTIONS;
-	    info = pot_info;
-	    break;
-	case RING:
-	    maxnum = MAXRINGS;
-	    info = ring_info;
-	    break;
-	case STICK:
-	    maxnum = MAXSTICKS;
-	    info = ws_info;
-	    break;
+    switch (type) {
+    case SCROLL:
+	maxnum = MAXSCROLLS;
+	info = scr_info;
+	break;
+    case POTION:
+	maxnum = MAXPOTIONS;
+	info = pot_info;
+	break;
+    case RING:
+	maxnum = MAXRINGS;
+	info = ring_info;
+	break;
+    case STICK:
+	maxnum = MAXSTICKS;
+	info = ws_info;
+	break;
     }
     set_order(order, maxnum);
     obj.o_count = 1;
     obj.o_flags = 0;
     num_found = 0;
-    for (i = 0; i < maxnum; i++)
-	if (info[order[i]].oi_know || info[order[i]].oi_guess)
-	{
+    for (i = 0; i < maxnum; i++) {
+	if (info[order[i]].oi_know || info[order[i]].oi_guess) {
 	    obj.o_type = type;
 	    obj.o_which = order[i];
 	    add_line("%s", inv_name(&obj, false));
 	    num_found++;
 	}
-    if (num_found == 0)
+    }
+    if (num_found == 0) {
 	add_line(nothing(type), NULL);
+    }
 }
 
 /*
@@ -481,11 +493,11 @@ set_order(int *order, int numthings)
 {
     int i, r, t;
 
-    for (i = 0; i< numthings; i++)
+    for (i = 0; i < numthings; i++) {
 	order[i] = i;
+    }
 
-    for (i = numthings; i > 0; i--)
-    {
+    for (i = numthings; i > 0; i--) {
 	r = rnd(i);
 	t = order[i - 1];
 	order[i - 1] = order[r];
@@ -506,63 +518,58 @@ add_line(const char *fmt, const char *arg)
     char *prompt = " --More--";
     static int maxlen = -1;
 
-    if (line_cnt == 0)
-    {
-	    wclear(hw);
-	    if (inv_type == INV_SLOW)
-		mpos = 0;
+    if (line_cnt == 0) {
+	wclear(hw);
+	if (inv_type == INV_SLOW) {
+	    mpos = 0;
+	}
     }
-    if (inv_type == INV_SLOW)
-    {
-	if (*fmt != '\0')
-	    if (msg(fmt, arg) == ESCAPE)
+    if (inv_type == INV_SLOW) {
+	if (*fmt != '\0') {
+	    if (msg(fmt, arg) == ESCAPE) {
 		return ESCAPE;
+	    }
+	}
 	line_cnt++;
-    }
-    else
-    {
-	if (maxlen < 0)
-	    maxlen = (int) strlen(prompt);
-	if (line_cnt >= LINES - 1 || fmt == NULL)
-	{
-	    if (inv_type == INV_OVER && fmt == NULL && !newpage)
-	    {
+    } else {
+	if (maxlen < 0) {
+	    maxlen = (int)strlen(prompt);
+	}
+	if (line_cnt >= LINES - 1 || fmt == NULL) {
+	    if (inv_type == INV_OVER && fmt == NULL && !newpage) {
 		msg("");
 		refresh();
 		tw = newwin(line_cnt + 1, maxlen + 2, 0, COLS - maxlen - 3);
 		sw = subwin(tw, line_cnt + 1, maxlen + 1, 0, COLS - maxlen - 2);
-                for (y = 0; y <= line_cnt; y++)
-                {
-                    wmove(sw, y, 0);
-                    for (x = 0; x <= maxlen; x++)
-                        waddch(sw, mvwinch(hw, y, x));
-                }
+		for (y = 0; y <= line_cnt; y++) {
+		    wmove(sw, y, 0);
+		    for (x = 0; x <= maxlen; x++) {
+			waddch(sw, mvwinch(hw, y, x));
+		    }
+		}
 		wmove(tw, line_cnt, 1);
 		waddstr(tw, prompt);
 		/*
 		 * if there are lines below, use 'em
 		 */
-		if (LINES > NUMLINES)
-		{
-		    if (NUMLINES + line_cnt > LINES)
+		if (LINES > NUMLINES) {
+		    if (NUMLINES + line_cnt > LINES) {
 			mvwin(tw, LINES - (line_cnt + 1), COLS - maxlen - 3);
-		    else
+		    } else {
 			mvwin(tw, NUMLINES, 0);
+		    }
 		}
 		touchwin(tw);
 		wrefresh(tw);
 		wait_for(tw, ' ');
-                if (md_hasclreol())
-		{
+		if (md_hasclreol()) {
 		    werase(tw);
 		    leaveok(tw, true);
 		    wrefresh(tw);
 		}
 		delwin(tw);
 		touchwin(stdscr);
-	    }
-	    else
-	    {
+	    } else {
 		wmove(hw, LINES - 1, 0);
 		waddstr(hw, prompt);
 		wrefresh(hw);
@@ -573,14 +580,14 @@ add_line(const char *fmt, const char *arg)
 	    }
 	    newpage = true;
 	    line_cnt = 0;
-	    maxlen = (int) strlen(prompt);
+	    maxlen = (int)strlen(prompt);
 	}
-	if (fmt != NULL && !(line_cnt == 0 && *fmt == '\0'))
-	{
+	if (fmt != NULL && !(line_cnt == 0 && *fmt == '\0')) {
 	    mvwprintw(hw, line_cnt++, 0, fmt, arg);
 	    getyx(hw, y, x);
-	    if (maxlen < x)
+	    if (maxlen < x) {
 		maxlen = x;
+	    }
 	    lastfmt = fmt;
 	    lastarg = arg;
 	}
@@ -596,15 +603,13 @@ add_line(const char *fmt, const char *arg)
 void
 end_line(void)
 {
-    if (inv_type != INV_SLOW)
-    {
-	if (line_cnt == 1 && !newpage)
-	{
+    if (inv_type != INV_SLOW) {
+	if (line_cnt == 1 && !newpage) {
 	    mpos = 0;
 	    msg(lastfmt, lastarg);
-	}
-	else
+	} else {
 	    add_line(NULL, NULL);
+	}
     }
     line_cnt = 0;
     newpage = false;
@@ -620,21 +625,27 @@ nothing(int type)
     char *sp, *tystr = NULL;
 
     memset(prbuf, 0, sizeof(prbuf)); /* paranoia */
-    if (terse)
+    if (terse) {
 	snprintf(prbuf, sizeof(prbuf), "Nothing");
-    else
+    } else {
 	snprintf(prbuf, sizeof(prbuf), "Haven't discovered anything");
-    if (type != '*')
-    {
+    }
+    if (type != '*') {
 	sp = &prbuf[strlen(prbuf)];
-	switch (type)
-	{
-	    case POTION: tystr = "potion";
-	    when SCROLL: tystr = "scroll";
-	    when RING: tystr = "ring";
-	    when STICK: tystr = "stick";
+	switch (type) {
+	case POTION:
+	    tystr = "potion";
+	    break;
+	case SCROLL:
+	    tystr = "scroll";
+	    break;
+	case RING:
+	    tystr = "ring";
+	    break;
+	case STICK:
+	    tystr = "stick";
 	}
-	snprintf(sp, sizeof(prbuf)-strlen(prbuf), " about any %ss", tystr);
+	snprintf(sp, sizeof(prbuf) - strlen(prbuf), " about any %ss", tystr);
     }
     return prbuf;
 }
@@ -645,28 +656,28 @@ nothing(int type)
  */
 
 void
-nameit(const THING *obj, const char *type, const char *which, const struct obj_info *op,
-    const char *(*prfunc)(const THING *))
+nameit(const THING *obj, const char *type, const char *which, const struct obj_info *op, const char *(*prfunc)(const THING *))
 {
     char *pb;
 
     memset(prbuf, 0, sizeof(prbuf)); /* paranoia */
-    if (op->oi_know || op->oi_guess)
-    {
-	if (obj->o_count == 1)
+    if (op->oi_know || op->oi_guess) {
+	if (obj->o_count == 1) {
 	    snprintf(prbuf, sizeof(prbuf), "A %s ", type);
-	else
+	} else {
 	    snprintf(prbuf, sizeof(prbuf), "%d %ss ", obj->o_count, type);
+	}
 	pb = &prbuf[strlen(prbuf)];
-	if (op->oi_know)
-	    snprintf(pb, sizeof(prbuf)-strlen(prbuf), "of %s%s(%s)", op->oi_name, (*prfunc)(obj), which);
-	else if (op->oi_guess)
-	    snprintf(pb, sizeof(prbuf)-strlen(prbuf), "called %s%s(%s)", op->oi_guess, (*prfunc)(obj), which);
-    }
-    else if (obj->o_count == 1)
+	if (op->oi_know) {
+	    snprintf(pb, sizeof(prbuf) - strlen(prbuf), "of %s%s(%s)", op->oi_name, (*prfunc)(obj), which);
+	} else if (op->oi_guess) {
+	    snprintf(pb, sizeof(prbuf) - strlen(prbuf), "called %s%s(%s)", op->oi_guess, (*prfunc)(obj), which);
+	}
+    } else if (obj->o_count == 1) {
 	snprintf(prbuf, sizeof(prbuf), "A%s %s %s", vowelstr(which), which, type);
-    else
+    } else {
 	snprintf(prbuf, sizeof(prbuf), "%d %s %ss", obj->o_count, which, type);
+    }
 }
 
 /*
@@ -680,7 +691,7 @@ nullstr(const THING *ignored)
     return "";
 }
 
-# ifdef	MASTER
+#ifdef MASTER
 /*
  * pr_list:
  *	List possible potions, scrolls, etc. for wizard.
@@ -691,30 +702,37 @@ pr_list(void)
 {
     int ch;
 
-    if (!terse)
+    if (!terse) {
 	addmsg("for ");
+    }
     addmsg("what type");
-    if (!terse)
+    if (!terse) {
 	addmsg(" of object do you want a list");
+    }
     msg("? ");
     ch = readchar();
-	msg("");
-    switch (ch)
-    {
-	case POTION:
-	    pr_spec(pot_info, MAXPOTIONS);
-	when SCROLL:
-	    pr_spec(scr_info, MAXSCROLLS);
-	when RING:
-	    pr_spec(ring_info, MAXRINGS);
-	when STICK:
-	    pr_spec(ws_info, MAXSTICKS);
-	when ARMOR:
-	    pr_spec(arm_info, MAXARMORS);
-	when WEAPON:
-	    pr_spec(weap_info, MAXWEAPONS);
-	otherwise:
-	    return;
+    msg("");
+    switch (ch) {
+    case POTION:
+	pr_spec(pot_info, MAXPOTIONS);
+	break;
+    case SCROLL:
+	pr_spec(scr_info, MAXSCROLLS);
+	break;
+    case RING:
+	pr_spec(ring_info, MAXRINGS);
+	break;
+    case STICK:
+	pr_spec(ws_info, MAXSTICKS);
+	break;
+    case ARMOR:
+	pr_spec(arm_info, MAXARMORS);
+	break;
+    case WEAPON:
+	pr_spec(weap_info, MAXWEAPONS);
+	break;
+    default:
+	return;
     }
 }
 
@@ -731,10 +749,10 @@ pr_spec(const struct obj_info *info, int nitems)
 
     endp = &info[nitems];
     lastprob = 0;
-    for (i = '0'; info < endp; i++)
-    {
-	if (i == '9' + 1)
+    for (i = '0'; info < endp; i++) {
+	if (i == '9' + 1) {
 	    i = 'a';
+	}
 	memset(prbuf, 0, sizeof(prbuf)); /* paranoia */
 	snprintf(prbuf, sizeof(prbuf), "%c: %%s (%d%%%%)", i, info->oi_prob - lastprob);
 	lastprob = info->oi_prob;
@@ -743,4 +761,4 @@ pr_spec(const struct obj_info *info, int nitems)
     }
     end_line();
 }
-# endif	/* MASTER */
+#endif /* MASTER */

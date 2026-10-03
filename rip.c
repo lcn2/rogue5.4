@@ -28,6 +28,7 @@
 #include "score.h"
 #include "rogue.h"
 
+// clang-format off
 static char *rip[] = {
 "                       __________\n",
 "                      /          \\\n",
@@ -44,6 +45,7 @@ static char *rip[] = {
 "         ________)/\\\\_//(\\/(/\\)/\\//\\/|_)_______\n",
     0
 };
+// clang-format on
 
 /*
  * init_score_value:
@@ -57,9 +59,9 @@ init_score_value(SCORE *scp)
      * initialize leading values in a SCORE
      */
     memset(scp, 0, sizeof(SCORE));
-    scp->sc_uid = 1; /* the BSD traditional UID of user daemon - for grins */
-    scp->sc_score = 0; /* 0 score will be at the bottom of the score set, and will NOT be printed */
-    scp->sc_flags = 0; /* set death flag */
+    scp->sc_uid = 1;	   /* the BSD traditional UID of user daemon - for grins */
+    scp->sc_score = 0;	   /* 0 score will be at the bottom of the score set, and will NOT be printed */
+    scp->sc_flags = 0;	   /* set death flag */
     scp->sc_monster = 'B'; /* just use the lowly bat as the monster */
 
     /*
@@ -82,7 +84,6 @@ init_score_value(SCORE *scp)
     scp->sc_time = 0;
     return;
 }
-
 
 /*
  * score:
@@ -130,16 +131,18 @@ score(int amount, int flags, int monst)
     SCORE *scp;
     SCORE *sc2;
     SCORE *top_scores, *endp;
-# ifdef MASTER
+#ifdef MASTER
     int prflags = 0;
-# endif
+#endif
     uid_t uid;
+    // clang-format off
     char *reason[] = {
 	"killed",
 	"quit",
 	"A total winner",
 	"killed with Amulet"
     };
+// clang-format on
 #if defined(SIGHUP)
     void (*sig_hup)(int);
 #endif
@@ -178,12 +181,12 @@ score(int amount, int flags, int monst)
     /*
      * initialize top_scores array
      */
-    top_scores = calloc(numscores+1, sizeof(SCORE)); /* +1 for paranoia */
-    if (top_scores == NULL)
+    top_scores = calloc(numscores + 1, sizeof(SCORE)); /* +1 for paranoia */
+    if (top_scores == NULL) {
 	return;
+    }
     endp = &top_scores[numscores];
-    for (scp = top_scores; scp < endp; scp++)
-    {
+    for (scp = top_scores; scp < endp; scp++) {
 	init_score_value(scp);
     }
 
@@ -193,16 +196,19 @@ score(int amount, int flags, int monst)
      * NOTE: If wizard mode, entering names or edit before the return
      *	     will enable later actions via prflags.
      */
- if (flags >= 0
 #ifdef MASTER
-            || wizard
-#endif
-        )
-    {
-	mvaddstr(LINES - 1, 0 , "[Press return to continue]");
-        refresh();
-        wgetnstr(stdscr, prbuf, NUMCOLS);   /* read up to NUMCOLS bytes and append a NUL byte */
+    if (flags >= 0 || wizard) {
+	mvaddstr(LINES - 1, 0, "[Press return to continue]");
+	refresh();
+	wgetnstr(stdscr, prbuf, NUMCOLS); /* read up to NUMCOLS bytes and append a NUL byte */
     }
+#else
+    if (flags >= 0) {
+	mvaddstr(LINES - 1, 0, "[Press return to continue]");
+	refresh();
+	wgetnstr(stdscr, prbuf, NUMCOLS); /* read up to NUMCOLS bytes and append a NUL byte */
+    }
+#endif
 #ifdef MASTER
     if (wizard) {
 	if (strcmp(prbuf, "names") == 0) {
@@ -230,37 +236,36 @@ score(int amount, int flags, int monst)
      * Insert her in list if need be
      */
     sc2 = NULL;
-    if (!noscore)
-    {
+    if (!noscore) {
 	uid = md_getuid();
-	for (scp = top_scores; scp < endp; scp++)
-	    if (amount > scp->sc_score)
+	for (scp = top_scores; scp < endp; scp++) {
+	    if (amount > scp->sc_score) {
 		break;
 #if !defined(ALLSCORES)
-	    else if (!allscore &&	/* only one score per nowin uid */
-		flags != 2 && scp->sc_uid == uid && scp->sc_flags != 2)
-		    scp = endp;
+	    } else if (!allscore && /* only one score per nowin uid */
+		       flags != 2 && scp->sc_uid == uid && scp->sc_flags != 2) {
+		scp = endp;
 #endif
-	if (scp < endp)
-	{
-#if !defined(ALLSCORES)
-	    if (flags != 2 && !allscore)
-	    {
-		for (sc2 = scp; sc2 < endp; sc2++)
-		{
-		    if (sc2->sc_uid == uid && sc2->sc_flags != 2)
-			break;
-		}
-		if (sc2 >= endp)
-		    sc2 = endp - 1;
 	    }
-	    else
+	}
+	if (scp < endp) {
+#if !defined(ALLSCORES)
+	    if (flags != 2 && !allscore) {
+		for (sc2 = scp; sc2 < endp; sc2++) {
+		    if (sc2->sc_uid == uid && sc2->sc_flags != 2) {
+			break;
+		    }
+		}
+		if (sc2 >= endp) {
+		    sc2 = endp - 1;
+		}
+	    } else {
 		sc2 = endp - 1;
+	    }
 #else
 	    sc2 = endp - 1;
 #endif
-	    while (sc2 > scp)
-	    {
+	    while (sc2 > scp) {
 		*sc2 = sc2[-1];
 		sc2--;
 	    }
@@ -269,13 +274,14 @@ score(int amount, int flags, int monst)
 	    strlcpy(scp->sc_name, whoami, MAX_USERNAME);
 	    scp->sc_name[MAX_USERNAME] = '\0'; /* paranoia */
 	    scp->sc_flags = flags;
-	    if (flags == 2)
+	    if (flags == 2) {
 		scp->sc_level = max_level;
-	    else
+	    } else {
 		scp->sc_level = level;
+	    }
 	    scp->sc_monster = monst;
 	    scp->sc_uid = uid;
-	    scp->sc_time = (uintmax_t) time(NULL);
+	    scp->sc_time = (uintmax_t)time(NULL);
 	    sc2 = scp;
 	}
     }
@@ -285,8 +291,9 @@ score(int amount, int flags, int monst)
      *
      * We will print scores until we find a score slot with a - score.
      */
-    if (flags != -1)
+    if (flags != -1) {
 	putchar('\n');
+    }
 #if defined(ALLSCORES)
     printf("Top %d Scores:\n", NUMSCORES);
 #else
@@ -294,45 +301,43 @@ score(int amount, int flags, int monst)
 #endif
     printf("   Score Name\n");
     fflush(stdout);
-    for (scp = top_scores; scp < endp; scp++)
-    {
+    for (scp = top_scores; scp < endp; scp++) {
 	if (scp->sc_score > 0) {
-	    if (sc2 == scp)
+	    if (sc2 == scp) {
 		md_raw_standout();
-	    printf("%2d %5d %s: %s on level %d",
-		(int) (scp - top_scores + 1), scp->sc_score, scp->sc_name,
-		reason[scp->sc_flags], scp->sc_level);
-	    if (scp->sc_flags == 0 || scp->sc_flags == 3)
-		printf(" by %s", killname(scp->sc_monster, true));
-#ifdef MASTER
-	    if (prflags == 1)
-	    {
-		printf(" (%s)", md_getrealname(scp->sc_uid));
 	    }
-	    else if (prflags == 2)
-	    {
+	    printf("%2d %5d %s: %s on level %d", (int)(scp - top_scores + 1), scp->sc_score, scp->sc_name, reason[scp->sc_flags],
+		   scp->sc_level);
+	    if (scp->sc_flags == 0 || scp->sc_flags == 3) {
+		printf(" by %s", killname(scp->sc_monster, true));
+	    }
+#ifdef MASTER
+	    if (prflags == 1) {
+		printf(" (%s)", md_getrealname(scp->sc_uid));
+	    } else if (prflags == 2) {
 		memset(prbuf, 0, sizeof(prbuf));
 		fflush(stdout);
-		(void) fgets(prbuf,10,stdin);
-		if (prbuf[0] == 'd')
-		{
-		    for (sc2 = scp; sc2 < endp - 1; sc2++)
+		(void)fgets(prbuf, 10, stdin);
+		if (prbuf[0] == 'd') {
+		    for (sc2 = scp; sc2 < endp - 1; sc2++) {
 			*sc2 = *(sc2 + 1);
+		    }
 		    sc2 = endp - 1;
 		    init_score_value(sc2);
 		    scp--;
 		}
+	    } else {
+		putchar('.');
 	    }
-	    else
+#else  /* MASTER */
+	    putchar('.');
 #endif /* MASTER */
-                putchar('.');
-	    if (sc2 == scp)
+	    if (sc2 == scp) {
 		md_raw_standend();
-            putchar('\n');
+	    }
+	    putchar('\n');
 	    fflush(stdout);
-	}
-	else
-	{
+	} else {
 	    /* found a score slot with a 0 score, stop printing */
 	    break;
 	}
@@ -343,13 +348,11 @@ score(int amount, int flags, int monst)
     /*
      * Update the list file
      */
-    if (sc2 != NULL)
-    {
+    if (sc2 != NULL) {
 	/*
 	 * lock and update score
 	 */
-	if (lock_sc())
-	{
+	if (lock_sc()) {
 	    /*
 	     * write score and unlock
 	     */
@@ -386,7 +389,7 @@ score(int amount, int flags, int monst)
 
 /*
  * death:
- *	Do something really fun when he dies
+ *	Do something really fun when they die
  */
 
 void
@@ -430,8 +433,7 @@ death(int monst)
      *
      * Unless we are being killed by a signal, that can happen when rogue is run with the -S option.
      */
-    if (monst != 'z')
-    {
+    if (monst != 'z') {
 	purse -= purse / 10;
     }
 
@@ -440,34 +442,34 @@ death(int monst)
      */
     clear();
     killer = killname(monst, false);
-    if (!tombstone)
-    {
+    if (!tombstone) {
 	mvprintw(LINES - 2, 0, "Killed by ");
 	killer = killname(monst, false);
-	if (monst != 's' && monst != 'h')
+	if (monst != 's' && monst != 'h') {
 	    printw("a%s ", vowelstr(killer));
+	}
 	printw("%s with %d gold", killer, purse);
-    }
-    else
-    {
+    } else {
 	time(&date);
 	lt = localtime(&date);
 	move(8, 0);
 	dp = rip;
-	while (*dp)
+	while (*dp) {
 	    addstr(*dp++);
+	}
 	mvaddstr(17, center(killer), killer);
-	if (monst == 's' || monst == 'h')
+	if (monst == 's' || monst == 'h') {
 	    mvaddch(16, 32, ' ');
-	else
+	} else {
 	    mvaddstr(16, 33, vowelstr(killer));
+	}
 	mvaddstr(14, center(whoami), whoami);
 	memset(prbuf, 0, sizeof(prbuf)); /* paranoia */
 	snprintf(prbuf, sizeof(prbuf), "%d Au", purse);
 	move(15, center(prbuf));
 	addstr(prbuf);
 	memset(prbuf, 0, sizeof(prbuf)); /* paranoia */
-	snprintf(prbuf, sizeof(prbuf), "%4d", 1900+lt->tm_year);
+	snprintf(prbuf, sizeof(prbuf), "%4d", 1900 + lt->tm_year);
 	mvaddstr(18, 26, prbuf);
     }
     move(LINES - 1, 0);
@@ -569,63 +571,72 @@ total_winner(void)
     clear();
     mvaddstr(0, 0, "   Worth  Item\n");
     oldpurse = purse;
-    for (obj = pack; obj != NULL; obj = next(obj))
-    {
-	switch (obj->o_type)
-	{
-	    case FOOD:
-		worth = 2 * obj->o_count;
-	    when WEAPON:
-		worth = weap_info[obj->o_which].oi_worth;
-		worth *= 3 * (obj->o_hplus + obj->o_dplus) + obj->o_count;
-		obj->o_flags |= ISKNOW;
-	    when ARMOR:
-		worth = arm_info[obj->o_which].oi_worth;
-		worth += (9 - obj->o_arm) * 100;
-		worth += (10 * (a_class[obj->o_which] - obj->o_arm));
-		obj->o_flags |= ISKNOW;
-	    when SCROLL:
-		worth = scr_info[obj->o_which].oi_worth;
-		worth *= obj->o_count;
-		op = &scr_info[obj->o_which];
-		if (!op->oi_know)
-		    worth /= 2;
-		op->oi_know = true;
-	    when POTION:
-		worth = pot_info[obj->o_which].oi_worth;
-		worth *= obj->o_count;
-		op = &pot_info[obj->o_which];
-		if (!op->oi_know)
-		    worth /= 2;
-		op->oi_know = true;
-	    when RING:
-		op = &ring_info[obj->o_which];
-		worth = op->oi_worth;
-		if (obj->o_which == R_ADDSTR || obj->o_which == R_ADDDAM ||
-		    obj->o_which == R_PROTECT || obj->o_which == R_ADDHIT)
-		{
-			if (obj->o_arm > 0)
-			    worth += obj->o_arm * 100;
-			else
-			    worth = 10;
+    for (obj = pack; obj != NULL; obj = next(obj)) {
+	switch (obj->o_type) {
+	case FOOD:
+	    worth = 2 * obj->o_count;
+	    break;
+	case WEAPON:
+	    worth = weap_info[obj->o_which].oi_worth;
+	    worth *= 3 * (obj->o_hplus + obj->o_dplus) + obj->o_count;
+	    obj->o_flags |= ISKNOW;
+	    break;
+	case ARMOR:
+	    worth = arm_info[obj->o_which].oi_worth;
+	    worth += (9 - obj->o_arm) * 100;
+	    worth += (10 * (a_class[obj->o_which] - obj->o_arm));
+	    obj->o_flags |= ISKNOW;
+	    break;
+	case SCROLL:
+	    worth = scr_info[obj->o_which].oi_worth;
+	    worth *= obj->o_count;
+	    op = &scr_info[obj->o_which];
+	    if (!op->oi_know) {
+		worth /= 2;
+	    }
+	    op->oi_know = true;
+	    break;
+	case POTION:
+	    worth = pot_info[obj->o_which].oi_worth;
+	    worth *= obj->o_count;
+	    op = &pot_info[obj->o_which];
+	    if (!op->oi_know) {
+		worth /= 2;
+	    }
+	    op->oi_know = true;
+	    break;
+	case RING:
+	    op = &ring_info[obj->o_which];
+	    worth = op->oi_worth;
+	    if (obj->o_which == R_ADDSTR || obj->o_which == R_ADDDAM || obj->o_which == R_PROTECT || obj->o_which == R_ADDHIT) {
+		if (obj->o_arm > 0) {
+		    worth += obj->o_arm * 100;
+		} else {
+		    worth = 10;
 		}
-		if (!(obj->o_flags & ISKNOW))
-		    worth /= 2;
-		obj->o_flags |= ISKNOW;
-		op->oi_know = true;
-	    when STICK:
-		op = &ws_info[obj->o_which];
-		worth = op->oi_worth;
-		worth += 20 * obj->o_charges;
-		if (!(obj->o_flags & ISKNOW))
-		    worth /= 2;
-		obj->o_flags |= ISKNOW;
-		op->oi_know = true;
-	    when AMULET:
-		worth = 1000;
+	    }
+	    if (!(obj->o_flags & ISKNOW)) {
+		worth /= 2;
+	    }
+	    obj->o_flags |= ISKNOW;
+	    op->oi_know = true;
+	    break;
+	case STICK:
+	    op = &ws_info[obj->o_which];
+	    worth = op->oi_worth;
+	    worth += 20 * obj->o_charges;
+	    if (!(obj->o_flags & ISKNOW)) {
+		worth /= 2;
+	    }
+	    obj->o_flags |= ISKNOW;
+	    op->oi_know = true;
+	    break;
+	case AMULET:
+	    worth = 1000;
 	}
-	if (worth < 0)
+	if (worth < 0) {
 	    worth = 0;
+	}
 	printw("%c) %5d  %s\n", obj->o_packch, worth, inv_name(obj, false));
 	purse += worth;
     }
@@ -661,6 +672,7 @@ killname(int monst, int doart)
     struct h_list *hp;
     const char *sp;
     int article;
+    // clang-format off
     struct h_list nlist[] = {
 	{'a',	"arrow",		true},
 	{'b',	"bolt",			true},
@@ -670,23 +682,21 @@ killname(int monst, int doart)
 	{'z',	"signal",		false},
 	{'\0'}
     };
+    // clang-format on
 
-    if (isupper(monst))
-    {
-	sp = monsters[monst-'A'].m_name;
+    if (isupper(monst)) {
+	sp = monsters[monst - 'A'].m_name;
 	article = true;
-    }
-    else
-    {
+    } else {
 	sp = "Wally the Wonder Badger";
 	article = false;
-	for (hp = nlist; hp->h_ch; hp++)
-	    if (hp->h_ch == monst)
-	    {
+	for (hp = nlist; hp->h_ch; hp++) {
+	    if (hp->h_ch == monst) {
 		sp = hp->h_desc;
 		article = hp->h_print;
 		break;
 	    }
+	}
     }
     if (doart && article) {
 	memset(prbuf, 0, sizeof(prbuf)); /* paranoia */
@@ -705,14 +715,15 @@ killname(int monst, int doart)
 int
 death_monst(void)
 {
-    int poss[] =
-    {
+    // clang-format off
+    int poss[] = {
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 	'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
 	'Y', 'Z', 'a', 'b', 'd', 'h', 's', 'z',
 	' '	/* This is provided to generate the "Wally the Wonder Badger"
 		   message for killer */
     };
+    // clang-format on
 
-    return poss[rnd(sizeof poss / sizeof (int))];
+    return poss[rnd(sizeof poss / sizeof(int))];
 }

@@ -40,6 +40,7 @@ CAT= cat
 CC= cc
 CHGRP= chgrp
 CHMOD= chmod
+CLANG_FORMAT= clang-format
 CMP= cmp
 COLCRT= colcrt
 CP= cp
@@ -391,6 +392,11 @@ scedit: ${OBJS} scmisc.o scedit.o
 ##################################################
 # other targets that are not automatically built #
 ##################################################
+
+# reformat primary (non-built) source using clang-format
+#
+clang-format: .clang-format ${C_SRC} ${H_SRC}
+	${CLANG_FORMAT} -i --style=file:.clang-format ${C_SRC} ${H_SRC}
 
 # try to compile all with gcc, full warnings, no optimizer, no ASAN
 #

@@ -19,9 +19,9 @@
  * msg:
  *	Display a message at the top of the screen.
  */
-#define MAXMSG	(NUMCOLS - sizeof " --More--")
+#define MAXMSG (NUMCOLS - sizeof " --More--")
 
-static char msgbuf[2*MAXMSG+1];
+static char msgbuf[2 * MAXMSG + 1];
 static int newpos = 0;
 
 /* VARARGS1 */
@@ -33,8 +33,7 @@ msg(const char *fmt, ...)
     /*
      * if the string is "", just clear the line
      */
-    if (*fmt == '\0')
-    {
+    if (*fmt == '\0') {
 	move(0, 0);
 	clrtoeol();
 	mpos = 0;
@@ -74,34 +73,34 @@ endmsg(void)
 {
     int ch;
 
-    if (save_msg)
+    if (save_msg) {
 	strcpy(huh, msgbuf);
-    if (mpos)
-    {
+    }
+    if (mpos) {
 	look(false);
 	mvaddstr(0, mpos, " --More--");
 	refresh();
-	if (!msg_esc)
+	if (!msg_esc) {
 	    wait_for(stdscr, ' ');
-	else
-	{
-	    while ((ch = readchar()) != ' ')
-		if (ch == ESCAPE)
-		{
+	} else {
+	    while ((ch = readchar()) != ' ') {
+		if (ch == ESCAPE) {
 		    msgbuf[0] = '\0';
 		    mpos = 0;
 		    newpos = 0;
 		    msgbuf[0] = '\0';
 		    return ESCAPE;
 		}
+	    }
 	}
     }
     /*
      * All messages should start with uppercase, except ones that
      * start with a pack addressing character
      */
-    if (islower((int)msgbuf[0]) && !lower_msg && msgbuf[1] != ')')
-	msgbuf[0] = (char) toupper(msgbuf[0]);
+    if (islower((int)msgbuf[0]) && !lower_msg && msgbuf[1] != ')') {
+	msgbuf[0] = (char)toupper(msgbuf[0]);
+    }
     mvaddstr(0, 0, msgbuf);
     clrtoeol();
     mpos = newpos;
@@ -118,17 +117,18 @@ endmsg(void)
 void
 doadd(const char *fmt, va_list args)
 {
-    static char buf[MAXSTR+1];	/* +1 for paranoia */
+    static char buf[MAXSTR + 1]; /* +1 for paranoia */
 
     /*
      * Do the printf into buf
      */
     memset(buf, 0, sizeof(buf)); /* paranoia */
     vsnprintf(buf, MAXSTR, fmt, args);
-    if (strlen(buf) + newpos >= MAXMSG)
-        endmsg();
+    if (strlen(buf) + newpos >= MAXMSG) {
+	endmsg();
+    }
     strcat(msgbuf, buf);
-    newpos = (int) strlen(msgbuf);
+    newpos = (int)strlen(msgbuf);
 }
 
 /*
@@ -138,14 +138,13 @@ doadd(const char *fmt, va_list args)
 int
 step_ok(int ch)
 {
-    switch (ch)
-    {
-	case ' ':
-	case '|':
-	case '-':
-	    return false;
-	default:
-	    return (!isalpha(ch));
+    switch (ch) {
+    case ' ':
+    case '|':
+    case '-':
+	return false;
+    default:
+	return (!isalpha(ch));
     }
 }
 
@@ -161,13 +160,12 @@ readchar(void)
 
     ch = md_readchar(stdscr);
 
-    if (ch == 3)
-    {
+    if (ch == 3) {
 	quit(0);
-        return(27);
+	return (27);
     }
 
-    return(ch);
+    return (ch);
 }
 
 int
@@ -177,15 +175,13 @@ wreadchar(WINDOW *win)
 
     ch = md_readchar(win);
 
-    if (ch == 3)
-    {
+    if (ch == 3) {
 	quit(0);
-        return(27);
+	return (27);
     }
 
-    return(ch);
+    return (ch);
 }
-
 
 /*
  * status:
@@ -203,32 +199,27 @@ status(void)
     static int s_arm = 0;
     static int s_str = 0;
     static int s_exp = 0;
-    static char *state_name[] =
-    {
-	"", "Hungry", "Weak", "Faint"
-    };
+    static char *state_name[] = {"", "Hungry", "Weak", "Faint"};
 
     /*
      * If nothing has changed since the last status, don't
      * bother.
      */
     temp = (cur_armor != NULL ? cur_armor->o_arm : pstats.s_arm);
-    if (s_hp == pstats.s_hpt && s_exp == pstats.s_exp && s_pur == purse
-	&& s_arm == temp && s_str == pstats.s_str && s_lvl == level
-	&& s_hungry == hungry_state
-	&& !stat_msg
-	)
-	    return;
+    if (s_hp == pstats.s_hpt && s_exp == pstats.s_exp && s_pur == purse && s_arm == temp && s_str == pstats.s_str &&
+	s_lvl == level && s_hungry == hungry_state && !stat_msg) {
+	return;
+    }
 
     s_arm = temp;
 
     getyx(stdscr, oy, ox);
-    if (s_hp != max_hp)
-    {
+    if (s_hp != max_hp) {
 	temp = max_hp;
 	s_hp = max_hp;
-	for (hpwidth = 0; temp; hpwidth++)
+	for (hpwidth = 0; temp; hpwidth++) {
 	    temp /= 10;
+	}
     }
 
     /*
@@ -241,22 +232,15 @@ status(void)
     s_exp = pstats.s_exp;
     s_hungry = hungry_state;
 
-    if (stat_msg)
-    {
-        move(0, 0);
-        msg("Level: %d  Gold: %-5d  Hp: %*d(%*d)  Str: %2d(%d)  Arm: %-2d  Exp: %d/%d  %s",
-        level, purse, hpwidth, pstats.s_hpt, hpwidth, max_hp, pstats.s_str,
-        max_stats.s_str, 10 - s_arm, pstats.s_class, pstats.s_exp,
-        state_name[hungry_state]);
-    }
-    else
-    {
+    if (stat_msg) {
+	move(0, 0);
+	msg("Level: %d  Gold: %-5d  Hp: %*d(%*d)  Str: %2d(%d)  Arm: %-2d  Exp: %d/%d  %s", level, purse, hpwidth, pstats.s_hpt,
+	    hpwidth, max_hp, pstats.s_str, max_stats.s_str, 10 - s_arm, pstats.s_class, pstats.s_exp, state_name[hungry_state]);
+    } else {
 	move(STATLINE, 0);
 
-        printw("Level: %d  Gold: %-5d  Hp: %*d(%*d)  Str: %2d(%d)  Arm: %-2d  Exp: %d/%d  %s",
-	    level, purse, hpwidth, pstats.s_hpt, hpwidth, max_hp, pstats.s_str,
-	    max_stats.s_str, 10 - s_arm, pstats.s_class, pstats.s_exp,
-	    state_name[hungry_state]);
+	printw("Level: %d  Gold: %-5d  Hp: %*d(%*d)  Str: %2d(%d)  Arm: %-2d  Exp: %d/%d  %s", level, purse, hpwidth, pstats.s_hpt,
+	       hpwidth, max_hp, pstats.s_str, max_stats.s_str, 10 - s_arm, pstats.s_class, pstats.s_exp, state_name[hungry_state]);
     }
 
     clrtoeol();
@@ -272,12 +256,15 @@ wait_for(WINDOW *win, int ch)
 {
     int c;
 
-    if (ch == '\n')
-        while ((c = wreadchar(win)) != '\n' && c != '\r')
+    if (ch == '\n') {
+	while ((c = wreadchar(win)) != '\n' && c != '\r') {
 	    continue;
-    else
-        while (wreadchar(win) != ch)
+	}
+    } else {
+	while (wreadchar(win) != ch) {
 	    continue;
+	}
+    }
 }
 
 /*

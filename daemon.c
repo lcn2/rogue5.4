@@ -27,11 +27,15 @@ d_slot(void)
 {
     struct delayed_action *dev;
 
-    for (dev = d_list; dev <= &d_list[MAXDAEMONS-1]; dev++)
-	if (dev->d_type == EMPTY)
+    for (dev = d_list; dev <= &d_list[MAXDAEMONS - 1]; dev++) {
+	if (dev->d_type == EMPTY) {
 	    return dev;
+	}
+    }
 #ifdef MASTER
-    debug("Ran out of fuse slots");
+    if (wizard) {
+	msg("Ran out of fuse slots");
+    }
 #endif
     return NULL;
 }
@@ -45,9 +49,11 @@ find_slot(void (*func)(int))
 {
     struct delayed_action *dev;
 
-    for (dev = d_list; dev <= &d_list[MAXDAEMONS-1]; dev++)
-	if (dev->d_type != EMPTY && func == dev->d_func)
+    for (dev = d_list; dev <= &d_list[MAXDAEMONS - 1]; dev++) {
+	if (dev->d_type != EMPTY && func == dev->d_func) {
 	    return dev;
+	}
+    }
     return NULL;
 }
 
@@ -76,8 +82,9 @@ kill_daemon(void (*func)(int))
 {
     struct delayed_action *dev;
 
-    if ((dev = find_slot(func)) == NULL)
+    if ((dev = find_slot(func)) == NULL) {
 	return;
+    }
     /*
      * Take it out of the list
      */
@@ -97,12 +104,14 @@ do_daemons(int flag)
     /*
      * Loop through the devil list
      */
-    for (dev = d_list; dev <= &d_list[MAXDAEMONS-1]; dev++)
+    for (dev = d_list; dev <= &d_list[MAXDAEMONS - 1]; dev++) {
 	/*
 	 * Executing each one, giving it the proper arguments
 	 */
-	if (dev->d_type == flag && dev->d_time == DAEMON)
+	if (dev->d_type == flag && dev->d_time == DAEMON) {
 	    (*dev->d_func)(dev->d_arg);
+	}
+    }
 }
 
 /*
@@ -130,8 +139,9 @@ lengthen(void (*func)(int), int xtime)
 {
     struct delayed_action *wire;
 
-    if ((wire = find_slot(func)) == NULL)
+    if ((wire = find_slot(func)) == NULL) {
 	return;
+    }
     wire->d_time += xtime;
 }
 
@@ -144,8 +154,9 @@ extinguish(void (*func)(int))
 {
     struct delayed_action *wire;
 
-    if ((wire = find_slot(func)) == NULL)
+    if ((wire = find_slot(func)) == NULL) {
 	return;
+    }
     wire->d_type = EMPTY;
 }
 
@@ -161,14 +172,14 @@ do_fuses(int flag)
     /*
      * Step though the list
      */
-    for (wire = d_list; wire <= &d_list[MAXDAEMONS-1]; wire++)
+    for (wire = d_list; wire <= &d_list[MAXDAEMONS - 1]; wire++) {
 	/*
 	 * Decrementing counters and starting things we want.  We also need
 	 * to remove the fuse from the list once it has gone off.
 	 */
-	if (flag == wire->d_type && wire->d_time > 0 && --wire->d_time == 0)
-	{
+	if (flag == wire->d_type && wire->d_time > 0 && --wire->d_time == 0) {
 	    wire->d_type = EMPTY;
 	    (*wire->d_func)(wire->d_arg);
 	}
+    }
 }

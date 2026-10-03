@@ -30,39 +30,38 @@
 
 static char *program = "rogue"; /* our name */
 
-static char *usage =
-    "usage: %s [\"\"] [-S] [-r] [-s [ score_file ] | -d | -V | -h] [ save_file ]\n"
-    "\n"
-    "\t\"\"\t\tempty option MUST be the first option: attempt to enter into wizard mode\n"
-    "\n"
-    "\t-S\t\tquit game catching a terminating signal (def: save game)\n"
-    "\n"
-    "\t-r\t\tthis option is ignored and is here for backward compatibility only\n"
-    "\n"
-    "\t-s\t\tprint out the list of scores from: %s\n"
-    "\t-s score_file\tprint out the list of scores from score_file\n"
-    "\n"
-    "\t-d\t\tkill the rogue and try to add the rogue to the score file\n"
-    "\n"
-    "\t-h\t\toutput this message and exit\n"
-    "\n"
-    "\t-V\t\tprint version string and exit\n"
-    "\n"
-    "\t[ save_file ]\tset the save file path (def save file path: %s)\n"
-    "\n"
-    "Exit codes:\n"
-    "     0   rogue exited normally, all OK\n"
-    "     2   -h and help string printed or -V and version string printed\n"
-    "     3   invalid command line, invalid option or option missing an argument\n"
-    "     4   score file path too long\n"
-    "     5   failed to restore game\n"
-    "     6   failed to open rogue pid file for writing\n"
-    "     7   screen to small to restore game\n"
-    " >= 10   internal rogue error\n"
-    "\n"
-    "rogue version: %s %s (chongo was here)";
+static char *usage = "usage: %s [\"\"] [-S] [-r] [-s [ score_file ] | -d | -V | -h] [ save_file ]\n"
+		     "\n"
+		     "\t\"\"\t\tempty option MUST be the first option: attempt to enter into wizard mode\n"
+		     "\n"
+		     "\t-S\t\tquit game catching a terminating signal (def: save game)\n"
+		     "\n"
+		     "\t-r\t\tthis option is ignored and is here for backward compatibility only\n"
+		     "\n"
+		     "\t-s\t\tprint out the list of scores from: %s\n"
+		     "\t-s score_file\tprint out the list of scores from score_file\n"
+		     "\n"
+		     "\t-d\t\tkill the rogue and try to add the rogue to the score file\n"
+		     "\n"
+		     "\t-h\t\toutput this message and exit\n"
+		     "\n"
+		     "\t-V\t\tprint version string and exit\n"
+		     "\n"
+		     "\t[ save_file ]\tset the save file path (def save file path: %s)\n"
+		     "\n"
+		     "Exit codes:\n"
+		     "     0   rogue exited normally, all OK\n"
+		     "     2   -h and help string printed or -V and version string printed\n"
+		     "     3   invalid command line, invalid option or option missing an argument\n"
+		     "     4   score file path too long\n"
+		     "     5   failed to restore game\n"
+		     "     6   failed to open rogue pid file for writing\n"
+		     "     7   screen to small to restore game\n"
+		     " >= 10   internal rogue error\n"
+		     "\n"
+		     "rogue version: %s %s (chongo was here)";
 
-char whoami[MAX_USERNAME+1] = {'\0'};	/* Name of player, +1 for paranoia */
+char whoami[MAX_USERNAME + 1] = {'\0'}; /* Name of player, +1 for paranoia */
 
 /*
  * main:
@@ -74,8 +73,8 @@ main(int argc, char **argv)
     char *env;
     struct timeval tp;
     int len;
-    extern char *optarg;	/* option argument */
-    extern int optind;		/* argv index of the next arg */
+    extern char *optarg; /* option argument */
+    extern int optind;	 /* argv index of the next arg */
     int i;
 
     /*
@@ -88,14 +87,14 @@ main(int argc, char **argv)
      *
      * NOTE: This is needed prior to calling md_init().
      */
-    (void) atexit(endwin_and_ncurses_cleanup);
+    (void)atexit(endwin_and_ncurses_cleanup);
 
     /*
      * set mode for write access for the owner only
      *
      * NOTE: This is needed prior to calling md_init().
      */
-    (void) umask(S_IWGRP | S_IWOTH);
+    (void)umask(S_IWGRP | S_IWOTH);
 
 #ifdef MASTER
     /*
@@ -105,12 +104,10 @@ main(int argc, char **argv)
      * Skip over 1st argument empty string, regardless of if they prove
      * they are a wizard, or not.
      */
-    if (argc >= 2 && argv[1] != NULL && argv[1][0] == '\0')
-    {
+    if (argc >= 2 && argv[1] != NULL && argv[1][0] == '\0') {
 
 	/* ask them to prove they are a wizard */
-	if (strcmp(PASSWD, md_crypt(md_getpass("wizard's password: "), "mT")) == 0)
-	{
+	if (strcmp(PASSWD, md_crypt(md_getpass("wizard's password: "), "mT")) == 0) {
 	    wizard = true;
 	    player.t_flags |= SEEMONST;
 	}
@@ -158,7 +155,7 @@ main(int argc, char **argv)
 	if (username == NULL || username[0] == '\0') {
 	    username = "nobody"; /* paranoia */
 	}
-        strlcpy(whoami, username, MAX_USERNAME);
+	strlcpy(whoami, username, MAX_USERNAME);
     }
 
     /*
@@ -185,7 +182,7 @@ main(int argc, char **argv)
     if (strncmp(whoami, "rogo-", strlen("rogo-")) == 0) {
 	env = getenv("ROGOSEED");
 	if (env != NULL) {
-	    long ret;	/* $ROGOSEED as a long */
+	    long ret; /* $ROGOSEED as a long */
 
 	    /*
 	     * convert $ROGOSEED into dungeon number, if possible
@@ -195,8 +192,8 @@ main(int argc, char **argv)
 	    if (errno == 0) {
 		dnum = (unsigned int)ret;
 	    } else {
-		fprintf(stderr, "ERROR: whoami: %s unable to convert $ROGOSEED into dungeon number: %s error: %s\n",
-				whoami, env, strerror(errno));
+		fprintf(stderr, "ERROR: whoami: %s unable to convert $ROGOSEED into dungeon number: %s error: %s\n", whoami, env,
+			strerror(errno));
 	    }
 	}
     }
@@ -207,7 +204,7 @@ main(int argc, char **argv)
 	 */
 	env = getenv("SEED");
 	if (env != NULL) {
-	    long ret;	/* $SEED as a long */
+	    long ret; /* $SEED as a long */
 	    dnum = (unsigned int)strtol(env, NULL, 0);
 
 	    /*
@@ -218,8 +215,8 @@ main(int argc, char **argv)
 	    if (errno == 0) {
 		dnum = (unsigned int)ret;
 	    } else {
-		fprintf(stderr, "ERROR: as wizard, unable to convert $SEED into dungeon number: %s error: %s\n",
-				env, strerror(errno));
+		fprintf(stderr, "ERROR: as wizard, unable to convert $SEED into dungeon number: %s error: %s\n", env,
+			strerror(errno));
 	    }
 	}
     }
@@ -230,14 +227,14 @@ main(int argc, char **argv)
      */
     while ((i = getopt(argc, argv, ":Srs:dVh")) != -1) {
 	switch (i) {
-	case 'S':   /* -S ==> terminating signal will quit the game */
+	case 'S': /* -S ==> terminating signal will quit the game */
 	    signal_quit = true;
 	    break;
 
-	case 'r':   /* -r ==>  option ignored */
+	case 'r': /* -r ==>  option ignored */
 	    break;
 
-	case 's':   /* -s score_file ==> list of scores from score_file */
+	case 's': /* -s score_file ==> list of scores from score_file */
 	    if (optarg != NULL && (strcmp(optarg, "--") != 0)) {
 		/*
 		 * By overriding score_path below, the subsequent call to open_score() will read that score file path.
@@ -249,7 +246,7 @@ main(int argc, char **argv)
 		    fprintf(stderr, "ERROR: score path length: %d > MAXSTR: %d\n", len, MAXSTR);
 		    exit(4); /*ooo*/
 		}
-		strncpy(score_path, optarg, len+1);
+		strncpy(score_path, optarg, len + 1);
 		score_path[len] = '\0'; /* paranoia */
 	    }
 
@@ -262,12 +259,12 @@ main(int argc, char **argv)
 	    exit(0); /*ooo*/
 	    break;
 
-	case 'd':   /* -d ==> die immediately by bat (or random monster if wizard mode) */
+	case 'd': /* -d ==> die immediately by bat (or random monster if wizard mode) */
 	    /*
 	     * throw away some rnd()s to break patterns
 	     */
 	    {
-		unsigned int rnum = rnd(100)+1;
+		unsigned int rnum = rnd(100) + 1;
 		while (--rnum > 0) {
 		    rnd(100);
 		}
@@ -304,13 +301,13 @@ main(int argc, char **argv)
 	    exit(0); /*ooo*/
 	    break;
 
-	case 'V':   /* -V ==> print the rogue version, release date, and then exit */
+	case 'V': /* -V ==> print the rogue version, release date, and then exit */
 	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
 	    printf("%s %s", version, release);
 	    fflush(stdout);
 	    exit(2); /*ooo*/
 
-	case 'h':   /* -h ==> print usage message and exit */
+	case 'h': /* -h ==> print usage message and exit */
 	    /* Due to atexit(), a newline will be printed, so we don't print a newline now */
 	    fflush(stdout);
 	    fprintf(stderr, usage, program, score_path, file_name, version, release);
@@ -335,8 +332,8 @@ main(int argc, char **argv)
 	     * otherwise report missing argument
 	     */
 	    fflush(stdout);
-            (void) fprintf(stderr, "%s: ERROR: requires an argument -- %c\n", program, optopt);
-	    (void) fprintf(stderr, usage, program, score_path, file_name, version, release);
+	    (void)fprintf(stderr, "%s: ERROR: requires an argument -- %c\n", program, optopt);
+	    (void)fprintf(stderr, usage, program, score_path, file_name, version, release);
 	    fflush(stderr);
 	    exit(3); /* ooo */
 	    /*NOTREACHED*/
@@ -360,8 +357,8 @@ main(int argc, char **argv)
 	     * otherwise report illegal argument
 	     */
 	    fflush(stdout);
-            (void) fprintf(stderr, "%s: ERROR: illegal option -- %c\n", program, optopt);
-	    (void) fprintf(stderr, usage, program, score_path, file_name, version, release);
+	    (void)fprintf(stderr, "%s: ERROR: illegal option -- %c\n", program, optopt);
+	    (void)fprintf(stderr, usage, program, score_path, file_name, version, release);
 	    fflush(stderr);
 	    exit(3); /* ooo */
 	    /*NOTREACHED*/
@@ -369,8 +366,8 @@ main(int argc, char **argv)
 
 	default:
 	    fflush(stdout);
-	    (void) fprintf(stderr, "%s: ERROR: invalid -flag\n", program);
-	    (void) fprintf(stderr, usage, program, score_path, file_name, version, release);
+	    (void)fprintf(stderr, "%s: ERROR: invalid -flag\n", program);
+	    (void)fprintf(stderr, usage, program, score_path, file_name, version, release);
 	    fflush(stderr);
 	    exit(3); /* ooo */
 	    /*NOTREACHED*/
@@ -413,10 +410,11 @@ main(int argc, char **argv)
      * report dungeon (or wizard dungeon)
      */
 #ifdef MASTER
-    if (wizard)
+    if (wizard) {
 	printf("Hello %s, welcome to dungeon #%u", whoami, dnum);
-    else
+    } else {
 	printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
+    }
 #else
     printf("Hello %s, just a moment while I dig the dungeon #%u...", whoami, dnum);
 #endif
@@ -431,17 +429,17 @@ main(int argc, char **argv)
     srandom((unsigned)dnum);
 #endif
 
-   /*
-    * Get the process id of this rogue program if the
-    * environment variable is set which requests this be
-    * done.  Then create the file name with the PID so
-    * that the debugging scripts can find it and use the
-    * PID.
-    *
-    * This code can be removed if you don't need to use
-    * the debugging scripts.
-    *
-    */
+    /*
+     * Get the process id of this rogue program if the
+     * environment variable is set which requests this be
+     * done.  Then create the file name with the PID so
+     * that the debugging scripts can find it and use the
+     * PID.
+     *
+     * This code can be removed if you don't need to use
+     * the debugging scripts.
+     *
+     */
 
     /* Process ID */
     pid_t pid;
@@ -449,15 +447,15 @@ main(int argc, char **argv)
     FILE *pidfp;
 
     if (getenv("GETROGUEPID") != NULL) {
-      pid = md_getpid ();
-      memset (pidfilename, '\0', sizeof(pidfilename));
-      snprintf (pidfilename, SHORTSTR, "roguepid.%d", pid);
-      if ((pidfp = fopen (pidfilename, "w")) == NULL) {
-	fflush(stdout);
-        fprintf(stderr, "Can't open '%s'.\n", pidfilename);
-	fflush(stderr);
-        exit(6); /*ooo*/
-      }
+	pid = md_getpid();
+	memset(pidfilename, '\0', sizeof(pidfilename));
+	snprintf(pidfilename, SHORTSTR, "roguepid.%d", pid);
+	if ((pidfp = fopen(pidfilename, "w")) == NULL) {
+	    fflush(stdout);
+	    fprintf(stderr, "Can't open '%s'.\n", pidfilename);
+	    fflush(stderr);
+	    exit(6); /*ooo*/
+	}
     }
 
     /*
@@ -483,12 +481,12 @@ main(int argc, char **argv)
     /*
      * initialize rogue same state
      */
-    init_probs();			/* Set up prob tables for objects */
-    init_player();			/* Set up initial player stats */
-    init_names();			/* Set up names of scrolls */
-    init_colors();			/* Set up colors of potions */
-    init_stones();			/* Set up stone settings of rings */
-    init_materials();			/* Set up materials of wands */
+    init_probs();     /* Set up prob tables for objects */
+    init_player();    /* Set up initial player stats */
+    init_names();     /* Set up names of scrolls */
+    init_colors();    /* Set up colors of potions */
+    init_stones();    /* Set up stone settings of rings */
+    init_materials(); /* Set up materials of wands */
 
     /*
      * Setup signal handlers to auto_save(), and get the terminal setup
@@ -526,5 +524,5 @@ main(int argc, char **argv)
     fuse(swander, 0, WANDERTIME, AFTER);
     start_daemon(stomach, 0, AFTER);
     playit();
-    return(0);
+    return (0);
 }

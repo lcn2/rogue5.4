@@ -24,6 +24,7 @@
 /*
  * List of monsters in rough order of vorpalness
  */
+// clang-format off
 static const int lvl_mons[MAXMONSTERS] =  {
     'K', 'E', 'B', 'S', 'H', 'I', 'R', 'O', 'Z', 'L', 'C', 'Q', 'A',
     'N', 'Y', 'F', 'T', 'W', 'P', 'X', 'U', 'M', 'V', 'G', 'J', 'D'
@@ -33,6 +34,7 @@ static const int wand_mons[MAXMONSTERS] = {
     'K', 'E', 'B', 'S', 'H',   0, 'R', 'O', 'Z',   0, 'C', 'Q', 'A',
       0, 'Y',   0, 'T', 'W', 'P',   0, 'U', 'M', 'V', 'G', 'J',   0
 };
+// clang-format on
 
 /*
  * randmonster:
@@ -42,19 +44,18 @@ static const int wand_mons[MAXMONSTERS] = {
 int
 randmonster(int wander)
 {
-    int d;		/* monster index into lvl_mons[] or wand_mons[] */
-    const int *mons;	/* monster from lvl_mons[] or wand_mons[] to return */
+    int d;	     /* monster index into lvl_mons[] or wand_mons[] */
+    const int *mons; /* monster from lvl_mons[] or wand_mons[] to return */
 
     mons = (wander ? wand_mons : lvl_mons);
-    do
-    {
+    do {
 	/*
 	 * given a dungeon level, select a monster index
 	 *
 	 * NOTE: Because (rnd(10) - 6) has a range of 10 values -6..3,
 	 *	 a monster can only appear on 10 different dungeon levels.
 	 */
-	d = level + (rnd(10) - 6);	/* d = level + -6..3 */
+	d = level + (rnd(10) - 6); /* d = level + -6..3 */
 
 	/*
 	 * convert any potential negative monster index into a 0..4 monster index
@@ -68,8 +69,9 @@ randmonster(int wander)
 	 *       On level 5, the first 9 monsters are possible.
 	 *       On level 6, the first 10 monsters are possible.
 	 */
-	if (d < 0)
+	if (d < 0) {
 	    d = rnd(5);
+	}
 
 	/*
 	 * convert any monster index from going off the end of the array
@@ -88,8 +90,9 @@ randmonster(int wander)
 	 *       On level 31, the last 1 monster are possible.
 	 *       On level 32 and beyond, the last 5 monsters are possible.
 	 */
-	if (d > MAXMONSTERS-1)
+	if (d > MAXMONSTERS - 1) {
 	    d = rnd(5) + 21;
+	}
 
     } while (mons[d] == 0);
     return mons[d];
@@ -106,33 +109,37 @@ new_monster(THING *tp, int type, const coord *cp)
     struct monster *mp;
     int lev_add;
 
-    if ((lev_add = level - AMULETLEVEL) < 0)
+    if ((lev_add = level - AMULETLEVEL) < 0) {
 	lev_add = 0;
+    }
     attach(mlist, tp);
     tp->t_type = type;
     tp->t_disguise = type;
     tp->t_pos = *cp;
     move(cp->y, cp->x);
-    tp->t_oldch = CCHAR( inch() );
+    tp->t_oldch = CCHAR(inch());
     tp->t_room = roomin(cp);
     moat(cp->y, cp->x) = tp;
-    mp = &monsters[tp->t_type-'A'];
+    mp = &monsters[tp->t_type - 'A'];
     /* monster classes increase one per dungeon level below AMULETLEVEL! */
     tp->t_stats.s_class = mp->m_stats.s_class + lev_add;
     tp->t_stats.s_maxhp = tp->t_stats.s_hpt = roll(tp->t_stats.s_class, 8);
     tp->t_stats.s_arm = mp->m_stats.s_arm - lev_add;
-    strcpy(tp->t_stats.s_dmg,mp->m_stats.s_dmg);
+    strcpy(tp->t_stats.s_dmg, mp->m_stats.s_dmg);
     tp->t_stats.s_str = mp->m_stats.s_str;
     tp->t_stats.s_exp = mp->m_stats.s_exp + lev_add * 10 + exp_add(tp);
     tp->t_flags = mp->m_flags;
-    if (level > 29)
+    if (level > 29) {
 	tp->t_flags |= ISHASTE;
+    }
     tp->t_turn = true;
     tp->t_pack = NULL;
-    if (ISWEARING(R_AGGR))
+    if (ISWEARING(R_AGGR)) {
 	runto(cp);
-    if (type == 'X')
+    }
+    if (type == 'X') {
 	tp->t_disguise = rnd_thing();
+    }
 }
 
 /*
@@ -144,14 +151,16 @@ exp_add(const THING *tp)
 {
     int mod;
 
-    if (tp->t_stats.s_class == 1)
+    if (tp->t_stats.s_class == 1) {
 	mod = tp->t_stats.s_maxhp / 8;
-    else
+    } else {
 	mod = tp->t_stats.s_maxhp / 6;
-    if (tp->t_stats.s_class > 9)
+    }
+    if (tp->t_stats.s_class > 9) {
 	mod *= 20;
-    else if (tp->t_stats.s_class > 6)
+    } else if (tp->t_stats.s_class > 6) {
 	mod *= 4;
+    }
     return mod;
 }
 
@@ -168,33 +177,32 @@ wanderer(void)
     int cnt = 0;
 
     tp = new_thing_ptr();
-    do
-    {
-        /*
+    do {
+	/*
 	 * Avoid endless loop when all rooms are filled with monsters
 	 * and the player room is not accessible to the monsters.
 	 */
-	if (cnt++ >= 500)
-	{
+	if (cnt++ >= 500) {
 	    discard(tp);
 	    return;
 	}
 	find_floor(NULL, &cp, false, true);
     } while (roomin(&cp) == proom && moat(cp.y, cp.x) == NULL);
     new_monster(tp, randmonster(true), &cp);
-    if (on(player, SEEMONST))
-    {
+    if (on(player, SEEMONST)) {
 	standout();
-	if (!on(player, ISHALU))
+	if (!on(player, ISHALU)) {
 	    addch(tp->t_type);
-	else
+	} else {
 	    addch(rnd(26) + 'A');
+	}
 	standend();
     }
     runto(&tp->t_pos);
 #ifdef MASTER
-    if (wizard)
-	msg("started a wandering %s", monsters[tp->t_type-'A'].m_name);
+    if (wizard) {
+	msg("started a wandering %s", monsters[tp->t_type - 'A'].m_name);
+    }
 #endif
 }
 
@@ -207,7 +215,7 @@ wake_monster(int y, int x)
 {
     THING *tp;
     struct room *rp;
-	int ch;
+    int ch;
     const char *mname;
 
     if ((tp = moat(y, x)) == NULL) {
@@ -221,31 +229,26 @@ wake_monster(int y, int x)
     /*
      * Every time he sees mean monster, it might start chasing him
      */
-    if (!on(*tp, ISRUN) && rnd(3) != 0 && on(*tp, ISMEAN) && !on(*tp, ISHELD)
-	&& !ISWEARING(R_STEALTH) && !on(player, ISLEVIT))
-    {
+    if (!on(*tp, ISRUN) && rnd(3) != 0 && on(*tp, ISMEAN) && !on(*tp, ISHELD) && !ISWEARING(R_STEALTH) && !on(player, ISLEVIT)) {
 	tp->t_dest = &hero;
 	tp->t_flags |= ISRUN;
     }
-    if (ch == 'M' && !on(player, ISBLIND) && !on(player, ISHALU)
-	&& !on(*tp, ISFOUND) && !on(*tp, ISCANC) && on(*tp, ISRUN))
-    {
-        rp = proom;
-	if ((rp != NULL && !(rp->r_flags & ISDARK))
-	    || dist(y, x, hero.y, hero.x) < LAMPDIST)
-	{
+    if (ch == 'M' && !on(player, ISBLIND) && !on(player, ISHALU) && !on(*tp, ISFOUND) && !on(*tp, ISCANC) && on(*tp, ISRUN)) {
+	rp = proom;
+	if ((rp != NULL && !(rp->r_flags & ISDARK)) || dist(y, x, hero.y, hero.x) < LAMPDIST) {
 	    tp->t_flags |= ISFOUND;
-	    if (!save(VS_MAGIC))
-	    {
-		if (on(player, ISHUH))
+	    if (!save(VS_MAGIC)) {
+		if (on(player, ISHUH)) {
 		    lengthen(unconfuse, spread(HUHDURATION));
-		else
+		} else {
 		    fuse(unconfuse, 0, spread(HUHDURATION), AFTER);
+		}
 		player.t_flags |= ISHUH;
 		mname = set_mname(tp);
 		addmsg("%s", mname);
-		if (strcmp(mname, "it") != 0)
+		if (strcmp(mname, "it") != 0) {
 		    addmsg("'");
+		}
 		msg("s gaze has confused you");
 	    }
 	}
@@ -253,13 +256,13 @@ wake_monster(int y, int x)
     /*
      * Let greedy ones guard gold
      */
-    if (on(*tp, ISGREED) && !on(*tp, ISRUN))
-    {
+    if (on(*tp, ISGREED) && !on(*tp, ISRUN)) {
 	tp->t_flags |= ISRUN;
-	if (proom->r_goldval)
+	if (proom->r_goldval) {
 	    tp->t_dest = &proom->r_gold;
-	else
+	} else {
 	    tp->t_dest = &hero;
+	}
     }
     return tp;
 }
@@ -272,8 +275,9 @@ wake_monster(int y, int x)
 void
 give_pack(THING *tp)
 {
-    if (level >= max_level && rnd(100) < monsters[tp->t_type-'A'].m_carry)
+    if (level >= max_level && rnd(100) < monsters[tp->t_type - 'A'].m_carry) {
 	attach(tp->t_pack, new_thing());
+    }
 }
 
 /*
@@ -296,12 +300,13 @@ save_throw(int which, const THING *tp)
 int
 save(int which)
 {
-    if (which == VS_MAGIC)
-    {
-	if (ISRING(LEFT, R_PROTECT))
+    if (which == VS_MAGIC) {
+	if (ISRING(LEFT, R_PROTECT)) {
 	    which -= cur_ring[LEFT]->o_arm;
-	if (ISRING(RIGHT, R_PROTECT))
+	}
+	if (ISRING(RIGHT, R_PROTECT)) {
 	    which -= cur_ring[RIGHT]->o_arm;
+	}
     }
     return save_throw(which, &player);
 }

@@ -33,38 +33,39 @@ ring_on(void)
     /*
      * Make certain that it is somethings that we want to wear
      */
-    if (obj == NULL)
+    if (obj == NULL) {
 	return;
-    if (obj->o_type != RING)
-    {
-	if (!terse)
+    }
+    if (obj->o_type != RING) {
+	if (!terse) {
 	    msg("it would be difficult to wrap that around a finger");
-	else
+	} else {
 	    msg("not a ring");
+	}
 	return;
     }
 
     /*
      * find out which hand to put it on
      */
-    if (is_current(obj))
+    if (is_current(obj)) {
 	return;
-
-    if (cur_ring[LEFT] == NULL && cur_ring[RIGHT] == NULL)
-    {
-	if ((ring = gethand()) < 0)
-	    return;
     }
-    else if (cur_ring[LEFT] == NULL)
+
+    if (cur_ring[LEFT] == NULL && cur_ring[RIGHT] == NULL) {
+	if ((ring = gethand()) < 0) {
+	    return;
+	}
+    } else if (cur_ring[LEFT] == NULL) {
 	ring = LEFT;
-    else if (cur_ring[RIGHT] == NULL)
+    } else if (cur_ring[RIGHT] == NULL) {
 	ring = RIGHT;
-    else
-    {
-	if (!terse)
+    } else {
+	if (!terse) {
 	    msg("you already have a ring on each hand");
-	else
+	} else {
 	    msg("wearing two");
+	}
 	return;
     }
     cur_ring[ring] = obj;
@@ -72,21 +73,21 @@ ring_on(void)
     /*
      * Calculate the effect it has on the poor guy.
      */
-    switch (obj->o_which)
-    {
-	case R_ADDSTR:
-	    chg_str(obj->o_arm);
-	    break;
-	case R_SEEINVIS:
-	    invis_on();
-	    break;
-	case R_AGGR:
-	    aggravate();
-	    break;
+    switch (obj->o_which) {
+    case R_ADDSTR:
+	chg_str(obj->o_arm);
+	break;
+    case R_SEEINVIS:
+	invis_on();
+	break;
+    case R_AGGR:
+	aggravate();
+	break;
     }
 
-    if (!terse)
+    if (!terse) {
 	addmsg("you are now wearing ");
+    }
     msg("%s (%c)", inv_name(obj, true), obj->o_packch);
 }
 
@@ -101,30 +102,29 @@ ring_off(void)
     int ring;
     THING *obj;
 
-    if (cur_ring[LEFT] == NULL && cur_ring[RIGHT] == NULL)
-    {
-	if (terse)
+    if (cur_ring[LEFT] == NULL && cur_ring[RIGHT] == NULL) {
+	if (terse) {
 	    msg("no rings");
-	else
+	} else {
 	    msg("you aren't wearing any rings");
+	}
+	return;
+    } else if (cur_ring[LEFT] == NULL) {
+	ring = RIGHT;
+    } else if (cur_ring[RIGHT] == NULL) {
+	ring = LEFT;
+    } else if ((ring = gethand()) < 0) {
 	return;
     }
-    else if (cur_ring[LEFT] == NULL)
-	ring = RIGHT;
-    else if (cur_ring[RIGHT] == NULL)
-	ring = LEFT;
-    else
-	if ((ring = gethand()) < 0)
-	    return;
     mpos = 0;
     obj = cur_ring[ring];
-    if (obj == NULL)
-    {
+    if (obj == NULL) {
 	msg("not wearing such a ring");
 	return;
     }
-    if (dropcheck(obj))
+    if (dropcheck(obj)) {
 	msg("was wearing %s(%c)", inv_name(obj, true), obj->o_packch);
+    }
 }
 
 /*
@@ -136,23 +136,26 @@ gethand(void)
 {
     int c;
 
-    for (;;)
-    {
-	if (terse)
+    for (;;) {
+	if (terse) {
 	    msg("left or right ring? ");
-	else
+	} else {
 	    msg("left hand or right hand? ");
-	if ((c = readchar()) == ESCAPE)
+	}
+	if ((c = readchar()) == ESCAPE) {
 	    return -1;
+	}
 	mpos = 0;
-	if (c == 'l' || c == 'L')
+	if (c == 'l' || c == 'L') {
 	    return LEFT;
-	else if (c == 'r' || c == 'R')
+	} else if (c == 'r' || c == 'R') {
 	    return RIGHT;
-	if (terse)
+	}
+	if (terse) {
 	    msg("L or R");
-	else
+	} else {
 	    msg("please type L or R");
+	}
     }
 }
 
@@ -166,21 +169,24 @@ ring_eat(int hand)
     THING *ring;
     int eat;
     int uses[] = {
-	 1,	/* R_PROTECT */		 1,	/* R_ADDSTR */
-	 1,	/* R_SUSTSTR */		-3,	/* R_SEARCH */
-	-5,	/* R_SEEINVIS */	 0,	/* R_NOP */
-	 0,	/* R_AGGR */		-3,	/* R_ADDHIT */
-	-3,	/* R_ADDDAM */		 2,	/* R_REGEN */
-	-2,	/* R_DIGEST */		 0,	/* R_TELEPORT */
-	 1,	/* R_STEALTH */		 1	/* R_SUSTARM */
+	1,  /* R_PROTECT */ 1,	/* R_ADDSTR */
+	1,  /* R_SUSTSTR */ -3, /* R_SEARCH */
+	-5, /* R_SEEINVIS */ 0, /* R_NOP */
+	0,  /* R_AGGR */ -3,	/* R_ADDHIT */
+	-3, /* R_ADDDAM */ 2,	/* R_REGEN */
+	-2, /* R_DIGEST */ 0,	/* R_TELEPORT */
+	1,  /* R_STEALTH */ 1	/* R_SUSTARM */
     };
 
-    if ((ring = cur_ring[hand]) == NULL)
+    if ((ring = cur_ring[hand]) == NULL) {
 	return 0;
-    if ((eat = uses[ring->o_which]) < 0)
+    }
+    if ((eat = uses[ring->o_which]) < 0) {
 	eat = (rnd(-eat) == 0);
-    if (ring->o_which == R_DIGEST)
+    }
+    if (ring->o_which == R_DIGEST) {
 	eat = -eat;
+    }
     return eat;
 }
 
@@ -191,20 +197,21 @@ ring_eat(int hand)
 const char *
 ring_num(const THING *obj)
 {
-    static char buf[RING_BUF+1]; /* +1 for paranoia */
+    static char buf[RING_BUF + 1]; /* +1 for paranoia */
 
-    if (!(obj->o_flags & ISKNOW))
+    if (!(obj->o_flags & ISKNOW)) {
 	return "";
-    switch (obj->o_which)
-    {
-	case R_PROTECT:
-	case R_ADDSTR:
-	case R_ADDDAM:
-	case R_ADDHIT:
-	    memset(buf, 0, sizeof(buf)); /* paranoia */
-	    snprintf(buf, RING_BUF, " [%s]", num(obj->o_arm, 0, RING));
-	otherwise:
-	    return "";
+    }
+    switch (obj->o_which) {
+    case R_PROTECT:
+    case R_ADDSTR:
+    case R_ADDDAM:
+    case R_ADDHIT:
+	memset(buf, 0, sizeof(buf)); /* paranoia */
+	snprintf(buf, RING_BUF, " [%s]", num(obj->o_arm, 0, RING));
+	break;
+    default:
+	return "";
     }
     return buf;
 }

@@ -33,47 +33,48 @@ whatis(int insist, int type)
 {
     THING *obj;
 
-    if (pack == NULL)
-    {
+    if (pack == NULL) {
 	msg("you don't have anything in your pack to identify");
 	return;
     }
 
-    for (;;)
-    {
+    for (;;) {
 	obj = get_item("identify", type);
-	if (insist)
-	{
-	    if (n_objs == 0)
+	if (insist) {
+	    if (n_objs == 0) {
 		return;
-	    else if (obj == NULL)
+	    } else if (obj == NULL) {
 		msg("you must identify something");
-	    else if (type && obj->o_type != type &&
-	       !(type == R_OR_S && (obj->o_type == RING || obj->o_type == STICK)) )
-		    msg("you must identify a %s", type_name(type));
-	    else
+	    } else if (type && obj->o_type != type && !(type == R_OR_S && (obj->o_type == RING || obj->o_type == STICK))) {
+		msg("you must identify a %s", type_name(type));
+	    } else {
 		break;
-	}
-	else
+	    }
+	} else {
 	    break;
+	}
     }
 
-    if (obj == NULL)
+    if (obj == NULL) {
 	return;
+    }
 
-    switch (obj->o_type)
-    {
-        case SCROLL:
-	    set_know(obj, scr_info);
-        when POTION:
-	    set_know(obj, pot_info);
-	when STICK:
-	    set_know(obj, ws_info);
-        when WEAPON:
-        case ARMOR:
-	    obj->o_flags |= ISKNOW;
-        when RING:
-	    set_know(obj, ring_info);
+    switch (obj->o_type) {
+    case SCROLL:
+	set_know(obj, scr_info);
+	break;
+    case POTION:
+	set_know(obj, pot_info);
+	break;
+    case STICK:
+	set_know(obj, ws_info);
+	break;
+    case WEAPON:
+    case ARMOR:
+	obj->o_flags |= ISKNOW;
+	break;
+    case RING:
+	set_know(obj, ring_info);
     }
     msg("%s", inv_name(obj, false));
 }
@@ -91,8 +92,7 @@ set_know(THING *obj, struct obj_info *info)
     info[obj->o_which].oi_know = true;
     obj->o_flags |= ISKNOW;
     guess = &info[obj->o_which].oi_guess;
-    if (*guess)
-    {
+    if (*guess) {
 	free(*guess);
 	*guess = NULL;
     }
@@ -107,21 +107,19 @@ type_name(int type)
 {
     struct h_list *hp;
     struct h_list tlist[] = {
-	{POTION, "potion",		false},
-	{SCROLL, "scroll",		false},
-	{FOOD,	 "food",		false},
-	{R_OR_S, "ring, wand or staff",	false},
-	{RING,	 "ring",		false},
-	{STICK,	 "wand or staff",	false},
-	{WEAPON, "weapon",		false},
-	{ARMOR,	 "suit of armor",	false},
+	{POTION, "potion", false}, {SCROLL, "scroll", false},
+	{FOOD, "food", false},	   {R_OR_S, "ring, wand or staff", false},
+	{RING, "ring", false},	   {STICK, "wand or staff", false},
+	{WEAPON, "weapon", false}, {ARMOR, "suit of armor", false},
     };
 
-    for (hp = tlist; hp->h_ch; hp++)
-	if (type == hp->h_ch)
+    for (hp = tlist; hp->h_ch; hp++) {
+	if (type == hp->h_ch) {
 	    return hp->h_desc;
+	}
+    }
     /* NOTREACHED */
-    return(0);
+    return (0);
 }
 
 #ifdef MASTER
@@ -136,19 +134,19 @@ highest_which_letter(int highest)
 {
     /* firewall -- negative max maps onto 0 */
     if (highest <= 0) {
-	return (char) '0';
+	return (char)'0';
 
-    /* first 10 map into 0 thru 9 */
+	/* first 10 map into 0 thru 9 */
     } else if (highest < 10) {
-	return (char) ('0' + highest);
+	return (char)('0' + highest);
 
-    /* next 26 max into a to z */
-    } else if (highest < 10+26) {
-	return (char) ('a' + (highest-10));
+	/* next 26 max into a to z */
+    } else if (highest < 10 + 26) {
+	return (char)('a' + (highest - 10));
     }
 
     /* firewall - max too large maps onto 0 */
-    return (char) '0';
+    return (char)'0';
 }
 
 /*
@@ -163,13 +161,13 @@ which_char_to_int(int ch)
     if (!isascii(ch)) {
 	return 0;
 
-    /* case: '0' to '9' */
+	/* case: '0' to '9' */
     } else if (isdigit(ch)) {
-	return (int) (ch - '0');
+	return (int)(ch - '0');
 
-    /* case: 'a' to 'z' */
+	/* case: 'a' to 'z' */
     } else if (islower(ch)) {
-	return (int) ((ch - 'a')+10);
+	return (int)((ch - 'a') + 10);
     }
 
     /* firewall - bogus char return 0 */
@@ -199,8 +197,8 @@ create_obj(void)
      */
     switch (obj->o_type) {
 
-    case POTION:    /* ! */
-	highest_char = highest_which_letter(MAXPOTIONS-1);
+    case POTION: /* ! */
+	highest_char = highest_which_letter(MAXPOTIONS - 1);
 	do {
 	    msg("which %c (potion) do you want? (0-%c)", obj->o_type, highest_char);
 	    ch = readchar();
@@ -212,8 +210,8 @@ create_obj(void)
 	} while (which < 0 || which >= MAXPOTIONS);
 	break;
 
-    case SCROLL:    /* ? */
-	highest_char = highest_which_letter(MAXSCROLLS-1);
+    case SCROLL: /* ? */
+	highest_char = highest_which_letter(MAXSCROLLS - 1);
 	do {
 	    msg("which %c (scroll) do you want? (0-%c)", obj->o_type, highest_char);
 	    ch = readchar();
@@ -225,8 +223,8 @@ create_obj(void)
 	} while (which < 0 || which >= MAXSCROLLS);
 	break;
 
-    case WEAPON:    /* ) */
-	highest_char = highest_which_letter(MAXWEAPONS-1);
+    case WEAPON: /* ) */
+	highest_char = highest_which_letter(MAXWEAPONS - 1);
 	do {
 	    msg("which %c (weapon) do you want? (0-%c)", obj->o_type, highest_char);
 	    ch = readchar();
@@ -238,8 +236,8 @@ create_obj(void)
 	} while (which < 0 || which >= MAXWEAPONS);
 	break;
 
-    case ARMOR:	    /* ] */
-	highest_char = highest_which_letter(MAXARMORS-1);
+    case ARMOR: /* ] */
+	highest_char = highest_which_letter(MAXARMORS - 1);
 	do {
 	    msg("which %c (armor) do you want? (0-%c)", obj->o_type, highest_char);
 	    ch = readchar();
@@ -251,8 +249,8 @@ create_obj(void)
 	} while (which < 0 || which >= MAXARMORS);
 	break;
 
-    case RING:	    /* = */
-	highest_char = highest_which_letter(MAXRINGS-1);
+    case RING: /* = */
+	highest_char = highest_which_letter(MAXRINGS - 1);
 	do {
 	    msg("which %c (ring) do you want? (0-%c)", obj->o_type, highest_char);
 	    ch = readchar();
@@ -264,8 +262,8 @@ create_obj(void)
 	} while (which < 0 || which >= MAXRINGS);
 	break;
 
-    case STICK:	    /* / */
-	highest_char = highest_which_letter(MAXSTICKS-1);
+    case STICK: /* / */
+	highest_char = highest_which_letter(MAXSTICKS - 1);
 	do {
 	    msg("which %c (staff) do you want? (0-%c)", obj->o_type, highest_char);
 	    ch = readchar();
@@ -277,7 +275,7 @@ create_obj(void)
 	} while (which < 0 || which >= MAXSTICKS);
 	break;
 
-    default:	    /* anything that doesn't have an o_which */
+    default: /* anything that doesn't have an o_which */
 	highest_char = '0';
 	ch = '0';
 	which = 0;
@@ -293,61 +291,56 @@ create_obj(void)
     obj->o_text = NULL;
     obj->o_label = NULL;
     mpos = 0;
-    if (obj->o_type == WEAPON || obj->o_type == ARMOR)
-    {
+    if (obj->o_type == WEAPON || obj->o_type == ARMOR) {
 	msg("blessing? (+,-,n) ");
 	bless = readchar();
 	mpos = 0;
-	if (obj->o_type == WEAPON)
-	{
+	if (obj->o_type == WEAPON) {
 	    init_weapon(obj, obj->o_which);
 	    if (bless == '-') {
-		obj->o_hplus -= rnd(3)+1;   /* decrease the ability to hit */
-		obj->o_dplus -= rnd(3)+1;   /* decrease the hit damaged */
+		obj->o_hplus -= rnd(3) + 1; /* decrease the ability to hit */
+		obj->o_dplus -= rnd(3) + 1; /* decrease the hit damaged */
 		obj->o_flags |= ISCURSED;   /* curse */
 	    } else if (bless == '+') {
-		obj->o_hplus += rnd(3)+1;   /* increase the ability to hit */
-		obj->o_dplus += rnd(3)+1;   /* increase the hit damaged */
+		obj->o_hplus += rnd(3) + 1; /* increase the ability to hit */
+		obj->o_dplus += rnd(3) + 1; /* increase the hit damaged */
 		obj->o_flags &= ~ISCURSED;  /* not cursed */
 	    } else {
-		obj->o_flags &= ~ISCURSED;  /* not cursed */
+		obj->o_flags &= ~ISCURSED; /* not cursed */
 	    }
-	}
-	else
-	{
+	} else {
 	    obj->o_arm = a_class[obj->o_which];
 	    if (bless == '-') {
-		obj->o_arm += rnd(3)+1;	    /* decrease the protection */
-		obj->o_flags |= ISCURSED;   /* curse */
+		obj->o_arm += rnd(3) + 1; /* decrease the protection */
+		obj->o_flags |= ISCURSED; /* curse */
 	    } else if (bless == '+') {
-		obj->o_arm -= rnd(3)+1;	    /* increase the protection */
-		obj->o_flags &= ~ISCURSED;  /* not cursed */
+		obj->o_arm -= rnd(3) + 1;  /* increase the protection */
+		obj->o_flags &= ~ISCURSED; /* not cursed */
 	    } else {
-		obj->o_flags &= ~ISCURSED;  /* not cursed */
+		obj->o_flags &= ~ISCURSED; /* not cursed */
 	    }
 	}
-    }
-    else if (obj->o_type == RING)
-	switch (obj->o_which)
-	{
-	    case R_PROTECT:
-	    case R_ADDSTR:
-	    case R_ADDHIT:
-	    case R_ADDDAM:
-		msg("blessing? (+,-,n)");
-		bless = readchar();
-		mpos = 0;
-		if (bless == '-')
-		    obj->o_flags |= ISCURSED;
-		obj->o_arm = (bless == '-' ? -1 : rnd(2) + 1);
-	    when R_AGGR:
-	    case R_TELEPORT:
+    } else if (obj->o_type == RING) {
+	switch (obj->o_which) {
+	case R_PROTECT:
+	case R_ADDSTR:
+	case R_ADDHIT:
+	case R_ADDDAM:
+	    msg("blessing? (+,-,n)");
+	    bless = readchar();
+	    mpos = 0;
+	    if (bless == '-') {
 		obj->o_flags |= ISCURSED;
+	    }
+	    obj->o_arm = (bless == '-' ? -1 : rnd(2) + 1);
+	    break;
+	case R_AGGR:
+	case R_TELEPORT:
+	    obj->o_flags |= ISCURSED;
 	}
-    else if (obj->o_type == STICK)
+    } else if (obj->o_type == STICK) {
 	fix_stick(obj);
-    else if (obj->o_type == GOLD)
-    {
+    } else if (obj->o_type == GOLD) {
 	msg("how much?");
 	get_num(&obj->o_goldval, stdscr);
     }
@@ -367,14 +360,11 @@ teleport(void)
 
     mvaddch(hero.y, hero.x, floor_at());
     find_floor(NULL, &c, false, true);
-    if (roomin(&c) != proom)
-    {
+    if (roomin(&c) != proom) {
 	leave_room(&hero);
 	hero = c;
 	enter_room(&hero);
-    }
-    else
-    {
+    } else {
 	hero = c;
 	look(true);
     }
@@ -386,7 +376,7 @@ teleport(void)
     if (on(player, ISHELD)) {
 	player.t_flags &= ~ISHELD;
 	vf_hit = 0;
-	strcpy(monsters['F'-'A'].m_stats.s_dmg, "000x0");
+	strcpy(monsters['F' - 'A'].m_stats.s_dmg, "000x0");
     }
     no_move = 0;
     count = 0;
@@ -409,15 +399,18 @@ passwd(void)
     msg("wizard's Password: ");
     mpos = 0;
     sp = buf;
-    while ((c = readchar()) != '\n' && c != '\r' && c != ESCAPE)
-	if (c == md_killchar())
+    while ((c = readchar()) != '\n' && c != '\r' && c != ESCAPE) {
+	if (c == md_killchar()) {
 	    sp = buf;
-	else if (c == md_erasechar() && sp > buf)
+	} else if (c == md_erasechar() && sp > buf) {
 	    sp--;
-	else
-	    *sp++ = (char) c;
-    if (sp == buf)
+	} else {
+	    *sp++ = (char)c;
+	}
+    }
+    if (sp == buf) {
 	return false;
+    }
     *sp = '\0';
     return (strcmp(PASSWD, md_crypt(buf, "mT")) == 0);
 }
@@ -433,17 +426,19 @@ show_map(void)
     int y, x, real;
 
     wclear(hw);
-    for (y = 1; y < NUMLINES - 1; y++)
-	for (x = 0; x < NUMCOLS; x++)
-	{
+    for (y = 1; y < NUMLINES - 1; y++) {
+	for (x = 0; x < NUMCOLS; x++) {
 	    real = flat(y, x) & F_REAL;
-	    if (!real)
+	    if (!real) {
 		wstandout(hw);
+	    }
 	    wmove(hw, y, x);
 	    waddch(hw, chat(y, x));
-	    if (!(real & F_REAL))
+	    if (!(real & F_REAL)) {
 		wstandend(hw);
+	    }
 	}
+    }
     show_win(" --More--");
 }
 #endif

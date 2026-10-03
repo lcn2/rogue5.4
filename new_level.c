@@ -20,9 +20,9 @@
 #include "extern.h"
 #include "rogue.h"
 
-#define TREAS_ROOM 20	/* one chance in TREAS_ROOM for a treasure room */
-#define MAXTREAS 10	/* maximum number of treasures in a treasure room */
-#define MINTREAS 2	/* minimum number of treasures in a treasure room */
+#define TREAS_ROOM 20 /* one chance in TREAS_ROOM for a treasure room */
+#define MAXTREAS 10   /* maximum number of treasures in a treasure room */
+#define MINTREAS 2    /* minimum number of treasures in a treasure room */
 
 void
 new_level(void)
@@ -32,14 +32,14 @@ new_level(void)
     int *sp;
     int i;
 
-    player.t_flags &= ~ISHELD;	/* unhold when you go down just in case */
-    if (level > max_level)
+    player.t_flags &= ~ISHELD; /* unhold when you go down just in case */
+    if (level > max_level) {
 	max_level = level;
+    }
     /*
      * Clean things off from last level
      */
-    for (pp = places; pp < &places[MAXCOLS*MAXLINES]; pp++)
-    {
+    for (pp = places; pp < &places[MAXCOLS * MAXLINES]; pp++) {
 	pp->p_ch = ' ';
 	pp->p_flags = F_REAL;
 	pp->p_monst = NULL;
@@ -48,39 +48,37 @@ new_level(void)
     /*
      * Free up the monsters on the last level
      */
-    for (tp = mlist; tp != NULL; tp = next(tp))
+    for (tp = mlist; tp != NULL; tp = next(tp)) {
 	free_list(tp->t_pack);
+    }
     free_list(mlist);
     /*
      * Throw away stuff left on the previous level (if anything)
      */
     free_list(lvl_obj);
-    do_rooms();				/* Draw rooms */
-    do_passages();			/* Draw passages */
+    do_rooms();	   /* Draw rooms */
+    do_passages(); /* Draw passages */
     no_food++;
-    put_things();			/* Place objects (if any) */
+    put_things(); /* Place objects (if any) */
     /*
      * Place the traps
      */
-    if (rnd(10) < level)
-    {
+    if (rnd(10) < level) {
 	ntraps = rnd(level / 4) + 1;
-	if (ntraps > MAXTRAPS)
+	if (ntraps > MAXTRAPS) {
 	    ntraps = MAXTRAPS;
+	}
 	i = ntraps;
-	while (i--)
-	{
+	while (i--) {
 	    /*
 	     * not only wouldn't it be NICE to have traps in mazes
 	     * (not that we care about being nice), since the trap
 	     * number is stored where the passage number is, we
 	     * can't actually do it.
 	     */
-	    do
-	    {
+	    do {
 		find_floor(NULL, &stairs, false, false);
-	    } while ( (chat(stairs.y, stairs.x) != FLOOR) &&
-	              (flat(stairs.y, stairs.x) & F_REAL) );
+	    } while ((chat(stairs.y, stairs.x) != FLOOR) && (flat(stairs.y, stairs.x) & F_REAL));
 	    sp = &flat(stairs.y, stairs.x);
 	    *sp &= ~(F_REAL | F_TMASK);
 	    *sp |= rnd(NTRAPS);
@@ -93,8 +91,9 @@ new_level(void)
     chat(stairs.y, stairs.x) = STAIRS;
     seenstairs = false;
 
-    for (tp = mlist; tp != NULL; tp = next(tp))
+    for (tp = mlist; tp != NULL; tp = next(tp)) {
 	tp->t_room = roomin(&tp->t_pos);
+    }
 
     /* make sure the hero doesn't start a new level on top of an item */
     do {
@@ -102,10 +101,12 @@ new_level(void)
     } while ((chat(hero.y, hero.x) != PASSAGE) && (chat(hero.y, hero.x) != FLOOR));
     enter_room(&hero);
     mvaddch(hero.y, hero.x, PLAYER);
-    if (on(player, SEEMONST))
+    if (on(player, SEEMONST)) {
 	turn_see(false);
-    if (on(player, ISHALU))
+    }
+    if (on(player, ISHALU)) {
 	visuals(0);
+    }
 }
 
 /*
@@ -117,8 +118,7 @@ rnd_room(void)
 {
     int rm;
 
-    do
-    {
+    do {
 	rm = rnd(MAXROOMS);
     } while (rooms[rm].r_flags & ISGONE);
     return rm;
@@ -139,19 +139,20 @@ put_things(void)
      * Once you have found the amulet, the only way to get new stuff is
      * go down into the dungeon.
      */
-    if (amulet && level < max_level)
+    if (amulet && level < max_level) {
 	return;
+    }
     /*
      * check for treasure rooms, and if so, put it in.
      */
-    if (rnd(TREAS_ROOM) == 0)
+    if (rnd(TREAS_ROOM) == 0) {
 	treas_room();
+    }
     /*
      * Do MAXOBJ attempts to put things on a level
      */
-    for (i = 0; i < MAXOBJ; i++)
-	if (rnd(100) < 36)
-	{
+    for (i = 0; i < MAXOBJ; i++) {
+	if (rnd(100) < 36) {
 	    /*
 	     * Pick a new object and link it in the list
 	     */
@@ -163,18 +164,18 @@ put_things(void)
 	    find_floor(NULL, &obj->o_pos, false, false);
 	    chat(obj->o_pos.y, obj->o_pos.x) = obj->o_type;
 	}
+    }
     /*
      * If he is really deep in the dungeon and he hasn't found the
      * amulet yet, put it somewhere on the ground
      */
-    if (level >= AMULETLEVEL && !amulet)
-    {
+    if (level >= AMULETLEVEL && !amulet) {
 	obj = new_thing_ptr();
 	attach(lvl_obj, obj);
 	obj->o_hplus = 0;
 	obj->o_dplus = 0;
-	strlcpy(obj->o_damage, "0x0", sizeof(obj->o_damage)-1);
-        strlcpy(obj->o_hurldmg, "0x0", sizeof(obj->o_hurldmg)-1);
+	strlcpy(obj->o_damage, "0x0", sizeof(obj->o_damage) - 1);
+	strlcpy(obj->o_hurldmg, "0x0", sizeof(obj->o_hurldmg) - 1);
 	obj->o_arm = 11;
 	obj->o_type = AMULET;
 	/*
@@ -189,8 +190,7 @@ put_things(void)
  * treas_room:
  *	Add a treasure room
  */
-#define MAXTRIES 10	/* max number of tries to put down a monster */
-
+#define MAXTRIES 10 /* max number of tries to put down a monster */
 
 void
 treas_room(void)
@@ -203,11 +203,11 @@ treas_room(void)
 
     rp = &rooms[rnd_room()];
     spots = (rp->r_max.y - 2) * (rp->r_max.x - 2) - MINTREAS;
-    if (spots > (MAXTREAS - MINTREAS))
+    if (spots > (MAXTREAS - MINTREAS)) {
 	spots = (MAXTREAS - MINTREAS);
+    }
     num_monst = nm = rnd(spots) + MINTREAS;
-    while (nm--)
-    {
+    while (nm--) {
 	find_floor(rp, &mp, 2 * MAXTRIES, false);
 	tp = new_thing();
 	tp->o_pos = mp;
@@ -219,20 +219,20 @@ treas_room(void)
      * fill up room with monsters from the next level down
      */
 
-    if ((nm = rnd(spots) + MINTREAS) < num_monst + 2)
+    if ((nm = rnd(spots) + MINTREAS) < num_monst + 2) {
 	nm = num_monst + 2;
+    }
     spots = (rp->r_max.y - 2) * (rp->r_max.x - 2);
-    if (nm > spots)
+    if (nm > spots) {
 	nm = spots;
+    }
     level++;
-    while (nm--)
-    {
+    while (nm--) {
 	spots = 0;
-	if (find_floor(rp, &mp, MAXTRIES, true))
-	{
+	if (find_floor(rp, &mp, MAXTRIES, true)) {
 	    tp = new_thing_ptr();
 	    new_monster(tp, randmonster(false), &mp);
-	    tp->t_flags |= ISMEAN;	/* no slouchers in THIS room */
+	    tp->t_flags |= ISMEAN; /* no slouchers in THIS room */
 	    give_pack(tp);
 	}
     }

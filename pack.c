@@ -32,9 +32,11 @@ update_mdest(THING *obj)
 {
     THING *mp;
 
-    for (mp = mlist; mp != NULL; mp = next(mp))
-        if (mp->t_dest == &obj->o_pos)
-     mp->t_dest = &hero;
+    for (mp = mlist; mp != NULL; mp = next(mp)) {
+	if (mp->t_dest == &obj->o_pos) {
+	    mp->t_dest = &hero;
+	}
+    }
 }
 
 /*
@@ -52,110 +54,97 @@ add_pack(THING *obj, int silent)
     int discarded = 0;
 
     from_floor = false;
-    if (obj == NULL)
-    {
-	if ((obj = find_obj(hero.y, hero.x)) == NULL)
+    if (obj == NULL) {
+	if ((obj = find_obj(hero.y, hero.x)) == NULL) {
 	    return;
+	}
 	from_floor = true;
     }
 
     /*
      * Check for and deal with scare monster scrolls
      */
-    if (obj->o_type == SCROLL && obj->o_which == S_SCARE)
-	if (obj->o_flags & ISFOUND)
-	{
+    if (obj->o_type == SCROLL && obj->o_which == S_SCARE) {
+	if (obj->o_flags & ISFOUND) {
 	    detach(lvl_obj, obj);
 	    mvaddch(hero.y, hero.x, floor_ch());
 	    chat(hero.y, hero.x) = (proom->r_flags & ISGONE) ? PASSAGE : FLOOR;
-            update_mdest(obj);
-            discarded = 1;
+	    update_mdest(obj);
+	    discarded = 1;
 	    discard(obj);
 	    msg("the scroll turns to dust as you pick it up");
 	    return;
 	}
+    }
 
-    if (pack == NULL)
-    {
+    if (pack == NULL) {
 	pack = obj;
 	obj->o_packch = pack_char();
 	inpack++;
-    }
-    else
-    {
+    } else {
 	lp = NULL;
-	for (op = pack; op != NULL; op = next(op))
-	{
-	    if (op->o_type != obj->o_type)
+	for (op = pack; op != NULL; op = next(op)) {
+	    if (op->o_type != obj->o_type) {
 		lp = op;
-	    else
-	    {
-		while (op->o_type == obj->o_type && op->o_which != obj->o_which)
-		{
+	    } else {
+		while (op->o_type == obj->o_type && op->o_which != obj->o_which) {
 		    lp = op;
-		    if (next(op) == NULL)
+		    if (next(op) == NULL) {
 			break;
-		    else
+		    } else {
 			op = next(op);
+		    }
 		}
-		if (op->o_type == obj->o_type && op->o_which == obj->o_which)
-		{
-		    if (ISMULT(op->o_type))
-		    {
-			if (!pack_room(from_floor, obj))
+		if (op->o_type == obj->o_type && op->o_which == obj->o_which) {
+		    if (ISMULT(op->o_type)) {
+			if (!pack_room(from_floor, obj)) {
 			    return;
+			}
 			op->o_count++;
-dump_it:
+		    dump_it:
 			update_mdest(obj);
 			discard(obj);
 			obj = op;
-                        discarded = 1;
+			discarded = 1;
 			lp = NULL;
 			goto out;
-		    }
-		    else if (obj->o_group)
-		    {
+		    } else if (obj->o_group) {
 			lp = op;
-			while (op->o_type == obj->o_type
-			    && op->o_which == obj->o_which
-			    && op->o_group != obj->o_group)
-			{
+			while (op->o_type == obj->o_type && op->o_which == obj->o_which && op->o_group != obj->o_group) {
 			    lp = op;
-			    if (next(op) == NULL)
+			    if (next(op) == NULL) {
 				break;
-			    else
+			    } else {
 				op = next(op);
+			    }
 			}
-			if (op->o_type == obj->o_type
-			    && op->o_which == obj->o_which
-			    && op->o_group == obj->o_group)
-			{
-				op->o_count += obj->o_count;
-				inpack--;
-				if (!pack_room(from_floor, obj))
-				    return;
-				goto dump_it;
+			if (op->o_type == obj->o_type && op->o_which == obj->o_which && op->o_group == obj->o_group) {
+			    op->o_count += obj->o_count;
+			    inpack--;
+			    if (!pack_room(from_floor, obj)) {
+				return;
+			    }
+			    goto dump_it;
 			}
-		    }
-		    else
+		    } else {
 			lp = op;
+		    }
 		}
-out:
+	    out:
 		break;
 	    }
 	}
 
-	if (lp != NULL)
-	{
-	    if (!pack_room(from_floor, obj))
+	if (lp != NULL) {
+	    if (!pack_room(from_floor, obj)) {
 		return;
-	    else
-	    {
+	    } else {
 		obj->o_packch = pack_char();
 		next(obj) = next(lp);
 		prev(obj) = lp;
-		if (next(lp) != NULL)
+		if (next(lp) != NULL) {
 		    prev(next(lp)) = obj;
+		}
 		next(lp) = obj;
 	    }
 	}
@@ -167,18 +156,20 @@ out:
      * If this was the object of something's desire, that monster will
      * get mad and run at the hero.
      */
-    if (!discarded)
-        update_mdest(obj);
+    if (!discarded) {
+	update_mdest(obj);
+    }
 
-    if (obj->o_type == AMULET)
+    if (obj->o_type == AMULET) {
 	amulet = true;
+    }
     /*
      * Notify the user
      */
-    if (!silent)
-    {
-	if (!terse)
+    if (!silent) {
+	if (!terse) {
 	    addmsg("you now have ");
+	}
 	msg("%s (%c)", inv_name(obj, !terse), obj->o_packch);
     }
 }
@@ -191,22 +182,23 @@ out:
 int
 pack_room(int from_floor, THING *obj)
 {
-    if (++inpack > MAXPACK)
-    {
-	if (!terse)
+    if (++inpack > MAXPACK) {
+	if (!terse) {
 	    addmsg("there's ");
+	}
 	addmsg("no room");
-	if (!terse)
+	if (!terse) {
 	    addmsg(" in your pack");
+	}
 	endmsg();
-	if (from_floor)
+	if (from_floor) {
 	    move_msg(obj);
+	}
 	inpack = MAXPACK;
 	return false;
     }
 
-    if (from_floor)
-    {
+    if (from_floor) {
 	detach(lvl_obj, obj);
 	mvaddch(hero.y, hero.x, floor_ch());
 	chat(hero.y, hero.x) = (proom->r_flags & ISGONE) ? PASSAGE : FLOOR;
@@ -226,23 +218,20 @@ leave_pack(THING *obj, int newobj, int all)
 
     inpack--;
     nobj = obj;
-    if (obj->o_count > 1 && !all)
-    {
+    if (obj->o_count > 1 && !all) {
 	last_pick = obj;
 	obj->o_count--;
-	if (obj->o_group)
+	if (obj->o_group) {
 	    inpack++;
-	if (newobj)
-	{
+	}
+	if (newobj) {
 	    nobj = new_thing_ptr();
 	    *nobj = *obj;
 	    next(nobj) = NULL;
 	    prev(nobj) = NULL;
 	    nobj->o_count = 1;
 	}
-    }
-    else
-    {
+    } else {
 	last_pick = NULL;
 	pack_used[obj->o_packch - 'a'] = false;
 	detach(pack, obj);
@@ -259,8 +248,9 @@ pack_char(void)
 {
     int *bp;
 
-    for (bp = pack_used; *bp; bp++)
+    for (bp = pack_used; *bp; bp++) {
 	continue;
+    }
     *bp = true;
     return ((int)(bp - pack_used) + 'a');
 }
@@ -273,15 +263,14 @@ pack_char(void)
 int
 inventory(const THING *list, int type)
 {
-    static char inv_temp[MAXSTR+1]; /* +1 for paranoia */
+    static char inv_temp[MAXSTR + 1]; /* +1 for paranoia */
 
     n_objs = 0;
-    for (; list != NULL; list = next(list))
-    {
-	if (type && type != list->o_type && !(type == CALLABLE &&
-	    list->o_type != FOOD && list->o_type != AMULET) &&
-	    !(type == R_OR_S && (list->o_type == RING || list->o_type == STICK)))
-		continue;
+    for (; list != NULL; list = next(list)) {
+	if (type && type != list->o_type && !(type == CALLABLE && list->o_type != FOOD && list->o_type != AMULET) &&
+	    !(type == R_OR_S && (list->o_type == RING || list->o_type == STICK))) {
+	    continue;
+	}
 	n_objs++;
 #ifdef MASTER
 	if (!list->o_packch) {
@@ -295,22 +284,19 @@ inventory(const THING *list, int type)
 	snprintf(inv_temp, MAXSTR, "%c) %%s", list->o_packch);
 #endif
 	msg_esc = true;
-	if (add_line(inv_temp, inv_name(list, false)) == ESCAPE)
-	{
+	if (add_line(inv_temp, inv_name(list, false)) == ESCAPE) {
 	    msg_esc = false;
 	    msg("");
 	    return true;
 	}
 	msg_esc = false;
     }
-    if (n_objs == 0)
-    {
-	if (terse)
-	    msg(type == 0 ? "empty handed" :
-			    "nothing appropriate");
-	else
-	    msg(type == 0 ? "you are empty handed" :
-			    "you don't have anything appropriate");
+    if (n_objs == 0) {
+	if (terse) {
+	    msg(type == 0 ? "empty handed" : "nothing appropriate");
+	} else {
+	    msg(type == 0 ? "you are empty handed" : "you don't have anything appropriate");
+	}
 	return false;
     }
     end_line();
@@ -327,50 +313,54 @@ pick_up(int ch)
 {
     THING *obj, *tmpl;
 
-    if (on(player, ISLEVIT))
+    if (on(player, ISLEVIT)) {
 	return;
+    }
 
     obj = find_obj(hero.y, hero.x);
-    if (move_on)
+    if (move_on) {
 	move_msg(obj);
-    else
-	switch (ch)
-	{
-	    case GOLD:
-		if (obj == NULL)
-		    return;
-		money(obj->o_goldval);
-		/*
-		 * fix the segfault in chase.c - the bug was actually in
-		 * pack.c in function pick_up.  monsters chasing gold were not being
-		 * adjusted to chase the hero if the hero picked up the gold.
-		 */
-		proom->r_goldval = 0;
-		for (tmpl = mlist; tmpl != NULL; tmpl = next(tmpl)) {
-		    if (tmpl->t_dest == &obj->o_pos) {
-			tmpl->t_dest = &hero;
-		    }
+    } else {
+	switch (ch) {
+	case GOLD:
+	    if (obj == NULL) {
+		return;
+	    }
+	    money(obj->o_goldval);
+	    /*
+	     * fix the segfault in chase.c - the bug was actually in
+	     * pack.c in function pick_up.  monsters chasing gold were not being
+	     * adjusted to chase the hero if the hero picked up the gold.
+	     */
+	    proom->r_goldval = 0;
+	    for (tmpl = mlist; tmpl != NULL; tmpl = next(tmpl)) {
+		if (tmpl->t_dest == &obj->o_pos) {
+		    tmpl->t_dest = &hero;
 		}
-		detach(lvl_obj, obj);
-		update_mdest(obj);
-		discard(obj);
-		proom->r_goldval = 0;
-		break;
-	    default:
+	    }
+	    detach(lvl_obj, obj);
+	    update_mdest(obj);
+	    discard(obj);
+	    proom->r_goldval = 0;
+	    break;
+	default:
 #ifdef MASTER
-		debug("Where did you pick a '%s' up???", unctrl(ch));
+	    if (wizard) {
+		msg("Where did you pick a '%s' up???", unctrl(ch));
+	    }
 #endif
-	    case ARMOR:
-	    case POTION:
-	    case FOOD:
-	    case WEAPON:
-	    case SCROLL:
-	    case AMULET:
-	    case RING:
-	    case STICK:
-		add_pack(NULL, false);
-		break;
+	case ARMOR:
+	case POTION:
+	case FOOD:
+	case WEAPON:
+	case SCROLL:
+	case AMULET:
+	case RING:
+	case STICK:
+	    add_pack(NULL, false);
+	    break;
 	}
+    }
 }
 
 /*
@@ -381,8 +371,9 @@ pick_up(int ch)
 void
 move_msg(const THING *obj)
 {
-    if (!terse)
+    if (!terse) {
 	addmsg("you ");
+    }
     msg("moved onto %s", inv_name(obj, true));
 }
 
@@ -397,25 +388,23 @@ picky_inven(void)
     THING *obj;
     int mch;
 
-    if (pack == NULL)
+    if (pack == NULL) {
 	msg("you aren't carrying anything");
-    else if (next(pack) == NULL)
+    } else if (next(pack) == NULL) {
 	msg("a) %s", inv_name(pack, false));
-    else
-    {
+    } else {
 	msg(terse ? "item: " : "which item do you wish to inventory: ");
 	mpos = 0;
-	if ((mch = readchar()) == ESCAPE)
-	{
+	if ((mch = readchar()) == ESCAPE) {
 	    msg("");
 	    return;
 	}
-	for (obj = pack; obj != NULL; obj = next(obj))
-	    if (mch == obj->o_packch)
-	    {
+	for (obj = pack; obj != NULL; obj = next(obj)) {
+	    if (mch == obj->o_packch) {
 		msg("%c) %s", mch, inv_name(obj, false));
 		return;
 	    }
+	}
 	msg("'%s' not in pack", unctrl(mch));
     }
 }
@@ -430,55 +419,53 @@ get_item(const char *purpose, int type)
     THING *obj;
     int ch;
 
-    if (pack == NULL)
+    if (pack == NULL) {
 	msg("you aren't carrying anything");
-    else if (again)
-	if (last_pick)
+    } else if (again) {
+	if (last_pick) {
 	    return last_pick;
-	else
+	} else {
 	    msg("you ran out");
-    else
-    {
-	for (;;)
-	{
-	    if (!terse)
+	}
+    } else {
+	for (;;) {
+	    if (!terse) {
 		addmsg("which object do you want to ");
+	    }
 	    addmsg(purpose);
-	    if (terse)
+	    if (terse) {
 		addmsg(" what");
+	    }
 	    msg("? (* for list): ");
 	    ch = readchar();
 	    mpos = 0;
 	    /*
 	     * Give the poor player a chance to abort the command
 	     */
-	    if (ch == ESCAPE)
-	    {
+	    if (ch == ESCAPE) {
 		reset_last();
 		after = false;
 		msg("");
 		return NULL;
 	    }
-	    n_objs = 1;		/* normal case: person types one char */
-	    if (ch == '*')
-	    {
+	    n_objs = 1; /* normal case: person types one char */
+	    if (ch == '*') {
 		mpos = 0;
-		if (inventory(pack, type) == 0)
-		{
+		if (inventory(pack, type) == 0) {
 		    after = false;
 		    return NULL;
 		}
 		continue;
 	    }
-	    for (obj = pack; obj != NULL; obj = next(obj))
-		if (obj->o_packch == ch)
+	    for (obj = pack; obj != NULL; obj = next(obj)) {
+		if (obj->o_packch == ch) {
 		    break;
-	    if (obj == NULL)
-	    {
-		msg("'%s' is not a valid item",unctrl(ch));
-		continue;
+		}
 	    }
-	    else {
+	    if (obj == NULL) {
+		msg("'%s' is not a valid item", unctrl(ch));
+		continue;
+	    } else {
 		msg("");
 		return obj;
 	    }
@@ -498,10 +485,10 @@ money(int value)
     purse += value;
     mvaddch(hero.y, hero.x, floor_ch());
     chat(hero.y, hero.x) = (proom->r_flags & ISGONE) ? PASSAGE : FLOOR;
-    if (value > 0)
-    {
-	if (!terse)
+    if (value > 0) {
+	if (!terse) {
 	    addmsg("you found ");
+	}
 	msg("%d gold pieces", value);
     }
 }
@@ -513,8 +500,9 @@ money(int value)
 int
 floor_ch(void)
 {
-    if (proom->r_flags & ISGONE)
+    if (proom->r_flags & ISGONE) {
 	return PASSAGE;
+    }
     return (show_floor() ? FLOOR : ' ');
 }
 
@@ -529,8 +517,9 @@ floor_at(void)
     int ch;
 
     ch = chat(hero.y, hero.x);
-    if (ch == FLOOR)
+    if (ch == FLOOR) {
 	ch = floor_ch();
+    }
     return ch;
 }
 

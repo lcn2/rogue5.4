@@ -10,33 +10,32 @@
  * See the file LICENSE for full copyright and licensing information.
  */
 
-# include	<stdio.h>
-# include	<sys/types.h>
-# include	<sys/stat.h>
-# include	<ctype.h>
-# include	<string.h>
-# include	<unistd.h>
-# include	<fcntl.h>
-# include	<time.h>
-# include	<stdbool.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <ctype.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <time.h>
+#include <stdbool.h>
 
-# include	"have_strlcat.h"
-# include	"have_strlcpy.h"
-# include	"strl.h"
-# include	"score.h"
+#include "have_strlcat.h"
+#include "have_strlcpy.h"
+#include "strl.h"
+#include "score.h"
 
-# define	MAXLINE		80
-# define	when		break;case
-# define	otherwise	break;default
+#define MAXLINE 80
 
 typedef struct {
-	char	*m_name;
+    char *m_name;
 } MONST;
 
-char	*s_vowelstr(char *str);
+char *s_vowelstr(char *str);
 
-static char	prbuf[MAXLINE+1];		/* buffer for sprintfs */
+static char prbuf[MAXLINE + 1]; /* buffer for sprintfs */
 
+// clang-format off
 static MONST	monsters[] = {
 	{ "aquator" }, { "bat" }, { "centaur" }, { "dragon" }, { "emu" },
 	{ "venus flytrap" }, { "griffin" }, { "hobgoblin" }, { "ice monster" },
@@ -45,7 +44,7 @@ static MONST	monsters[] = {
 	{ "snake" }, { "troll" }, { "ur-vile" }, { "vampire" }, { "wraith" },
 	{ "xeroc" }, { "yeti" }, { "zombie" }
 };
-
+// clang-format on
 
 /* duplicated external declarations - because including rogue.h brings in too much other stuff */
 
@@ -54,11 +53,11 @@ extern const char statlist[];
 
 /* external functions from scedit.c */
 
-extern void	md_sleep(int s);
-extern int	md_unlink(char *file);
-extern void	add_score(void);
-extern void	del_score(void);
-extern int	insert_score(SCORE *new);
+extern void md_sleep(int s);
+extern int md_unlink(char *file);
+extern void add_score(void);
+extern void del_score(void);
+extern int insert_score(SCORE *new);
 
 /*
  * s_encwrite:
@@ -75,15 +74,16 @@ s_encwrite(char *start, size_t size, FILE *outf)
     e2 = statlist;
     fb = 0;
 
-    while (size--)
-    {
+    while (size--) {
 	putc(*start++ ^ *e1 ^ *e2 ^ fb, outf);
 	temp = *e1++;
 	fb += temp * *e2++;
-	if (*e1 == '\0')
+	if (*e1 == '\0') {
 	    e1 = encstr;
-	if (*e2 == '\0')
+	}
+	if (*e2 == '\0') {
 	    e2 = statlist;
+	}
     }
 }
 
@@ -102,21 +102,23 @@ s_encread(char *start, size_t size, int inf)
 
     fb = 0;
 
-    if ((read_size = read(inf, start, size)) == 0 || read_size == -1)
+    if ((read_size = read(inf, start, size)) == 0 || read_size == -1) {
 	return;
+    }
 
     e1 = encstr;
     e2 = statlist;
 
-    while (size--)
-    {
+    while (size--) {
 	*start++ ^= *e1 ^ *e2 ^ fb;
 	temp = *e1++;
 	fb += temp * *e2++;
-	if (*e1 == '\0')
+	if (*e1 == '\0') {
 	    e1 = encstr;
-	if (*e2 == '\0')
+	}
+	if (*e2 == '\0') {
 	    e2 = statlist;
+	}
     }
 }
 
@@ -131,34 +133,38 @@ s_killname(int monst, int doart)
     int article;
 
     article = true;
-    switch (monst)
-    {
-	case 'a':
-	    sp = "arrow";
-	when 'b':
-	    sp = "bolt";
-	when 'd':
-	    sp = "dart";
-	when 's':
-	    sp = "starvation";
+    switch (monst) {
+    case 'a':
+	sp = "arrow";
+	break;
+    case 'b':
+	sp = "bolt";
+	break;
+    case 'd':
+	sp = "dart";
+	break;
+    case 's':
+	sp = "starvation";
+	article = false;
+	break;
+    case 'h':
+	sp = "hypothermia";
+	article = false;
+	break;
+    default:
+	if (isupper(monst)) {
+	    sp = monsters[monst - 'A'].m_name;
+	} else {
+	    sp = "God";
 	    article = false;
-	when 'h':
-	    sp = "hypothermia";
-	    article = false;
-	otherwise:
-	    if (isupper(monst))
-		sp = monsters[monst-'A'].m_name;
-	    else
-	    {
-		sp = "God";
-		article = false;
-	    }
+	}
     }
     memset(prbuf, 0, sizeof(prbuf));
-    if (doart && article)
+    if (doart && article) {
 	snprintf(prbuf, sizeof(prbuf), "a%s ", s_vowelstr(sp));
-    else
+    } else {
 	prbuf[0] = '\0';
+    }
     strcat(prbuf, sp);
     return prbuf;
 }
@@ -171,15 +177,19 @@ s_killname(int monst, int doart)
 char *
 s_vowelstr(char *str)
 {
-    switch (*str)
-    {
-	case 'a': case 'A':
-	case 'e': case 'E':
-	case 'i': case 'I':
-	case 'o': case 'O':
-	case 'u': case 'U':
-	    return "n";
-	default:
-	    return "";
+    switch (*str) {
+    case 'a':
+    case 'A':
+    case 'e':
+    case 'E':
+    case 'i':
+    case 'I':
+    case 'o':
+    case 'O':
+    case 'u':
+    case 'U':
+	return "n";
+    default:
+	return "";
     }
 }

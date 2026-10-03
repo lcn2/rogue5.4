@@ -23,19 +23,19 @@ wear(void)
     THING *obj;
     char *sp;
 
-    if ((obj = get_item("wear", ARMOR)) == NULL)
+    if ((obj = get_item("wear", ARMOR)) == NULL) {
 	return;
-    if (cur_armor != NULL)
-    {
+    }
+    if (cur_armor != NULL) {
 	addmsg("you are already wearing some");
-	if (!terse)
+	if (!terse) {
 	    addmsg(".  You'll have to take it off first");
+	}
 	endmsg();
 	after = false;
 	return;
     }
-    if (obj->o_type != ARMOR)
-    {
+    if (obj->o_type != ARMOR) {
 	msg("you can't wear that");
 	return;
     }
@@ -43,8 +43,9 @@ wear(void)
     obj->o_flags |= ISKNOW;
     sp = inv_name(obj, true);
     cur_armor = obj;
-    if (!terse)
+    if (!terse) {
 	addmsg("you are now ");
+    }
     msg("wearing %s", sp);
 }
 
@@ -57,22 +58,24 @@ take_off(void)
 {
     THING *obj;
 
-    if ((obj = cur_armor) == NULL)
-    {
+    if ((obj = cur_armor) == NULL) {
 	after = false;
-	if (terse)
-		msg("not wearing armor");
-	else
-		msg("you aren't wearing any armor");
+	if (terse) {
+	    msg("not wearing armor");
+	} else {
+	    msg("you aren't wearing any armor");
+	}
 	return;
     }
-    if (!dropcheck(cur_armor))
+    if (!dropcheck(cur_armor)) {
 	return;
+    }
     cur_armor = NULL;
-    if (terse)
+    if (terse) {
 	addmsg("was");
-    else
+    } else {
 	addmsg("you used to be");
+    }
     msg(" wearing %c) %s", obj->o_packch, inv_name(obj, true));
 }
 

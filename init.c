@@ -84,6 +84,7 @@ init_player(void)
  * potions and scrolls
  */
 
+// clang-format off
 const char *rainbow[] = {
     "amber",
     "aquamarine",
@@ -228,8 +229,9 @@ const char *metal[] = {
     "tungsten",
     "zinc",
 };
+// clang-format on
 
-#define NMETAL (sizeof metal / sizeof (char *))
+#define NMETAL (sizeof metal / sizeof(char *))
 
 int cNWOOD = NWOOD;
 int cNMETAL = NMETAL;
@@ -246,13 +248,13 @@ init_colors(void)
     int i, j;
     int used[NCOLORS];
 
-    for (i = 0; i < NCOLORS; i++)
+    for (i = 0; i < NCOLORS; i++) {
 	used[i] = false;
-    for (i = 0; i < MAXPOTIONS; i++)
-    {
-	do
+    }
+    for (i = 0; i < MAXPOTIONS; i++) {
+	do {
 	    j = rnd(NCOLORS);
-	until (!used[j]);
+	} while (used[j]);
 	used[j] = true;
 	p_colors[i] = rainbow[j];
     }
@@ -262,7 +264,7 @@ init_colors(void)
  * init_names:
  *	Generate the names of the various scrolls
  */
-#define MAXNAME	40	/* Max number of characters in a name */
+#define MAXNAME 40 /* Max number of characters in a name */
 
 void
 init_names(void)
@@ -272,27 +274,27 @@ init_names(void)
     char *cp;
     int i, nwords;
 
-    for (i = 0; i < MAXSCROLLS; i++)
-    {
+    for (i = 0; i < MAXSCROLLS; i++) {
 	cp = prbuf;
 	nwords = rnd(3) + 2;
-	while (nwords--)
-	{
+	while (nwords--) {
 	    nsyl = rnd(3) + 1;
-	    while (nsyl--)
-	    {
-		sp = sylls[rnd((sizeof sylls) / (sizeof (char *)))];
-		if (&cp[strlen(sp)] > &prbuf[MAXNAME])
-			break;
-		while (*sp)
+	    while (nsyl--) {
+		sp = sylls[rnd((sizeof sylls) / (sizeof(char *)))];
+		if (&cp[strlen(sp)] > &prbuf[MAXNAME]) {
+		    break;
+		}
+		while (*sp) {
 		    *cp++ = *sp++;
+		}
 	    }
 	    *cp++ = ' ';
 	}
 	*--cp = '\0';
-	s_names[i] = malloc(strlen(prbuf)+1);
-	if (s_names[i] != NULL)
-		strcpy(s_names[i], prbuf);
+	s_names[i] = malloc(strlen(prbuf) + 1);
+	if (s_names[i] != NULL) {
+	    strcpy(s_names[i], prbuf);
+	}
     }
 }
 
@@ -306,13 +308,13 @@ init_stones(void)
     int used[NSTONES];
     int i, j;
 
-    for (i = 0; i < NSTONES; i++)
+    for (i = 0; i < NSTONES; i++) {
 	used[i] = false;
-    for (i = 0; i < MAXRINGS; i++)
-    {
-	do
+    }
+    for (i = 0; i < MAXRINGS; i++) {
+	do {
 	    j = rnd(NSTONES);
-	until (!used[j]);
+	} while (used[j]);
 	used[j] = true;
 	r_stones[i] = stones[j].st_name;
 	ring_info[i].oi_worth += stones[j].st_value;
@@ -331,55 +333,52 @@ init_materials(void)
     int metused[NMETAL];
     int used[NWOOD];
 
-    for (i = 0; i < NWOOD; i++)
+    for (i = 0; i < NWOOD; i++) {
 	used[i] = false;
-    for (i = 0; i < NMETAL; i++)
+    }
+    for (i = 0; i < NMETAL; i++) {
 	metused[i] = false;
-    for (i = 0; i < MAXSTICKS; i++)
-    {
-	for (;;)
-	    if (rnd(2) == 0)
-	    {
+    }
+    for (i = 0; i < MAXSTICKS; i++) {
+	for (;;) {
+	    if (rnd(2) == 0) {
 		j = rnd(NMETAL);
-		if (!metused[j])
-		{
+		if (!metused[j]) {
 		    ws_type[i] = "wand";
 		    str = metal[j];
 		    metused[j] = true;
 		    break;
 		}
-	    }
-	    else
-	    {
+	    } else {
 		j = rnd(NWOOD);
-		if (!used[j])
-		{
+		if (!used[j]) {
 		    ws_type[i] = "staff";
 		    str = wood[j];
 		    used[j] = true;
 		    break;
 		}
 	    }
+	}
 	ws_made[i] = str;
     }
 }
 
 #ifdef MASTER
-# define	NT	NUMTHINGS, "things"
-# define	MP	MAXPOTIONS, "potions"
-# define	MS	MAXSCROLLS, "scrolls"
-# define	MR	MAXRINGS, "rings"
-# define	MWS	MAXSTICKS, "sticks"
-# define	MW	MAXWEAPONS, "weapons"
-# define	MA	MAXARMORS, "armor"
+#  define NT NUMTHINGS, "things"
+#  define MP MAXPOTIONS, "potions"
+#  define MS MAXSCROLLS, "scrolls"
+#  define MR MAXRINGS, "rings"
+#  define MWS MAXSTICKS, "sticks"
+#  define MW MAXWEAPONS, "weapons"
+#  define MA MAXARMORS, "armor"
 #else
-# define	NT	NUMTHINGS
-# define	MP	MAXPOTIONS
-# define	MS	MAXSCROLLS
-# define	MR	MAXRINGS
-# define	MWS	MAXSTICKS
-# define	MW	MAXWEAPONS
-# define	MA	MAXARMORS
+#  define NT NUMTHINGS
+#  define MP MAXPOTIONS
+#  define MS MAXSCROLLS
+#  define MR MAXRINGS
+#  define MWS MAXSTICKS
+#  define MW MAXWEAPONS
+#  define MA MAXARMORS
 #endif
 
 /*
@@ -389,18 +388,20 @@ init_materials(void)
 void
 sumprobs(struct obj_info *info, int bound
 #ifdef MASTER
-	, char *name
+	 ,
+	 char *name
 #endif
 )
 {
 #ifdef MASTER
-	struct obj_info *start = info;
+    struct obj_info *start = info;
 #endif
     struct obj_info *endp;
 
     endp = info + bound;
-    while (++info < endp)
+    while (++info < endp) {
 	info->oi_prob += (info - 1)->oi_prob;
+    }
 #ifdef MASTER
     badcheck(name, start, bound);
 #endif
@@ -432,15 +433,18 @@ badcheck(const char *name, const struct obj_info *info, int bound)
 {
     const struct obj_info *end;
 
-    if (info[bound - 1].oi_prob == 100)
+    if (info[bound - 1].oi_prob == 100) {
 	return;
+    }
     printf("Bad percentages for %s (bound = %d):\n", name, bound);
-    for (end = &info[bound]; info < end; info++)
+    for (end = &info[bound]; info < end; info++) {
 	printf("%3d%% %s\n", info->oi_prob, info->oi_name);
+    }
     printf("[hit RETURN to continue]");
     fflush(stdout);
-    while (getchar() != '\n')
+    while (getchar() != '\n') {
 	continue;
+    }
 }
 #endif
 

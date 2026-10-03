@@ -46,25 +46,21 @@ save_game(void)
      */
     mpos = 0;
 over:
-    if (file_name[0] != '\0')
-    {
-	for (;;)
-	{
+    if (file_name[0] != '\0') {
+	for (;;) {
 	    msg("save file (%s)? ", file_name);
 	    c = readchar();
 	    mpos = 0;
-	    if (c == ESCAPE)
-	    {
+	    if (c == ESCAPE) {
 		msg("");
 		return;
-	    }
-	    else if (c == 'n' || c == 'N' || c == 'y' || c == 'Y')
+	    } else if (c == 'n' || c == 'N' || c == 'y' || c == 'Y') {
 		break;
-	    else
+	    } else {
 		msg("please answer Y or N");
+	    }
 	}
-	if (c == 'y' || c == 'Y')
-	{
+	if (c == 'y' || c == 'Y') {
 	    addstr("Yes\n");
 	    refresh();
 	    strcpy(buf, file_name);
@@ -72,43 +68,42 @@ over:
 	}
     }
 
-    do
-    {
+    do {
 	mpos = 0;
 	msg("file name: ");
 	buf[0] = '\0';
-	if (get_str(buf, stdscr) == QUIT)
-	{
-quit_it:
+	if (get_str(buf, stdscr) == QUIT) {
+	quit_it:
 	    msg("");
 	    return;
 	}
 	mpos = 0;
-gotfile:
+    gotfile:
 	/*
 	 * test to see if the file exists
 	 */
-	if (stat(buf, &sbuf) >= 0)
-	{
-	    for (;;)
-	    {
+	if (stat(buf, &sbuf) >= 0) {
+	    for (;;) {
 		msg("File exists.  Do you wish to overwrite it?");
 		mpos = 0;
-		if ((c = readchar()) == ESCAPE)
+		if ((c = readchar()) == ESCAPE) {
 		    goto quit_it;
-		if (c == 'y' || c == 'Y')
+		}
+		if (c == 'y' || c == 'Y') {
 		    break;
-		else if (c == 'n' || c == 'N')
+		} else if (c == 'n' || c == 'N') {
 		    goto over;
-		else
+		} else {
 		    msg("Please answer Y or N");
+		}
 	    }
 	    msg("file name: %s", buf);
 	    md_unlink(file_name);
 	}
 	strcpy(file_name, buf);
-	if ((savef = fopen(file_name, "w")) == NULL)
+	if ((savef = fopen(file_name, "w")) == NULL) {
 	    msg(strerror(errno));
+	}
     } while (savef == NULL);
     msg("");
     save_file(savef);
@@ -154,20 +149,19 @@ auto_save(int sig)
 	 * report death by signal
 	 */
 	death('z'); /* rogue death by signal */
-	/*NOTREACHED*/
+		    /*NOTREACHED*/
 
-    /*
-     * case: rogue w/o -S
-     */
+	/*
+	 * case: rogue w/o -S
+	 */
     } else {
 
 	/*
 	 * save game so that it might be restored later
 	 */
 	if (file_name[0] != '\0' && ((savef = fopen(file_name, "w")) != NULL ||
-	    (md_unlink_open_file(file_name, savef) >= 0 && (savef = fopen(file_name, "w")) != NULL)))
-	{
-		save_file(savef);
+				     (md_unlink_open_file(file_name, savef) >= 0 && (savef = fopen(file_name, "w")) != NULL))) {
+	    save_file(savef);
 	}
     }
 
@@ -182,13 +176,13 @@ auto_save(int sig)
 void
 save_file(FILE *savef)
 {
-    char buf[80+1]; /* +1 for paranoia */
+    char buf[80 + 1]; /* +1 for paranoia */
 
     md_chmod(file_name, 0400);
-    encwrite(version, strlen(version)+1, savef);
+    encwrite(version, strlen(version) + 1, savef);
     snprintf(buf, 80, "%d x %d\n", LINES, COLS);
     buf[80] = '\0'; /* paranoia */
-    encwrite(buf,80,savef);
+    encwrite(buf, 80, savef);
     rs_save_file(savef);
     fflush(savef);
     fclose(savef);
@@ -218,7 +212,7 @@ restore(const char *file)
      */
     if (strlen(file) >= MAXSTR) {
 	printf("Sorry, the rogue save file path is too long: %s\r\n", file);
-        printf("Unable to restore: %s\r\n", file);
+	printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	return false;
     }
@@ -240,7 +234,7 @@ restore(const char *file)
      */
     memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
     {
-	int fd;	    /* temporary open rogue save file descriptor */
+	int fd; /* temporary open rogue save file descriptor */
 
 	/*
 	 * attempt to open rogue save file
@@ -279,8 +273,7 @@ restore(const char *file)
 	 * reopen the verified rogue save file
 	 */
 	inf = fdopen(fd, "r");
-	if (inf == NULL)
-	{
+	if (inf == NULL) {
 	    printf("Sorry, failed to open for reading rogue save file: %s - %s\r\n", file, strerror(errno));
 	    printf("Unable to restore: %s\r\n", file);
 	    fflush(stdout);
@@ -295,11 +288,10 @@ restore(const char *file)
      */
     memset(buf, 0, sizeof(buf)); /* paranoia */
     encread(buf, strlen(version) + 1, inf);
-    if (strcmp(buf, version) != 0)
-    {
+    if (strcmp(buf, version) != 0) {
 	printf("Sorry, saved game is out of date.\r\n");
 	printf("Expected version: %s found version: %s\r\n", version, buf);
-        printf("Unable to restore: %s\r\n", file);
+	printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -314,7 +306,7 @@ restore(const char *file)
     ret = sscanf(buf, "%d x %d\n", &lines, &cols);
     if (ret != 2) {
 	printf("Sorry, failed to parse the lines and columns from: %s\r\n", file);
-        printf("Unable to restore: %s\r\n", file);
+	printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -346,10 +338,10 @@ restore(const char *file)
      * NOTE: we do not close the file so that we will have a hold of the inode for as long as possible
      */
     memset(&sbuf2, 0, sizeof(sbuf2)); /* paranoia */
-    errno = 0; /* paranoia */
+    errno = 0;			      /* paranoia */
     if (fstat(fileno(inf), &sbuf2) < 0) {
 	endwin_and_ncurses_cleanup();
-        printf("Unable to restore: %s\r\n", file);
+	printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -364,11 +356,10 @@ restore(const char *file)
 #ifdef MASTER
 	!wizard &&
 #endif
-        md_unlink_open_file(file, inf) < 0)
-    {
+	md_unlink_open_file(file, inf) < 0) {
 	endwin_and_ncurses_cleanup();
 	printf("Sorry, cannot remove rogue save file after restoring: %s\r\n", strerror(errno));
-        printf("Unable to restore: %s\r\n", file);
+	printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);
 	md_tstpresume();
@@ -381,8 +372,7 @@ restore(const char *file)
 #ifdef MASTER
     if (!wizard)
 #endif
-	if (sbuf2.st_nlink != 1)
-	{
+	if (sbuf2.st_nlink != 1) {
 	    endwin_and_ncurses_cleanup();
 	    printf("Sorry, cannot restore from a rogue save file that linked\r\n");
 	    printf("Link count: %ld != 1\r\n", (long int)sbuf2.st_nlink);
@@ -401,8 +391,7 @@ restore(const char *file)
     /*
      * catch the attempt to save a dead player
      */
-    if (pstats.s_hpt <= 0)
-    {
+    if (pstats.s_hpt <= 0) {
 	endwin_and_ncurses_cleanup();
 	printf("\"He's dead, Jim\"\n");
 	printf("Attempt to restore a game of a dead rogue player, HP: %d\r\n", pstats.s_hpt);
@@ -461,7 +450,7 @@ encclearerr(void)
 
     encerrno = 0;
 
-    return(n);
+    return (n);
 }
 
 /*
@@ -485,24 +474,24 @@ encwrite(const char *start, size_t size, FILE *outf)
 	return 0;
     }
 
-    while(size)
-    {
-	if (putc(*start++ ^ *e1 ^ *e2 ^ fb, outf) == EOF)
-	{
+    while (size) {
+	if (putc(*start++ ^ *e1 ^ *e2 ^ fb, outf) == EOF) {
 	    encerrno = errno;
-            break;
+	    break;
 	}
 
 	temp = *e1++;
-	fb = fb + ((char) (temp * *e2++));
-	if (*e1 == '\0')
+	fb = fb + ((char)(temp * *e2++));
+	if (*e1 == '\0') {
 	    e1 = encstr;
-	if (*e2 == '\0')
+	}
+	if (*e2 == '\0') {
 	    e2 = statlist;
+	}
 	size--;
     }
 
-    return(o_size - size);
+    return (o_size - size);
 }
 
 /*
@@ -524,26 +513,28 @@ encread(char *start, size_t size, FILE *inf)
 	return 0;
     }
 
-    items = read_size = fread(start,1,size,inf);
+    items = read_size = fread(start, 1, size, inf);
 
     e1 = encstr;
     e2 = statlist;
 
-    while (read_size--)
-    {
+    while (read_size--) {
 	*start++ ^= *e1 ^ *e2 ^ fb;
 	temp = *e1++;
 	fb = fb + (char)(temp * *e2++);
-	if (*e1 == '\0')
+	if (*e1 == '\0') {
 	    e1 = encstr;
-	if (*e2 == '\0')
+	}
+	if (*e2 == '\0') {
 	    e2 = statlist;
+	}
     }
 
-    if (items != size)
+    if (items != size) {
 	encerrno = errno;
+    }
 
-    return(items);
+    return (items);
 }
 
 /*
@@ -553,22 +544,22 @@ encread(char *start, size_t size, FILE *inf)
 void
 rd_score(SCORE *top_score)
 {
-    char scoreline[MAXSCORELINE+1]; /* +1 for paranoia */
-    SCORE score;		    /* scanned score */
-    bool failed = false;	    /* true ==> score file scan failed */
-    int ret;			    /* scanf return value */
+    char scoreline[MAXSCORELINE + 1]; /* +1 for paranoia */
+    SCORE score;		      /* scanned score */
+    bool failed = false;	      /* true ==> score file scan failed */
+    int ret;			      /* scanf return value */
     int i;
 
-    if (scoreboard == NULL)
+    if (scoreboard == NULL) {
 	return;
+    }
 
     rewind(scoreboard);
 
-    for(i = 0; i < numscores; i++)
-    {
+    for (i = 0; i < numscores; i++) {
 	memset(scoreline, 0, sizeof(scoreline)); /* paranoia */
-	memset(&score, 0, sizeof(score)); /* paranoia */
-        encread(scoreline, MAXSCORELINE, scoreboard);
+	memset(&score, 0, sizeof(score));	 /* paranoia */
+	encread(scoreline, MAXSCORELINE, scoreboard);
 	/*
 	 * NOTE: A number of C compilers do not correctly process a sscanf(3) line such as:
 	 *
@@ -577,11 +568,8 @@ rd_score(SCORE *top_score)
 	 * So we must HARD code the maximum width in the sscanf(3) call below.
 	 * The value MAX_USERNAME in score.h MUST match the %32s format string width.
 	 */
-        ret = sscanf(scoreline, "%32s %u %d %u %d %d %jx \n",
-            score.sc_name,
-	    &score.sc_uid, &score.sc_score,
-            &score.sc_flags, &score.sc_monster,
-            &score.sc_level, &score.sc_time);
+	ret = sscanf(scoreline, "%32s %u %d %u %d %d %jx \n", score.sc_name, &score.sc_uid, &score.sc_score, &score.sc_flags,
+		     &score.sc_monster, &score.sc_level, &score.sc_time);
 	if (ret == 7) {
 	    top_score[i] = score;
 	} else {
@@ -605,25 +593,24 @@ rd_score(SCORE *top_score)
 void
 wr_score(SCORE *top_score)
 {
-    char scoreline[MAXSCORELINE+1]; /* +1 for paranoia */
+    char scoreline[MAXSCORELINE + 1]; /* +1 for paranoia */
     int i;
 
-    if (scoreboard == NULL)
+    if (scoreboard == NULL) {
 	return;
-    if (top_score == NULL)
+    }
+    if (top_score == NULL) {
 	return;
+    }
 
     rewind(scoreboard);
 
-    for(i = 0; i < numscores; i++)
-    {
-	  memset(scoreline, 0, sizeof(scoreline)); /* paranoia */
-          snprintf(scoreline, MAXSCORELINE, "%*s %u %d %u %d %d %jx \n",
-	      MAX_USERNAME, top_score[i].sc_name,
-              top_score[i].sc_uid, top_score[i].sc_score,
-              top_score[i].sc_flags, top_score[i].sc_monster,
-              top_score[i].sc_level, top_score[i].sc_time);
-          encwrite(scoreline, MAXSCORELINE, scoreboard);
+    for (i = 0; i < numscores; i++) {
+	memset(scoreline, 0, sizeof(scoreline)); /* paranoia */
+	snprintf(scoreline, MAXSCORELINE, "%*s %u %d %u %d %d %jx \n", MAX_USERNAME, top_score[i].sc_name, top_score[i].sc_uid,
+		 top_score[i].sc_score, top_score[i].sc_flags, top_score[i].sc_monster, top_score[i].sc_level,
+		 top_score[i].sc_time);
+	encwrite(scoreline, MAXSCORELINE, scoreboard);
     }
     fflush(scoreboard);
 

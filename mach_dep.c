@@ -16,7 +16,7 @@
  *	LOCKPATH	Path of the lock file
  *	SCOREPATH	Path of the score file
  *	ALLSCORES	Score file is top ten scores, not top ten
- *			players.  This is only useful when only a few
+ *			players.  This is only useful only when a few
  *			people will be playing; otherwise the score file
  *			gets hogged by just a few people.
  *	NUMSCORES	Number of scores in the score file (default 10).
@@ -50,9 +50,10 @@
 #define NOOP(x) (x += 0)
 
 #ifdef CHECKTIME
-static int num_checks = 0;		/* times we've gone over in checkout() */
+static int num_checks = 0; /* times we've gone over in checkout() */
 
-#define MAX_MSGS 3
+#  define MAX_MSGS 3
+// clang-format off
 char *msgs[MAX_MSGS + 1] = { /* +1 for paranoia */
     "The load is too high to be playing.  Please leave in %0.1f minutes",
     "Please save your game.  You have %0.1f minutes",
@@ -60,11 +61,12 @@ char *msgs[MAX_MSGS + 1] = { /* +1 for paranoia */
     "You took too longer than %0.1f minutes", /* not printed */
     NULL /* paranoia */
 };
+// clang-format on
 
 #endif /* CHECKTIME */
 
-static int lock_fd = -1;		/* rogue lock file descriptor, <0 ==> rogue lock file not open */
-static bool locked = false;		/* true ==> locked, false ==> not locked */
+static int lock_fd = -1;    /* rogue lock file descriptor, <0 ==> rogue lock file not open */
+static bool locked = false; /* true ==> locked, false ==> not locked */
 
 /*
  * init_check:
@@ -75,11 +77,9 @@ void
 init_check(void)
 {
 #if defined(MAXLOAD)
-    if (too_much())
-    {
+    if (too_much()) {
 	printf("Sorry, %s, but the system is too loaded now.\n", whoami);
-	printf("Try again later.  Meanwhile, why not enjoy a%s %s?\n",
-	    vowelstr(fruit), fruit);
+	printf("Try again later.  Meanwhile, why not enjoy a%s %s?\n", vowelstr(fruit), fruit);
 	fflush(stdout);
 	if (author()) {
 	    printf("However, since you're a good guy, it's up to you\n");
@@ -99,7 +99,7 @@ init_check(void)
 void
 open_score(void)
 {
-    struct stat buf;	    /* score file status */
+    struct stat buf; /* score file status */
     numscores = NUMSCORES;
 
 #ifdef ALLSCORES
@@ -108,14 +108,14 @@ open_score(void)
     allscore = false;
 #endif /* ALLSCORES */
 
-     /*
-      * We drop setgid privileges after opening the score file, so subsequent
-      * open()'s will fail.  Just reuse the earlier file handle.
-      */
+    /*
+     * We drop setgid privileges after opening the score file, so subsequent
+     * open()'s will fail.  Just reuse the earlier file handle.
+     */
 
     if (scoreboard != NULL) {
-        rewind(scoreboard);
-        return;
+	rewind(scoreboard);
+	return;
     }
 
     scoreboard = fopen(score_path, "r+");
@@ -136,9 +136,9 @@ open_score(void)
 	    fclose(scoreboard);
 	    scoreboard = NULL;
 
-	/*
-	 * if score file is empty
-	 */
+	    /*
+	     * if score file is empty
+	     */
 	} else if (buf.st_size == 0) {
 	    /* close score file, and let the next section initialize the score file */
 	    fclose(scoreboard);
@@ -150,7 +150,7 @@ open_score(void)
      * initialize the score file if the score file is not open
      */
     if (scoreboard == NULL) {
-	SCORE top_scores[NUMSCORES+1];        /* scores from the score file, +1 for paranoia */
+	SCORE top_scores[NUMSCORES + 1]; /* scores from the score file, +1 for paranoia */
 #if defined(SIGHUP)
 	void (*sig_hup)(int);
 #endif
@@ -186,17 +186,17 @@ open_score(void)
 	 */
 	scoreboard = fopen(score_path, "w+");
 	if (scoreboard == NULL) {
-	     printf("Could not open %s for writing: %s\n", score_path, strerror(errno));
-	     fflush(stdout);
-	     exit(31);
+	    printf("Could not open %s for writing: %s\n", score_path, strerror(errno));
+	    fflush(stdout);
+	    exit(31);
 	}
-        md_chmod(score_path, 0664);
+	md_chmod(score_path, 0664);
 
 	/*
 	 * initialize all scores
 	 */
 	memset(top_scores, 0, sizeof(top_scores)); /* paranoia */
-	for (i=0; i < NUMSCORES; ++i) {
+	for (i = 0; i < NUMSCORES; ++i) {
 	    init_score_value(&top_scores[i]);
 	}
 
@@ -233,7 +233,7 @@ getltchars(void)
 {
     got_ltc = true;
     orig_dsusp = md_dsuspchar();
-    md_setdsuspchar( md_suspchar() );
+    md_setdsuspchar(md_suspchar());
 }
 
 /*
@@ -251,14 +251,14 @@ setup(void)
 #endif
 
 #ifdef CHECKTIME
-    md_start_checkout_timer(CHECKTIME*60);
+    md_start_checkout_timer(CHECKTIME * 60);
     num_checks = 0;
 #endif
 
-    raw();				/* Raw mode */
-    noecho();				/* Echo off */
-    keypad(stdscr,1);
-    getltchars();			/* get the local tty chars */
+    raw();    /* Raw mode */
+    noecho(); /* Echo off */
+    keypad(stdscr, 1);
+    getltchars(); /* get the local tty chars */
 }
 
 /*
@@ -269,7 +269,7 @@ void
 resetltchars(void)
 {
     if (got_ltc) {
-        md_setdsuspchar(orig_dsusp);
+	md_setdsuspchar(orig_dsusp);
     }
 }
 
@@ -281,7 +281,7 @@ void
 playltchars(void)
 {
     if (got_ltc) {
-        md_setdsuspchar( md_suspchar() );
+	md_setdsuspchar(md_suspchar());
     }
 }
 
@@ -306,17 +306,18 @@ start_score(void)
 int
 too_much(void)
 {
-#ifdef MAXLOAD
+#  ifdef MAXLOAD
     double avec[3];
-#else
+#  else
     int cnt;
-#endif
+#  endif
 
-#ifdef MAXLOAD
+#  ifdef MAXLOAD
     md_loadav(avec);
-    if (avec[1] > (MAXLOAD / 10.0))
+    if (avec[1] > (MAXLOAD / 10.0)) {
 	return true;
-#endif
+    }
+#  endif
     return false;
 }
 
@@ -327,16 +328,16 @@ too_much(void)
 int
 author(void)
 {
-#ifdef MASTER
-    if (wizard)
+#  ifdef MASTER
+    if (wizard) {
 	return true;
-#endif
-    switch (md_getuid())
-    {
-	case -1:
-	    return true;
-	default:
-	    return false;
+    }
+#  endif
+    switch (md_getuid()) {
+    case -1:
+	return true;
+    default:
+	return false;
     }
 }
 #endif
@@ -352,22 +353,17 @@ checkout(int sig)
 {
     int checktime;
 
-    if (too_much())
-    {
-	if (author())
-	{
+    if (too_much()) {
+	if (author()) {
 	    num_checks = 1;
 	    chmsg("The load is rather high, O exalted one");
-	}
-	else if (num_checks++ >= MAX_MSGS)
+	} else if (num_checks++ >= MAX_MSGS) {
 	    fatal("Sorry.  You took too long.  You are dead\n");
+	}
 	checktime = (CHECKTIME * 60) / num_checks;
-	chmsg(msgs[num_checks - 1], ((double) checktime / 60.0));
-    }
-    else
-    {
-	if (num_checks)
-	{
+	chmsg(msgs[num_checks - 1], ((double)checktime / 60.0));
+    } else {
+	if (num_checks) {
 	    num_checks = 0;
 	    chmsg("The load has dropped back down.  You have a reprieve");
 	}
@@ -386,10 +382,9 @@ checkout(int sig)
 
 chmsg(char *fmt, int arg)
 {
-    if (!in_shell)
+    if (!in_shell) {
 	msg(fmt, arg);
-    else
-    {
+    } else {
 	printf(fmt, arg);
 	putchar('\n');
 	fflush(stdout);
@@ -404,7 +399,7 @@ chmsg(char *fmt, int arg)
 int
 lock_sc(void)
 {
-    int ret;	    /* flock return */
+    int ret; /* flock return */
 
     /*
      * do nothing if already locked
@@ -424,7 +419,7 @@ lock_sc(void)
      * open lock file if not already open
      */
     if (lock_fd < 0) {
-	lock_fd = open(lock_path, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH); /* more 0644 */
+	lock_fd = open(lock_path, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH); /* more 0644 */
 	if (lock_fd < 0) {
 	    /* failed to open and/or create the lock file */
 	    printf("ERROR: failed to open lock file: %s\n", lock_path);
@@ -459,12 +454,12 @@ lock_sc(void)
 void
 unlock_sc(void)
 {
-    int ret;	    /* flock return */
+    int ret; /* flock return */
 
     /*
      * do nothing if not locked
      */
-    if (! locked) {
+    if (!locked) {
 	return;
     }
 
@@ -517,7 +512,7 @@ form_home(void)
      * do nothing if home string is non-empty
      */
     if (home[0]) {
-        return;
+	return;
     }
 
     /*
@@ -541,9 +536,8 @@ form_lock_path(void)
      * do nothing if lock path string is non-empty
      */
     if (lock_path[0]) {
-        return;
+	return;
     }
-
 
     /*
      * determine lock file path
@@ -571,7 +565,7 @@ form_save_path(void)
      * do nothing if save path string is non-empty
      */
     if (file_name[0]) {
-        return;
+	return;
     }
 
     /*
@@ -600,7 +594,7 @@ form_score_path(void)
      * do nothing if score path string is non-empty
      */
     if (score_path[0]) {
-        return;
+	return;
     }
 
     /*

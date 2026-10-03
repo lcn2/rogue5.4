@@ -16,10 +16,10 @@
 #include "extern.h"
 #include "rogue.h"
 
-typedef struct spot {		/* position matrix for maze positions */
-	int	nexits;
-	coord	exits[4];
-	int	used;
+typedef struct spot { /* position matrix for maze positions */
+    int nexits;
+    coord exits[4];
+    int used;
 } SPOT;
 
 #define GOLDGRP 1
@@ -37,7 +37,7 @@ do_rooms(void)
     THING *tp;
     int left_out;
     coord top;
-    coord bsze;				/* maximum room size */
+    coord bsze; /* maximum room size */
     coord mp;
 
     bsze.x = NUMCOLS / 3;
@@ -45,8 +45,7 @@ do_rooms(void)
     /*
      * Clear things for a new level
      */
-    for (rp = rooms; rp < &rooms[MAXROOMS]; rp++)
-    {
+    for (rp = rooms; rp < &rooms[MAXROOMS]; rp++) {
 	rp->r_goldval = 0;
 	rp->r_nexits = 0;
 	rp->r_flags = 0;
@@ -55,79 +54,75 @@ do_rooms(void)
      * Put the gone rooms, if any, on the level
      */
     left_out = rnd(4);
-    for (i = 0; i < left_out; i++)
+    for (i = 0; i < left_out; i++) {
 	rooms[rnd_room()].r_flags |= ISGONE;
+    }
     /*
      * dig and populate all the rooms on the level
      */
-    for (i = 0, rp = rooms; i < MAXROOMS; rp++, i++)
-    {
+    for (i = 0, rp = rooms; i < MAXROOMS; rp++, i++) {
 	/*
 	 * Find upper left corner of box that this room goes in
 	 */
 	top.x = (i % 3) * bsze.x + 1;
 	top.y = (i / 3) * bsze.y;
-	if (rp->r_flags & ISGONE)
-	{
+	if (rp->r_flags & ISGONE) {
 	    /*
 	     * Place a gone room.  Make certain that there is a blank line
 	     * for passage drawing.
 	     */
-	    do
-	    {
+	    do {
 		rp->r_pos.x = top.x + rnd(bsze.x - 2) + 1;
 		rp->r_pos.y = top.y + rnd(bsze.y - 2) + 1;
 		rp->r_max.x = -NUMCOLS;
 		rp->r_max.y = -NUMLINES;
-	    } until (rp->r_pos.y > 0 && rp->r_pos.y < NUMLINES-1);
+	    } while (rp->r_pos.y <= 0 || rp->r_pos.y >= NUMLINES - 1);
 	    continue;
 	}
 	/*
 	 * set room type
 	 */
-	if (rnd(10) < level - 1)
-	{
-	    rp->r_flags |= ISDARK;		/* dark room */
-	    if (rnd(15) == 0)
-		rp->r_flags = ISMAZE;		/* maze room */
+	if (rnd(10) < level - 1) {
+	    rp->r_flags |= ISDARK; /* dark room */
+	    if (rnd(15) == 0) {
+		rp->r_flags = ISMAZE; /* maze room */
+	    }
 	}
 	/*
 	 * Find a place and size for a random room
 	 */
-	if (rp->r_flags & ISMAZE)
-	{
+	if (rp->r_flags & ISMAZE) {
 	    rp->r_max.x = bsze.x - 1;
 	    rp->r_max.y = bsze.y - 1;
-	    if ((rp->r_pos.x = top.x) == 1)
+	    if ((rp->r_pos.x = top.x) == 1) {
 		rp->r_pos.x = 0;
-	    if ((rp->r_pos.y = top.y) == 0)
-	    {
+	    }
+	    if ((rp->r_pos.y = top.y) == 0) {
 		rp->r_pos.y++;
 		rp->r_max.y--;
 	    }
-	}
-	else
-	    do
-	    {
+	} else {
+	    do {
 		rp->r_max.x = rnd(bsze.x - 4) + 4;
 		rp->r_max.y = rnd(bsze.y - 4) + 4;
 		rp->r_pos.x = top.x + rnd(bsze.x - rp->r_max.x);
 		rp->r_pos.y = top.y + rnd(bsze.y - rp->r_max.y);
 
 		/* check to see if room is too close to above maze */
-		if ((i > 3) && (rooms[i-3].r_flags&ISMAZE) &&
-		    ((rooms[i-3].r_pos.y+rooms[i-3].r_max.y) == (rp->r_pos.y-1))) {
-		  rp->r_pos.y++;
-		  if (rp->r_max.y > 4)
-		    rp->r_max.y--;
+		if ((i > 3) && (rooms[i - 3].r_flags & ISMAZE) &&
+		    ((rooms[i - 3].r_pos.y + rooms[i - 3].r_max.y) == (rp->r_pos.y - 1))) {
+		    rp->r_pos.y++;
+		    if (rp->r_max.y > 4) {
+			rp->r_max.y--;
+		    }
 		}
-	    } until (rp->r_pos.y != 0);
+	    } while (rp->r_pos.y == 0);
+	}
 	draw_room(rp);
 	/*
 	 * Put the gold in
 	 */
-	if (rnd(2) == 0 && (!amulet || level >= max_level))
-	{
+	if (rnd(2) == 0 && (!amulet || level >= max_level)) {
 	    THING *gold;
 
 	    gold = new_thing_ptr();
@@ -143,8 +138,7 @@ do_rooms(void)
 	/*
 	 * Put the monster in
 	 */
-	if (rnd(100) < (rp->r_goldval > 0 ? 80 : 25))
-	{
+	if (rnd(100) < (rp->r_goldval > 0 ? 80 : 25)) {
 	    tp = new_thing_ptr();
 	    find_floor(rp, &mp, false, true);
 	    new_monster(tp, randmonster(false), &mp);
@@ -164,21 +158,22 @@ draw_room(const struct room *rp)
 {
     int y, x;
 
-    if (rp->r_flags & ISMAZE)
+    if (rp->r_flags & ISMAZE) {
 	do_maze(rp);
-    else
-    {
-	vert(rp, rp->r_pos.x);				/* Draw left side */
-	vert(rp, rp->r_pos.x + rp->r_max.x - 1);	/* Draw right side */
-	horiz(rp, rp->r_pos.y);				/* Draw top */
-	horiz(rp, rp->r_pos.y + rp->r_max.y - 1);	/* Draw bottom */
+    } else {
+	vert(rp, rp->r_pos.x);			  /* Draw left side */
+	vert(rp, rp->r_pos.x + rp->r_max.x - 1);  /* Draw right side */
+	horiz(rp, rp->r_pos.y);			  /* Draw top */
+	horiz(rp, rp->r_pos.y + rp->r_max.y - 1); /* Draw bottom */
 
 	/*
 	 * Put the floor down
 	 */
-	for (y = rp->r_pos.y + 1; y < rp->r_pos.y + rp->r_max.y - 1; y++)
-	    for (x = rp->r_pos.x + 1; x < rp->r_pos.x + rp->r_max.x - 1; x++)
+	for (y = rp->r_pos.y + 1; y < rp->r_pos.y + rp->r_max.y - 1; y++) {
+	    for (x = rp->r_pos.x + 1; x < rp->r_pos.x + rp->r_max.x - 1; x++) {
 		chat(y, x) = FLOOR;
+	    }
+	}
     }
 }
 
@@ -192,8 +187,9 @@ vert(const struct room *rp, int startx)
 {
     int y;
 
-    for (y = rp->r_pos.y + 1; y <= rp->r_max.y + rp->r_pos.y - 1; y++)
+    for (y = rp->r_pos.y + 1; y <= rp->r_max.y + rp->r_pos.y - 1; y++) {
 	chat(y, startx) = '|';
+    }
 }
 
 /*
@@ -206,8 +202,9 @@ horiz(const struct room *rp, int starty)
 {
     int x;
 
-    for (x = rp->r_pos.x; x <= rp->r_pos.x + rp->r_max.x - 1; x++)
+    for (x = rp->r_pos.x; x <= rp->r_pos.x + rp->r_max.x - 1; x++) {
 	chat(starty, x) = '-';
+    }
 }
 
 /*
@@ -215,10 +212,9 @@ horiz(const struct room *rp, int starty)
  *	Dig a maze
  */
 
-static int	Maxy, Maxx, Starty, Startx;
+static int Maxy, Maxx, Starty, Startx;
 
-static SPOT	maze[NUMLINES/3+1][NUMCOLS/3+1];
-
+static SPOT maze[NUMLINES / 3 + 1][NUMCOLS / 3 + 1];
 
 void
 do_maze(const struct room *rp)
@@ -227,8 +223,7 @@ do_maze(const struct room *rp)
     int starty, startx;
     coord pos;
 
-    for (sp = &maze[0][0]; sp <= &maze[NUMLINES / 3][NUMCOLS / 3]; sp++)
-    {
+    for (sp = &maze[0][0]; sp <= &maze[NUMLINES / 3][NUMCOLS / 3]; sp++) {
 	sp->used = false;
 	sp->nexits = 0;
     }
@@ -256,46 +251,43 @@ dig(int y, int x)
     coord *cp;
     int cnt, newy, newx, nexty = 0, nextx = 0;
     coord pos;
-    coord del[4] = {
-	{2, 0}, {-2, 0}, {0, 2}, {0, -2}
-    };
+    coord del[4] = {{2, 0}, {-2, 0}, {0, 2}, {0, -2}};
 
-    for (;;)
-    {
+    for (;;) {
 	cnt = 0;
-	for (cp = del; cp <= &del[3]; cp++)
-	{
+	for (cp = del; cp <= &del[3]; cp++) {
 	    newy = y + cp->y;
 	    newx = x + cp->x;
-	    if (newy < 0 || newy > Maxy || newx < 0 || newx > Maxx)
+	    if (newy < 0 || newy > Maxy || newx < 0 || newx > Maxx) {
 		continue;
-	    if (flat(newy + Starty, newx + Startx) & F_PASS)
+	    }
+	    if (flat(newy + Starty, newx + Startx) & F_PASS) {
 		continue;
-	    if (rnd(++cnt) == 0)
-	    {
+	    }
+	    if (rnd(++cnt) == 0) {
 		nexty = newy;
 		nextx = newx;
 	    }
 	}
-	if (cnt == 0)
+	if (cnt == 0) {
 	    return;
+	}
 	accnt_maze(y, x, nexty, nextx);
 	accnt_maze(nexty, nextx, y, x);
-	if (nexty == y)
-	{
+	if (nexty == y) {
 	    pos.y = y + Starty;
-	    if (nextx - x < 0)
+	    if (nextx - x < 0) {
 		pos.x = nextx + Startx + 1;
-	    else
+	    } else {
 		pos.x = nextx + Startx - 1;
-	}
-	else
-	{
+	    }
+	} else {
 	    pos.x = x + Startx;
-	    if (nexty - y < 0)
+	    if (nexty - y < 0) {
 		pos.y = nexty + Starty + 1;
-	    else
+	    } else {
 		pos.y = nexty + Starty - 1;
+	    }
 	}
 	putpass(&pos);
 	pos.y = nexty + Starty;
@@ -317,9 +309,11 @@ accnt_maze(int y, int x, int ny, int nx)
     coord *cp;
 
     sp = &maze[y][x];
-    for (cp = sp->exits; cp < &sp->exits[sp->nexits]; cp++)
-	if (cp->y == ny && cp->x == nx)
+    for (cp = sp->exits; cp < &sp->exits[sp->nexits]; cp++) {
+	if (cp->y == ny && cp->x == nx) {
 	    return;
+	}
+    }
     cp->y = ny;
     cp->x = nx;
 }
@@ -351,27 +345,27 @@ find_floor(const struct room *rp, coord *cp, int limit, int monst)
 
     pickroom = (rp == NULL);
 
-    if (!pickroom)
+    if (!pickroom) {
 	compchar = ((rp->r_flags & ISMAZE) ? PASSAGE : FLOOR);
+    }
     cnt = limit;
-    for (;;)
-    {
-	if (limit && cnt-- == 0)
+    for (;;) {
+	if (limit && cnt-- == 0) {
 	    return false;
-	if (pickroom)
-	{
+	}
+	if (pickroom) {
 	    rp = &rooms[rnd_room()];
 	    compchar = ((rp->r_flags & ISMAZE) ? PASSAGE : FLOOR);
 	}
 	rnd_pos(rp, cp);
 	pp = INDEX(cp->y, cp->x);
-	if (monst)
-	{
-	    if (pp->p_monst == NULL && step_ok(pp->p_ch))
+	if (monst) {
+	    if (pp->p_monst == NULL && step_ok(pp->p_ch)) {
 		return true;
-	}
-	else if (pp->p_ch == compchar)
+	    }
+	} else if (pp->p_ch == compchar) {
 	    return true;
+	}
     }
 }
 
@@ -390,36 +384,35 @@ enter_room(const coord *cp)
 
     rp = proom = roomin(cp);
     door_open(rp);
-    if (!(rp->r_flags & ISDARK) && !on(player, ISBLIND))
-	for (y = rp->r_pos.y; y < rp->r_max.y + rp->r_pos.y; y++)
-	{
+    if (!(rp->r_flags & ISDARK) && !on(player, ISBLIND)) {
+	for (y = rp->r_pos.y; y < rp->r_max.y + rp->r_pos.y; y++) {
 	    move(y, rp->r_pos.x);
-	    for (x = rp->r_pos.x; x < rp->r_max.x + rp->r_pos.x; x++)
-	    {
+	    for (x = rp->r_pos.x; x < rp->r_max.x + rp->r_pos.x; x++) {
 		tp = moat(y, x);
 		ch = chat(y, x);
-		if (tp == NULL)
-		    if (CCHAR(inch()) != ch)
+		if (tp == NULL) {
+		    if (CCHAR(inch()) != ch) {
 			addch(ch);
-		    else
+		    } else {
 			move(y, x + 1);
-		else
-		{
+		    }
+		} else {
 		    tp->t_oldch = ch;
-		    if (!see_monst(tp))
-			if (on(player, SEEMONST))
-			{
+		    if (!see_monst(tp)) {
+			if (on(player, SEEMONST)) {
 			    standout();
 			    addch(tp->t_disguise);
 			    standend();
-			}
-			else
+			} else {
 			    addch(ch);
-		    else
+			}
+		    } else {
 			addch(tp->t_disguise);
+		    }
 		}
 	    }
 	}
+    }
 }
 
 /*
@@ -438,45 +431,45 @@ leave_room(const coord *cp)
 
     rp = proom;
 
-    if (rp->r_flags & ISMAZE)
+    if (rp->r_flags & ISMAZE) {
 	return;
+    }
 
-    if (rp->r_flags & ISGONE)
+    if (rp->r_flags & ISGONE) {
 	floor = PASSAGE;
-    else if (!(rp->r_flags & ISDARK) || on(player, ISBLIND))
+    } else if (!(rp->r_flags & ISDARK) || on(player, ISBLIND)) {
 	floor = FLOOR;
-    else
+    } else {
 	floor = ' ';
+    }
 
     proom = &passages[flat(cp->y, cp->x) & F_PNUM];
-    for (y = rp->r_pos.y; y < rp->r_max.y + rp->r_pos.y; y++)
-	for (x = rp->r_pos.x; x < rp->r_max.x + rp->r_pos.x; x++)
-	{
+    for (y = rp->r_pos.y; y < rp->r_max.y + rp->r_pos.y; y++) {
+	for (x = rp->r_pos.x; x < rp->r_max.x + rp->r_pos.x; x++) {
 	    move(y, x);
-	    switch ( ch = CCHAR(inch()) )
-	    {
-		case FLOOR:
-		    if (floor == ' ' && ch != ' ')
-			addch(' ');
-		    break;
-		default:
-		    /*
-		     * to check for monster, we have to strip out
-		     * standout bit
-		     */
-		    if (isupper(toascii(ch)))
-		    {
-			if (on(player, SEEMONST))
-			{
-			    standout();
-			    addch(ch);
-			    standend();
-			    break;
-			}
-                        pp = INDEX(y,x);
-			addch(pp->p_ch == DOOR ? DOOR : floor);
+	    switch (ch = CCHAR(inch())) {
+	    case FLOOR:
+		if (floor == ' ' && ch != ' ') {
+		    addch(' ');
+		}
+		break;
+	    default:
+		/*
+		 * to check for monster, we have to strip out
+		 * standout bit
+		 */
+		if (isupper(toascii(ch))) {
+		    if (on(player, SEEMONST)) {
+			standout();
+			addch(ch);
+			standend();
+			break;
 		    }
+		    pp = INDEX(y, x);
+		    addch(pp->p_ch == DOOR ? DOOR : floor);
+		}
 	    }
 	}
+    }
     door_open(rp);
 }

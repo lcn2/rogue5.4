@@ -60,7 +60,7 @@
 #  if defined(STRL_TEST)
 size_t
 test_strlcpy(char *dst, const char *src, size_t dstsize)
-#  else  /* STRL_TEST */
+#  else	 /* STRL_TEST */
 size_t
 strlcpy(char *dst, const char *src, size_t dstsize)
 #  endif /* STRL_TEST */
@@ -71,11 +71,11 @@ strlcpy(char *dst, const char *src, size_t dstsize)
      * firewall
      */
     if (dst == NULL || src == NULL || dstsize <= 0) {
-        /* nothing can be copied */
+	/* nothing can be copied */
 #  if defined(STRL_TEST)
-        printf("in %s: return 0\n", __FUNCTION__);
+	printf("in %s: return 0\n", __FUNCTION__);
 #  endif /* STRL_TEST */
-        return 0;
+	return 0;
     }
 
     /*
@@ -87,16 +87,16 @@ strlcpy(char *dst, const char *src, size_t dstsize)
      * perform the size limited copy and NUL terminate
      */
     if (srclen + 1 > dstsize) {
-        memcpy(dst, src, dstsize - 1);
-        dst[dstsize - 1] = '\0';
+	memcpy(dst, src, dstsize - 1);
+	dst[dstsize - 1] = '\0';
 #  if defined(STRL_TEST)
-        printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, dstsize - 1);
+	printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, dstsize - 1);
 #  endif /* STRL_TEST */
     } else {
-        memcpy(dst, src, srclen);
-        dst[srclen] = '\0';
+	memcpy(dst, src, srclen);
+	dst[srclen] = '\0';
 #  if defined(STRL_TEST)
-        printf("in %s: else memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, srclen);
+	printf("in %s: else memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, srclen);
 #  endif /* STRL_TEST */
     }
 
@@ -137,7 +137,7 @@ strlcpy(char *dst, const char *src, size_t dstsize)
 #  if defined(STRL_TEST)
 size_t
 test_strlcat(char *dst, const char *src, size_t dstsize)
-#  else  /* STRL_TEST */
+#  else	 /* STRL_TEST */
 size_t
 strlcat(char *dst, const char *src, size_t dstsize)
 #  endif /* STRL_TEST */
@@ -150,11 +150,11 @@ strlcat(char *dst, const char *src, size_t dstsize)
      * firewall
      */
     if (dst == NULL || src == NULL || dstsize <= 0) {
-        /* nothing can be concatenated */
+	/* nothing can be concatenated */
 #  if defined(STRL_TEST)
-        printf("in %s: return 0\n", __FUNCTION__);
+	printf("in %s: return 0\n", __FUNCTION__);
 #  endif /* STRL_TEST */
-        return 0;
+	return 0;
     }
 
     /*
@@ -167,12 +167,12 @@ strlcat(char *dst, const char *src, size_t dstsize)
     printf("in %s: dstlen = %zu srclen = %zu\n", __FUNCTION__, dstlen, srclen);
 #  endif /* STRL_TEST */
     if (dstsize <= dstlen + 1) {
-        /* dst is already full */
+	/* dst is already full */
 #  if defined(STRL_TEST)
-        printf("in %s: dstsize: %zu <= dstlen+1: %zu\n", __FUNCTION__, dstsize, dstlen + 1);
-        printf("in %s: already full return %zu\n", __FUNCTION__, srclen + dstlen);
+	printf("in %s: dstsize: %zu <= dstlen+1: %zu\n", __FUNCTION__, dstsize, dstlen + 1);
+	printf("in %s: already full return %zu\n", __FUNCTION__, srclen + dstlen);
 #  endif /* STRL_TEST */
-        return srclen + dstlen;
+	return srclen + dstlen;
     }
 
     /*
@@ -188,16 +188,16 @@ strlcat(char *dst, const char *src, size_t dstsize)
     printf("in %s: catlen = %zu\n", __FUNCTION__, catlen);
 #  endif /* STRL_TEST */
     if (catlen > srclen + 1) {
-        memcpy(dst, src, srclen);
-        dst[srclen] = '\0';
+	memcpy(dst, src, srclen);
+	dst[srclen] = '\0';
 #  if defined(STRL_TEST)
-        printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, srclen);
+	printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, srclen);
 #  endif /* STRL_TEST */
     } else {
-        memcpy(dst, src, catlen);
-        dst[catlen] = '\0';
+	memcpy(dst, src, catlen);
+	dst[catlen] = '\0';
 #  if defined(STRL_TEST)
-        printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, catlen);
+	printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, catlen);
 #  endif /* STRL_TEST */
     }
 
@@ -222,7 +222,7 @@ int
 main(int argc, char **argv)
 {
     char dst[sizeof(src)]; /* test destination string */
-    size_t ret;            /* strlcpy() or strlcat() return */
+    size_t ret;		   /* strlcpy() or strlcat() return */
 
     /*
      * normal copy

@@ -17,70 +17,75 @@
 #include "config.h"
 #include "rogue.h"
 
-int  after;				/* True if we want after daemons */
-int  again;				/* Repeating the last command */
-int  noscore = false;			/* Was a wizard sometime */
-int  seenstairs;			/* Have seen the stairs (for lsd) */
-int  amulet = false;			/* He found the amulet */
-int  door_stop = false;			/* Stop running when we pass a door */
-int  fight_flush = false;		/* True if toilet input */
-int  firstmove = false;			/* First move after setting door_stop */
-int  got_ltc = false;			/* We have gotten the local tty chars */
-int  has_hit = false;			/* Has a "hit" message pending in msg */
-int  in_shell = false;			/* True if executing a shell */
-int  inv_describe = true;		/* Say which way items are being used */
-int  jump = false;			/* Show running as series of jumps */
-int  kamikaze = false;			/* to_death really to DEATH */
-int  lower_msg = false;			/* Messages should start w/lower case */
-int  move_on = false;			/* Next move shouldn't pick up items */
-int  msg_esc = false;			/* Check for ESC from msg's --More-- */
-int  passgo = false;			/* Follow passages */
-int  playing = true;			/* True until he quits */
-int  q_comm = false;			/* Are we executing a 'Q' command? */
-int  running = false;			/* True if player is running */
-int  save_msg = true;			/* Remember last msg */
-int  see_floor = true;			/* Show the lamp illuminated floor */
-int  stat_msg = false;			/* Should status() print as a msg() */
-int  terse = false;				/* True if we should be short */
-int  to_death = false;			/* Fighting is to the death! */
-int  tombstone = true;			/* Print out tombstone at end */
+int after;		 /* True if we want after daemons */
+int again;		 /* Repeating the last command */
+int noscore = false;	 /* Was a wizard sometime */
+int seenstairs;		 /* Have seen the stairs (for lsd) */
+int amulet = false;	 /* He found the amulet */
+int door_stop = false;	 /* Stop running when we pass a door */
+int fight_flush = false; /* True if toilet input */
+int firstmove = false;	 /* First move after setting door_stop */
+int got_ltc = false;	 /* We have gotten the local tty chars */
+int has_hit = false;	 /* Has a "hit" message pending in msg */
+int in_shell = false;	 /* True if executing a shell */
+int inv_describe = true; /* Say which way items are being used */
+int jump = false;	 /* Show running as series of jumps */
+int kamikaze = false;	 /* to_death really to DEATH */
+int lower_msg = false;	 /* Messages should start w/lower case */
+int move_on = false;	 /* Next move shouldn't pick up items */
+int msg_esc = false;	 /* Check for ESC from msg's --More-- */
+int passgo = false;	 /* Follow passages */
+int playing = true;	 /* True until he quits */
+int q_comm = false;	 /* Are we executing a 'Q' command? */
+int running = false;	 /* True if player is running */
+int save_msg = true;	 /* Remember last msg */
+int see_floor = true;	 /* Show the lamp illuminated floor */
+int stat_msg = false;	 /* Should status() print as a msg() */
+int terse = false;	 /* True if we should be short */
+int to_death = false;	 /* Fighting is to the death! */
+int tombstone = true;	 /* Print out tombstone at end */
 #ifdef MASTER
-int  wizard = false;			/* True if allows wizard commands */
+int wizard = false; /* True if allows wizard commands */
 #endif
+// clang-format off
 int  pack_used[MAXPACK + 1] = {		/* Is the character used in the pack? +1 for paranoia */
     false, false, false, false, false, false, false, false, false,
     false, false, false, false, false, false, false, false, false,
     false, false, false, false, false, false, false, false,
     false, /* paranoia */
 };
+// clang-format on
 
-int  dir_ch;				/* Direction from last get_dir() call */
-char home[MAXSTR + 1] = {'\0'};		/* User's home directory plus a trailing /, +1 for paranoia */
-char file_name[MAXSTR + 1] = {'\0'};	/* rogue save file path, +1 for paranoia */
-char lock_path[MAXSTR + 1] = {'\0'};	/* rogue lock file path, +1 for paranoia */
-char score_path[MAXSTR + 1] = {'\0'};	/* rogue score file path, +1 for paranoia */
-int  signal_quit = false;		/* True if terminating signal will quit the game, False will save game state */
-char huh[MAXSTR+1];			/* The last message printed, +1 for paranoia */
-const char *p_colors[MAXPOTIONS + 1];	/* Colors of the potions, +1 for paranoia */
-char prbuf[PFBUF_LEN + 1] = {'\0'};	/* buffer for snprintfs, +1 for paranoia */
-const char *r_stones[MAXRINGS + 1];	/* Stone settings of the rings, +1 for paranoia */
-int  runch;				/* Direction player is running */
-char *s_names[MAXSCROLLS + 1];		/* Names of the scrolls, +1 for paranoia */
-int  take;				/* Thing she is taking */
-const char *ws_made[MAXSTICKS];		/* What sticks are made of */
-char *ws_type[MAXSTICKS];		/* Is it a wand or a staff */
-int  orig_dsusp;			/* Original dsusp char */
-char fruit[MAXSTR+1] =			/* Favorite fruit, +1 for paranoia */
-		{ 's', 'l', 'i', 'm', 'e', '-', 'm', 'o', 'l', 'd', '\0' };
+int dir_ch;			      /* Direction from last get_dir() call */
+char home[MAXSTR + 1] = {'\0'};	      /* User's home directory plus a trailing /, +1 for paranoia */
+char file_name[MAXSTR + 1] = {'\0'};  /* rogue save file path, +1 for paranoia */
+char lock_path[MAXSTR + 1] = {'\0'};  /* rogue lock file path, +1 for paranoia */
+char score_path[MAXSTR + 1] = {'\0'}; /* rogue score file path, +1 for paranoia */
+int signal_quit = false;	      /* True if terminating signal will quit the game, False will save game state */
+char huh[MAXSTR + 1];		      /* The last message printed, +1 for paranoia */
+const char *p_colors[MAXPOTIONS + 1]; /* Colors of the potions, +1 for paranoia */
+char prbuf[PFBUF_LEN + 1] = {'\0'};   /* buffer for snprintfs, +1 for paranoia */
+const char *r_stones[MAXRINGS + 1];   /* Stone settings of the rings, +1 for paranoia */
+int runch;			      /* Direction player is running */
+char *s_names[MAXSCROLLS + 1];	      /* Names of the scrolls, +1 for paranoia */
+int take;			      /* Thing she is taking */
+const char *ws_made[MAXSTICKS];	      /* What sticks are made of */
+char *ws_type[MAXSTICKS];	      /* Is it a wand or a staff */
+int orig_dsusp;			      /* Original dsusp char */
+char fruit[MAXSTR + 1] =	      /* Favorite fruit, +1 for paranoia */
+    {'s', 'l', 'i', 'm', 'e', '-', 'm', 'o', 'l', 'd', '\0'};
+// clang-format off
 const char *inv_t_name[] = {
 	"Overwrite",
 	"Slow",
 	"Clear"
 };
-int  l_last_comm = '\0';		/* Last last_comm */
-int  l_last_dir = '\0';			/* Last last_dir */
-int  last_comm = '\0';			/* Last command typed */
-int  last_dir = '\0';			/* Last direction given */
+// clang-format on
+int l_last_comm = '\0'; /* Last last_comm */
+int l_last_dir = '\0';	/* Last last_dir */
+int last_comm = '\0';	/* Last command typed */
+int last_dir = '\0';	/* Last direction given */
+// clang-format off
 const char *tr_name[] = {			/* Names of the traps */
 	"a trapdoor",
 	"an arrow trap",
@@ -91,18 +96,19 @@ const char *tr_name[] = {			/* Names of the traps */
 	"a rust trap",
         "a mysterious trap"
 };
+// clang-format on
 
-
-int n_objs;				/* # items listed in inventory() call */
-int ntraps;				/* Number of traps on this level */
-int hungry_state = 0;			/* How hungry is he */
-int inpack = 0;				/* Number of things in pack */
-int inv_type = 0;			/* Type of inventory to use */
-int level = 1;				/* What level she is on */
-int max_hit;				/* Max damage done to her in to_death */
-int max_level;				/* Deepest player has gone */
-int mpos = 0;				/* Where cursor is on top line */
-int no_food = 0;			/* Number of levels without food */
+int n_objs;	      /* # items listed in inventory() call */
+int ntraps;	      /* Number of traps on this level */
+int hungry_state = 0; /* How hungry is he */
+int inpack = 0;	      /* Number of things in pack */
+int inv_type = 0;     /* Type of inventory to use */
+int level = 1;	      /* What level she is on */
+int max_hit;	      /* Max damage done to her in to_death */
+int max_level;	      /* Deepest player has gone */
+int mpos = 0;	      /* Where cursor is on top line */
+int no_food = 0;      /* Number of levels without food */
+// clang-format off
 const int a_class[MAXARMORS] = {		/* Armor class for each armor type */
 	8,	/* LEATHER */
 	7,	/* RING_MAIL */
@@ -113,21 +119,23 @@ const int a_class[MAXARMORS] = {		/* Armor class for each armor type */
 	4,	/* BANDED_MAIL */
 	3,	/* PLATE_MAIL */
 };
+// clang-format on
 
-int count = 0;				/* Number of times to repeat command */
-FILE *scoreboard = NULL;		/* File descriptor for score file */
-int food_left;				/* Amount of food in hero's stomach */
-int lastscore = -1;			/* Score before this turn */
-int no_command = 0;			/* Number of turns asleep */
-int no_move = 0;			/* Number of turns held in place */
-int purse = 0;				/* How much gold he has */
-int quiet = 0;				/* Number of quiet turns */
-int vf_hit = 0;				/* Number of time flytrap has hit */
+int count = 0;		 /* Number of times to repeat command */
+FILE *scoreboard = NULL; /* File descriptor for score file */
+int food_left;		 /* Amount of food in hero's stomach */
+int lastscore = -1;	 /* Score before this turn */
+int no_command = 0;	 /* Number of turns asleep */
+int no_move = 0;	 /* Number of turns held in place */
+int purse = 0;		 /* How much gold he has */
+int quiet = 0;		 /* Number of quiet turns */
+int vf_hit = 0;		 /* Number of time flytrap has hit */
 
-unsigned int dnum;				/* Dungeon number */
+unsigned int dnum; /* Dungeon number */
 #if defined(NON_BSD_RN_GENERATOR)
-unsigned int seed;				/* Random number seed */
+unsigned int seed; /* Random number seed */
 #endif
+// clang-format off
 const int e_levels[] = {
         10L,
 	20L,
@@ -151,31 +159,33 @@ const int e_levels[] = {
    8000000L,
 	 0L
 };
+// clang-format on
 
-coord delta;				/* Change indicated to get_dir() */
-coord oldpos;				/* Position before last look() call */
-coord stairs;				/* Location of staircase */
+coord delta;  /* Change indicated to get_dir() */
+coord oldpos; /* Position before last look() call */
+coord stairs; /* Location of staircase */
 
-PLACE places[(MAXLINES*MAXCOLS) + 1];		/* level map, +1 for paranoia */
+PLACE places[(MAXLINES * MAXCOLS) + 1]; /* level map, +1 for paranoia */
 
-THING *cur_armor;			/* What he is wearing */
-THING *cur_ring[2];			/* Which rings are being worn */
-THING *cur_weapon;			/* Which weapon he is weilding */
-THING *l_last_pick = NULL;		/* Last last_pick */
-THING *last_pick = NULL;		/* Last object picked in get_item() */
-THING *lvl_obj = NULL;			/* List of objects on this level */
-THING *mlist = NULL;			/* List of monsters on the level */
-THING player;				/* His stats */
-					/* restart of game */
+THING *cur_armor;	   /* What he is wearing */
+THING *cur_ring[2];	   /* Which rings are being worn */
+THING *cur_weapon;	   /* Which weapon he is weilding */
+THING *l_last_pick = NULL; /* Last last_pick */
+THING *last_pick = NULL;   /* Last object picked in get_item() */
+THING *lvl_obj = NULL;	   /* List of objects on this level */
+THING *mlist = NULL;	   /* List of monsters on the level */
+THING player;		   /* His stats */
+			   /* restart of game */
 
-WINDOW *hw = NULL;			/* used as a scratch window */
+WINDOW *hw = NULL; /* used as a scratch window */
 
-#define INIT_STATS { 16, 0, 1, 10, 12, "1x4", 12 }
+#define INIT_STATS {16, 0, 1, 10, 12, "1x4", 12}
 
-struct stats max_stats = INIT_STATS;	/* The maximum for the player */
+struct stats max_stats = INIT_STATS; /* The maximum for the player */
 
-struct room *oldrp;			/* Roomin(&oldpos) */
-struct room rooms[MAXROOMS + 1];	/* One for each room -- A level, +1 for paranoia */
+struct room *oldrp;		 /* Roomin(&oldpos) */
+struct room rooms[MAXROOMS + 1]; /* One for each room -- A level, +1 for paranoia */
+// clang-format off
 struct room passages[MAXPASS + 1] =	/* One for each passage, +1 for paranoia */
 {
     { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} },
@@ -193,6 +203,7 @@ struct room passages[MAXPASS + 1] =	/* One for each passage, +1 for paranoia */
     { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} },
     { {0, 0}, {0, 0}, {0, 0}, 0, ISGONE|ISDARK, 0, {{0,0}} } /* paranoia */
 };
+
 
 #define ___ 1
 #define XX 10
@@ -408,17 +419,20 @@ const struct h_list helpstr[] = {
     {'v',	"	print version, release, dungeon number",true},
     {0,		NULL }
 };
+// clang-format on
 int numscores = NUMSCORES;
 char *Numname;
 int allscore;
 int between;
 
-#define _X_ { EMPTY }
+#define _X_ {EMPTY}
 
+// clang-format off
 struct delayed_action d_list[MAXDAEMONS+1] = {
     _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_,
     _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_, _X_,
     _X_
 };
+// clang-format on
 
 int group = 2;

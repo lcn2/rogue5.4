@@ -55,7 +55,7 @@ fatal(const char *s)
 int
 rnd(int range)
 {
-    return range == 0 ? 0 : abs((int) RN) % range;
+    return range == 0 ? 0 : abs((int)RN) % range;
 }
 
 /*
@@ -67,8 +67,9 @@ roll(int number, int sides)
 {
     int dtotal = 0;
 
-    while (number--)
-	dtotal += rnd(sides)+1;
+    while (number--) {
+	dtotal += rnd(sides) + 1;
+    }
     return dtotal;
 }
 
@@ -90,10 +91,10 @@ tstp(int ignored)
      */
     getyx(curscr, oy, ox);
     mvcur(0, COLS - 1, LINES - 1, 0);
-    (void) endwin();
+    (void)endwin();
     resetltchars();
     fflush(stdout);
-    md_tstpsignal();	/* will send a SIGSTOP signal to ourselves */
+    md_tstpsignal(); /* will send a SIGSTOP signal to ourselves */
 
     /*
      * start back up again
@@ -101,7 +102,7 @@ tstp(int ignored)
     md_tstpresume();
     raw();
     noecho();
-    keypad(stdscr,1);
+    keypad(stdscr, 1);
     playltchars();
     clearok(curscr, true);
     wrefresh(curscr);
@@ -126,27 +127,28 @@ playit(void)
      * set up defaults for slow terminals
      */
 
-    if (baudrate() <= 1200)
-    {
+    if (baudrate() <= 1200) {
 	terse = true;
 	jump = true;
 	see_floor = false;
     }
 
-    if (md_hasclreol())
+    if (md_hasclreol()) {
 	inv_type = INV_CLEAR;
+    }
 
     /*
      * parse environment declaration of options
      */
-    if ((opts = getenv("ROGUEOPTS")) != NULL)
+    if ((opts = getenv("ROGUEOPTS")) != NULL) {
 	parse_opts(opts);
-
+    }
 
     oldpos = hero;
     oldrp = roomin(&hero);
-    while (playing)
-	command();			/* Command execution */
+    while (playing) {
+	command(); /* Command execution */
+    }
     endit(0);
 }
 
@@ -178,13 +180,13 @@ quit(int sig)
     /*
      * Reset the signal in case we got here via an interrupt
      */
-    if (!q_comm)
+    if (!q_comm) {
 	mpos = 0;
+    }
     getyx(curscr, oy, ox);
     msg("really quit?");
     ch = readchar();
-    if (ch == 'y' || ch == 'Y')
-    {
+    if (ch == 'y' || ch == 'Y') {
 	/*
 	 * temporarily disable SIGHUP, SIGINT, SIGQUIT, and SIGTERM
 	 */
@@ -223,9 +225,7 @@ quit(int sig)
 	signal(SIGTERM, sig_term);
 #endif
 	my_exit(0);
-    }
-    else
-    {
+    } else {
 	move(0, 0);
 	clrtoeol();
 	status();
@@ -250,7 +250,7 @@ leave(int sig)
 
     NOOP(sig);
 
-    setbuf(stdout, buf);	/* throw away pending output */
+    setbuf(stdout, buf); /* throw away pending output */
 
     my_exit(0);
 }
@@ -266,9 +266,9 @@ shell(void)
     /*
      * Set the terminal back to original mode
      */
-    move(LINES-1, 0);
+    move(LINES - 1, 0);
     refresh();
-    (void) endwin();
+    (void)endwin();
     resetltchars();
     putchar('\n');
     in_shell = true;
@@ -281,7 +281,7 @@ shell(void)
 
     noecho();
     raw();
-    keypad(stdscr,1);
+    keypad(stdscr, 1);
     playltchars();
     in_shell = false;
     clearok(stdscr, true);

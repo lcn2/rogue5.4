@@ -25,28 +25,29 @@
 #include "score.h"
 #include "rogue.h"
 
-#define	EQSTR(a, b, c)	(strncmp(a, b, c) == 0)
+#define EQSTR(a, b, c) (strncmp(a, b, c) == 0)
 
-#define	NUM_OPTS	(sizeof optlist / sizeof (OPTION))
+#define NUM_OPTS (sizeof optlist / sizeof(OPTION))
 
 /*
  * description of an option and what to do with it
  */
 struct optstruct {
-    char	*o_name;	/* option name */
-    char	*o_prompt;	/* prompt for interactive entry */
-    void	*o_opt;		/* pointer to thing to set */
-				/* function to print value */
-    void	(*o_putfunc)(void *opt);
-				/* function to get value interactively */
-    int		(*o_getfunc)(void *opt, WINDOW *win);
+    char *o_name;   /* option name */
+    char *o_prompt; /* prompt for interactive entry */
+    void *o_opt;    /* pointer to thing to set */
+    /* function to print value */
+    void (*o_putfunc)(void *opt);
+    /* function to get value interactively */
+    int (*o_getfunc)(void *opt, WINDOW *win);
 };
 
-typedef struct optstruct	OPTION;
+typedef struct optstruct OPTION;
 
-void	pr_optname(const OPTION *op);
+void pr_optname(const OPTION *op);
 
-static const OPTION	optlist[] = {
+// clang-format off
+static const OPTION optlist[] = {
     {"terse",	 "Terse output",
 		 &terse,	put_bool,	get_bool	},
     {"flush",	 "Flush typeahead during battle",
@@ -72,6 +73,7 @@ static const OPTION	optlist[] = {
     {"lock",	 "Lock file",
 		 lock_path,	put_str,	get_str		}
 };
+// clang-format on
 
 /*
  * option:
@@ -82,14 +84,13 @@ void
 option(void)
 {
     const OPTION *op;
-    int		retval;
+    int retval;
 
     wclear(hw);
     /*
      * Display current values of options
      */
-    for (op = optlist; op <= &optlist[NUM_OPTS-1]; op++)
-    {
+    for (op = optlist; op <= &optlist[NUM_OPTS - 1]; op++) {
 	pr_optname(op);
 	(*op->o_putfunc)(op->o_opt);
 	waddch(hw, '\n');
@@ -98,19 +99,16 @@ option(void)
      * Set values
      */
     wmove(hw, 0, 0);
-    for (op = optlist; op <= &optlist[NUM_OPTS-1]; op++)
-    {
+    for (op = optlist; op <= &optlist[NUM_OPTS - 1]; op++) {
 	pr_optname(op);
 	retval = (*op->o_getfunc)(op->o_opt, hw);
-	if (retval)
-	{
-	    if (retval == QUIT)
+	if (retval) {
+	    if (retval == QUIT) {
 		break;
-	    else if (op > optlist) {	/* MINUS */
+	    } else if (op > optlist) { /* MINUS */
 		wmove(hw, (int)(op - optlist) - 1, 0);
 		op -= 2;
-	    }
-	    else	/* trying to back up beyond the top */
+	    } else /* trying to back up beyond the top */
 	    {
 		putchar('\007');
 		wmove(hw, 0, 0);
@@ -149,7 +147,7 @@ pr_optname(const OPTION *op)
 void
 put_bool(void *b)
 {
-    waddstr(hw, *(int *) b ? "True" : "False");
+    waddstr(hw, *(int *)b ? "True" : "False");
 }
 
 /*
@@ -160,7 +158,7 @@ put_bool(void *b)
 void
 put_str(void *str)
 {
-    waddstr(hw, (char *) str);
+    waddstr(hw, (char *)str);
 }
 
 /*
@@ -171,7 +169,7 @@ put_str(void *str)
 void
 put_inv_t(void *ip)
 {
-    waddstr(hw, inv_t_name[*(int *) ip]);
+    waddstr(hw, inv_t_name[*(int *)ip]);
 }
 
 /*
@@ -181,40 +179,38 @@ put_inv_t(void *ip)
 int
 get_bool(void *vp, WINDOW *win)
 {
-    int *bp = (int *) vp;
+    int *bp = (int *)vp;
     int oy, ox;
     int op_bad;
 
     op_bad = true;
     getyx(win, oy, ox);
     waddstr(win, *bp ? "True" : "False");
-    while (op_bad)
-    {
+    while (op_bad) {
 	wmove(win, oy, ox);
 	wrefresh(win);
-	switch (wreadchar(win))
-	{
-	    case 't':
-	    case 'T':
-		*bp = true;
-		op_bad = false;
-		break;
-	    case 'f':
-	    case 'F':
-		*bp = false;
-		op_bad = false;
-		break;
-	    case '\n':
-	    case '\r':
-		op_bad = false;
-		break;
-	    case ESCAPE:
-		return QUIT;
-	    case '-':
-		return MINUS;
-	    default:
-		wmove(win, oy, ox + 10);
-		waddstr(win, "(T or F)");
+	switch (wreadchar(win)) {
+	case 't':
+	case 'T':
+	    *bp = true;
+	    op_bad = false;
+	    break;
+	case 'f':
+	case 'F':
+	    *bp = false;
+	    op_bad = false;
+	    break;
+	case '\n':
+	case '\r':
+	    op_bad = false;
+	    break;
+	case ESCAPE:
+	    return QUIT;
+	case '-':
+	    return MINUS;
+	default:
+	    wmove(win, oy, ox + 10);
+	    waddstr(win, "(T or F)");
 	}
     }
     wmove(win, oy, ox);
@@ -231,36 +227,37 @@ get_bool(void *vp, WINDOW *win)
 int
 get_sf(void *vp, WINDOW *win)
 {
-    int	*bp = (int *) vp;
-    int	was_sf;
-    int		retval;
+    int *bp = (int *)vp;
+    int was_sf;
+    int retval;
 
     was_sf = see_floor;
     retval = get_bool(bp, win);
-    if (retval == QUIT) return(QUIT);
-    if (was_sf != see_floor)
-    {
+    if (retval == QUIT) {
+	return (QUIT);
+    }
+    if (was_sf != see_floor) {
 	if (!see_floor) {
 	    see_floor = true;
 	    erase_lamp(&hero, proom);
 	    see_floor = false;
-	}
-	else
+	} else {
 	    look(false);
+	}
     }
-    return(NORM);
+    return (NORM);
 }
 
 /*
  * get_str:
  *	Set a string option
  */
-#define MAXINP	50	/* max string to read from terminal or environment */
+#define MAXINP 50 /* max string to read from terminal or environment */
 
 int
 get_str(void *vopt, WINDOW *win)
 {
-    char *opt = (char *) vopt;
+    char *opt = (char *)vopt;
     char *sp;
     int oy, ox;
     int c;
@@ -271,64 +268,59 @@ get_str(void *vopt, WINDOW *win)
     /*
      * loop reading in the string, and put it in a temporary buffer
      */
-    for (sp = buf; (c = wreadchar(win)) != '\n' && c != '\r' && c != ESCAPE;
-	wclrtoeol(win), wrefresh(win))
-    {
-	if (c == -1)
+    for (sp = buf; (c = wreadchar(win)) != '\n' && c != '\r' && c != ESCAPE; wclrtoeol(win), wrefresh(win)) {
+	if (c == -1) {
 	    continue;
+	}
 	/* Check erase and avoid stty erase vs terminal emulator key conflicts. */
-	else if (c == '\b' || c == 0x7F || c == erasechar())
-	{
-	    if (sp > buf)
-	    {
+	else if (c == '\b' || c == 0x7F || c == erasechar()) {
+	    if (sp > buf) {
 		int hx, hy, width;
 		getyx(win, hy, hx);
 		sp--;
 		width = strlen(unctrl(*sp));
-		mvwaddstr(win, hy, hx-width, "  ");
-		wmove(win, hy, hx-width);
+		mvwaddstr(win, hy, hx - width, "  ");
+		wmove(win, hy, hx - width);
 	    }
 	    continue;
-	}
-	else if (c == killchar())	/* process kill character */
+	} else if (c == killchar()) /* process kill character */
 	{
 	    sp = buf;
 	    wmove(win, oy, ox);
 	    continue;
-	}
-	else if (sp == buf)
-	{
-	    if (c == '-' && win != stdscr)
+	} else if (sp == buf) {
+	    if (c == '-' && win != stdscr) {
 		break;
-	    else if (c == '~')
-	    {
+	    } else if (c == '~') {
 		strcpy(buf, home);
 		waddstr(win, home);
 		sp += strlen(home);
 		continue;
 	    }
 	}
-	if (sp >= &buf[MAXINP] || !(isprint(c) || c == ' '))
+	if (sp >= &buf[MAXINP] || !(isprint(c) || c == ' ')) {
 	    putchar(CTRL('G'));
-	else
-	{
-	    *sp++ = (char) c;
+	} else {
+	    *sp++ = (char)c;
 	    waddstr(win, unctrl(c));
 	}
     }
     *sp = '\0';
-    if (sp > buf)	/* only change option if something has been typed */
+    if (sp > buf) { /* only change option if something has been typed */
 	strucpy(opt, buf, strlen(buf));
+    }
     mvwprintw(win, oy, ox, "%s\n", opt);
     wrefresh(win);
-    if (win == stdscr)
+    if (win == stdscr) {
 	mpos += (int)(sp - buf);
-    if (c == '-')
+    }
+    if (c == '-') {
 	return MINUS;
-    else if (c == ESCAPE)
+    } else if (c == ESCAPE) {
 	return QUIT;
-    else
+    } else {
 	return NORM;
+    }
 }
 
 /*
@@ -338,51 +330,48 @@ get_str(void *vopt, WINDOW *win)
 int
 get_inv_t(void *vp, WINDOW *win)
 {
-    int *ip = (int *) vp;
+    int *ip = (int *)vp;
     int oy, ox;
     int op_bad;
 
     op_bad = true;
     getyx(win, oy, ox);
     waddstr(win, inv_t_name[*ip]);
-    while (op_bad)
-    {
+    while (op_bad) {
 	wmove(win, oy, ox);
 	wrefresh(win);
-	switch (wreadchar(win))
-	{
-	    case 'o':
-	    case 'O':
-		*ip = INV_OVER;
-		op_bad = false;
-		break;
-	    case 's':
-	    case 'S':
-		*ip = INV_SLOW;
-		op_bad = false;
-		break;
-	    case 'c':
-	    case 'C':
-		*ip = INV_CLEAR;
-		op_bad = false;
-		break;
-	    case '\n':
-	    case '\r':
-		op_bad = false;
-		break;
-	    case ESCAPE:
-		return QUIT;
-	    case '-':
-		return MINUS;
-	    default:
-		wmove(win, oy, ox + 15);
-		waddstr(win, "(O, S, or C)");
+	switch (wreadchar(win)) {
+	case 'o':
+	case 'O':
+	    *ip = INV_OVER;
+	    op_bad = false;
+	    break;
+	case 's':
+	case 'S':
+	    *ip = INV_SLOW;
+	    op_bad = false;
+	    break;
+	case 'c':
+	case 'C':
+	    *ip = INV_CLEAR;
+	    op_bad = false;
+	    break;
+	case '\n':
+	case '\r':
+	    op_bad = false;
+	    break;
+	case ESCAPE:
+	    return QUIT;
+	case '-':
+	    return MINUS;
+	default:
+	    wmove(win, oy, ox + 15);
+	    waddstr(win, "(O, S, or C)");
 	}
     }
     mvwprintw(win, oy, ox, "%s\n", inv_t_name[*ip]);
     return NORM;
 }
-
 
 #ifdef MASTER
 /*
@@ -392,12 +381,13 @@ get_inv_t(void *vp, WINDOW *win)
 int
 get_num(void *vp, WINDOW *win)
 {
-    int *opt = (int *) vp;
+    int *opt = (int *)vp;
     int i;
     static char buf[MAXSTR];
 
-    if ((i = get_str(buf, win)) == NORM)
+    if ((i = get_str(buf, win)) == NORM) {
 	*opt = atoi(buf);
+    }
     return i;
 }
 #endif
@@ -420,77 +410,78 @@ parse_opts(char *str)
     const char **i;
     char *start;
 
-    while (*str)
-    {
+    while (*str) {
 	/*
 	 * Get option name
 	 */
-	for (sp = str; isalpha((int)*sp); sp++)
+	for (sp = str; isalpha((int)*sp); sp++) {
 	    continue;
+	}
 	len = (int)(sp - str);
 	/*
 	 * Look it up and deal with it
 	 */
-	for (op = optlist; op <= &optlist[NUM_OPTS-1]; op++)
-	    if (EQSTR(str, op->o_name, len))
-	    {
-		if (op->o_putfunc == put_bool)	/* if option is a boolean */
-		    *(int *)op->o_opt = true;	/* NOSTRICT */
-		else				/* string option */
+	for (op = optlist; op <= &optlist[NUM_OPTS - 1]; op++) {
+	    if (EQSTR(str, op->o_name, len)) {
+		if (op->o_putfunc == put_bool) { /* if option is a boolean */
+		    *(int *)op->o_opt = true;	 /* NOSTRICT */
+		} else				 /* string option */
 		{
 		    /*
 		     * Skip to start of string value
 		     */
-		    for (str = sp + 1; *str == '='; str++)
+		    for (str = sp + 1; *str == '='; str++) {
 			continue;
-		    if (*str == '~')
-		    {
-			strcpy((char *) op->o_opt, home);	  /* NOSTRICT */
-			start = (char *) op->o_opt + strlen(home);/* NOSTRICT */
-			while (*++str == '/')
-			    continue;
 		    }
-		    else
-			start = (char *) op->o_opt;	/* NOSTRICT */
+		    if (*str == '~') {
+			strcpy((char *)op->o_opt, home);	  /* NOSTRICT */
+			start = (char *)op->o_opt + strlen(home); /* NOSTRICT */
+			while (*++str == '/') {
+			    continue;
+			}
+		    } else {
+			start = (char *)op->o_opt; /* NOSTRICT */
+		    }
 		    /*
 		     * Skip to end of string value
 		     */
-		    for (sp = str + 1; *sp && *sp != ','; sp++)
+		    for (sp = str + 1; *sp && *sp != ','; sp++) {
 			continue;
+		    }
 		    /*
 		     * check for type of inventory
 		     */
-		    if (op->o_putfunc == put_inv_t)
-		    {
-			if (islower((int)*str))
-			    *str = (char) toupper(*str);
-			for (i = inv_t_name; i <= &inv_t_name[INV_CLEAR]; i++)
-			    if (strncmp(str, *i, sp - str) == 0)
-			    {
+		    if (op->o_putfunc == put_inv_t) {
+			if (islower((int)*str)) {
+			    *str = (char)toupper(*str);
+			}
+			for (i = inv_t_name; i <= &inv_t_name[INV_CLEAR]; i++) {
+			    if (strncmp(str, *i, sp - str) == 0) {
 				inv_type = (int)(i - inv_t_name);
 				break;
 			    }
-		    }
-		    else
+			}
+		    } else {
 			strucpy(start, str, (size_t)(sp - str));
+		    }
 		}
 		break;
 	    }
 	    /*
 	     * check for "noname" for booleans
 	     */
-	    else if (op->o_putfunc == put_bool
-	      && EQSTR(str, "no", 2) && EQSTR(str + 2, op->o_name, len - 2))
-	    {
-		*(int *)op->o_opt = false;	/* NOSTRICT */
+	    else if (op->o_putfunc == put_bool && EQSTR(str, "no", 2) && EQSTR(str + 2, op->o_name, len - 2)) {
+		*(int *)op->o_opt = false; /* NOSTRICT */
 		break;
 	    }
+	}
 
 	/*
 	 * skip to start of next option name
 	 */
-	while (*sp && !isalpha((int)*sp))
+	while (*sp && !isalpha((int)*sp)) {
 	    sp++;
+	}
 	str = sp;
     }
 }
@@ -503,12 +494,13 @@ parse_opts(char *str)
 void
 strucpy(char *s1, const char *s2, size_t len)
 {
-    if (len > MAXINP)
+    if (len > MAXINP) {
 	len = MAXINP;
-    while (len--)
-    {
-	if (isprint((int)*s2) || *s2 == ' ')
+    }
+    while (len--) {
+	if (isprint((int)*s2) || *s2 == ' ') {
 	    *s1++ = *s2;
+	}
 	s2++;
     }
     *s1 = '\0';

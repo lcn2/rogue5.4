@@ -20,7 +20,6 @@
  * used to hold the new hero position
  */
 
-
 /*
  * do_run:
  *	Start the hero running
@@ -47,8 +46,7 @@ do_move(int dy, int dx)
     coord nh;
 
     firstmove = false;
-    if (no_move)
-    {
+    if (no_move) {
 	no_move--;
 	msg("you are still stuck in the bear trap");
 	return;
@@ -56,20 +54,16 @@ do_move(int dy, int dx)
     /*
      * Do a confused move (maybe)
      */
-    if (on(player, ISHUH) && rnd(5) != 0)
-    {
+    if (on(player, ISHUH) && rnd(5) != 0) {
 	nh = rndmove(&player);
-	if (ce(nh, hero))
-	{
+	if (ce(nh, hero)) {
 	    after = false;
 	    running = false;
 	    to_death = false;
 	    return;
 	}
-    }
-    else
-    {
-over:
+    } else {
+    over:
 	nh.y = hero.y + dy;
 	nh.x = hero.x + dx;
     }
@@ -78,127 +72,120 @@ over:
      * Check if he tried to move off the screen or make an illegal
      * diagonal move, and stop him if he did.
      */
-    if (nh.x < 0 || nh.x >= NUMCOLS || nh.y <= 0 || nh.y >= NUMLINES - 1)
+    if (nh.x < 0 || nh.x >= NUMCOLS || nh.y <= 0 || nh.y >= NUMLINES - 1) {
 	goto hit_bound;
-    if (!diag_ok(&hero, &nh))
-    {
+    }
+    if (!diag_ok(&hero, &nh)) {
 	after = false;
 	running = false;
 	return;
     }
-    if (running && ce(hero, nh))
+    if (running && ce(hero, nh)) {
 	after = running = false;
+    }
     fl = flat(nh.y, nh.x);
     ch = winat(nh.y, nh.x);
-    if (!(fl & F_REAL) && ch == FLOOR)
-    {
-	if (!on(player, ISLEVIT))
-	{
+    if (!(fl & F_REAL) && ch == FLOOR) {
+	if (!on(player, ISLEVIT)) {
 	    chat(nh.y, nh.x) = ch = TRAP;
 	    flat(nh.y, nh.x) |= F_REAL;
 	}
-    }
-    else if (on(player, ISHELD) && ch != 'F')
-    {
+    } else if (on(player, ISHELD) && ch != 'F') {
 	msg("you are being held");
 	return;
     }
-    switch (ch)
-    {
-	case ' ':
-	case '|':
-	case '-':
-hit_bound:
-	    if (passgo && running && (proom->r_flags & ISGONE)
-		&& !on(player, ISBLIND))
-	    {
-		int	b1, b2;
+    switch (ch) {
+    case ' ':
+    case '|':
+    case '-':
+    hit_bound:
+	if (passgo && running && (proom->r_flags & ISGONE) && !on(player, ISBLIND)) {
+	    int b1, b2;
 
-		switch (runch)
-		{
-		    case 'h':
-		    case 'l':
-			b1 = (hero.y != 1 && turn_ok(hero.y - 1, hero.x));
-			b2 = (hero.y != NUMLINES - 2 && turn_ok(hero.y + 1, hero.x));
-			if (!(b1 ^ b2))
-			    break;
-			if (b1)
-			{
-			    runch = 'k';
-			    dy = -1;
-			}
-			else
-			{
-			    runch = 'j';
-			    dy = 1;
-			}
-			dx = 0;
-			turnref();
-			goto over;
-		    case 'j':
-		    case 'k':
-			b1 = (hero.x != 0 && turn_ok(hero.y, hero.x - 1));
-			b2 = (hero.x != NUMCOLS - 1 && turn_ok(hero.y, hero.x + 1));
-			if (!(b1 ^ b2))
-			    break;
-			if (b1)
-			{
-			    runch = 'h';
-			    dx = -1;
-			}
-			else
-			{
-			    runch = 'l';
-			    dx = 1;
-			}
-			dy = 0;
-			turnref();
-			goto over;
+	    switch (runch) {
+	    case 'h':
+	    case 'l':
+		b1 = (hero.y != 1 && turn_ok(hero.y - 1, hero.x));
+		b2 = (hero.y != NUMLINES - 2 && turn_ok(hero.y + 1, hero.x));
+		if (!(b1 ^ b2)) {
+		    break;
 		}
+		if (b1) {
+		    runch = 'k';
+		    dy = -1;
+		} else {
+		    runch = 'j';
+		    dy = 1;
+		}
+		dx = 0;
+		turnref();
+		goto over;
+	    case 'j':
+	    case 'k':
+		b1 = (hero.x != 0 && turn_ok(hero.y, hero.x - 1));
+		b2 = (hero.x != NUMCOLS - 1 && turn_ok(hero.y, hero.x + 1));
+		if (!(b1 ^ b2)) {
+		    break;
+		}
+		if (b1) {
+		    runch = 'h';
+		    dx = -1;
+		} else {
+		    runch = 'l';
+		    dx = 1;
+		}
+		dy = 0;
+		turnref();
+		goto over;
 	    }
-	    running = false;
-	    after = false;
-	    break;
-	case DOOR:
-	    running = false;
-	    if (flat(hero.y, hero.x) & F_PASS)
-		enter_room(&nh);
-	    goto move_stuff;
-	case TRAP:
-	    ch = be_trapped(&nh);
-	    if (ch == T_DOOR || ch == T_TELEP)
-		return;
-	    goto move_stuff;
-	case PASSAGE:
-	    /*
-	     * when you're in a corridor, you don't know if you're in
-	     * a maze room or not, and there ain't no way to find out
-	     * if you're leaving a maze room, so it is necessary to
-	     * always recalculate proom.
-	     */
-	    proom = roomin(&hero);
-	    goto move_stuff;
-	case FLOOR:
-	    if (!(fl & F_REAL))
-		be_trapped(&hero);
-	    goto move_stuff;
-	case STAIRS:
-	    seenstairs = true;
-	    /* FALLTHROUGH */
-	default:
-	    running = false;
-	    if (isupper(ch) || moat(nh.y, nh.x))
-		fight(&nh, cur_weapon, false);
-	    else
-	    {
-		if (ch != STAIRS)
-		    take = ch;
-move_stuff:
-		mvaddch(hero.y, hero.x, floor_at());
-		if ((fl & F_PASS) && chat(oldpos.y, oldpos.x) == DOOR)
-		    leave_room(&nh);
-		hero = nh;
+	}
+	running = false;
+	after = false;
+	break;
+    case DOOR:
+	running = false;
+	if (flat(hero.y, hero.x) & F_PASS) {
+	    enter_room(&nh);
+	}
+	goto move_stuff;
+    case TRAP:
+	ch = be_trapped(&nh);
+	if (ch == T_DOOR || ch == T_TELEP) {
+	    return;
+	}
+	goto move_stuff;
+    case PASSAGE:
+	/*
+	 * when you're in a corridor, you don't know if you're in
+	 * a maze room or not, and there ain't no way to find out
+	 * if you're leaving a maze room, so it is necessary to
+	 * always recalculate proom.
+	 */
+	proom = roomin(&hero);
+	goto move_stuff;
+    case FLOOR:
+	if (!(fl & F_REAL)) {
+	    be_trapped(&hero);
+	}
+	goto move_stuff;
+    case STAIRS:
+	seenstairs = true;
+	/* FALLTHROUGH */
+    default:
+	running = false;
+	if (isupper(ch) || moat(nh.y, nh.x)) {
+	    fight(&nh, cur_weapon, false);
+	} else {
+	    if (ch != STAIRS) {
+		take = ch;
 	    }
+	move_stuff:
+	    mvaddch(hero.y, hero.x, floor_at());
+	    if ((fl & F_PASS) && chat(oldpos.y, oldpos.x) == DOOR) {
+		leave_room(&nh);
+	    }
+	    hero = nh;
+	}
     }
 }
 
@@ -212,8 +199,7 @@ turn_ok(int y, int x)
     PLACE *pp;
 
     pp = INDEX(y, x);
-    return (pp->p_ch == DOOR
-	|| (pp->p_flags & (F_REAL|F_PASS)) == (F_REAL|F_PASS));
+    return (pp->p_ch == DOOR || (pp->p_flags & (F_REAL | F_PASS)) == (F_REAL | F_PASS));
 }
 
 /*
@@ -227,10 +213,8 @@ turnref(void)
     PLACE *pp;
 
     pp = INDEX(hero.y, hero.x);
-    if (!(pp->p_flags & F_SEEN))
-    {
-	if (jump)
-	{
+    if (!(pp->p_flags & F_SEEN)) {
+	if (jump) {
 	    leaveok(stdscr, true);
 	    refresh();
 	    leaveok(stdscr, false);
@@ -250,11 +234,15 @@ door_open(const struct room *rp)
 {
     int y, x;
 
-    if (!(rp->r_flags & ISGONE))
-	for (y = rp->r_pos.y; y < rp->r_pos.y + rp->r_max.y; y++)
-	    for (x = rp->r_pos.x; x < rp->r_pos.x + rp->r_max.x; x++)
-		if (isupper(winat(y, x)))
+    if (!(rp->r_flags & ISGONE)) {
+	for (y = rp->r_pos.y; y < rp->r_pos.y + rp->r_max.y; y++) {
+	    for (x = rp->r_pos.x; x < rp->r_pos.x + rp->r_max.x; x++) {
+		if (isupper(winat(y, x))) {
 		    wake_monster(y, x);
+		}
+	    }
+	}
+    }
 }
 
 /*
@@ -268,88 +256,110 @@ be_trapped(const coord *tc)
     THING *arrow;
     int tr;
 
-    if (on(player, ISLEVIT))
-	return T_RUST;	/* anything that's not a door or teleport */
+    if (on(player, ISLEVIT)) {
+	return T_RUST; /* anything that's not a door or teleport */
+    }
     running = false;
     count = false;
     pp = INDEX(tc->y, tc->x);
     pp->p_ch = TRAP;
     tr = pp->p_flags & F_TMASK;
     pp->p_flags |= F_SEEN;
-    switch (tr)
-    {
-	case T_DOOR:
-	    level++;
-	    new_level();
-	    msg("you fell into a trap!");
-	when T_BEAR:
-	    no_move += BEARTIME;
-	    msg("you are caught in a bear trap");
-        when T_MYST:
-            switch(rnd(11))
-            {
-                case 0: msg("you are suddenly in a parallel dimension");
-                when 1: msg("the light in here suddenly seems %s", rainbow[rnd(cNCOLORS)]);
-                when 2: msg("you feel a sting in the side of your neck");
-                when 3: msg("multi-colored lines swirl around you, then fade");
-                when 4: msg("a %s light flashes in your eyes", rainbow[rnd(cNCOLORS)]);
-                when 5: msg("a spike shoots past your ear!");
-                when 6: msg("%s sparks dance across your armor", rainbow[rnd(cNCOLORS)]);
-                when 7: msg("you suddenly feel very thirsty");
-                when 8: msg("you feel time speed up suddenly");
-                when 9: msg("time now seems to be going slower");
-                when 10: msg("you pack turns %s!", rainbow[rnd(cNCOLORS)]);
-            }
-	when T_SLEEP:
-	    no_command += SLEEPTIME;
-	    player.t_flags &= ~ISRUN;
-	    msg("a strange white mist envelops you and you fall asleep");
-	when T_ARROW:
-	    if (swing(pstats.s_class - 1, pstats.s_arm, 1))
-	    {
-		pstats.s_hpt -= roll(1, 6);
-		if (pstats.s_hpt <= 0)
-		{
-		    msg("an arrow killed you");
-		    death('a');
-		}
-		else
-		    msg("oh no! An arrow shot you");
+    switch (tr) {
+    case T_DOOR:
+	level++;
+	new_level();
+	msg("you fell into a trap!");
+	break;
+    case T_BEAR:
+	no_move += BEARTIME;
+	msg("you are caught in a bear trap");
+	break;
+    case T_MYST:
+	switch (rnd(11)) {
+	case 0:
+	    msg("you are suddenly in a parallel dimension");
+	    break;
+	case 1:
+	    msg("the light in here suddenly seems %s", rainbow[rnd(cNCOLORS)]);
+	    break;
+	case 2:
+	    msg("you feel a sting in the side of your neck");
+	    break;
+	case 3:
+	    msg("multi-colored lines swirl around you, then fade");
+	    break;
+	case 4:
+	    msg("a %s light flashes in your eyes", rainbow[rnd(cNCOLORS)]);
+	    break;
+	case 5:
+	    msg("a spike shoots past your ear!");
+	    break;
+	case 6:
+	    msg("%s sparks dance across your armor", rainbow[rnd(cNCOLORS)]);
+	    break;
+	case 7:
+	    msg("you suddenly feel very thirsty");
+	    break;
+	case 8:
+	    msg("you feel time speed up suddenly");
+	    break;
+	case 9:
+	    msg("time now seems to be going slower");
+	    break;
+	case 10:
+	    msg("you pack turns %s!", rainbow[rnd(cNCOLORS)]);
+	}
+	break;
+    case T_SLEEP:
+	no_command += SLEEPTIME;
+	player.t_flags &= ~ISRUN;
+	msg("a strange white mist envelops you and you fall asleep");
+	break;
+    case T_ARROW:
+	if (swing(pstats.s_class - 1, pstats.s_arm, 1)) {
+	    pstats.s_hpt -= roll(1, 6);
+	    if (pstats.s_hpt <= 0) {
+		msg("an arrow killed you");
+		death('a');
+	    } else {
+		msg("oh no! An arrow shot you");
 	    }
-	    else
-	    {
-		arrow = new_thing_ptr();
-		init_weapon(arrow, ARROW);
-		arrow->o_count = 1;
-		arrow->o_pos = hero;
-		fall(arrow, false);
-		msg("an arrow shoots past you");
+	} else {
+	    arrow = new_thing_ptr();
+	    init_weapon(arrow, ARROW);
+	    arrow->o_count = 1;
+	    arrow->o_pos = hero;
+	    fall(arrow, false);
+	    msg("an arrow shoots past you");
+	}
+	break;
+    case T_TELEP:
+	/*
+	 * since the hero's leaving, look() won't put a TRAP
+	 * down for us, so we have to do it ourself
+	 */
+	teleport();
+	mvaddch(tc->y, tc->x, TRAP);
+	break;
+    case T_DART:
+	if (!swing(pstats.s_class + 1, pstats.s_arm, 1)) {
+	    msg("a small dart whizzes by your ear and vanishes");
+	} else {
+	    pstats.s_hpt -= roll(1, 4);
+	    if (pstats.s_hpt <= 0) {
+		msg("a poisoned dart killed you");
+		death('d');
 	    }
-	when T_TELEP:
-	    /*
-	     * since the hero's leaving, look() won't put a TRAP
-	     * down for us, so we have to do it ourself
-	     */
-	    teleport();
-	    mvaddch(tc->y, tc->x, TRAP);
-	when T_DART:
-	    if (!swing(pstats.s_class+1, pstats.s_arm, 1))
-		msg("a small dart whizzes by your ear and vanishes");
-	    else
-	    {
-		pstats.s_hpt -= roll(1, 4);
-		if (pstats.s_hpt <= 0)
-		{
-		    msg("a poisoned dart killed you");
-		    death('d');
-		}
-		if (!ISWEARING(R_SUSTSTR) && !save(VS_POISON))
-		    chg_str(-1);
-		msg("a small dart just hit you in the shoulder");
+	    if (!ISWEARING(R_SUSTSTR) && !save(VS_POISON)) {
+		chg_str(-1);
 	    }
-	when T_RUST:
-	    msg("a gush of water hits you on the head");
-	    rust_armor(cur_armor);
+	    msg("a small dart just hit you in the shoulder");
+	}
+	break;
+    case T_RUST:
+	msg("a gush of water hits you on the head");
+	rust_armor(cur_armor);
     }
     flush_type();
     return tr;
@@ -365,7 +375,7 @@ rndmove(const THING *who)
     THING *obj;
     int x, y;
     int ch;
-    coord ret;  /* what we will be returning */
+    coord ret; /* what we will be returning */
 
     y = ret.y = who->t_pos.y + rnd(3) - 1;
     x = ret.x = who->t_pos.x + rnd(3) - 1;
@@ -373,22 +383,25 @@ rndmove(const THING *who)
      * Now check to see if that's a legal move.  If not, don't move.
      * (I.e., bump into the wall or whatever)
      */
-    if (y == who->t_pos.y && x == who->t_pos.x)
+    if (y == who->t_pos.y && x == who->t_pos.x) {
 	return ret;
-    if (!diag_ok(&who->t_pos, &ret))
+    }
+    if (!diag_ok(&who->t_pos, &ret)) {
 	goto bad;
-    else
-    {
+    } else {
 	ch = winat(y, x);
-	if (!step_ok(ch))
+	if (!step_ok(ch)) {
 	    goto bad;
-	if (ch == SCROLL)
-	{
-	    for (obj = lvl_obj; obj != NULL; obj = next(obj))
-		if (y == obj->o_pos.y && x == obj->o_pos.x)
+	}
+	if (ch == SCROLL) {
+	    for (obj = lvl_obj; obj != NULL; obj = next(obj)) {
+		if (y == obj->o_pos.y && x == obj->o_pos.x) {
 		    break;
-	    if (obj != NULL && obj->o_which == S_SCARE)
+		}
+	    }
+	    if (obj != NULL && obj->o_which == S_SCARE) {
 		goto bad;
+	    }
 	}
     }
     return ret;
@@ -407,21 +420,20 @@ bad:
 void
 rust_armor(THING *arm)
 {
-    if (arm == NULL || arm->o_type != ARMOR || arm->o_which == LEATHER ||
-	arm->o_arm >= 9)
-	    return;
-
-    if ((arm->o_flags & ISPROT) || ISWEARING(R_SUSTARM))
-    {
-	if (!to_death)
-	    msg("the rust vanishes instantly");
+    if (arm == NULL || arm->o_type != ARMOR || arm->o_which == LEATHER || arm->o_arm >= 9) {
+	return;
     }
-    else
-    {
+
+    if ((arm->o_flags & ISPROT) || ISWEARING(R_SUSTARM)) {
+	if (!to_death) {
+	    msg("the rust vanishes instantly");
+	}
+    } else {
 	arm->o_arm++;
-	if (!terse)
+	if (!terse) {
 	    msg("your armor appears to be weaker now. Oh my!");
-	else
+	} else {
 	    msg("your armor weakens");
+	}
     }
 }
