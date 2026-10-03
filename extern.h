@@ -77,7 +77,6 @@ extern int signal_quit;		    /* True if terminating signal will quit the game, F
  */
 
 int md_chmod(const char *filename, int mode);
-char *md_crypt(const char *key, const char *salt);
 int md_dsuspchar(void);
 int md_erasechar(void);
 char *md_gethomedir(void);
@@ -107,7 +106,6 @@ void md_onsignal_autosave(void);
 void md_onsignal_exit(void);
 void md_onsignal_default(void);
 int md_issymlink(char *sp);
-extern char *xcrypt(const char *key, const char *setting);
 
 extern void form_home(void);
 extern void form_lock_path(void);

@@ -394,8 +394,9 @@ passwd(void)
 {
     char *sp;
     int c;
-    static char buf[MAXSTR];
+    static char buf[MAXSTR + 1]; /* +1 for paranoia */
 
+    memset(buf, 0, sizeof(buf)); /* paranoia */
     msg("wizard's Password: ");
     mpos = 0;
     sp = buf;
@@ -412,7 +413,7 @@ passwd(void)
 	return false;
     }
     *sp = '\0';
-    return (strcmp(PASSWD, md_crypt(buf, "mT")) == 0);
+    return (strcmp(WIZARD_MODE, buf) == 0);
 }
 
 /*

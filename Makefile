@@ -79,7 +79,7 @@ LOCKFILE_BASENAME= .rogue.lck
 SAVEFILE_BASENAME= .rogue.save
 SCOREFILE_BASENAME= .rogue.scr
 
-# PREFIX - Tree under which the rogue binary, findpw, scedit binaries,
+# PREFIX - Tree under which the rogue binary, scedit binaries,
 #	   rogue documentation, and rogue man page.
 #
 PREFIX= /usr/local
@@ -172,7 +172,7 @@ else
 LIBS= -lncurses
 endif
 
-TARGETS= rogue findpw scedit
+TARGETS= rogue scedit
 
 
 #############
@@ -205,7 +205,7 @@ OBJS1= vers.o extern.o armor.o chase.o command.o common.o \
 
 OBJS2= options.o pack.o passages.o potions.o rings.o \
            rip.o rooms.o save.o scrolls.o state.o sticks.o \
-           things.o weapons.o wizard.o xcrypt.o strl.o
+           things.o weapons.o wizard.o strl.o
 
 OBJS= ${OBJS1} ${OBJS2}
 
@@ -214,9 +214,9 @@ CFILES= vers.c extern.c armor.c chase.c command.c daemon.c \
            main.c mdport.c misc.c monsters.c move.c new_level.c \
            options.c pack.c passages.c potions.c rings.c rip.c \
            rooms.c save.c scrolls.c state.c sticks.c things.c \
-           weapons.c wizard.c xcrypt.c strl.c
+           weapons.c wizard.c strl.c
 
-MISC_C= findpw.c scedit.c scmisc.c common.c have_strlcat.c have_strlcpy.c
+MISC_C= scedit.c scmisc.c common.c have_strlcat.c have_strlcpy.c
 
 MISC_H=
 
@@ -381,9 +381,6 @@ all: hsrc ${TARGETS} stddocs
 
 rogue: ${H_SRC} ${BUILD_HSRC} ${OBJS} main.o
 	${CC} ${CFLAGS} ${LDFLAGS} ${OBJS} main.o ${LIBS} -o $@
-
-findpw: ${OBJS} findpw.o
-	${CC} ${CFLAGS} ${LDFLAGS} ${OBJS} findpw.o ${LIBS} -o $@
 
 scedit: ${OBJS} scmisc.o scedit.o
 	${CC} ${CFLAGS} ${LDFLAGS} ${OBJS} scmisc.o scedit.o ${LIBS} -o $@
@@ -757,7 +754,7 @@ tags: ${SRC}
 clean:
 	${RM} -f ${OBJS1}
 	${RM} -f ${OBJS2}
-	${RM} -f main.o findpw.o scedit.o scmisc.o
+	${RM} -f main.o scedit.o scmisc.o
 
 clobber: clean
 	${RM} -f empty tags unused_tmp
@@ -765,6 +762,19 @@ clobber: clean
 	${RM} -f ${BUILD_HSRC} ${BUILD_OBJS} ${BUILD_TOOLS}
 	${RM} -f ${TARGETS}
 	${RM} -rf skel
+	@# remove obsolete files
+	-@if [[ -e xcrypt.o ]]; then \
+	    echo "${RM} -f xcrypt.o" ; \
+	    ${RM} -f xcrypt.o ; \
+	fi
+	-@if [[ -e findpw.o ]]; then \
+	    echo "${RM} -f findpw.o" ; \
+	    ${RM} -f findpw.o ; \
+	fi
+	-@if [[ -e findpw ]]; then \
+	    echo "${RM} -f findpw" ; \
+	    ${RM} -f findpw ; \
+	fi
 
 distclean maintainer-clean: clobber
 
@@ -843,7 +853,6 @@ install: all
 	    echo "${INSTALL} -m 0755 rogue ${DESTDIR}/rogue" ; \
 	    ${INSTALL} -m 0755 rogue ${DESTDIR}/rogue ; \
         fi
-	-${INSTALL} -m 0755 findpw ${DESTDIR}/findpw
 	-${INSTALL} -m 0755 scedit ${DESTDIR}/scedit
 	-${INSTALL} -m 0644 rogue.6 ${MAN6DIR}/rogue.6
 	-${INSTALL} -m 0444 rogue.doc ${DESTDOC}/rogue.doc
@@ -853,10 +862,14 @@ install: all
 	-${INSTALL} -m 0444 LICENSE ${DESTDOC}/LICENSE
 	-${INSTALL} -m 0444 LICENSE ${DESTDOC}/LICENSE.TXT
 	-${INSTALL} -m 0444 README.md ${DESTDOC}/README.md
+	@# remove obsolete files
+	-@if [[ -e ${DESTDIR}/findpw ]]; then \
+	    echo "${RM} -f ${DESTDIR}/findpw" ; \
+	    ${RM} -f ${DESTDIR}/findpw ; \
+	fi
 
 uninstall:
 	-${RM} -f -v ${DESTDIR}/rogue
-	-${RM} -f -v ${DESTDIR}/findpw
 	-${RM} -f -v ${DESTDIR}/scedit
 	-${RM} -f -v ${MAN6DIR}/rogue.6
 	-${RM} -f -v ${DESTDOC}/rogue.doc
@@ -867,6 +880,11 @@ uninstall:
 	-${RM} -f -v ${DESTDOC}/LICENSE.TXT
 	-${RM} -f -v ${DESTDOC}/README.md
 	-${RMDIR} -v ${DESTDOC}
+	@# remove obsolete files
+	-@if [[ -e ${DESTDIR}/findpw ]]; then \
+	    echo "${RM} -f -v ${DESTDIR}/findpw" ; \
+	    ${RM} -f -v ${DESTDIR}/findpw ; \
+	fi
 
 reinstall: uninstall install
 
@@ -1044,8 +1062,6 @@ fight.o: have_strlcpy.h
 fight.o: modern_curses.h
 fight.o: rogue.h
 fight.o: strl.h
-findpw.o: findpw.c
-findpw.o: score.h
 have_strlcat.o: have_strlcat.c
 have_strlcpy.o: have_strlcpy.c
 init.o: config.h
@@ -1230,7 +1246,3 @@ wizard.o: modern_curses.h
 wizard.o: rogue.h
 wizard.o: strl.h
 wizard.o: wizard.c
-xcrypt.o: have_strlcat.h
-xcrypt.o: have_strlcpy.h
-xcrypt.o: strl.h
-xcrypt.o: xcrypt.c

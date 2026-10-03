@@ -140,9 +140,7 @@
 #  define BOLT_LENGTH 6
 #  define LAMPDIST 3
 #  ifdef MASTER
-#    ifndef PASSWD
-#      define PASSWD "mTreRQpbBWGLI" /* The historic wizard mode password is bathtub */
-#    endif
+#    define WIZARD_MODE "bathtub" /* The historic wizard mode password is bathtub */
 #  endif
 
 /*
