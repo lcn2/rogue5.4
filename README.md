@@ -1038,8 +1038,8 @@ in the game.
 If you do not know the **wizard password**, you will need to do a little reading of the source code.
 You need to, as the expression goes, [RTFS](https://en.wikipedia.org/wiki/RTFS).
 
-**BONUS HINT**: **The historic wizard password** may be found in a source code comment about a defined symbol
-in the **`rogue.h`** header file.
+**BONUS HINT**: **The historic wizard password** may be found as a
+defined symbol in the **`rogue.h`** header file.
 
 You may toggle **wizard mode** on and off by pressing the "+" key.
 When you successfully toggle **wizard mode** on, you will see the message:

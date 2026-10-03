@@ -730,12 +730,6 @@ md_getrealname(uid_t uid)
 }
 
 char *
-md_crypt(const char *key, const char *salt)
-{
-    return (xcrypt(key, salt));
-}
-
-char *
 md_getpass(char *prompt)
 {
 #ifndef HAVE_GETPASS
