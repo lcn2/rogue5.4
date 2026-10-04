@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master", "rogue54-audit" ]
+  pull_request:
+    branches: [ "master", "rogue54-audit" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.os }} / ${{ matrix.cc }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, cc: gcc }
+          - { os: ubuntu-latest, cc: clang }
+          - { os: macos-latest, cc: clang }
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libncurses-dev groff clang
+      - name: Install documentation dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install groff
+      - name: Build, warnings are errors
+        run: make ${{ matrix.cc }}
+      - name: Verify standard docs build
+        run: |
+          make -B stddocs
+          for doc in rogue.6 rogue.me rogue.html rogue.doc rogue.cat rogue.md; do
+            test -s "$doc" || { echo "Documentation output is missing or empty: $doc" >&2; exit 1; }
+          done

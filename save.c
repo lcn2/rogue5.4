@@ -538,7 +538,7 @@ encread(char *start, size_t size, FILE *inf)
 }
 
 /*
- * rd_scrore:
+ * rd_score:
  *	Read in the score file
  */
 void
@@ -587,7 +587,7 @@ rd_score(SCORE *top_score)
 }
 
 /*
- * wr_scrore:
+ * wr_score:
  *	Write in the score file
  */
 void

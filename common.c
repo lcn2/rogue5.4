@@ -240,7 +240,7 @@ quit(int sig)
 
 /*
  * leave:
- *	Leave quickly, but curteously
+ *	Leave quickly, but courteously
  */
 
 void

@@ -205,7 +205,6 @@ main(int argc, char **argv)
 	env = getenv("SEED");
 	if (env != NULL) {
 	    long ret; /* $SEED as a long */
-	    dnum = (unsigned int)strtol(env, NULL, 0);
 
 	    /*
 	     * convert $SEED into dungeon number, if possible

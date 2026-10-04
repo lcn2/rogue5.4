@@ -1,5 +1,5 @@
 /*
- * global variable initializaton
+ * global variable initialization
  *
  * @(#)extern.c	4.82 (Berkeley) 02/05/99
  *
@@ -169,7 +169,7 @@ PLACE places[(MAXLINES * MAXCOLS) + 1]; /* level map, +1 for paranoia */
 
 THING *cur_armor;	   /* What he is wearing */
 THING *cur_ring[2];	   /* Which rings are being worn */
-THING *cur_weapon;	   /* Which weapon he is weilding */
+THING *cur_weapon;	   /* Which weapon he is wielding */
 THING *l_last_pick = NULL; /* Last last_pick */
 THING *last_pick = NULL;   /* Last object picked in get_item() */
 THING *lvl_obj = NULL;	   /* List of objects on this level */

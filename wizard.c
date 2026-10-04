@@ -349,7 +349,7 @@ create_obj(void)
 #endif
 
 /*
- * telport:
+ * teleport:
  *	Bamf the hero someplace else
  */
 
@@ -403,9 +403,11 @@ passwd(void)
     while ((c = readchar()) != '\n' && c != '\r' && c != ESCAPE) {
 	if (c == md_killchar()) {
 	    sp = buf;
-	} else if (c == md_erasechar() && sp > buf) {
-	    sp--;
-	} else {
+	} else if (c == md_erasechar()) {
+	    if (sp > buf) {
+		sp--;
+	    }
+	} else if (sp < buf + MAXSTR) { /* never overrun buf */
 	    *sp++ = (char)c;
 	}
     }

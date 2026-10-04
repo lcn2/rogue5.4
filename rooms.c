@@ -371,7 +371,7 @@ find_floor(const struct room *rp, coord *cp, int limit, int monst)
 
 /*
  * enter_room:
- *	Code that is executed whenver you appear in a room
+ *	Code that is executed whenever you appear in a room
  */
 
 void
