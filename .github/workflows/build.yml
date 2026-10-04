@@ -28,4 +28,8 @@ jobs:
       - name: Build, warnings are errors
         run: make ${{ matrix.cc }}
       - name: Verify standard docs build
-        run: make stddocs
+        run: |
+          make -B stddocs
+          for doc in rogue.6 rogue.me rogue.html rogue.doc rogue.cat rogue.md; do
+            test -s "$doc" || { echo "Documentation output is missing or empty: $doc" >&2; exit 1; }
+          done
