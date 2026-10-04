@@ -270,7 +270,7 @@ With
 the screen is cleared, the list is displayed, and then the dungeon level is re-displayed.
 .sp
 Default:
-.B clear
+.B overwrite
 .sp
 Recommendation:
 .B overwrite
@@ -448,7 +448,9 @@ The length of the rogue score file is usually 112 bytes per score slot, so the d
 rogue score file size is 1120 bytes.
 .sp
 Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue scores,
-no matter how they were played, and no matter if they won the game or not.
+whether or not the character won the game.
+However, a game in which wizard mode was ever enabled
+(even if later disabled, or after a save and restore) is never recorded.
 .sp
 If the rogue score file does not exist,
 .B rogue

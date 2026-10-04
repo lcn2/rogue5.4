@@ -139,7 +139,7 @@
             With [1mclear[22m, the screen is cleared, the list is displayed,  and  then
             the dungeon level is re-displayed.
 
-            Default: [1mclear[0m
+            Default: [1moverwrite[0m
 
             Recommendation: [1moverwrite[0m
 
@@ -261,8 +261,9 @@
             slot, so the default rogue score file size is 1120 bytes.
 
             Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue
-            scores, no matter how they were played, and no matter  if  they  won
-            the game or not.
+            scores, whether or not the character won the game.  However, a game
+            in which wizard mode was ever enabled (even if later disabled, or
+            after a save and restore) is never recorded.
 
             If the rogue score file does not exist, [1mrogue [22mwill create it.
 
