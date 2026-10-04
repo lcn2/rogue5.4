@@ -1102,6 +1102,21 @@ you will start in this fun "treasure room":
 -------+-
 ```
 
+Using seed **130045835**:
+
+```sh
+SEED=130045835 rogue ""
+```
+
+see if you can survive this "treasure room":
+
+```
+--+-----------
+|.SS]..E@!.ES+
+|E.H:..BH)..B|
+--------------
+```
+
 For an even more challenging "treasure room" start, try:
 
 ```sh
