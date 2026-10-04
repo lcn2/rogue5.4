@@ -270,6 +270,8 @@ With
 the screen is cleared, the list is displayed, and then the dungeon level is re-displayed.
 .sp
 Default:
+.B clear
+if the terminal has a clear-to-end-of-line capability (nearly all do), otherwise
 .B overwrite
 .sp
 Recommendation:

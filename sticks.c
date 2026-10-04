@@ -279,6 +279,9 @@ drain(void)
 	if (mp->t_room == proom || mp->t_room == corp ||
 	    (inpass && chat(mp->t_pos.y, mp->t_pos.x) == DOOR && &passages[flat(mp->t_pos.y, mp->t_pos.x) & F_PNUM] == proom)) {
 	    *dp++ = mp;
+	    if ((size_t)(dp - drainee) >= sizeof(drainee) / sizeof(drainee[0]) - 1) {
+		break;
+	    }
 	}
     }
     if ((cnt = (int)(dp - drainee)) == 0) {

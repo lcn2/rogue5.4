@@ -466,10 +466,10 @@ As in
 % rogue \fIsave\*_file\fP
 .ip
 To restart from the default save file (see below),
-run
+give its path (the \fB\-r\fP option is ignored):
 .ti +1i
 .nf
-% rogue \-r
+% rogue @SAVEFILE@
 .ip v
 Prints the program release and version number.
 .ip )
@@ -813,8 +813,10 @@ the list is displayed,
 and then the dungeon level is re-displayed.
 Due to speed considerations,
 .i clear
-is the default for terminals without
-clear-to-end-of-line capabilities.
+is the default for terminals with
+clear-to-end-of-line capabilities;
+otherwise the default is
+.i overwrite .
 .ip "\fBname\fP [account name]"
 This is the name of your character.
 It is used if you get on the top ten scorer's list.

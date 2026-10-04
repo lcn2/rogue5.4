@@ -472,8 +472,9 @@ USD:33-8                     A Guide to the Dungeons of Doom
      file name as an argument to rogue.  As in
                % rogue save_file
 
-     To restart from the default save file (see below), run
-               % rogue -r
+     To restart from the default save file (see below), give
+     its path (the -r option is ignored):
+               % rogue @SAVEFILE@
 
 v    Prints the program release and version number.
 
@@ -773,8 +774,9 @@ inven [overwrite]
      time on the top of the  screen,  and  with  clear,  the
      screen  is cleared, the list is displayed, and then the
      dungeon level is re-displayed.  Due to speed considera-
-     tions, clear  is  the  default  for  terminals  without
-     clear-to-end-of-line capabilities.
+     tions, clear  is  the  default  for  terminals  with
+     clear-to-end-of-line capabilities; otherwise the default
+     is overwrite.
 
 name [account name]
      This  is the name of your character.  It is used if you

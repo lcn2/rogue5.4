@@ -139,7 +139,8 @@
             With [1mclear[22m, the screen is cleared, the list is displayed,  and  then
             the dungeon level is re-displayed.
 
-            Default: [1moverwrite[0m
+            Default: [1mclear[0m if the terminal has a clear-to-end-of-line
+            capability (nearly all do), otherwise [1moverwrite[0m
 
             Recommendation: [1moverwrite[0m
 

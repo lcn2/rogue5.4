@@ -237,7 +237,7 @@ With "slow", lists are displayed one item at a time on the top of the screen.
 
 With "clear", the screen is cleared, the list is displayed, and then the dungeon level is re-displayed.
 
-Default: overwrite
+Default: clear if the terminal has a clear-to-end-of-line capability (nearly all do), otherwise overwrite
 
 Recommendation: overwrite
 
@@ -1034,12 +1034,15 @@ When you read use a staff:
 |   6   |  10 % | magic missile | Inflicts 1d4 damage on a target.            |
 |   7   |  10 % | haste monster | Hastens a monster.                          |
 |   8   |  11 % | slow monster  | Slows a monster.                            |
-|   9   |   9 % | drain life    | Drains half hero's hp.  Take same hp from   |
-|       |       |               | all monsters in room or next to in passage. |
+|   9   |   9 % | drain life    | Halves hero's hp; that remaining amount is  |
+|       |       |               | split evenly among the monsters in the room |
+|       |       |               | (or next to hero in a passage) as damage.   |
 |   a   |   1 % | nothing       | A "/dev/null" staff.                        |
 |   b   |   6 % | teleport away | Teleport a monster somewhere else.          |
 |   c   |   6 % | teleport to   | Teleport a monster to near you.             |
 |   d   |   5 % | cancellation  | Suppresses monster's special abilities.     |
+
+Lightning, fire and cold bolts, and magic missile, can be resisted by a monster's saving throw.
 
 
 ## wizard mode spoilers
