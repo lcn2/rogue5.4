@@ -430,7 +430,7 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * If the rogue score file is empty or missing, the code will automatically re-initialize it
 * The top scores are recorded in the rogue score file, regardless of if the game was won or not
 * You may change the `NUMSCORES` value in `config.h` to a value other than 10
-* By default, the `rogue` game is **NOT** installed setguid (`${GROUPOWNER}`, by default, is empty)
+* By default, the `rogue` game is **NOT** installed setgid (`${GROUPOWNER}`, by default, is empty)
 * Rogue prints the version an exits when **rogue -V** command option is given
 * Answering **?**" to the question `What do you want to call it?` will set correct name of the potion
 * To assist debugging rogomatic, when rogue starts with a player name beginning with **rogo-**, then **$ROGOSEED** sets the dungeon seed
@@ -457,15 +457,15 @@ This [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4)
 was cloned from [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4).
 [Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing rogue on the Vax running BSD, wanted to
 port the original game to modern compilers and UNIX-like operating systems
-(such as those that resonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
+(such as those that reasonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
 
 As the [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4)
-is efficetly a "read-only" archive of the Dump of the original
+is effectively a "read-only" archive of the Dump of the original
 [svn r1490](https://github.com/RoguelikeRestorationProject/rogue5.4/commit/9d0dcccc8ec82454bd4d4310f4638985a4726d83),
 [Landon Curt Noll](https://github.com/lcn2) elected to break the form and clone
 [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4) as a standalone repo
 to make it easier for people to contribute [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls)
-directly to this repo.  Even so, we are greatful to the
+directly to this repo.  Even so, we are grateful to the
 [RoguelikeRestorationProject](https://github.com/RoguelikeRestorationProject)
 for making original code base available.
 
@@ -567,7 +567,7 @@ The following table lists the known monsters in the dungeon and their properties
 |    Y   | yeti          | 11..20 |   30 % |       |   50 |  4d8 |   6   | 1x6 / 1x6        |
 |    Z   | zombie        | 05..14 |    0 % | m     |    6 |  2d8 |   8   | 1x8              |
 
-The "**levels**" refers to the dungeon level range on which the given monoster may be found.
+The "**levels**" refers to the dungeon level range on which the given monster may be found.
 
 **NOTE**: Not listed in the above table:
 While on dungeon level 31 only the **D** (dragon) will be found,
@@ -662,11 +662,11 @@ levels deeper) they will have an initial "**HP**" of "12d8".
 
 * note 1: The **F** (venus flytrap) does no damage at first. However, the damage increases by 1 each turn being held.
 
-* note 2: The special attack has a 1d20 saving throw where the value needed to save is: 14 - int(experence_level/2)^2.
+* note 2: The special attack has a 1d20 saving throw where the value needed to save is: 14 - int(experience_level/2)^2.
 
-* note 3: The special attack has a 1d20 saving throw where the value needed to save is: 17 - armor_class - int(experence_level/2).
+* note 3: The special attack has a 1d20 saving throw where the value needed to save is: 17 - armor_class - int(experience_level/2).
 
-* note 4: The special attack removed 1d10 from player maximum HP, and reduces experence_level by 1. 0 experence_level causes death.
+* note 4: The special attack removed 1d10 from player maximum HP, and reduces experience_level by 1. 0 experience_level causes death.
 
 
 ## potion spoilers ==> !

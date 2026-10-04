@@ -1436,8 +1436,13 @@ rs_restore_file(FILE *savef)
 
     encclearerr();
 
-    noscore = 0;
-    rs_read_int(savef, &noscore);
+    {
+	/* once wizard mode has been used, scoring stays disabled even across restore */
+	int saved_noscore = 0;
+
+	rs_read_int(savef, &saved_noscore);
+	noscore = (saved_noscore || noscore || wizard) ? true : false;
+    }
     seenstairs = 0;
     rs_read_int(savef, &seenstairs);
     amulet = 0;
