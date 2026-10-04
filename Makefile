@@ -655,7 +655,7 @@ stddocs: rogue.6 rogue.me rogue.html rogue.doc rogue.cat rogue.md
 
 rogue.6: rogue.6.in
 	${RM} -f $@
-	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
+	LC_ALL=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			  -e 's;${AT}LOCKFILE${AT};${ROGUEDIR}/${LOCKFILE_BASENAME};' \
 			  -e 's;${AT}SAVEFILE${AT};${ROGUEDIR}/${SAVEFILE_BASENAME};' \
 			  -e 's;${AT}SCOREFILE${AT};${ROGUEDIR}/${SCOREFILE_BASENAME};' \
@@ -663,7 +663,7 @@ rogue.6: rogue.6.in
 
 rogue.me: rogue.me.in
 	${RM} -f $@
-	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
+	LC_ALL=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			  -e 's;${AT}LOCKFILE${AT};${ROGUEDIR}/${LOCKFILE_BASENAME};' \
 			  -e 's;${AT}SAVEFILE${AT};${ROGUEDIR}/${SAVEFILE_BASENAME};' \
 			  -e 's;${AT}SCOREFILE${AT};${ROGUEDIR}/${SCOREFILE_BASENAME};' \
@@ -671,7 +671,7 @@ rogue.me: rogue.me.in
 
 rogue.html: rogue.html.in
 	${RM} -f $@
-	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
+	LC_ALL=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			  -e 's;${AT}LOCKFILE${AT};${ROGUEDIR}/${LOCKFILE_BASENAME};' \
 			  -e 's;${AT}SAVEFILE${AT};${ROGUEDIR}/${SAVEFILE_BASENAME};' \
 			  -e 's;${AT}SCOREFILE${AT};${ROGUEDIR}/${SCOREFILE_BASENAME};' \
@@ -680,18 +680,18 @@ rogue.html: rogue.html.in
 rogue.doc: rogue.me rogue.doc.in
 	${RM} -f $@
 	@-if test "x${GROFF}" != "x" -a "x${SED}" != "x" ; then \
-	    echo "${GROFF} -P-c -t -me -Tascii rogue.me | LC_CTYPE=C ${SED} -e 's/.\x08//g' > $@" ; \
-	    ${GROFF} -P-c -t -me -Tascii rogue.me | LC_CTYPE=C ${SED} -e 's/.\x08//g' > $@ ; \
+	    echo "${GROFF} -P-c -t -me -Tascii rogue.me | LC_ALL=C ${SED} -e 's/.\x08//g' > $@" ; \
+	    ${GROFF} -P-c -t -me -Tascii rogue.me | LC_ALL=C ${SED} -e 's/.\x08//g' > $@ ; \
 	elif test "x${NROFF}" != "x" -a "x${TBL}" != "x" -a "x${COLCRT}" != "x" ; then \
 	    echo "${TBL} rogue.me | ${NROFF} -me | colcrt - > $@" ; \
 	    ${TBL} rogue.me | ${NROFF} -me | colcrt - > $@ ; \
         else \
-	    echo "LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
+	    echo "LC_ALL=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			      -e 's;${AT}LOCKFILE${AT};${ROGUEDIR}/${LOCKFILE_BASENAME};' \
 			      -e 's;${AT}SAVEFILE${AT};${ROGUEDIR}/${SAVEFILE_BASENAME};' \
 			      -e 's;${AT}SCOREFILE${AT};${ROGUEDIR}/${SCOREFILE_BASENAME};' \
 			      rogue.doc.in > $@" ; \
-	    LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
+	    LC_ALL=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			      -e 's;${AT}LOCKFILE${AT};${ROGUEDIR}/${LOCKFILE_BASENAME};' \
 			      -e 's;${AT}SAVEFILE${AT};${ROGUEDIR}/${SAVEFILE_BASENAME};' \
 			      -e 's;${AT}SCOREFILE${AT};${ROGUEDIR}/${SCOREFILE_BASENAME};' \
@@ -701,18 +701,18 @@ rogue.doc: rogue.me rogue.doc.in
 rogue.cat: rogue.6 rogue.cat.in
 	${RM} -f $@
 	@-if test "x${GROFF}" != "x" -a "x${SED}" != "x" ; then \
-	    echo "${GROFF} -Tascii -man rogue.6 | LC_CTYPE=C ${SED} -e 's/.\x08//g' > $@" ; \
-	    ${GROFF} -Tascii -man rogue.6 | LC_CTYPE=C ${SED} -e 's/.\x08//g' > $@ ; \
+	    echo "${GROFF} -Tascii -man rogue.6 | LC_ALL=C ${SED} -e 's/.\x08//g' > $@" ; \
+	    ${GROFF} -Tascii -man rogue.6 | LC_ALL=C ${SED} -e 's/.\x08//g' > $@ ; \
 	elif test "x${NROFF}" != "x" -a "x${TBL}" != "x" -a "x${COLCRT}" != "x" ; then \
 	    echo "${NROFF} -man rogue.6 | ${COLCRT} - > $@" ; \
 	    ${NROFF} -man rogue.6 | ${COLCRT} - > $@ ; \
         else \
-	    echo "LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
+	    echo "LC_ALL=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			      -e 's;${AT}LOCKFILE${AT};${ROGUEDIR}/${LOCKFILE_BASENAME};' \
 			      -e 's;${AT}SAVEFILE${AT};${ROGUEDIR}/${SAVEFILE_BASENAME};' \
 			      -e 's;${AT}SCOREFILE${AT};${ROGUEDIR}/${SCOREFILE_BASENAME};' \
 			      rogue.cat.in > $@" ; \
-	    LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
+	    LC_ALL=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			      -e 's;${AT}LOCKFILE${AT};${ROGUEDIR}/${LOCKFILE_BASENAME};' \
 			      -e 's;${AT}SAVEFILE${AT};${ROGUEDIR}/${SAVEFILE_BASENAME};' \
 			      -e 's;${AT}SCOREFILE${AT};${ROGUEDIR}/${SCOREFILE_BASENAME};' \
@@ -721,7 +721,7 @@ rogue.cat: rogue.6 rogue.cat.in
 
 rogue.md: rogue.md.in
 	${RM} -f $@
-	LC_CTYPE=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
+	LC_ALL=C ${SED} -e 's;${AT}PROGRAM${AT};rogue;' \
 			  -e 's;${AT}LOCKFILE${AT};${ROGUEDIR}/${LOCKFILE_BASENAME};' \
 			  -e 's;${AT}SAVEFILE${AT};${ROGUEDIR}/${SAVEFILE_BASENAME};' \
 			  -e 's;${AT}SCOREFILE${AT};${ROGUEDIR}/${SCOREFILE_BASENAME};' \
@@ -732,7 +732,7 @@ rogue.md: rogue.md.in
 #
 form_rogue_cat_in: rogue.6.in
 	${RM} -f rogue.cat.in
-	${GROFF} -Tascii -man rogue.6.in | LC_CTYPE=C ${SED} -e 's/.\x08//g' > rogue.cat.in
+	${GROFF} -Tascii -man rogue.6.in | LC_ALL=C ${SED} -e 's/.\x08//g' > rogue.cat.in
 
 
 #################################################
