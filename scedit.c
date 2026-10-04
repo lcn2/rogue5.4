@@ -263,12 +263,6 @@ do_comm(void)
 	return false; /* quit */
 	break;
 
-    case EOF:
-	printf("EOF\n");
-	fflush(stdout);
-	return false;
-	break;
-
     default:
 	printf("Unknown command character: \"%c\"\n", buf[0]);
 	fflush(stdout);
