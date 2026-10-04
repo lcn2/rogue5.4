@@ -82,7 +82,14 @@ rs_write(FILE *savef, const void *ptr, size_t size)
 void
 rs_read(FILE *savef, void *ptr, size_t size)
 {
-    encread(ptr, size, savef);
+    size_t got;
+
+    got = encread(ptr, size, savef);
+
+    /* a short read (e.g., truncated save file) must not be silently accepted */
+    if (got != size && !encerror()) {
+	encseterr(EIO);
+    }
 }
 
 void
@@ -181,7 +188,7 @@ rs_read_chars(FILE *savef, char *i, int cnt)
 
     rs_read_int(savef, &value);
 
-    if (!encerror() && (value != cnt)) {
+    if (!encerror() && (value != cnt || cnt < 0)) {
 	encseterr(EILSEQ);
     }
 
@@ -254,7 +261,7 @@ rs_read_string(FILE *savef, char *s, int max)
 
     rs_read_int(savef, &len);
 
-    if (!encerror() && (len > max)) {
+    if (!encerror() && (len < 0 || len > max)) {
 	encseterr(EILSEQ);
     }
 
@@ -271,6 +278,11 @@ rs_read_new_string(FILE *savef, char **s)
     rs_read_int(savef, &len);
 
     if (encerror()) {
+	return;
+    }
+
+    if (len < 0 || len > MAXSTR + 1) {
+	encseterr(EILSEQ); /* a forged length must not cause a huge allocation */
 	return;
     }
 
@@ -311,7 +323,7 @@ rs_read_string_index(FILE *savef, const char *master[], int maxindex, const char
 
     rs_read_int(savef, &i);
 
-    if (!encerror() && (i > maxindex)) {
+    if (!encerror() && (i < -1 || i >= maxindex)) {
 	encseterr(EILSEQ);
     } else if (i >= 0) {
 	*str = master[i];

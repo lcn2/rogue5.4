@@ -521,7 +521,7 @@ md_getusername(void)
 
     pw = getpwuid(getuid());
 
-    l = pw->pw_name;
+    l = (pw != NULL) ? pw->pw_name : NULL;
 
     if ((l == NULL) || (*l == '\0')) {
 	if ((l = getenv("USERNAME")) == NULL) {
@@ -551,9 +551,9 @@ md_gethomedir(void)
 
     pw = getpwuid(getuid());
 
-    h = pw->pw_dir;
+    h = (pw != NULL) ? pw->pw_dir : NULL;
 
-    if (strcmp(h, "/") == 0) {
+    if (h != NULL && strcmp(h, "/") == 0) {
 	h = NULL;
     }
     homedir[0] = 0;
@@ -573,7 +573,7 @@ md_gethomedir(void)
     }
 
     len = strlen(homedir);
-    strlcat(homedir, h, PATH_MAX - len);
+    strlcat(homedir, h, PATH_MAX);
     len = strlen(homedir);
 
     if ((len > 0) && (homedir[len - 1] != slash)) {
@@ -598,7 +598,7 @@ md_getshell(void)
     char *def = "/bin/sh";
     struct passwd *pw;
     pw = getpwuid(getuid());
-    s = pw->pw_shell;
+    s = (pw != NULL) ? pw->pw_shell : NULL;
     if ((s == NULL) || (*s == '\0')) {
 	if ((s = getenv("COMSPEC")) == NULL) {
 	    if ((s = getenv("SHELL")) == NULL) {

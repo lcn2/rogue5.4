@@ -261,7 +261,7 @@ get_str(void *vopt, WINDOW *win)
     char *sp;
     int oy, ox;
     int c;
-    static char buf[MAXSTR];
+    static char buf[MAXSTR + 1]; /* +1 for paranoia */
 
     getyx(win, oy, ox);
     wrefresh(win);
@@ -292,9 +292,9 @@ get_str(void *vopt, WINDOW *win)
 	    if (c == '-' && win != stdscr) {
 		break;
 	    } else if (c == '~') {
-		strcpy(buf, home);
-		waddstr(win, home);
-		sp += strlen(home);
+		strlcpy(buf, home, MAXSTR);
+		waddstr(win, buf);
+		sp += strlen(buf);
 		continue;
 	    }
 	}
@@ -307,7 +307,13 @@ get_str(void *vopt, WINDOW *win)
     }
     *sp = '\0';
     if (sp > buf) { /* only change option if something has been typed */
-	strucpy(opt, buf, strlen(buf));
+	size_t len = strlen(buf);
+
+	/* never write beyond the end of the rogue name */
+	if (opt == whoami && len > MAX_USERNAME) {
+	    len = MAX_USERNAME;
+	}
+	strucpy(opt, buf, len);
     }
     mvwprintw(win, oy, ox, "%s\n", opt);
     wrefresh(win);
@@ -409,12 +415,14 @@ parse_opts(char *str)
     int len;
     const char **i;
     char *start;
+    size_t cap;	 /* maximum string length of the option string, excluding the NUL */
+    size_t used; /* length already stored in the option string */
 
     while (*str) {
 	/*
 	 * Get option name
 	 */
-	for (sp = str; isalpha((int)*sp); sp++) {
+	for (sp = str; isalpha((unsigned char)*sp); sp++) {
 	    continue;
 	}
 	len = (int)(sp - str);
@@ -430,12 +438,15 @@ parse_opts(char *str)
 		    /*
 		     * Skip to start of string value
 		     */
-		    for (str = sp + 1; *str == '='; str++) {
+		    for (str = sp + (*sp ? 1 : 0); *str == '='; str++) { /* never step past the NUL byte */
 			continue;
 		    }
+		    cap = (op->o_opt == (void *)whoami) ? MAX_USERNAME : MAXSTR;
+		    used = 0;
 		    if (*str == '~') {
-			strcpy((char *)op->o_opt, home);	  /* NOSTRICT */
-			start = (char *)op->o_opt + strlen(home); /* NOSTRICT */
+			strlcpy((char *)op->o_opt, home, cap + 1); /* NOSTRICT */
+			used = strlen((char *)op->o_opt);	   /* NOSTRICT */
+			start = (char *)op->o_opt + used;	   /* NOSTRICT */
 			while (*++str == '/') {
 			    continue;
 			}
@@ -444,25 +455,34 @@ parse_opts(char *str)
 		    }
 		    /*
 		     * Skip to end of string value
+		     *
+		     * NOTE: Do not look beyond the NUL byte when the value is empty.
 		     */
-		    for (sp = str + 1; *sp && *sp != ','; sp++) {
+		    for (sp = str; *sp && *sp != ','; sp++) {
 			continue;
 		    }
 		    /*
 		     * check for type of inventory
 		     */
 		    if (op->o_putfunc == put_inv_t) {
-			if (islower((int)*str)) {
-			    *str = (char)toupper(*str);
-			}
+			/* do not modify the environment string: compare the 1st letter case insensitively */
 			for (i = inv_t_name; i <= &inv_t_name[INV_CLEAR]; i++) {
-			    if (strncmp(str, *i, sp - str) == 0) {
+			    if (sp > str && toupper((unsigned char)*str) == (*i)[0] &&
+				strncmp(str + 1, (*i) + 1, sp - str - 1) == 0) {
 				inv_type = (int)(i - inv_t_name);
 				break;
 			    }
 			}
 		    } else {
-			strucpy(start, str, (size_t)(sp - str));
+			size_t vlen = (size_t)(sp - str);
+
+			if (vlen > cap - used) {
+			    vlen = cap - used;
+			}
+			/* an empty value leaves the current (default) value alone */
+			if (vlen > 0 || used > 0) {
+			    strucpy(start, str, vlen);
+			}
 		    }
 		}
 		break;
@@ -479,7 +499,7 @@ parse_opts(char *str)
 	/*
 	 * skip to start of next option name
 	 */
-	while (*sp && !isalpha((int)*sp)) {
+	while (*sp && !isalpha((unsigned char)*sp)) {
 	    sp++;
 	}
 	str = sp;
