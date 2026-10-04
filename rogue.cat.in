@@ -310,7 +310,7 @@
 
      For a general overview of code improvements, see:
 
-          [4mhttps://github.com/lcn2/rogue5.4#why-yet-another-rouge-repo[0m
+          [4mhttps://github.com/lcn2/rogue5.4#why-yet-another-rogue-repo[0m
 
      [1mIMPORTANT NOTE  :  [22mThis code is [1mNOT the so-called [4m[22mPublic[24m [4mdomain[24m [4mrogue[24m [1mrogue[0m
      [1mgame that distributions such as NetBSD imported from 386BSD.  [22mThat  "[4mPublic[0m
@@ -341,7 +341,7 @@
      Probably  infinite  (although  countably infinite).  However, that Ice Mon-
      sters sometimes transfix you permanently is [4mnot[24m a bug.  It's a feature.
 
-     We    very    much    welcome     rogue5.4     GutHub     pull     requests
+     We    very    much    welcome     rogue5.4     GitHub     pull     requests
      ([4mhttps://github.com/lcn2/rogue5.4/pulls[24m)  to  fix  any failures to compile,
      compiler warning messages, and/or program crashes.
 

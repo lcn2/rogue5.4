@@ -533,7 +533,7 @@ of significant bug fixes to help avoid the game crashing.
 For a general overview of code improvements, see:
 .sp
 .in +0.5i
-.I https://github.com/lcn2/rogue5.4#why-yet-another-rouge-repo
+.I https://github.com/lcn2/rogue5.4#why-yet-another-rogue-repo
 .in -0.5i
 .PP
 .BR IMPORTANT\ NOTE :
@@ -594,7 +594,7 @@ is hyperbole and not intended to imply that nobody has achieved the goal.
 has completed the goal (won) at least 3 times (without using wizard mode),
 and reached a maximum dungeon depth (and successful return to level 0) of 31.
 .PP
-We very much welcome rogue5.4 GutHub pull requests
+We very much welcome rogue5.4 GitHub pull requests
 (\fIhttps://github.com/lcn2/rogue5.4/pulls\fP) to fix any
 failures to compile, compiler warning messages, and/or program crashes.
 .PP

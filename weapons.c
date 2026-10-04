@@ -257,7 +257,7 @@ wield(void)
 
 /*
  * fallpos:
- *	Pick a random position around the give (y, x) coordinates
+ *	Pick a random position around the given (y, x) coordinates
  */
 int
 fallpos(const coord *pos, coord *newpos)

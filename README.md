@@ -401,7 +401,7 @@ sudo make install ROGUEDIR=/var/tmp
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
-## Why yet another rouge repo?
+## Why yet another rogue repo?
 
 This code is based on the "Rogue like restoration project"'s [rogue5.4](https://github.com/RoguelikeRestorationProject/rogue5.4).
 
@@ -409,8 +409,8 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 
 * Improved the C source to be able to compile under recent C compilers
 * Fixed many bugs in the rogue code
-* Fixed the code to compile both the `findpw` and `scedit` rouge tools
-* Install the `findpw` and `scedit` rouge tools
+* Fixed the code to compile both the `findpw` and `scedit` rogue tools
+* Install the `findpw` and `scedit` rogue tools
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
 * To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
@@ -428,12 +428,12 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * Fixed bugs related to the reading and writing of the score file
 * Detects if the rogue score file is an old incompatible format and/or corrupt
 * If the rogue score file is empty or missing, the code will automatically re-initialize it
-* The top scores are recorded in the rogue score file, regardless of if the game was won or not
+* The top scores are recorded in the rogue score file, regardless of whether the game was won or not (except that a game in which **wizard mode** was ever enabled is never recorded)
 * You may change the `NUMSCORES` value in `config.h` to a value other than 10
 * By default, the `rogue` game is **NOT** installed setgid (`${GROUPOWNER}`, by default, is empty)
-* Rogue prints the version an exits when **rogue -V** command option is given
+* Rogue prints the version and exits when **rogue -V** command option is given
 * Answering **?**" to the question `What do you want to call it?` will set correct name of the potion
-* To assist debugging rogomatic, when rogue starts with a player name beginning with **rogo-**, then **$ROGOSEED** sets the dungeon seed
+* To assist debugging rogomatic, when rogue starts with a player name beginning with **rogo-**, then **$ROGOSEED** sets the dungeon seed (otherwise **$ROGOSEED** is ignored)
 * The **v** command prints the rogue version, rogue release date, and dungeon number
 * etc.
 
@@ -699,7 +699,7 @@ the question:
 > What do you want to call it?
 
 If you answer with a single question mark (i.e., "**?**"), the game will
-name provide the correct name of the potion.  Thus, when you find another
+provide the correct name of the potion.  Thus, when you find another
 potion of the same type, you will see the correct potion name.
 
 
@@ -727,7 +727,7 @@ When you read a scroll:
 |   b   |   2 % | food detection               | Your nose tingles and you smell food.                 |
 |       |       |                              |   -or-                                                |
 |       |       |                              | Your nose tingles                                     |
-|   c   |   5 % | teleportation                | ((you jump to a randomly spot on the current level))  |
+|   c   |   5 % | teleportation                | ((you jump to a random spot on the current level))  |
 |   d   |   8 % | enchant weapon               | Your ((name of armor)) glows ... for a moment         |
 |       |       |                              |   -or-                                                |
 |       |       |                              | You feel a strange sense of loss                      |
@@ -751,7 +751,7 @@ the question:
 > What do you want to call it?
 
 If you answer with a single question mark (i.e., "**?**"), the game will
-name provide the correct name of the scroll.  Thus, when you find another
+provide the correct name of the scroll.  Thus, when you find another
 scroll of the same type, you will see the correct scroll name.
 
 
@@ -821,7 +821,7 @@ monster in the distance that is moving towards you in an effort to weaken
 it before having to engage in direct combat.
 
 **TIP**: When you are "firing" arrows while wielding a bow
-(i.e., shooting arrows as descried above), use the "**a**" to
+(i.e., shooting arrows as described above), use the "**a**" to
 repeat the last command to "fire" multiple arrows.
 
 For example: assume your bow is in inventory is:
@@ -1057,8 +1057,8 @@ You may also start rogue in **wizard mode** by giving an empty 2nd argument:
 rogue ""
 ```
 
-If you start start rogue in **wizard mode**, then the `$SEED` environment variable
-may be used to set a specific dungeon number and pseudo-random number seed.
+If you start rogue in **wizard mode**, then the `$SEED` environment variable
+is honored and may be used to set a specific dungeon number and pseudo-random number seed.
 
 **NOTE**: A seed is likely portable across different systems that implement
 the BSD `random(3)` facility, for rogue release date **2026-02-24**
@@ -1158,7 +1158,7 @@ For "\*" ("_List types of an object_"), when it asks:
 > For what type of object do you want a list?
 
 enter the symbol you want to create.
-Refer too the symbol table under the "To play rogue" above for what to create.
+Refer to the symbol table under the "To play rogue" above for what to create.
 
 The "\*" ("_list types of an object_") command is only useful for:
 
@@ -1190,7 +1190,7 @@ Finally, when creating a weapon, armor or ring, it will ask:
 
 > Blessing? (+,-,n)
 
-Enter "+" for a enhanced item, "-" for a reduced item, or "n" for normal item.
+Enter "+" for an enhanced item, "-" for a reduced item, or "n" for normal item.
 
 
 # Reporting Security Issues

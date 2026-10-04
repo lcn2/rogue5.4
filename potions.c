@@ -67,7 +67,7 @@ quaff(void)
 
     obj = get_item("quaff", POTION);
     /*
-     * Make certain that it is somethings that we want to drink
+     * Make certain that it is something that we want to drink
      */
     if (obj == NULL) {
 	return;

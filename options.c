@@ -324,7 +324,7 @@ get_str(void *vopt, WINDOW *win)
 	     */
 	    if (rogo_name_required) {
 		/* case: $ROGOSEED was used at startup */
-		if (strncmp("rogo-", buf, sizeof("rogo-")-1) == 0) {
+		if (strncmp("rogo-", buf, sizeof("rogo-") - 1) == 0) {
 		    /* rogue name starts with "rogo-", so rogue name change is OK */
 		    strucpy(opt, buf, len);
 		}
@@ -333,9 +333,9 @@ get_str(void *vopt, WINDOW *win)
 		strucpy(opt, buf, len);
 	    }
 
-	/*
-	 * case: changing something else other than the rogue name
-	 */
+	    /*
+	     * case: changing something else other than the rogue name
+	     */
 	} else {
 	    strucpy(opt, buf, len);
 	}

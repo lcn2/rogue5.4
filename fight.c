@@ -445,7 +445,7 @@ roll_em(const THING *thatt, THING *thdef, const THING *weap, int hurl)
 	}
     }
     /*
-     * If the creature being attacked is not running (alseep or held)
+     * If the creature being attacked is not running (asleep or held)
      * then the attacker gets a plus four bonus to hit.
      */
     if (!on(*thdef, ISRUN)) {
