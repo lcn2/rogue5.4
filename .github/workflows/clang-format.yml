@@ -1,0 +1,18 @@
+name: clang-format
+
+on:
+  pull_request:
+    branches: [ "master", "rogue54-audit" ]
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+      - name: Format must not change sources
+        run: make clang-format && git diff --exit-code
