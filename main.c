@@ -191,6 +191,7 @@ main(int argc, char **argv)
 	    ret = strtol(env, NULL, 0);
 	    if (errno == 0) {
 		dnum = (unsigned int)ret;
+		rogo_name_required = true;  /* rogue name must start with rogo- when $ROGOSEED is used  */
 	    } else {
 		fprintf(stderr, "ERROR: whoami: %s unable to convert $ROGOSEED into dungeon number: %s error: %s\n", whoami, env,
 			strerror(errno));

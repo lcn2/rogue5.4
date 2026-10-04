@@ -309,11 +309,36 @@ get_str(void *vopt, WINDOW *win)
     if (sp > buf) { /* only change option if something has been typed */
 	size_t len = strlen(buf);
 
-	/* never write beyond the end of the rogue name */
-	if (opt == whoami && len > MAX_USERNAME) {
-	    len = MAX_USERNAME;
+	/*
+	 * case: changing rogue name
+	 */
+	if (opt == whoami) {
+
+	    /* never write beyond the end of the rogue name */
+	    if (len > MAX_USERNAME) {
+		len = MAX_USERNAME;
+	    }
+
+	    /*
+	     * if $ROGOSEED was used at startup, changing rogue MUST start with "rogo-"
+	     */
+	    if (rogo_name_required) {
+		/* case: $ROGOSEED was used at startup */
+		if (strncmp("rogo-", buf, sizeof("rogo-")-1) == 0) {
+		    /* rogue name starts with "rogo-", so rogue name change is OK */
+		    strucpy(opt, buf, len);
+		}
+	    } else {
+		/* case: $ROGOSEED wasn't used at startup, so rogue name change is OK */
+		strucpy(opt, buf, len);
+	    }
+
+	/*
+	 * case: changing something else other than the rogue name
+	 */
+	} else {
+	    strucpy(opt, buf, len);
 	}
-	strucpy(opt, buf, len);
     }
     mvwprintw(win, oy, ox, "%s\n", opt);
     wrefresh(win);

@@ -44,6 +44,7 @@ int stat_msg = false;	 /* Should status() print as a msg() */
 int terse = false;	 /* True if we should be short */
 int to_death = false;	 /* Fighting is to the death! */
 int tombstone = true;	 /* Print out tombstone at end */
+int rogo_name_required = false;	/* true ==> $ROGOSEED used, rogue player must start with rogo- */
 #ifdef MASTER
 int wizard = false; /* True if allows wizard commands */
 #endif
