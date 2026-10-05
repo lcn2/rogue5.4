@@ -639,8 +639,8 @@ the file name as an argument to rogue. As
 in</p>
 		<p align="justify">% rogue
 <i>save_file</i></p>
-		<p align="justify">To restart from the default save file (see below), run </p>
-		<p align="justify">% rogue -r</td>
+		<p align="justify">To restart from the default save file (see below), give its path (the -r option is ignored): </p>
+		<p align="justify">% rogue @SAVEFILE@</td>
 	</tr>
 	<tr>
 		<td align="left" valign="top">
@@ -959,8 +959,8 @@ With <i>slow</i>, lists are displayed one item at a time on
 the top of the screen, and with <i>clear</i>, the screen is
 cleared, the list is displayed, and then the dungeon level
 is re-displayed. Due to speed considerations, <i>clear</i>
-is the default for terminals without clear-to-end-of-line
-capabilities.</p>
+is the default for terminals with clear-to-end-of-line
+capabilities; otherwise the default is <i>overwrite</i>.</p>
 </blockquote>
 <p align="justify"><b>name</b> [account
 name]</p>

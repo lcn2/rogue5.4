@@ -271,6 +271,8 @@ the screen is cleared, the list is displayed, and then the dungeon level is re-d
 .sp
 Default:
 .B clear
+if the terminal has a clear-to-end-of-line capability (nearly all do), otherwise
+.B overwrite
 .sp
 Recommendation:
 .B overwrite
@@ -448,7 +450,9 @@ The length of the rogue score file is usually 112 bytes per score slot, so the d
 rogue score file size is 1120 bytes.
 .sp
 Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue scores,
-no matter how they were played, and no matter if they won the game or not.
+whether or not the character won the game.
+However, a game in which wizard mode was ever enabled
+(even if later disabled, or after a save and restore) is never recorded.
 .sp
 If the rogue score file does not exist,
 .B rogue
@@ -533,7 +537,7 @@ of significant bug fixes to help avoid the game crashing.
 For a general overview of code improvements, see:
 .sp
 .in +0.5i
-.I https://github.com/lcn2/rogue5.4#why-yet-another-rouge-repo
+.I https://github.com/lcn2/rogue5.4#why-yet-another-rogue-repo
 .in -0.5i
 .PP
 .BR IMPORTANT\ NOTE :
@@ -594,7 +598,7 @@ is hyperbole and not intended to imply that nobody has achieved the goal.
 has completed the goal (won) at least 3 times (without using wizard mode),
 and reached a maximum dungeon depth (and successful return to level 0) of 31.
 .PP
-We very much welcome rogue5.4 GutHub pull requests
+We very much welcome rogue5.4 GitHub pull requests
 (\fIhttps://github.com/lcn2/rogue5.4/pulls\fP) to fix any
 failures to compile, compiler warning messages, and/or program crashes.
 .PP

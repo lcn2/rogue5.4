@@ -31,7 +31,7 @@ ring_on(void)
 
     obj = get_item("put on", RING);
     /*
-     * Make certain that it is somethings that we want to wear
+     * Make certain that it is something that we want to wear
      */
     if (obj == NULL) {
 	return;

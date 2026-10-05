@@ -324,7 +324,7 @@ restore(const char *file)
     /*
      * object if screen is too small
      */
-    if (lines < NUMLINES || cols < NUMCOLS) {
+    if (lines < NUMLINES || cols < NUMCOLS || LINES < NUMLINES || COLS < NUMCOLS) {
 	endwin_and_ncurses_cleanup();
 	fprintf(stderr, "\r\nSorry, the current screen only has %d lines and %d columns.\r\n", LINES, COLS);
 	fprintf(stderr, "The screen must have at least %d lines and %d columns.\r\n", NUMLINES, NUMCOLS);
@@ -386,7 +386,15 @@ restore(const char *file)
     /*
      * complete the game state restoration process
      */
-    rs_restore_file(inf);
+    if (rs_restore_file(inf) != 0) {
+	endwin_and_ncurses_cleanup();
+	printf("Sorry, the rogue save file is truncated or corrupt: %s\r\n", file);
+	printf("Unable to restore: %s\r\n", file);
+	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
+	return false;
+    }
 
     /*
      * catch the attempt to save a dead player
@@ -578,7 +586,7 @@ rd_score(SCORE *top_score)
     }
     if (failed) {
 	printf("ERROR: The score file format is too old and/or has been corrupted!\r\n");
-	printf("WARNING: Before running rouge again, remove the score file: %s\r\n", score_path);
+	printf("WARNING: Before running rogue again, remove the score file: %s\r\n", score_path);
 	fflush(stdout);
 	exit(50); /*coo*/
     }

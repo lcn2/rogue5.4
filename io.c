@@ -74,7 +74,7 @@ endmsg(void)
     int ch;
 
     if (save_msg) {
-	strcpy(huh, msgbuf);
+	strlcpy(huh, msgbuf, sizeof(huh));
     }
     if (mpos) {
 	look(false);
@@ -127,7 +127,7 @@ doadd(const char *fmt, va_list args)
     if (strlen(buf) + newpos >= MAXMSG) {
 	endmsg();
     }
-    strcat(msgbuf, buf);
+    strlcat(msgbuf, buf, sizeof(msgbuf)); /* buf can be longer than the whole message line */
     newpos = (int)strlen(msgbuf);
 }
 

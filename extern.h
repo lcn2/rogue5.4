@@ -1,5 +1,5 @@
 /*
- * Widely sued defines and extern statements
+ * Widely used defines and extern statements
  *
  * @(#)extern.h	4.35 (Berkeley) 02/05/99
  *

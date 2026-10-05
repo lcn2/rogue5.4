@@ -901,7 +901,7 @@ call(void)
 
     obj = get_item("call", CALLABLE);
     /*
-     * Make certain that it is somethings that we want to wear
+     * Make certain that it is something that we want to wear
      */
     if (obj == NULL) {
 	return;

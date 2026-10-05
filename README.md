@@ -121,7 +121,9 @@ The following table may help explain the symbols you see when playing rogue:
 |    ]   | armor   |
 |    ,   | amulet  |
 |    =   | ring    |
-|    /   | staff   |
+|    /   | wand or staff |
+|    %   | stairs  |
+|    $   | magic item (shown by detect magic) |
 
 For more information about the make, see the `rogue(6)` man page after installing, or run the command
 from the top level directory:
@@ -235,7 +237,7 @@ With "slow", lists are displayed one item at a time on the top of the screen.
 
 With "clear", the screen is cleared, the list is displayed, and then the dungeon level is re-displayed.
 
-Default: clear
+Default: clear if the terminal has a clear-to-end-of-line capability (nearly all do), otherwise overwrite
 
 Recommendation: overwrite
 
@@ -343,15 +345,18 @@ The length of the rogue score file is usually 112 bytes per score slot,
 so the default rogue score file size is 1120 bytes.
 
 Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue scores,
-no matter how they were played, and no matter if they won the game or not.
+whether or not the character won the game.  However, a game in which wizard mode
+was ever enabled (even if later disabled, or after a save and restore) is never
+recorded in the rogue score file.
 
 If the rogue score file does not exist, the `rogue` game will create it.
 
 If the rogue score file is corrupted, or the format is too old, then
 the `rogue` game will display an error message and recommend removing it.
 
-The use of `rogue -r` will cause the default rogue save file, as defined by the
-`-DSCOREPATH=..` as used by the compile lines as specified by the `Makefile`.
+The `-r` flag is accepted and ignored (kept for backward compatibility).
+The default rogue save file is defined by `-DSAVEPATH=..` as used by the
+compile lines as specified by the `Makefile`.
 
 **IMPORTANT NOTE**: Changing the `NUMSCORES` value will cause rogue score files
 with a different number of slots to become invalid.  A game compiled
@@ -401,7 +406,7 @@ sudo make install ROGUEDIR=/var/tmp
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
-## Why yet another rouge repo?
+## Why yet another rogue repo?
 
 This code is based on the "Rogue like restoration project"'s [rogue5.4](https://github.com/RoguelikeRestorationProject/rogue5.4).
 
@@ -409,8 +414,8 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 
 * Improved the C source to be able to compile under recent C compilers
 * Fixed many bugs in the rogue code
-* Fixed the code to compile both the `findpw` and `scedit` rouge tools
-* Install the `findpw` and `scedit` rouge tools
+* Fixed the code to compile both the `findpw` and `scedit` rogue tools
+* Install the `findpw` and `scedit` rogue tools
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
 * To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
@@ -428,12 +433,12 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * Fixed bugs related to the reading and writing of the score file
 * Detects if the rogue score file is an old incompatible format and/or corrupt
 * If the rogue score file is empty or missing, the code will automatically re-initialize it
-* The top scores are recorded in the rogue score file, regardless of if the game was won or not
+* The top scores are recorded in the rogue score file, regardless of whether the game was won or not (except that a game in which **wizard mode** was ever enabled is never recorded)
 * You may change the `NUMSCORES` value in `config.h` to a value other than 10
 * By default, the `rogue` game is **NOT** installed setgid (`${GROUPOWNER}`, by default, is empty)
-* Rogue prints the version an exits when **rogue -V** command option is given
+* Rogue prints the version and exits when **rogue -V** command option is given
 * Answering **?**" to the question `What do you want to call it?` will set correct name of the potion
-* To assist debugging rogomatic, when rogue starts with a player name beginning with **rogo-**, then **$ROGOSEED** sets the dungeon seed
+* To assist debugging rogomatic, when rogue starts with a player name beginning with **rogo-**, then **$ROGOSEED** sets the dungeon seed (otherwise **$ROGOSEED** is ignored)
 * The **v** command prints the rogue version, rogue release date, and dungeon number
 * etc.
 
@@ -549,7 +554,7 @@ The following table lists the known monsters in the dungeon and their properties
 |    G   | griffin       | 20..29 |   20 % | m f r | 2000 | 13d8 |   2   | 4x3 / 3x5        |
 |    H   | hobgoblin     | 01..10 |    0 % | m     |    3 |  1d8 |   5   | 1x8              |
 |    I   | ice monster   | 02..11 |    0 % |       |    5 |  1d8 |   9   | 0x0              |
-|    J   | jabberwock    | 21..30 |   70 % |       | 3000 |  15d8 |   6   | 2x12 / 2x4       |
+|    J   | jabberwock    | 21..30 |   70 % |       | 3000 | 15d8 |   6   | 2x12 / 2x4       |
 |    K   | kestrel       | 01..06 |    0 % | m f   |    1 |  1d8 |   7   | 1x4              |
 |    L   | leprechaun    | 06..15 |    0 % |       |   10 |  3d8 |   8   | 1x1              |
 |    M   | medusa        | 18..27 |   40 % | m     |  200 |  8d8 |   2   | 3x4 / 3x4 / 2x5  |
@@ -570,10 +575,13 @@ The following table lists the known monsters in the dungeon and their properties
 The "**levels**" refers to the dungeon level range on which the given monster may be found.
 
 **NOTE**: Not listed in the above table:
-While on dungeon level 31 only the **D** (dragon) will be found,
-starting with dungeon level 32 (should you be that daring to try),
-you will find a mixture of **M** (medusa), **V** (vampire), **G** (griffin),
-**J** (jabberwock), and **D** (dragon) monsters.
+Starting at dungeon level 23, the monster selection can run off the end of the
+monster list and wrap around to a mixture of **M** (medusa), **V** (vampire),
+**G** (griffin), **J** (jabberwock), and **D** (dragon) monsters.  The "**levels**"
+above show the primary range only.  By dungeon level 32 and deeper
+(should you be that daring to try), these five are most of what you will find.
+Wandering monsters (those that arrive after the level is created) are never
+**F**, **I**, **L**, **N**, **X**, or **D**.
 
 Some monsters carry treasure that they drop when they are killed.  The "**carry**"
 is the percentage chance that the monster will drop treasure when it dies.
@@ -699,7 +707,7 @@ the question:
 > What do you want to call it?
 
 If you answer with a single question mark (i.e., "**?**"), the game will
-name provide the correct name of the potion.  Thus, when you find another
+provide the correct name of the potion.  Thus, when you find another
 potion of the same type, you will see the correct potion name.
 
 
@@ -727,7 +735,7 @@ When you read a scroll:
 |   b   |   2 % | food detection               | Your nose tingles and you smell food.                 |
 |       |       |                              |   -or-                                                |
 |       |       |                              | Your nose tingles                                     |
-|   c   |   5 % | teleportation                | ((you jump to a randomly spot on the current level))  |
+|   c   |   5 % | teleportation                | ((you jump to a random spot on the current level))    |
 |   d   |   8 % | enchant weapon               | Your ((name of armor)) glows ... for a moment         |
 |       |       |                              |   -or-                                                |
 |       |       |                              | You feel a strange sense of loss                      |
@@ -751,7 +759,7 @@ the question:
 > What do you want to call it?
 
 If you answer with a single question mark (i.e., "**?**"), the game will
-name provide the correct name of the scroll.  Thus, when you find another
+provide the correct name of the scroll.  Thus, when you find another
 scroll of the same type, you will see the correct scroll name.
 
 
@@ -821,7 +829,7 @@ monster in the distance that is moving towards you in an effort to weaken
 it before having to engage in direct combat.
 
 **TIP**: When you are "firing" arrows while wielding a bow
-(i.e., shooting arrows as descried above), use the "**a**" to
+(i.e., shooting arrows as described above), use the "**a**" to
 repeat the last command to "fire" multiple arrows.
 
 For example: assume your bow is in inventory is:
@@ -900,7 +908,7 @@ and want to be ready by the time the monster is right on top of you.
 When you have armor:
 
 | index | freq. | protection | armor                  |
-|-------|-------|------------|-------------------------
+|-------|-------|------------|-------------------------|
 |   0   |  20 % |      2     | leather armor          |
 |   1   |  15 % |      3     | ring mail              |
 |   2   |  15 % |      3     | studded leather armor  |
@@ -1026,12 +1034,15 @@ When you read use a staff:
 |   6   |  10 % | magic missile | Inflicts 1d4 damage on a target.            |
 |   7   |  10 % | haste monster | Hastens a monster.                          |
 |   8   |  11 % | slow monster  | Slows a monster.                            |
-|   9   |   9 % | drain life    | Drains half hero's hp.  Take same hp from   |
-|       |       |               | all monsters in room or next to in passage. |
+|   9   |   9 % | drain life    | Halves hero's hp; that remaining amount is  |
+|       |       |               | split evenly among the monsters in the room |
+|       |       |               | (or next to hero in a passage) as damage.   |
 |   a   |   1 % | nothing       | A "/dev/null" staff.                        |
 |   b   |   6 % | teleport away | Teleport a monster somewhere else.          |
 |   c   |   6 % | teleport to   | Teleport a monster to near you.             |
 |   d   |   5 % | cancellation  | Suppresses monster's special abilities.     |
+
+Lightning, fire and cold bolts, and magic missile, can be resisted by a monster's saving throw.
 
 
 ## wizard mode spoilers
@@ -1057,8 +1068,8 @@ You may also start rogue in **wizard mode** by giving an empty 2nd argument:
 rogue ""
 ```
 
-If you start start rogue in **wizard mode**, then the `$SEED` environment variable
-may be used to set a specific dungeon number and pseudo-random number seed.
+If you start rogue in **wizard mode**, then the `$SEED` environment variable
+is honored and may be used to set a specific dungeon number and pseudo-random number seed.
 
 **NOTE**: A seed is likely portable across different systems that implement
 the BSD `random(3)` facility, for rogue release date **2026-02-24**
@@ -1137,7 +1148,7 @@ When you are in **wizard mode**, you have these special commands available to yo
 | command | action                                                 |
 |---------|--------------------------------------------------------|
 |    +    | Toggle wizard mode                                     |
-|    |    | Show location                                          |
+|   \|   | Show location                                          |
 |    C    | Create                                                 |
 |    $    | Count items in pack                                    |
 | ctrl G  | Inventory current level                                |
@@ -1150,7 +1161,7 @@ When you are in **wizard mode**, you have these special commands available to yo
 | ctrl Q  | Show passage ways                                      |
 | ctrl X  | Toggle see monsters on level                           |
 |    ~    | Super charge staff                                     |
-| ctrl I  | +10 Exp, add +8 plate mail, add +1,+1 two handed sword |
+| ctrl I  | Raise 9 levels, wield +1,+1 two handed sword, wear +8 plate mail |
 |    *    | List types of an object                                |
 
 For "\*" ("_List types of an object_"), when it asks:
@@ -1158,7 +1169,7 @@ For "\*" ("_List types of an object_"), when it asks:
 > For what type of object do you want a list?
 
 enter the symbol you want to create.
-Refer too the symbol table under the "To play rogue" above for what to create.
+Refer to the symbol table under the "To play rogue" above for what to create.
 
 The "\*" ("_list types of an object_") command is only useful for:
 
@@ -1190,7 +1201,7 @@ Finally, when creating a weapon, armor or ring, it will ask:
 
 > Blessing? (+,-,n)
 
-Enter "+" for a enhanced item, "-" for a reduced item, or "n" for normal item.
+Enter "+" for an enhanced item, "-" for a reduced item, or "n" for normal item.
 
 
 # Reporting Security Issues
