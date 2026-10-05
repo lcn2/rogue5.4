@@ -452,7 +452,7 @@ command(void)
 		    if (wizard) {
 			noscore = true;
 			turn_see(false);
-			msg("you are suddenly as smart as Ken Arnold in dungeon #%d", dnum);
+			msg("you are suddenly as smart as Ken Arnold in dungeon #%u", dnum);
 		    } else {
 			msg("sorry");
 		    }
