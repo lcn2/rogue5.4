@@ -1,5 +1,5 @@
 /*
- * global variable initializaton
+ * global variable initialization
  *
  * @(#)extern.c	4.82 (Berkeley) 02/05/99
  *
@@ -17,33 +17,34 @@
 #include "config.h"
 #include "rogue.h"
 
-int after;		 /* True if we want after daemons */
-int again;		 /* Repeating the last command */
-int noscore = false;	 /* Was a wizard sometime */
-int seenstairs;		 /* Have seen the stairs (for lsd) */
-int amulet = false;	 /* He found the amulet */
-int door_stop = false;	 /* Stop running when we pass a door */
-int fight_flush = false; /* True if toilet input */
-int firstmove = false;	 /* First move after setting door_stop */
-int got_ltc = false;	 /* We have gotten the local tty chars */
-int has_hit = false;	 /* Has a "hit" message pending in msg */
-int in_shell = false;	 /* True if executing a shell */
-int inv_describe = true; /* Say which way items are being used */
-int jump = false;	 /* Show running as series of jumps */
-int kamikaze = false;	 /* to_death really to DEATH */
-int lower_msg = false;	 /* Messages should start w/lower case */
-int move_on = false;	 /* Next move shouldn't pick up items */
-int msg_esc = false;	 /* Check for ESC from msg's --More-- */
-int passgo = false;	 /* Follow passages */
-int playing = true;	 /* True until he quits */
-int q_comm = false;	 /* Are we executing a 'Q' command? */
-int running = false;	 /* True if player is running */
-int save_msg = true;	 /* Remember last msg */
-int see_floor = true;	 /* Show the lamp illuminated floor */
-int stat_msg = false;	 /* Should status() print as a msg() */
-int terse = false;	 /* True if we should be short */
-int to_death = false;	 /* Fighting is to the death! */
-int tombstone = true;	 /* Print out tombstone at end */
+int after;			/* True if we want after daemons */
+int again;			/* Repeating the last command */
+int noscore = false;		/* Was a wizard sometime */
+int seenstairs;			/* Have seen the stairs (for lsd) */
+int amulet = false;		/* He found the amulet */
+int door_stop = false;		/* Stop running when we pass a door */
+int fight_flush = false;	/* True if toilet input */
+int firstmove = false;		/* First move after setting door_stop */
+int got_ltc = false;		/* We have gotten the local tty chars */
+int has_hit = false;		/* Has a "hit" message pending in msg */
+int in_shell = false;		/* True if executing a shell */
+int inv_describe = true;	/* Say which way items are being used */
+int jump = false;		/* Show running as series of jumps */
+int kamikaze = false;		/* to_death really to DEATH */
+int lower_msg = false;		/* Messages should start w/lower case */
+int move_on = false;		/* Next move shouldn't pick up items */
+int msg_esc = false;		/* Check for ESC from msg's --More-- */
+int passgo = false;		/* Follow passages */
+int playing = true;		/* True until he quits */
+int q_comm = false;		/* Are we executing a 'Q' command? */
+int running = false;		/* True if player is running */
+int save_msg = true;		/* Remember last msg */
+int see_floor = true;		/* Show the lamp illuminated floor */
+int stat_msg = false;		/* Should status() print as a msg() */
+int terse = false;		/* True if we should be short */
+int to_death = false;		/* Fighting is to the death! */
+int tombstone = true;		/* Print out tombstone at end */
+int rogo_name_required = false; /* true ==> $ROGOSEED used, rogue player must start with rogo- */
 #ifdef MASTER
 int wizard = false; /* True if allows wizard commands */
 #endif
@@ -169,7 +170,7 @@ PLACE places[(MAXLINES * MAXCOLS) + 1]; /* level map, +1 for paranoia */
 
 THING *cur_armor;	   /* What he is wearing */
 THING *cur_ring[2];	   /* Which rings are being worn */
-THING *cur_weapon;	   /* Which weapon he is weilding */
+THING *cur_weapon;	   /* Which weapon he is wielding */
 THING *l_last_pick = NULL; /* Last last_pick */
 THING *last_pick = NULL;   /* Last object picked in get_item() */
 THING *lvl_obj = NULL;	   /* List of objects on this level */

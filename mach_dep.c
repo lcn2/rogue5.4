@@ -526,7 +526,7 @@ form_home(void)
 
 /*
  * form_lock_path:
- *	determine rouge score lock path
+ *	determine rogue score lock path
  */
 
 void
@@ -555,7 +555,7 @@ form_lock_path(void)
 
 /*
  * form_save_path:
- *	determine rouge save file path
+ *	determine rogue save file path
  */
 
 void
@@ -584,7 +584,7 @@ form_save_path(void)
 
 /*
  * form_score_path:
- *	determine rouge score file path
+ *	determine rogue score file path
  */
 
 void

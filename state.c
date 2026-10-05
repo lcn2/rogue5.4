@@ -67,6 +67,12 @@
 #define RSID_COORDLIST 0XABCD0016
 #define RSID_ROOMS 0XABCD0017
 
+/* upper limit on any restored list of things or objects */
+#define RS_MAXLIST (MAXLINES * MAXCOLS)
+
+/* upper limit on the saved screen size in either dimension */
+#define RS_MAXWINDIM 1024
+
 #define READSTAT (format_error || read_error)
 #define WRITESTAT (write_error)
 
@@ -82,7 +88,14 @@ rs_write(FILE *savef, const void *ptr, size_t size)
 void
 rs_read(FILE *savef, void *ptr, size_t size)
 {
-    encread(ptr, size, savef);
+    size_t got;
+
+    got = encread(ptr, size, savef);
+
+    /* a short read (e.g., truncated save file) must not be silently accepted */
+    if (got != size && !encerror()) {
+	encseterr(EIO);
+    }
 }
 
 void
@@ -181,7 +194,7 @@ rs_read_chars(FILE *savef, char *i, int cnt)
 
     rs_read_int(savef, &value);
 
-    if (!encerror() && (value != cnt)) {
+    if (!encerror() && (value != cnt || cnt < 0)) {
 	encseterr(EILSEQ);
     }
 
@@ -254,7 +267,7 @@ rs_read_string(FILE *savef, char *s, int max)
 
     rs_read_int(savef, &len);
 
-    if (!encerror() && (len > max)) {
+    if (!encerror() && (len < 0 || len > max)) {
 	encseterr(EILSEQ);
     }
 
@@ -274,6 +287,11 @@ rs_read_new_string(FILE *savef, char **s)
 	return;
     }
 
+    if (len < 0 || len > MAXSTR + 1) {
+	encseterr(EILSEQ); /* a forged length must not cause a huge allocation */
+	return;
+    }
+
     if (len == 0) {
 	buf = NULL; /* it is OK to set buf to NULL when len is 0 */
     } else {
@@ -281,10 +299,19 @@ rs_read_new_string(FILE *savef, char **s)
 
 	if (buf == NULL) {
 	    encseterr(ENOMEM);
+	    return;
 	}
     }
 
     rs_read_chars(savef, buf, len);
+
+    if (encerror() || (len > 0 && buf[len - 1] != '\0')) {
+	if (!encerror()) {
+	    encseterr(EILSEQ);
+	}
+	free(buf);
+	return;
+    }
 
     *s = buf;
 }
@@ -311,9 +338,9 @@ rs_read_string_index(FILE *savef, const char *master[], int maxindex, const char
 
     rs_read_int(savef, &i);
 
-    if (!encerror() && (i > maxindex)) {
+    if (!encerror() && (i < -1 || i >= maxindex)) {
 	encseterr(EILSEQ);
-    } else if (i >= 0) {
+    } else if (!encerror() && i >= 0) {
 	*str = master[i];
     } else {
 	*str = NULL;
@@ -377,10 +404,19 @@ rs_read_window(FILE *savef, WINDOW *win)
 	return;
     }
 
+    /* a forged size must not cause a huge loop */
+    if (maxlines < 0 || maxlines > RS_MAXWINDIM || maxcols < 0 || maxcols > RS_MAXWINDIM) {
+	encseterr(EILSEQ);
+	return;
+    }
+
     for (row = 0; row < maxlines; row++) {
 	for (col = 0; col < maxcols; col++) {
 	    value = 0;
 	    rs_read_int(savef, &value);
+	    if (encerror()) {
+		return;
+	    }
 
 	    if ((row < height) && (col < width)) {
 		mvwaddch(win, row, col, value);
@@ -481,9 +517,9 @@ rs_read_stone_index(FILE *savef, const STONE master[], int maxindex, const char 
 
     rs_read_int(savef, &i);
 
-    if (!encerror() && (i > maxindex)) {
+    if (!encerror() && (i < -1 || i >= maxindex)) {
 	encseterr(EILSEQ);
-    } else if (i >= 0) {
+    } else if (!encerror() && i >= 0) {
 	*str = master[i].st_name;
     } else {
 	*str = NULL;
@@ -635,7 +671,7 @@ rs_read_daemons(FILE *savef, struct delayed_action *dlist, int cnt)
     rs_read_marker(savef, RSID_DAEMONS);
     rs_read_int(savef, &value);
 
-    if (!encerror() && (value > cnt)) {
+    if (!encerror() && (value < 0 || value > cnt)) {
 	encseterr(EILSEQ);
 	return;
     }
@@ -686,12 +722,13 @@ rs_read_daemons(FILE *savef, struct delayed_action *dlist, int cnt)
 	    dlist[i].d_func = NULL;
 	    break;
 	}
-    }
 
-    if (dlist[i].d_func == NULL) {
-	dlist[i].d_type = 0;
-	dlist[i].d_arg = 0;
-	dlist[i].d_time = 0;
+	if (dlist[i].d_func == NULL || dlist[i].d_type < 0 || dlist[i].d_type > 2) {
+	    dlist[i].d_func = NULL;
+	    dlist[i].d_type = 0;
+	    dlist[i].d_arg = 0;
+	    dlist[i].d_time = 0;
+	}
     }
 }
 
@@ -722,12 +759,12 @@ rs_read_obj_info(FILE *savef, struct obj_info *mi, int cnt)
 
     rs_read_int(savef, &value);
 
-    if (!encerror() && (value > cnt)) {
+    if (!encerror() && (value < 0 || value > cnt)) {
 	encseterr(EILSEQ);
 	return;
     }
 
-    for (n = 0; n < value; n++) {
+    for (n = 0; n < value && !encerror(); n++) {
 	/* mi_name is const, defined at compile time in all cases */
 	mi[n].oi_prob = 0;
 	rs_read_int(savef, &mi[n].oi_prob);
@@ -805,10 +842,10 @@ rs_read_rooms(FILE *savef, struct room *r, int cnt)
 
     rs_read_int(savef, &value);
 
-    if (!encerror() && (value > cnt)) {
+    if (!encerror() && (value < 0 || value > cnt)) {
 	encseterr(EILSEQ);
     } else {
-	for (n = 0; n < value; n++) {
+	for (n = 0; n < value && !encerror(); n++) {
 	    rs_read_room(savef, &r[n]);
 	}
     }
@@ -824,6 +861,11 @@ rs_write_room_reference(FILE *savef, struct room *rp)
 	    room = i;
 	}
     }
+    for (i = 0; i < MAXPASS; i++) {
+	if (&passages[i] == rp) {
+	    room = MAXROOMS + i;
+	}
+    }
 
     rs_write_int(savef, room);
 }
@@ -835,8 +877,19 @@ rs_read_room_reference(FILE *savef, struct room **rp)
 
     rs_read_int(savef, &i);
 
-    if (!encerror()) {
+    if (encerror()) {
+	return;
+    }
+
+    /* -1 (an older save of a thing in a passage) is fixed up after the map is restored */
+    if (i < -1 || i >= MAXROOMS + MAXPASS) {
+	encseterr(EILSEQ);
+    } else if (i < 0) {
+	*rp = NULL;
+    } else if (i < MAXROOMS) {
 	*rp = &rooms[i];
+    } else {
+	*rp = &passages[i - MAXROOMS];
     }
 }
 
@@ -865,7 +918,7 @@ rs_read_monsters(FILE *savef, struct monster *m, int cnt)
     if (!encerror() && (value != cnt)) {
 	encseterr(EILSEQ);
     } else {
-	for (n = 0; n < cnt; n++) {
+	for (n = 0; n < cnt && !encerror(); n++) {
 	    rs_read_stats(savef, &m[n].m_stats);
 	}
     }
@@ -935,7 +988,12 @@ rs_read_object_list(FILE *savef, THING **list)
 	return;
     }
 
-    for (i = 0; i < cnt; i++) {
+    if (cnt < 0 || cnt > RS_MAXLIST) {
+	encseterr(EILSEQ); /* a forged count must not cause huge allocations */
+	return;
+    }
+
+    for (i = 0; i < cnt && !encerror(); i++) {
 	l = new_thing_ptr();
 
 	l->l_prev = previous;
@@ -1177,6 +1235,10 @@ rs_read_thing(FILE *savef, THING *t)
 	}
     } else if (listid == 3) /* gold */
     {
+	if (index < 0 || index >= MAXROOMS) {
+	    encseterr(EILSEQ);
+	    return;
+	}
 	t->_t._t_dest = &rooms[index].r_gold;
     } else {
 	t->_t._t_dest = NULL;
@@ -1241,7 +1303,12 @@ rs_read_thing_list(FILE *savef, THING **list)
 	return;
     }
 
-    for (i = 0; i < cnt; i++) {
+    if (cnt < 0 || cnt > RS_MAXLIST) {
+	encseterr(EILSEQ); /* a forged count must not cause huge allocations */
+	return;
+    }
+
+    for (i = 0; i < cnt && !encerror(); i++) {
 	l = new_thing_ptr();
 
 	l->l_prev = previous;
@@ -1352,6 +1419,207 @@ rs_read_places(FILE *savef, PLACE *p, int cnt)
     }
 }
 
+/*
+ * rs_ok_pos:
+ *	true if the coordinate is on the map
+ */
+static int
+rs_ok_pos(const coord *c)
+{
+    return (c->x >= 0 && c->x < NUMCOLS && c->y >= 0 && c->y < NUMLINES);
+}
+
+/*
+ * rs_ok_obj:
+ *	true if the restored object cannot make the game index outside its tables
+ */
+static int
+rs_ok_obj(const THING *o, int in_pack)
+{
+    int which = o->o_which;
+
+    if (o->o_count < 0 || (in_pack && (o->o_packch < 'a' || o->o_packch >= 'a' + MAXPACK)) ||
+	memchr(o->o_damage, '\0', sizeof(o->o_damage)) == NULL || memchr(o->o_hurldmg, '\0', sizeof(o->o_hurldmg)) == NULL) {
+	return (false);
+    }
+    if (o->o_launch < -1 || o->o_launch > MAXWEAPONS) {
+	return (false);
+    }
+
+    switch (o->o_type) {
+    case POTION:
+	return (which >= 0 && which < MAXPOTIONS);
+    case SCROLL:
+	return (which >= 0 && which < MAXSCROLLS);
+    case FOOD:
+	return (which == 0 || which == 1);
+    case WEAPON:
+	return (which >= 0 && which <= MAXWEAPONS);
+    case ARMOR:
+	return (which >= 0 && which < MAXARMORS);
+    case RING:
+	return (which >= 0 && which < MAXRINGS);
+    case STICK:
+	return (which >= 0 && which < MAXSTICKS);
+    case AMULET:
+    case GOLD:
+	return (true);
+    default:
+	return (false);
+    }
+}
+
+/*
+ * rs_ok_stats:
+ *	true if restored stats can be used safely
+ */
+static int
+rs_ok_stats(const struct stats *st, int max_class)
+{
+    return (st->s_str >= 0 && st->s_str < 32 && st->s_class >= 1 && st->s_class <= max_class &&
+	    memchr(st->s_dmg, '\0', sizeof(st->s_dmg)) != NULL);
+}
+
+/*
+ * rs_room_at:
+ *	Find the room or passage at a coordinate without roomin()'s abort() and msg()
+ */
+static struct room *
+rs_room_at(const coord *cp)
+{
+    struct room *rp;
+
+    if (flat(cp->y, cp->x) & F_PASS) {
+	return (&passages[flat(cp->y, cp->x) & F_PNUM]);
+    }
+    for (rp = rooms; rp < &rooms[MAXROOMS]; rp++) {
+	if (!(rp->r_flags & ISGONE) && cp->x <= rp->r_pos.x + rp->r_max.x && rp->r_pos.x <= cp->x &&
+	    cp->y <= rp->r_pos.y + rp->r_max.y && rp->r_pos.y <= cp->y) {
+	    return (rp);
+	}
+    }
+
+    return (NULL);
+}
+
+/*
+ * rs_validate_state:
+ *	Check the restored game state for values that would make the game index outside
+ *	its tables or follow wild pointers.  Sets EILSEQ on the first problem found.
+ */
+static void
+rs_validate_state(void)
+{
+    THING *tp;
+    int i, j;
+    int player_max_class = 0;
+    int monster_max_class;
+
+    if (encerror()) {
+	return;
+    }
+
+    while (e_levels[player_max_class] != 0) {
+	player_max_class++;
+    }
+    if (level < 1 || level > 10000 || max_level < 1 || max_level > 10000 || hungry_state < 0 || hungry_state > 3 ||
+	inv_type < INV_OVER || inv_type > INV_CLEAR || inpack < 0 || inpack > MAXPACK || ntraps < 0 || ntraps > MAXTRAPS ||
+	n_objs < 0 || (rogo_name_required != false && rogo_name_required != true) || !rs_ok_pos(&stairs) || !rs_ok_pos(&hero) ||
+	!rs_ok_stats(&pstats, player_max_class) || !rs_ok_stats(&max_stats, player_max_class)) {
+	encseterr(EILSEQ);
+	return;
+    }
+    monster_max_class = max(15, level - 11);
+    for (i = 0; i < MAXLINES * MAXCOLS; i++) {
+	if ((places[i].p_flags & F_PASS) && (places[i].p_flags & F_PNUM) >= MAXPASS) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+    }
+    for (i = 0; i < MAXROOMS + MAXPASS; i++) {
+	const struct room *rp = (i < MAXROOMS) ? &rooms[i] : &passages[i - MAXROOMS];
+
+	if (rp->r_nexits < 0 || rp->r_nexits > 12) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+	if (i < MAXROOMS &&
+	    (!rs_ok_pos(&rp->r_pos) || (!(rp->r_flags & ISGONE) && (rp->r_max.x <= 0 || rp->r_max.x > NUMCOLS - rp->r_pos.x ||
+								    rp->r_max.y <= 0 || rp->r_max.y > NUMLINES - rp->r_pos.y)))) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+	for (j = 0; j < rp->r_nexits; j++) {
+	    if (!rs_ok_pos(&rp->r_exit[j])) {
+		encseterr(EILSEQ);
+		return;
+	    }
+	}
+    }
+    for (i = 0; i < MAXPACK; i++) {
+	if (pack_used[i] != 0 && pack_used[i] != 1) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+    }
+
+    for (tp = player.t_pack; tp != NULL; tp = tp->l_next) {
+	if (!rs_ok_obj(tp, true)) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+    }
+    for (tp = lvl_obj; tp != NULL; tp = tp->l_next) {
+	if (!rs_ok_obj(tp, false) || !rs_ok_pos(&tp->o_pos)) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+    }
+    for (i = 0; i < MAXMONSTERS; i++) {
+	if (!rs_ok_stats(&monsters[i].m_stats, 15)) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+    }
+
+    for (tp = mlist; tp != NULL; tp = tp->l_next) {
+	if (tp->t_type < 'A' || tp->t_type > 'Z' || !rs_ok_pos(&tp->t_pos) || !rs_ok_stats(&tp->t_stats, monster_max_class)) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+	for (THING *op = tp->t_pack; op != NULL; op = op->l_next) {
+	    if (!rs_ok_obj(op, false)) {
+		encseterr(EILSEQ);
+		return;
+	    }
+	}
+    }
+
+    if ((cur_ring[LEFT] != NULL && cur_ring[LEFT]->o_type != RING) ||
+	(cur_ring[RIGHT] != NULL && cur_ring[RIGHT]->o_type != RING) || (cur_armor != NULL && cur_armor->o_type != ARMOR)) {
+	encseterr(EILSEQ);
+	return;
+    }
+
+    /* things saved while in a passage have no room: derive it from where they stand */
+    if (player.t_room == NULL) {
+	player.t_room = rs_room_at(&hero);
+    }
+    for (tp = mlist; tp != NULL; tp = tp->l_next) {
+	if (tp->t_room == NULL) {
+	    tp->t_room = rs_room_at(&tp->t_pos);
+	}
+    }
+    if (player.t_room == NULL) {
+	encseterr(EILSEQ);
+    }
+    for (tp = mlist; tp != NULL; tp = tp->l_next) {
+	if (tp->t_room == NULL) {
+	    encseterr(EILSEQ);
+	}
+    }
+}
+
 int
 rs_save_file(FILE *savef)
 {
@@ -1377,6 +1645,7 @@ rs_save_file(FILE *savef)
     rs_write_rings(savef);
     rs_write_scrolls(savef);
     rs_write_chars(savef, whoami, MAX_USERNAME);
+    rs_write_int(savef, rogo_name_required);
     rs_write_sticks(savef);
     rs_write_chars(savef, fruit, MAXSTR);
     rs_write_int(savef, n_objs);
@@ -1436,8 +1705,13 @@ rs_restore_file(FILE *savef)
 
     encclearerr();
 
-    noscore = 0;
-    rs_read_int(savef, &noscore);
+    {
+	/* once wizard mode has been used, scoring stays disabled even across restore */
+	int saved_noscore = 0;
+
+	rs_read_int(savef, &saved_noscore);
+	noscore = (saved_noscore || noscore || wizard) ? true : false;
+    }
     seenstairs = 0;
     rs_read_int(savef, &seenstairs);
     amulet = 0;
@@ -1462,6 +1736,8 @@ rs_restore_file(FILE *savef)
     rs_read_rings(savef);
     rs_read_scrolls(savef);
     rs_read_chars(savef, whoami, MAX_USERNAME);
+    rogo_name_required = false;
+    rs_read_int(savef, &rogo_name_required);
     rs_read_sticks(savef);
     rs_read_chars(savef, fruit, MAXSTR);
     n_objs = 0;
@@ -1526,6 +1802,7 @@ rs_restore_file(FILE *savef)
     group = 0;
     rs_read_int(savef, &group);
     rs_read_window(savef, stdscr);
+    rs_validate_state();
 
     return (encclearerr());
 }

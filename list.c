@@ -103,10 +103,11 @@ new_thing_ptr(void)
 
     item = calloc(1, sizeof(THING));
     if (item == NULL) {
-#ifdef MASTER
-	msg("ran out of memory after %d items", total);
-#endif
-	return NULL;
+	/* callers do not check for NULL: fail cleanly rather than dereference it */
+	endwin_and_ncurses_cleanup();
+	fprintf(stderr, "rogue: ran out of memory\n");
+	fflush(stderr);
+	exit(21); /*ooo*/
     }
 
 #ifdef MASTER

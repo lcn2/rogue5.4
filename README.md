@@ -121,7 +121,9 @@ The following table may help explain the symbols you see when playing rogue:
 |    ]   | armor   |
 |    ,   | amulet  |
 |    =   | ring    |
-|    /   | staff   |
+|    /   | wand or staff |
+|    %   | stairs  |
+|    $   | magic item (shown by detect magic) |
 
 For more information about the make, see the `rogue(6)` man page after installing, or run the command
 from the top level directory:
@@ -235,7 +237,7 @@ With "slow", lists are displayed one item at a time on the top of the screen.
 
 With "clear", the screen is cleared, the list is displayed, and then the dungeon level is re-displayed.
 
-Default: clear
+Default: clear if the terminal has a clear-to-end-of-line capability (nearly all do), otherwise overwrite
 
 Recommendation: overwrite
 
@@ -343,15 +345,18 @@ The length of the rogue score file is usually 112 bytes per score slot,
 so the default rogue score file size is 1120 bytes.
 
 Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue scores,
-no matter how they were played, and no matter if they won the game or not.
+whether or not the character won the game.  However, a game in which wizard mode
+was ever enabled (even if later disabled, or after a save and restore) is never
+recorded in the rogue score file.
 
 If the rogue score file does not exist, the `rogue` game will create it.
 
 If the rogue score file is corrupted, or the format is too old, then
 the `rogue` game will display an error message and recommend removing it.
 
-The use of `rogue -r` will cause the default rogue save file, as defined by the
-`-DSCOREPATH=..` as used by the compile lines as specified by the `Makefile`.
+The `-r` flag is accepted and ignored (kept for backward compatibility).
+The default rogue save file is defined by `-DSAVEPATH=..` as used by the
+compile lines as specified by the `Makefile`.
 
 **IMPORTANT NOTE**: Changing the `NUMSCORES` value will cause rogue score files
 with a different number of slots to become invalid.  A game compiled
@@ -401,7 +406,7 @@ sudo make install ROGUEDIR=/var/tmp
 * [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/) confirming (or reasonably conforming) operating system such as Linux, macOS, BSD, etc.
 
 
-## Why yet another rouge repo?
+## Why yet another rogue repo?
 
 This code is based on the "Rogue like restoration project"'s [rogue5.4](https://github.com/RoguelikeRestorationProject/rogue5.4).
 
@@ -409,8 +414,8 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 
 * Improved the C source to be able to compile under recent C compilers
 * Fixed many bugs in the rogue code
-* Fixed the code to compile both the `findpw` and `scedit` rouge tools
-* Install the `findpw` and `scedit` rouge tools
+* Fixed the code to compile the `scedit` rogue tool
+* Install the `scedit` rogue tool
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
 * To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
@@ -428,12 +433,12 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 * Fixed bugs related to the reading and writing of the score file
 * Detects if the rogue score file is an old incompatible format and/or corrupt
 * If the rogue score file is empty or missing, the code will automatically re-initialize it
-* The top scores are recorded in the rogue score file, regardless of if the game was won or not
+* The top scores are recorded in the rogue score file, regardless of whether the game was won or not (except that a game in which **wizard mode** was ever enabled is never recorded)
 * You may change the `NUMSCORES` value in `config.h` to a value other than 10
-* By default, the `rogue` game is **NOT** installed setguid (`${GROUPOWNER}`, by default, is empty)
-* Rogue prints the version an exits when **rogue -V** command option is given
+* By default, the `rogue` game is **NOT** installed setgid (`${GROUPOWNER}`, by default, is empty)
+* Rogue prints the version and exits when **rogue -V** command option is given
 * Answering **?**" to the question `What do you want to call it?` will set correct name of the potion
-* To assist debugging rogomatic, when rogue starts with a player name beginning with **rogo-**, then **$ROGOSEED** sets the dungeon seed
+* To assist debugging rogomatic, when rogue starts with a player name beginning with **rogo-**, then **$ROGOSEED** sets the dungeon seed (otherwise **$ROGOSEED** is ignored)
 * The **v** command prints the rogue version, rogue release date, and dungeon number
 * etc.
 
@@ -457,15 +462,15 @@ This [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4)
 was cloned from [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4).
 [Landon Curt Noll](https://github.com/lcn2), who fondly remembers playing rogue on the Vax running BSD, wanted to
 port the original game to modern compilers and UNIX-like operating systems
-(such as those that resonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
+(such as those that reasonably conform to the [Single UNIX Specification](https://pubs.opengroup.org/onlinepubs/9799919799/).
 
 As the [RoguelikeRestorationProject's rogue5.4 repo](https://github.com/RoguelikeRestorationProject/rogue5.4)
-is efficetly a "read-only" archive of the Dump of the original
+is effectively a "read-only" archive of the Dump of the original
 [svn r1490](https://github.com/RoguelikeRestorationProject/rogue5.4/commit/9d0dcccc8ec82454bd4d4310f4638985a4726d83),
 [Landon Curt Noll](https://github.com/lcn2) elected to break the form and clone
 [rogue5.4 GitHub repo](https://github.com/lcn2/rogue5.4) as a standalone repo
 to make it easier for people to contribute [rogue5.4 pull requests](https://github.com/lcn2/rogue5.4/pulls)
-directly to this repo.  Even so, we are greatful to the
+directly to this repo.  Even so, we are grateful to the
 [RoguelikeRestorationProject](https://github.com/RoguelikeRestorationProject)
 for making original code base available.
 
@@ -547,33 +552,36 @@ The following table lists the known monsters in the dungeon and their properties
 |    E   | emu           | 01..07 |    0 % | m     |    2 |  1d8 |   7   | 1x2              |
 |    F   | venus flytrap | 12..21 |    0 % | m     |   80 |  8d8 |   3   | (note 3 below)   |
 |    G   | griffin       | 20..29 |   20 % | m f r | 2000 | 13d8 |   2   | 4x3 / 3x5        |
-|    H   | hobgoblin     | 01..10 |    0 % | m     |    3 |  1d8 |   1   | 1x8              |
-|    I   | ice monster   | 02..11 |    0 % |       |    5 |  1d8 |   1   | 0x0              |
-|    J   | jabberwock    | 21..30 |   70 % |       | 3000 |  3d8 |   6   | 2x12 / 2x4       |
-|    K   | kestrel       | 01..06 |    0 % | m f   |    1 |  8d8 |   1   | 1x4              |
+|    H   | hobgoblin     | 01..10 |    0 % | m     |    3 |  1d8 |   5   | 1x8              |
+|    I   | ice monster   | 02..11 |    0 % |       |    5 |  1d8 |   9   | 0x0              |
+|    J   | jabberwock    | 21..30 |   70 % |       | 3000 | 15d8 |   6   | 2x12 / 2x4       |
+|    K   | kestrel       | 01..06 |    0 % | m f   |    1 |  1d8 |   7   | 1x4              |
 |    L   | leprechaun    | 06..15 |    0 % |       |   10 |  3d8 |   8   | 1x1              |
 |    M   | medusa        | 18..27 |   40 % | m     |  200 |  8d8 |   2   | 3x4 / 3x4 / 2x5  |
-|    N   | nymph         | 10..19 |  100 % | g     |   37 |  3d8 |   9   | 0x0              |
-|    O   | orc           | 04..13 |   15 % | i     |    5 |  1d8 |   6   | 1x8              |
-|    P   | phantom       | 15..24 |    0 % | m     |  120 |  8d8 |   3   | 4x4              |
+|    N   | nymph         | 10..19 |  100 % |       |   37 |  3d8 |   9   | 0x0              |
+|    O   | orc           | 04..13 |   15 % | g     |    5 |  1d8 |   6   | 1x8              |
+|    P   | phantom       | 15..24 |    0 % | i     |  120 |  8d8 |   3   | 4x4              |
 |    Q   | quagga        | 08..17 |    0 % | m     |   15 |  3d8 |   3   | 1x5 / 1x5        |
 |    R   | rattlesnake   | 03..12 |    0 % | m     |    9 |  2d8 |   3   | 1x6              |
 |    S   | snake         | 01..09 |    0 % | m     |    2 |  1d8 |   5   | 1x3              |
 |    T   | troll         | 13..22 |   50 % | m   r |  120 |  6d8 |   4   | 1x8 / 1x8 / 2x6  |
-|    U   | black unicorn | 17..26 |    0 % | m     |    7 |  7d8 |  -2   | 1x9 / 1x9 / 2x9  |
+|    U   | black unicorn | 17..26 |    0 % | m     |  190 |  7d8 |  -2   | 1x9 / 1x9 / 2x9  |
 |    V   | vampire       | 19..28 |   20 % | m   r |  350 |  8d8 |   1   | 1x10             |
 |    W   | wraith        | 14..23 |    0 % |       |   55 |  5d8 |   4   | 1x6              |
 |    X   | xeroc         | 16..25 |   30 % |       |  100 |  7d8 |   7   | 4x4              |
 |    Y   | yeti          | 11..20 |   30 % |       |   50 |  4d8 |   6   | 1x6 / 1x6        |
 |    Z   | zombie        | 05..14 |    0 % | m     |    6 |  2d8 |   8   | 1x8              |
 
-The "**levels**" refers to the dungeon level range on which the given monoster may be found.
+The "**levels**" refers to the dungeon level range on which the given monster may be found.
 
 **NOTE**: Not listed in the above table:
-While on dungeon level 31 only the **D** (dragon) will be found,
-starting with dungeon level 32 (should you be that daring to try),
-you will find a mixture of **M** (medusa), **V** (vampire), **G** (griffin),
-**J** (jabberwock), and **D** (dragon) monsters.
+Starting at dungeon level 23, the monster selection can run off the end of the
+monster list and wrap around to a mixture of **M** (medusa), **V** (vampire),
+**G** (griffin), **J** (jabberwock), and **D** (dragon) monsters.  The "**levels**"
+above show the primary range only.  By dungeon level 32 and deeper
+(should you be that daring to try), these five are most of what you will find.
+Wandering monsters (those that arrive after the level is created) are never
+**F**, **I**, **L**, **N**, **X**, or **D**.
 
 Some monsters carry treasure that they drop when they are killed.  The "**carry**"
 is the percentage chance that the monster will drop treasure when it dies.
@@ -583,10 +591,12 @@ The "**flags**" are:
 * m ==> is mean
 * f ==> can fly
 * r ==> able to regenerate
-* g ==> is greedy (can take things)
-* i ==> may start out as invisible
+* g ==> is greedy (runs towards gold)
+* i ==> is invisible
 
-The "**exp**" is the experience gained when you kill such a monster.
+The "**exp**" is the base experience gained when you kill such a monster.
+The actual experience is increased by the monster's initial HP (see "**HP**" below) and,
+below dungeon level 26, by 10 per dungeon level.
 
 The "**armor**" refers to the monster’s armor class.  The smaller the
 monster’s "**armor**" class, the harder they are to hit.
@@ -619,7 +629,7 @@ might start out with anywhere between 15 and 120 "**HP**"!
 The "**HP**" value depends on total sum of the dice "rolls".  Thus, the
 extremes of the range are more rare than the middle of the range.
 
-Below level 29, all monsters are hasted (are fast).
+Below dungeon level 29 (that is, on dungeon level 30 and deeper), all monsters are hasted (are fast).
 
 The base monster class levels go up by 1 for each dungeon level below
 level 26.  Thus, one additional 8-sided die is rolled for each dungeon
@@ -641,7 +651,7 @@ levels deeper) they will have an initial "**HP**" of "12d8".
 |    F   | venus flytrap | holds / damage increases (note 1)
 |    G   | griffin       |
 |    H   | hobgoblin     |
-|    I   | ice monster   | freezes (note 2)
+|    I   | ice monster   | freezes you for 3 or 4 turns (no saving throw)
 |    J   | jabberwock    |
 |    K   | kestrel       |
 |    L   | leprechaun    | steals gold (note 3)
@@ -655,18 +665,18 @@ levels deeper) they will have an initial "**HP**" of "12d8".
 |    T   | troll         |
 |    U   | black unicorn |
 |    V   | vampire       | 30% to reduce max HP by 1..3
-|    W   | wraith        | 15% change to drain level (note 4)
+|    W   | wraith        | 15% chance to drain level (note 4)
 |    X   | xeroc         | imitates an object
 |    Y   | yeti          |
 |    Z   | zombie        |
 
 * note 1: The **F** (venus flytrap) does no damage at first. However, the damage increases by 1 each turn being held.
 
-* note 2: The special attack has a 1d20 saving throw where the value needed to save is: 14 - int(experence_level/2)^2.
+* note 2: The special attack has a 1d20 saving throw where the value needed to save is: 14 - int(experience_level/2).
 
-* note 3: The special attack has a 1d20 saving throw where the value needed to save is: 17 - armor_class - int(experence_level/2).
+* note 3: The special attack has a 1d20 saving throw where the value needed to save is: 17 - int(experience_level/2) - (protection bonus of each worn ring of protection).
 
-* note 4: The special attack removed 1d10 from player maximum HP, and reduces experence_level by 1. 0 experence_level causes death.
+* note 4: The special attack removes 1d10 from the player's current and maximum HP, and reduces experience_level by 1 (never below 1). A hit that drains a player with 0 experience points causes death; so does reducing maximum HP to 0 or less.
 
 
 ## potion spoilers ==> !
@@ -697,7 +707,7 @@ the question:
 > What do you want to call it?
 
 If you answer with a single question mark (i.e., "**?**"), the game will
-name provide the correct name of the potion.  Thus, when you find another
+provide the correct name of the potion.  Thus, when you find another
 potion of the same type, you will see the correct potion name.
 
 
@@ -725,7 +735,7 @@ When you read a scroll:
 |   b   |   2 % | food detection               | Your nose tingles and you smell food.                 |
 |       |       |                              |   -or-                                                |
 |       |       |                              | Your nose tingles                                     |
-|   c   |   5 % | teleportation                | ((you jump to a randomly spot on the current level))  |
+|   c   |   5 % | teleportation                | ((you jump to a random spot on the current level))    |
 |   d   |   8 % | enchant weapon               | Your ((name of armor)) glows ... for a moment         |
 |       |       |                              |   -or-                                                |
 |       |       |                              | You feel a strange sense of loss                      |
@@ -749,7 +759,7 @@ the question:
 > What do you want to call it?
 
 If you answer with a single question mark (i.e., "**?**"), the game will
-name provide the correct name of the scroll.  Thus, when you find another
+provide the correct name of the scroll.  Thus, when you find another
 scroll of the same type, you will see the correct scroll name.
 
 
@@ -763,12 +773,14 @@ When you have a weapon:
 |   0   |  11 % |   2x4   |   1x3  | mace             |
 |   1   |  11 % |   3x4   |   1x2  | long sword       |
 |   2   |  12 % |   1x1   |   1x1  | short bow        |
-|   3   |  12 % |   1x1   |   2x3  | arrow (11)       |
-|   4   |   8 % |   1x6   |   1x4  | dagger (4)       |
+|   3   |  12 % |   1x1   |   2x3  | arrow (8-15)     |
+|   4   |   8 % |   1x6   |   1x4  | dagger (2-5)     |
 |   5   |  10 % |   4x4   |   1x2  | two handed sword |
-|   6   |  12 % |   1x1   |   1x3  | dart (10)        |
-|   7   |  12 % |   1x2   |   2x4  | shuriken (11)    |
+|   6   |  12 % |   1x1   |   1x3  | dart (8-15)      |
+|   7   |  12 % |   1x2   |   2x4  | shuriken (8-15)  |
 |   8   |  12 % |   2x3   |   1x6  | spear            |
+
+The number in parentheses is the range of how many are found together in a group.
 
 A weapon can be (+) enhanced, (n) normal, or (-) reduced in its effectiveness.
 
@@ -817,7 +829,7 @@ monster in the distance that is moving towards you in an effort to weaken
 it before having to engage in direct combat.
 
 **TIP**: When you are "firing" arrows while wielding a bow
-(i.e., shooting arrows as descried above), use the "**a**" to
+(i.e., shooting arrows as described above), use the "**a**" to
 repeat the last command to "fire" multiple arrows.
 
 For example: assume your bow is in inventory is:
@@ -896,7 +908,7 @@ and want to be ready by the time the monster is right on top of you.
 When you have armor:
 
 | index | freq. | protection | armor                  |
-|-------|-------|------------|-------------------------
+|-------|-------|------------|-------------------------|
 |   0   |  20 % |      2     | leather armor          |
 |   1   |  15 % |      3     | ring mail              |
 |   2   |  15 % |      3     | studded leather armor  |
@@ -927,15 +939,15 @@ What rings can do:
 |   1   |   9 % |     1     | add strength      | Adds to strength.                           |
 |   2   |   5 % |     1     | sustain strength  | Prevents poison and Rattlesnakes from       |
 |       |       |           |                   | reducing strength.                          |
-|   3   |  10 % |    -3     | searching         | Helps detect secret doors and traps.        |
-|   4   |  10 % |    -5     | see invisible     | Reveals Phantoms.                           |
+|   3   |  10 % |    1/3    | searching         | Helps detect secret doors and traps.        |
+|   4   |  10 % |    1/5    | see invisible     | Reveals Phantoms.                           |
 |   5   |   1 % |     0     | adornment         | Worth 10 gold.                              |
 |   6   |  10 % |     0     | aggravate monster | Cursed. Causes monsters to attack more      |
 |       |       |           |                   | aggressively.                               |
-|   7   |   8 % |    -3     | dexterity         | Improves weapon accuracy.                   |
-|   8   |   8 % |    -3     | increase damage   | Increases weapon damage.                    |
+|   7   |   8 % |    1/3    | dexterity         | Improves weapon accuracy.                   |
+|   8   |   8 % |    1/3    | increase damage   | Increases weapon damage.                    |
 |   9   |   4 % |     2     | regeneration      | Heals 1 hp per turn.                        |
-|   a   |   9 % |    -2     | slow digestion    | Reduces food consumption by about 50%. Two  |
+|   a   |   9 % |   -1/2    | slow digestion    | Reduces food consumption by about 50%. Two  |
 |       |       |           |                   | rings can cancel out food consumption.      |
 |   b   |   5 % |     0     | teleportation     | Cursed. Randomly teleports the player       |
 |       |       |           |                   | around the map.                             |
@@ -952,7 +964,6 @@ Once a scroll of "**remove curse**" has been used to remove the curse,
 a cursed ring may be put on or removed as needed; however, the ring will
 still have a negative effect.
 
-When **food used** is negative, the ring effectively adds food per turn when worn.
 
 
 ## food spoilers ==> :
@@ -978,26 +989,28 @@ If you perform an action, and if the monsters nearby move, then you can assume
 that your stomach will consume food unit(s).
 
 As noted above, some rings consume food units, while other rings give you food units.
-A ring with a positive **food used** will consume that many food units each turn: making you hungry faster.
-A ring with a negative **food used** will provide that many food units each turn: prolonging the time when you become hungry.
+A ring with a **food used** of a whole number will consume that many food units each turn: making you hungry faster.
+A ring with a **food used** of the form "1/N" will consume 1 food unit on average once every N turns (a 1 in N chance each turn).
+The ring of slow digestion has a **food used** of "-1/2": each turn there is a 1 in 2 chance that it provides 1 food unit, prolonging the time when you become hungry.
 
-The **Amulet of Yendor** acts like a ring consumes 1 food unit per turn.
+The **Amulet of Yendor** acts like a ring that provides 1 food unit per turn,
+cancelling the 1 food unit normally consumed each turn.
 
 When you eat food, you add a random number of food units to your stomach.
-Eating food adds a random number of food units between 1100 and 1500 units to your stomach
+Eating food adds a random number of food units between 1100 and 1499 units to your stomach
 until you reach the maximum capacity of 2000 food units.
 Eating food while your stomach is full does nothing other than to waste food.
 
 There are two types of foods, type 0 food (90% of the time), and type 1 food (10% of the time).
 
-Type 0 food, 70% of the time, will taste awful, and 30% of the time will taste good.
+Type 0 food, 29% of the time, will taste awful, and 71% of the time will taste good.
 
 Eating awful type 0 food does **NOT** harm you.  Awful type 0 food gives you an experience point!
 
 Type 1 food will always taste yummy.
 
 Both type 0 and type 1 food offer you a random number of food units as noted above,
-however only type 0 food 70% of the time, gives you an experience point.
+however only type 0 food, 29% of the time, gives you an experience point.
 
 If the game has not created food for 3 levels, the game will force the next created object to be food.
 Of course, you have to find the food that was forced to be created.
@@ -1021,12 +1034,15 @@ When you read use a staff:
 |   6   |  10 % | magic missile | Inflicts 1d4 damage on a target.            |
 |   7   |  10 % | haste monster | Hastens a monster.                          |
 |   8   |  11 % | slow monster  | Slows a monster.                            |
-|   9   |   9 % | drain life    | Drains half hero's hp.  Take same hp from   |
-|       |       |               | all monsters in room or next to in passage. |
+|   9   |   9 % | drain life    | Halves hero's hp; that remaining amount is  |
+|       |       |               | split evenly among the monsters in the room |
+|       |       |               | (or next to hero in a passage) as damage.   |
 |   a   |   1 % | nothing       | A "/dev/null" staff.                        |
 |   b   |   6 % | teleport away | Teleport a monster somewhere else.          |
 |   c   |   6 % | teleport to   | Teleport a monster to near you.             |
 |   d   |   5 % | cancellation  | Suppresses monster's special abilities.     |
+
+Lightning, fire and cold bolts, and magic missile, can be resisted by a monster's saving throw.
 
 
 ## wizard mode spoilers
@@ -1052,8 +1068,8 @@ You may also start rogue in **wizard mode** by giving an empty 2nd argument:
 rogue ""
 ```
 
-If you start start rogue in **wizard mode**, then the `$SEED` environment variable
-may be used to set a specific dungeon number and pseudo-random number seed.
+If you start rogue in **wizard mode**, then the `$SEED` environment variable
+is honored and may be used to set a specific dungeon number and pseudo-random number seed.
 
 **NOTE**: A seed is likely portable across different systems that implement
 the BSD `random(3)` facility, for rogue release date **2026-02-24**
@@ -1097,6 +1113,21 @@ you will start in this fun "treasure room":
 -------+-
 ```
 
+Using seed **130045835**:
+
+```sh
+SEED=130045835 rogue ""
+```
+
+see if you can survive this "treasure room":
+
+```
+--+-----------
+|.SS]..E@!.ES+
+|E.H:..BH)..B|
+--------------
+```
+
 For an even more challenging "treasure room" start, try:
 
 ```sh
@@ -1117,7 +1148,7 @@ When you are in **wizard mode**, you have these special commands available to yo
 | command | action                                                 |
 |---------|--------------------------------------------------------|
 |    +    | Toggle wizard mode                                     |
-|    |    | Show location                                          |
+|   \|   | Show location                                          |
 |    C    | Create                                                 |
 |    $    | Count items in pack                                    |
 | ctrl G  | Inventory current level                                |
@@ -1130,7 +1161,7 @@ When you are in **wizard mode**, you have these special commands available to yo
 | ctrl Q  | Show passage ways                                      |
 | ctrl X  | Toggle see monsters on level                           |
 |    ~    | Super charge staff                                     |
-| ctrl I  | +10 Exp, add +8 plate mail, add +1,+1 two handed sword |
+| ctrl I  | Raise 9 levels, wield +1,+1 two handed sword, wear +8 plate mail |
 |    *    | List types of an object                                |
 
 For "\*" ("_List types of an object_"), when it asks:
@@ -1138,7 +1169,7 @@ For "\*" ("_List types of an object_"), when it asks:
 > For what type of object do you want a list?
 
 enter the symbol you want to create.
-Refer too the symbol table under the "To play rogue" above for what to create.
+Refer to the symbol table under the "To play rogue" above for what to create.
 
 The "\*" ("_list types of an object_") command is only useful for:
 
@@ -1170,7 +1201,7 @@ Finally, when creating a weapon, armor or ring, it will ask:
 
 > Blessing? (+,-,n)
 
-Enter "+" for a enhanced item, "-" for a reduced item, or "n" for normal item.
+Enter "+" for an enhanced item, "-" for a reduced item, or "n" for normal item.
 
 
 # Reporting Security Issues

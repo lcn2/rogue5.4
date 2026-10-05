@@ -503,7 +503,7 @@ extern int passgo, playing, q_comm, running, save_msg, see_floor, seenstairs,
     mpos, take, n_objs, no_command, no_food, no_move, noscore, ntraps,
     purse, quiet, vf_hit, runch, last_comm, l_last_comm, last_dir,
     l_last_dir, numscores, total, between, group, cNWOOD, cNMETAL,
-    cNSTONES, cNCOLORS;
+    cNSTONES, cNCOLORS, rogo_name_required;
 
 extern char file_name[MAXSTR + 1]; /* +1 for paranoia */
 extern char huh[MAXSTR + 1];	   /* +1 for paranoia */

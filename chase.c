@@ -522,7 +522,7 @@ find_dest(const THING *tp)
  * dist:
  *	Calculate the "distance" between to points.  Actually,
  *	this calculates d^2, not d, but that's good enough for
- *	our purposes, since it's only used comparitively.
+ *	our purposes, since it's only used comparatively.
  */
 int
 dist(int y1, int x1, int y2, int x2)

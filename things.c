@@ -210,7 +210,7 @@ drop(void)
 
 /*
  * dropcheck:
- *	Do special checks for dropping or unweilding|unwearing|unringing
+ *	Do special checks for dropping or unwielding|unwearing|unringing
  */
 int
 dropcheck(const THING *obj)

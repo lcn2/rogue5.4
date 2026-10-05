@@ -291,9 +291,11 @@ init_names(void)
 	    *cp++ = ' ';
 	}
 	*--cp = '\0';
-	s_names[i] = malloc(strlen(prbuf) + 1);
-	if (s_names[i] != NULL) {
-	    strcpy(s_names[i], prbuf);
+	s_names[i] = strdup(prbuf);
+	if (s_names[i] == NULL) {
+	    endwin_and_ncurses_cleanup();
+	    fprintf(stderr, "rogue: ran out of memory\n");
+	    exit(21); /*ooo*/
 	}
     }
 }

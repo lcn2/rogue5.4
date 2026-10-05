@@ -56,7 +56,7 @@ static char *usage = "usage: %s [\"\"] [-S] [-r] [-s [ score_file ] | -d | -V | 
 		     "     4   score file path too long\n"
 		     "     5   failed to restore game\n"
 		     "     6   failed to open rogue pid file for writing\n"
-		     "     7   screen to small to restore game\n"
+		     "     7   screen too small to restore game\n"
 		     " >= 10   internal rogue error\n"
 		     "\n"
 		     "rogue version: %s %s (chongo was here)";
@@ -191,6 +191,7 @@ main(int argc, char **argv)
 	    ret = strtol(env, NULL, 0);
 	    if (errno == 0) {
 		dnum = (unsigned int)ret;
+		rogo_name_required = true; /* rogue name must start with rogo- when $ROGOSEED is used  */
 	    } else {
 		fprintf(stderr, "ERROR: whoami: %s unable to convert $ROGOSEED into dungeon number: %s error: %s\n", whoami, env,
 			strerror(errno));
@@ -205,7 +206,6 @@ main(int argc, char **argv)
 	env = getenv("SEED");
 	if (env != NULL) {
 	    long ret; /* $SEED as a long */
-	    dnum = (unsigned int)strtol(env, NULL, 0);
 
 	    /*
 	     * convert $SEED into dungeon number, if possible
@@ -456,6 +456,7 @@ main(int argc, char **argv)
 	    fflush(stderr);
 	    exit(6); /*ooo*/
 	}
+	fclose(pidfp);
     }
 
     /*

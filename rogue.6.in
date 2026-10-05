@@ -7,7 +7,7 @@
 .\"
 .\" See the file LICENSE for full copyright and licensing information.
 .\"
-.TH ROGUE 6 "2026 Jun 30"
+.TH ROGUE 6 "2026 Oct 04"
 .UC 4
 .SH NAME
 rogue \- Exploring The Dungeons of Doom \- version 5.4.5
@@ -271,6 +271,8 @@ the screen is cleared, the list is displayed, and then the dungeon level is re-d
 .sp
 Default:
 .B clear
+if the terminal has a clear-to-end-of-line capability (nearly all do), otherwise
+.B overwrite
 .sp
 Recommendation:
 .B overwrite
@@ -367,7 +369,7 @@ environment value is missing or empty, the default options will be used.
 Unknown options are silently ignored.
 .PP
 To assist in the debugging of
-.BR rogomatic ,
+.BR rogomatic (6),
 if the name of your character (i.e.,
 .BR rogue-name )
 starts with
@@ -378,34 +380,37 @@ starts, then the environment variable
 .B $ROGOSEED
 may be used to set the rogue dungeon number.
 .PP
-The
-.B v
-rogue command, in when printing the rogue version, and release date,
-also prints the rogue dungeon number.
-.PP
-.BR NOTE :
-Changing the
+.BR IMPORTANT :
+Unless the
 .B rogue-name
-with the
-.B o
-command does
-.B NOT
-st in the debugging of
-.B rogomatic
-as the
-.B rogue-name
-must be set, via the above mentioned
-.B $ROGUEOPTS
-environment variable method
-.B BEFORE
-.BR rogue
-starts.
+starts with the
+.B rogo\-
+the
+.B $ROGOSEED
+environment variable will be ignored.
+To use the
+.B $ROGOSEED
+environment variable
+to set the rogue dungeon number, you must set name of your character (i.e.,
+.BR rogue-name )
+with a string that starts with
+.B rogo\-
+at startup.
 For example:
 .sp
 .in +0.5i
 ROGUEOPTS="name=rogo-bot" ROGOSEED=1227897957 rogue
 .in -0.5i
 .sp
+If the
+.B $ROGOSEED
+environment variable is used to set the rogue dungeon number, then the
+.B o
+command will refuse to change the name of your character (i.e.,
+.BR rogue-name )
+unless the new name starts with
+.BR rogo\- .
+.PP
 See the
 .BR rogomatic (6)
 man page for how rogue dungeon seed debugging is performed by
@@ -445,7 +450,9 @@ The length of the rogue score file is usually 112 bytes per score slot, so the d
 rogue score file size is 1120 bytes.
 .sp
 Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue scores,
-no matter how they were played, and no matter if they won the game or not.
+whether or not the character won the game.
+However, a game in which wizard mode was ever enabled
+(even if later disabled, or after a save and restore) is never recorded.
 .sp
 If the rogue score file does not exist,
 .B rogue
@@ -508,13 +515,29 @@ to help distinguish this code from various buggy versions of 5.4.4 code.
 .PP
 Rogue version 5.4.5 plays like the original Vax binary that was distributed on the BSD 4.3 Reno tapes.
 .PP
+The
+.B v
+rogue command, in when printing the rogue version, and release date,
+also prints the rogue dungeon number.
+.PP
+If a potion or scroll is named
+.BR ? ,
+then the canonical potion or scroll name is used.
+This is done because the effect of potions and scrolls are widely known,
+so naming them
+.B ?
+will cause their well-known "true" name to be set.
+.PP
+Rogue version 5.4.5 helps support the use, debugging, and development of
+.BR rogomatic (6).
+.PP
 In addition to a port to ISO C 2017 with GNU extensions, this version contains a fair number
 of significant bug fixes to help avoid the game crashing.
 .PP
 For a general overview of code improvements, see:
 .sp
 .in +0.5i
-.I https://github.com/lcn2/rogue5.4#why-yet-another-rouge-repo
+.I https://github.com/lcn2/rogue5.4#why-yet-another-rogue-repo
 .in -0.5i
 .PP
 .BR IMPORTANT\ NOTE :
@@ -575,7 +598,7 @@ is hyperbole and not intended to imply that nobody has achieved the goal.
 has completed the goal (won) at least 3 times (without using wizard mode),
 and reached a maximum dungeon depth (and successful return to level 0) of 31.
 .PP
-We very much welcome rogue5.4 GutHub pull requests
+We very much welcome rogue5.4 GitHub pull requests
 (\fIhttps://github.com/lcn2/rogue5.4/pulls\fP) to fix any
 failures to compile, compiler warning messages, and/or program crashes.
 .PP

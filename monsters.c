@@ -87,7 +87,7 @@ randmonster(int wander)
 	 *       On level 28, the last 4 monsters are possible.
 	 *       On level 29, the last 3 monsters are possible.
 	 *       On level 30, the last 2 monsters are possible.
-	 *       On level 31, the last 1 monster are possible.
+	 *       On level 31, the last 1 monster is possible.
 	 *       On level 32 and beyond, the last 5 monsters are possible.
 	 */
 	if (d > MAXMONSTERS - 1) {

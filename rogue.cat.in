@@ -139,7 +139,8 @@
             With [1mclear[22m, the screen is cleared, the list is displayed,  and  then
             the dungeon level is re-displayed.
 
-            Default: [1mclear[0m
+            Default: [1mclear[0m if the terminal has a clear-to-end-of-line
+            capability (nearly all do), otherwise [1moverwrite[0m
 
             Recommendation: [1moverwrite[0m
 
@@ -261,8 +262,9 @@
             slot, so the default rogue score file size is 1120 bytes.
 
             Unlike the BSD rogue game on the Vax, rogue keeps track of top rogue
-            scores, no matter how they were played, and no matter  if  they  won
-            the game or not.
+            scores, whether or not the character won the game.  However, a game
+            in which wizard mode was ever enabled (even if later disabled, or
+            after a save and restore) is never recorded.
 
             If the rogue score file does not exist, [1mrogue [22mwill create it.
 
@@ -310,7 +312,7 @@
 
      For a general overview of code improvements, see:
 
-          [4mhttps://github.com/lcn2/rogue5.4#why-yet-another-rouge-repo[0m
+          [4mhttps://github.com/lcn2/rogue5.4#why-yet-another-rogue-repo[0m
 
      [1mIMPORTANT NOTE  :  [22mThis code is [1mNOT the so-called [4m[22mPublic[24m [4mdomain[24m [4mrogue[24m [1mrogue[0m
      [1mgame that distributions such as NetBSD imported from 386BSD.  [22mThat  "[4mPublic[0m
@@ -341,7 +343,7 @@
      Probably  infinite  (although  countably infinite).  However, that Ice Mon-
      sters sometimes transfix you permanently is [4mnot[24m a bug.  It's a feature.
 
-     We    very    much    welcome     rogue5.4     GutHub     pull     requests
+     We    very    much    welcome     rogue5.4     GitHub     pull     requests
      ([4mhttps://github.com/lcn2/rogue5.4/pulls[24m)  to  fix  any failures to compile,
      compiler warning messages, and/or program crashes.
 
