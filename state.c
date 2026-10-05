@@ -305,6 +305,14 @@ rs_read_new_string(FILE *savef, char **s)
 
     rs_read_chars(savef, buf, len);
 
+    if (encerror() || (len > 0 && buf[len - 1] != '\0')) {
+	if (!encerror()) {
+	    encseterr(EILSEQ);
+	}
+	free(buf);
+	return;
+    }
+
     *s = buf;
 }
 
@@ -1430,7 +1438,9 @@ rs_ok_obj(const THING *o, int in_pack)
 {
     int which = o->o_which;
 
-    if (o->o_count < 0 || (in_pack && (o->o_packch < 'a' || o->o_packch >= 'a' + MAXPACK))) {
+    if (o->o_count < 0 || (in_pack && (o->o_packch < 'a' || o->o_packch >= 'a' + MAXPACK)) ||
+	memchr(o->o_damage, '\0', sizeof(o->o_damage)) == NULL ||
+	memchr(o->o_hurldmg, '\0', sizeof(o->o_hurldmg)) == NULL) {
 	return (false);
     }
     if (o->o_launch < -1 || o->o_launch > MAXWEAPONS) {
@@ -1462,12 +1472,13 @@ rs_ok_obj(const THING *o, int in_pack)
 
 /*
  * rs_ok_stats:
- *	true if the restored strength can index the strength tables
+ *	true if restored stats can be used safely
  */
 static int
-rs_ok_stats(const struct stats *st)
+rs_ok_stats(const struct stats *st, int max_class)
 {
-    return (st->s_str >= 0 && st->s_str < 32);
+    return (st->s_str >= 0 && st->s_str < 32 && st->s_class >= 1 && st->s_class <= max_class &&
+	    memchr(st->s_dmg, '\0', sizeof(st->s_dmg)) != NULL);
 }
 
 /*
@@ -1483,7 +1494,8 @@ rs_room_at(const coord *cp)
 	return (&passages[flat(cp->y, cp->x) & F_PNUM]);
     }
     for (rp = rooms; rp < &rooms[MAXROOMS]; rp++) {
-	if (cp->x <= rp->r_pos.x + rp->r_max.x && rp->r_pos.x <= cp->x && cp->y <= rp->r_pos.y + rp->r_max.y &&
+	if (!(rp->r_flags & ISGONE) && cp->x <= rp->r_pos.x + rp->r_max.x && rp->r_pos.x <= cp->x &&
+	    cp->y <= rp->r_pos.y + rp->r_max.y &&
 	    rp->r_pos.y <= cp->y) {
 	    return (rp);
 	}
@@ -1501,18 +1513,25 @@ static void
 rs_validate_state(void)
 {
     THING *tp;
-    int i;
+    int i, j;
+    int player_max_class = 0;
+    int monster_max_class;
 
     if (encerror()) {
 	return;
     }
 
+    while (e_levels[player_max_class] != 0) {
+	player_max_class++;
+    }
     if (level < 1 || level > 10000 || max_level < 1 || max_level > 10000 || hungry_state < 0 || hungry_state > 3 ||
 	inv_type < INV_OVER || inv_type > INV_CLEAR || inpack < 0 || inpack > MAXPACK || ntraps < 0 || ntraps > MAXTRAPS ||
-	n_objs < 0 || !rs_ok_pos(&stairs) || !rs_ok_pos(&hero) || !rs_ok_stats(&pstats) || !rs_ok_stats(&max_stats)) {
+	n_objs < 0 || (rogo_name_required != false && rogo_name_required != true) || !rs_ok_pos(&stairs) || !rs_ok_pos(&hero) ||
+	!rs_ok_stats(&pstats, player_max_class) || !rs_ok_stats(&max_stats, player_max_class)) {
 	encseterr(EILSEQ);
 	return;
     }
+    monster_max_class = max(15, level - 11);
     for (i = 0; i < MAXLINES * MAXCOLS; i++) {
 	if ((places[i].p_flags & F_PASS) && (places[i].p_flags & F_PNUM) >= MAXPASS) {
 	    encseterr(EILSEQ);
@@ -1525,6 +1544,20 @@ rs_validate_state(void)
 	if (rp->r_nexits < 0 || rp->r_nexits > 12) {
 	    encseterr(EILSEQ);
 	    return;
+	}
+	if (i < MAXROOMS &&
+	    (!rs_ok_pos(&rp->r_pos) ||
+	     (!(rp->r_flags & ISGONE) &&
+	      (rp->r_max.x <= 0 || rp->r_max.x > NUMCOLS - rp->r_pos.x || rp->r_max.y <= 0 ||
+	       rp->r_max.y > NUMLINES - rp->r_pos.y)))) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+	for (j = 0; j < rp->r_nexits; j++) {
+	    if (!rs_ok_pos(&rp->r_exit[j])) {
+		encseterr(EILSEQ);
+		return;
+	    }
 	}
     }
     for (i = 0; i < MAXPACK; i++) {
@@ -1546,8 +1579,16 @@ rs_validate_state(void)
 	    return;
 	}
     }
+    for (i = 0; i < MAXMONSTERS; i++) {
+	if (!rs_ok_stats(&monsters[i].m_stats, 15)) {
+	    encseterr(EILSEQ);
+	    return;
+	}
+    }
+
     for (tp = mlist; tp != NULL; tp = tp->l_next) {
-	if (tp->t_type < 'A' || tp->t_type > 'Z' || !rs_ok_pos(&tp->t_pos) || !rs_ok_stats(&tp->t_stats)) {
+	if (tp->t_type < 'A' || tp->t_type > 'Z' || !rs_ok_pos(&tp->t_pos) ||
+	    !rs_ok_stats(&tp->t_stats, monster_max_class)) {
 	    encseterr(EILSEQ);
 	    return;
 	}
@@ -1557,6 +1598,13 @@ rs_validate_state(void)
 		return;
 	    }
 	}
+    }
+
+    if ((cur_ring[LEFT] != NULL && cur_ring[LEFT]->o_type != RING) ||
+	(cur_ring[RIGHT] != NULL && cur_ring[RIGHT]->o_type != RING) ||
+	(cur_armor != NULL && cur_armor->o_type != ARMOR)) {
+	encseterr(EILSEQ);
+	return;
     }
 
     /* things saved while in a passage have no room: derive it from where they stand */
@@ -1603,6 +1651,7 @@ rs_save_file(FILE *savef)
     rs_write_rings(savef);
     rs_write_scrolls(savef);
     rs_write_chars(savef, whoami, MAX_USERNAME);
+    rs_write_int(savef, rogo_name_required);
     rs_write_sticks(savef);
     rs_write_chars(savef, fruit, MAXSTR);
     rs_write_int(savef, n_objs);
@@ -1693,6 +1742,8 @@ rs_restore_file(FILE *savef)
     rs_read_rings(savef);
     rs_read_scrolls(savef);
     rs_read_chars(savef, whoami, MAX_USERNAME);
+    rogo_name_required = false;
+    rs_read_int(savef, &rogo_name_required);
     rs_read_sticks(savef);
     rs_read_chars(savef, fruit, MAXSTR);
     n_objs = 0;

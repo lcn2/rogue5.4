@@ -349,24 +349,6 @@ restore(const char *file)
     }
 
     /*
-     * unlink the rogue save file now that we have restored our game state
-     */
-    errno = 0; /* paranoia */
-    if (
-#ifdef MASTER
-	!wizard &&
-#endif
-	md_unlink_open_file(file, inf) < 0) {
-	endwin_and_ncurses_cleanup();
-	printf("Sorry, cannot remove rogue save file after restoring: %s\r\n", strerror(errno));
-	printf("Unable to restore: %s\r\n", file);
-	fflush(stdout);
-	fclose(inf);
-	md_tstpresume();
-	return false;
-    }
-
-    /*
      * defeat multiple restarting from the same place
      */
 #ifdef MASTER
@@ -403,6 +385,24 @@ restore(const char *file)
 	endwin_and_ncurses_cleanup();
 	printf("\"He's dead, Jim\"\n");
 	printf("Attempt to restore a game of a dead rogue player, HP: %d\r\n", pstats.s_hpt);
+	printf("Unable to restore: %s\r\n", file);
+	fflush(stdout);
+	fclose(inf);
+	md_tstpresume();
+	return false;
+    }
+
+    /*
+     * unlink the rogue save file now that we have validated our game state
+     */
+    errno = 0; /* paranoia */
+    if (
+#ifdef MASTER
+	!wizard &&
+#endif
+	md_unlink_open_file(file, inf) < 0) {
+	endwin_and_ncurses_cleanup();
+	printf("Sorry, cannot remove rogue save file after restoring: %s\r\n", strerror(errno));
 	printf("Unable to restore: %s\r\n", file);
 	fflush(stdout);
 	fclose(inf);

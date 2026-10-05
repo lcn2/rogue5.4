@@ -258,11 +258,10 @@ void
 drain(void)
 {
     THING *mp;
+    THING *next_mp;
     struct room *corp;
-    THING **dp;
     int cnt;
     int inpass;
-    THING *drainee[40];
 
     /*
      * First cnt how many things we need to spread the hit points among
@@ -274,32 +273,30 @@ drain(void)
 	corp = NULL;
     }
     inpass = (proom->r_flags & ISGONE);
-    dp = drainee;
     for (mp = mlist; mp != NULL; mp = next(mp)) {
 	if (mp->t_room == proom || mp->t_room == corp ||
 	    (inpass && chat(mp->t_pos.y, mp->t_pos.x) == DOOR && &passages[flat(mp->t_pos.y, mp->t_pos.x) & F_PNUM] == proom)) {
-	    *dp++ = mp;
-	    if ((size_t)(dp - drainee) >= sizeof(drainee) / sizeof(drainee[0]) - 1) {
-		break;
-	    }
+	    cnt++;
 	}
     }
-    if ((cnt = (int)(dp - drainee)) == 0) {
+    if (cnt == 0) {
 	msg("you have a tingling feeling");
 	return;
     }
-    *dp = NULL;
     pstats.s_hpt /= 2;
     cnt = pstats.s_hpt / cnt;
     /*
      * Now zot all of the monsters
      */
-    for (dp = drainee; *dp; dp++) {
-	mp = *dp;
-	if ((mp->t_stats.s_hpt -= cnt) <= 0) {
-	    killed(mp, see_monst(mp));
-	} else {
-	    runto(&mp->t_pos);
+    for (mp = mlist; mp != NULL; mp = next_mp) {
+	next_mp = next(mp);
+	if (mp->t_room == proom || mp->t_room == corp ||
+	    (inpass && chat(mp->t_pos.y, mp->t_pos.x) == DOOR && &passages[flat(mp->t_pos.y, mp->t_pos.x) & F_PNUM] == proom)) {
+	    if ((mp->t_stats.s_hpt -= cnt) <= 0) {
+		killed(mp, see_monst(mp));
+	    } else {
+		runto(&mp->t_pos);
+	    }
 	}
     }
 }

@@ -414,8 +414,8 @@ The [rogue5.4 repo](https://github.com/lcn2/rogue5.4) improves on the above ment
 
 * Improved the C source to be able to compile under recent C compilers
 * Fixed many bugs in the rogue code
-* Fixed the code to compile both the `findpw` and `scedit` rogue tools
-* Install the `findpw` and `scedit` rogue tools
+* Fixed the code to compile the `scedit` rogue tool
+* Install the `scedit` rogue tool
 * Removed GNU autoconf complexities replacing it with a simple `Makefile`
 * To configure, simply edit `Makefile` and/or the `config.h` file
 * Fixed `make stddocs` so that the proper configuration values are configured into the documentation
