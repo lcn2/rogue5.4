@@ -1439,8 +1439,7 @@ rs_ok_obj(const THING *o, int in_pack)
     int which = o->o_which;
 
     if (o->o_count < 0 || (in_pack && (o->o_packch < 'a' || o->o_packch >= 'a' + MAXPACK)) ||
-	memchr(o->o_damage, '\0', sizeof(o->o_damage)) == NULL ||
-	memchr(o->o_hurldmg, '\0', sizeof(o->o_hurldmg)) == NULL) {
+	memchr(o->o_damage, '\0', sizeof(o->o_damage)) == NULL || memchr(o->o_hurldmg, '\0', sizeof(o->o_hurldmg)) == NULL) {
 	return (false);
     }
     if (o->o_launch < -1 || o->o_launch > MAXWEAPONS) {
@@ -1495,8 +1494,7 @@ rs_room_at(const coord *cp)
     }
     for (rp = rooms; rp < &rooms[MAXROOMS]; rp++) {
 	if (!(rp->r_flags & ISGONE) && cp->x <= rp->r_pos.x + rp->r_max.x && rp->r_pos.x <= cp->x &&
-	    cp->y <= rp->r_pos.y + rp->r_max.y &&
-	    rp->r_pos.y <= cp->y) {
+	    cp->y <= rp->r_pos.y + rp->r_max.y && rp->r_pos.y <= cp->y) {
 	    return (rp);
 	}
     }
@@ -1546,10 +1544,8 @@ rs_validate_state(void)
 	    return;
 	}
 	if (i < MAXROOMS &&
-	    (!rs_ok_pos(&rp->r_pos) ||
-	     (!(rp->r_flags & ISGONE) &&
-	      (rp->r_max.x <= 0 || rp->r_max.x > NUMCOLS - rp->r_pos.x || rp->r_max.y <= 0 ||
-	       rp->r_max.y > NUMLINES - rp->r_pos.y)))) {
+	    (!rs_ok_pos(&rp->r_pos) || (!(rp->r_flags & ISGONE) && (rp->r_max.x <= 0 || rp->r_max.x > NUMCOLS - rp->r_pos.x ||
+								    rp->r_max.y <= 0 || rp->r_max.y > NUMLINES - rp->r_pos.y)))) {
 	    encseterr(EILSEQ);
 	    return;
 	}
@@ -1587,8 +1583,7 @@ rs_validate_state(void)
     }
 
     for (tp = mlist; tp != NULL; tp = tp->l_next) {
-	if (tp->t_type < 'A' || tp->t_type > 'Z' || !rs_ok_pos(&tp->t_pos) ||
-	    !rs_ok_stats(&tp->t_stats, monster_max_class)) {
+	if (tp->t_type < 'A' || tp->t_type > 'Z' || !rs_ok_pos(&tp->t_pos) || !rs_ok_stats(&tp->t_stats, monster_max_class)) {
 	    encseterr(EILSEQ);
 	    return;
 	}
@@ -1601,8 +1596,7 @@ rs_validate_state(void)
     }
 
     if ((cur_ring[LEFT] != NULL && cur_ring[LEFT]->o_type != RING) ||
-	(cur_ring[RIGHT] != NULL && cur_ring[RIGHT]->o_type != RING) ||
-	(cur_armor != NULL && cur_armor->o_type != ARMOR)) {
+	(cur_ring[RIGHT] != NULL && cur_ring[RIGHT]->o_type != RING) || (cur_armor != NULL && cur_armor->o_type != ARMOR)) {
 	encseterr(EILSEQ);
 	return;
     }
